@@ -1,0 +1,131 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>[[${titoloPagina}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h1 class="mb-4"><b>[[${titoloPagina}]]</b></h1>
+        <form th:action="@{/fatturazione/attiva/salva}" method="post" th:object="${fatturazione}"
+              class="add-data-form">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input type="hidden" th:field="*{id}">
+            <div th:if="${message}" class="alert alert-danger text-center" id="success-alert" >
+                [[${message}]]
+            </div>
+            <div class="border border-secondary rounded p-3">
+                <div class="form-group row">
+                    <div class="form-group col" >
+                        <label class="col-sm-16 col-form-label">Cliente </label>
+                        <select th:field="*{cliente.id}" class="form-control" required>
+                            <option th:value="null" th:text="---"></option>
+                            <option th:each="i : ${listaAziende}" th:value="${i.getId()}"
+                                    th:text="${i.getDenominazione()}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col" >
+                        <label class="col-sm-16 col-form-label">Stato </label>
+                        <select th:field="*{stato.id}" class="form-control" required>
+                            <option th:value="null" th:text="---"></option>
+                            <option th:each="i : ${listaStati}" th:value="${i.getId()}"
+                                    th:text="${i.getDescrizione()}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col">
+                        <label class="col col-form-label">Data Emissione</label>
+                        <input type="date" th:id="dataEmissione" th:name="dataEmissione" th:value="*{dataEmissione}" class="form-control" required  lang="it-IT"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col">
+                        <label class="col col-form-label">Data Scadenza</label>
+                        <input type="date" th:id="dataScadenza" th:name="dataScadenza" th:value="*{dataScadenza}" class="form-control" required  lang="it-IT"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Termine</label>
+                        <input type="text" th:field="*{termine}" class="form-control" maxlength="45" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Tariffa</label>
+                        <input type="text" th:field="*{tariffa}" class="form-control" maxlength="10" autocomplete="off" required/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col col-form-label">Giorni Lavorati</label>
+                        <input type="text" th:field="*{giorniLavorati}" class="form-control" maxlength="10" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Imponibile</label>
+                        <input type="text" th:field="*{imponibile}" class="form-control" maxlength="10" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Totale con Iva</label>
+                        <input type="text" th:field="*{totaleConIva}" class="form-control" maxlength="10" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col col-form-label">N. Fattura</label>
+                        <input type="text" th:field="*{nFattura}" class="form-control" maxlength="30" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Consulente</label>
+                        <input type="text" th:field="*{consulente}" class="form-control" maxlength="30" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Oggetto</label>
+                        <input type="text" th:field="*{oggetto}" class="form-control" maxlength="30" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col col-form-label">Descrizione</label>
+                        <input type="text" th:field="*{descrizione}" class="form-control" maxlength="30" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Oda</label>
+                        <input type="text" th:field="*{oda}" class="form-control" maxlength="30" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col">
+                        <label class="col-form-label">Note</label>
+                        <textarea th:field="*{note}" class="form-control-textarea" maxlength="4000"
+                                  autocomplete="off"></textarea>
+                    </div>
+                </div>
+                <div class="row form-btn-wrapper mt-5">
+                    <button type="submit" class="col-5 btn btn-lg btn-primary">Salva</button>
+                    <span class="col-2"></span>
+                    <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/pages/fatturazione_form.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/history_back.js}"></script>
+</body>
+</html>

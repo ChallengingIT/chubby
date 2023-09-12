@@ -1,0 +1,130 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>[[${titoloPagina}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap-select.min.css}" rel="stylesheet"/>
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap-select.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h1 class="mb-4"><b>[[${titoloPagina}]]</b></h1>
+        <form th:action="@{'/need/salva/'+ ${idCliente}}" method="post" th:object="${need}"
+              class="add-data-form">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input type="hidden" th:field="*{id}">
+            <div class="border border-secondary rounded p-3">
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col-form-label">Descrizione</label>
+                        <input type="text" th:field="*{descrizione}" class="form-control" required minlength="2" maxlength="200" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Priorità</label>
+                        <input type="number" th:field="*{priorita}" class="form-control" max="4" required/>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Job Description</label>
+                        <input type="text" th:field="*{jobDescription}" class="form-control" maxlength="90"/>
+                    </div>
+                </div><br>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col-form-label">Anni di Esperienza</label>
+                        <input type="number" th:field="*{anniEsperienza}" class="form-control" maxlength="2"/>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Numero di Risorse</label>
+                        <input type="number" th:field="*{numeroRisorse}" min="1" class="form-control" maxlength="2"/>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Data Richiesta</label>
+                        <input type="week" th:field="*{week}" class="form-control" required/>
+                    </div>
+                </div><br>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col-form-label">Ambito</label>
+                        <select th:field="*{tipologia.id}" class="form-control select-medium">
+                            <option th:each="i : ${listaTipologieN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Tipologia Azienda</label>
+                        <select th:field="*{tipo}" class="form-control select-medium">
+                            <option th:value="null" th:text="---"></option>
+                            <option value="1" text="Verde">Cliente</option>
+                            <option value="2" text="Verde chiaro">Consulenza</option>
+                            <option value="3" text="Giallo">Prospect</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Livello Scolastico</label>
+                        <select th:field="*{livelloScolastico.id}" class="form-control select-medium">
+                            <option th:each="j : ${listaLivelliScolastici}" th:value="${j.getId()}" th:text="${j.getDescrizione()}"></option>
+                        </select>
+                    </div>
+                </div><br>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col-form-label">Stato</label>
+                        <select th:field="*{stato.id}" class="form-control select-medium">
+                            <option th:each="i : ${listaStatiN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Seleziona le Skills</label>
+                        <select class="form-control selectpicker" th:field="*{skills}" id="skill" multiple>
+
+                            <option th:each="skill : ${listaSkillOrdinata}"
+                                    th:value="${skill.id}"
+                                    th:text="${skill.descrizione}">skill
+                            </option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col-form-label">Owner</label>
+                        <select th:field="*{owner.id}" class="form-control select-medium">
+                            <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <div class="row form-btn-wrapper mt-5">
+                    <button type="submit" class="col-5 btn btn-lg btn-primary">Salva</button>
+                    <span class="col-2"></span>
+                    <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/pages/need_form.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/history_back.js}"></script>
+</body>
+</html>

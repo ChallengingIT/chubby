@@ -1,0 +1,170 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>Lista Match </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h1 class="mb-4"><b>Lista Associazioni per [[${progetto.description}]]</b></h1>
+        <br>
+        <h2 class="mb-4"><b>Lista Staff da Associare</b></h2>
+        <div>
+            <form th:action="@{'/progetti/ricerca/match/' + ${progetto.id}}" method="get" th:object="${staffRicerca}">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <div class="form-group row">
+
+                    <div class="col">
+                        <label class="col-sm-16 col-form-label">Nome </label>
+                        <input type="text" th:field="*{nome}" class="form-control" pattern="[A-Za-z]{0,45}" maxlength="45" autocomplete="off"/>
+                    </div>
+                    <div class="col" style="margin-left:15px">
+                        <label class="col-sm-16 col-form-label">Cognome </label>
+                        <input type="text" th:field="*{cognome}" class="form-control" pattern="[A-Za-z]{0,45}" maxlength="45" autocomplete="off"/>
+                    </div>
+                    <div class="col" style="margin-left:15px">
+                        <label class="col-sm-16 col-form-label">Email </label>
+                        <input type="email" th:field="*{email}" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="45" autocomplete="off"/>
+                    </div>
+                    <div class="col" style="margin-left:15px;"><br>
+                        <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
+                    <label class="col-sm-16 col-form-label">Numero di righe</label>
+                    <select class="form-control maxRows" name="state">
+                        <option value="5000">Show ALL Rows</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%"  style="background-color:white;">
+                <thead class="thead" id="tabella-blu">
+                <tr>
+                    <th>E-mail</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Azioni</th>
+                </tr>
+                </thead>
+                <tbody  id="valori-tabella">
+                <th:block th:each="staff : ${listStaffNonAssociati}">
+                    <tr>
+                        <td>[[${staff.email}]]</td>
+                        <td>[[${staff.nome}]]</td>
+                        <td>[[${staff.cognome}]]</td>
+                        <td>
+                            <a th:href="@{'/progetti/associa/' + ${progetto.id} +'/'+  ${staff.id}}"  class="btn btn-info btn-lg">Associa</a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+                <div class='pagination-container' >
+                    <nav>
+                        <ul class="pagination">
+
+                            <li data-page="prev" >
+                                <span> < <span class="sr-only">(current)</span></span>
+                            </li>
+                            <!--	Here the JS Function Will Add the Rows -->
+                            <li data-page="next" class="prev">
+                                <span> > <span class="sr-only">(current)</span></span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+        </div>
+        <br>
+        <div>
+            <h2 class="mb-4"><b>Lista Staff Associati</b></h2>
+            <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
+                    <label class="col-sm-16 col-form-label">Numero di righe</label>
+                    <select class="form-control maxRows2" name="state">
+                        <option value="5000">Show ALL Rows</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%" style="background-color:white;">
+                <thead class="thead" id="tabella-blu-due">
+                <tr>
+                    <th>E-mail</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Azioni</th>
+                </tr>
+                </thead>
+                <tbody  style=" text-align: center;">
+                <th:block th:each="staff : ${listStaffAssociati}">
+                    <tr>
+                        <td>[[${staff.email}]]</td>
+                        <td>[[${staff.nome}]]</td>
+                        <td>[[${staff.cognome}]]</td>
+                        <td>
+                            <a th:href="@{'/progetti/rimuovi/' + ${progetto.id} +'/'+  ${staff.id}}"  class="btn btn-info btn-lg">Rimuovi</a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+                <div class='pagination-container' >
+                    <nav>
+                        <ul class="pagination2">
+
+                            <li data-page="prev" >
+                                <span> < <span class="sr-only">(current)</span></span>
+                            </li>
+                            <!--	Here the JS Function Will Add the Rows -->
+                            <li data-page="next" class="prev">
+                                <span> > <span class="sr-only">(current)</span></span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            <div class="row form-btn-wrapper mt-5" style="text-align:center;">
+                <div class="col">
+                    <button type="button" class="col-5 btn btn-lg btn-secondary"
+                        id="bottoneIndietro">Indietro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/pagination.js}"></script>
+<script type="text/javascript" th:src="@{/js/sortable.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/liste_match_progetto.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/history_back.js}"></script>
+</body>
+</html>

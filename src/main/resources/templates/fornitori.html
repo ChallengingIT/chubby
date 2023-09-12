@@ -1,0 +1,125 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>Gestione Fornitori</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h1 class="mb-4"><b>Gestione Fornitori</b></h1>
+        <div>
+            <a class="btn btn-info btn-lg" th:href="@{/fornitori/aggiungi}" style=" background-color: black; border-radius: 10px;">
+                <span class="glyphicon glyphicon-plus"></span> Aggiungi un nuovo fornitore
+            </a>
+        </div>
+        <br>
+        <div>
+            <form th:action="@{/fornitori/ricerca}" method="get" th:object="${fornitoreRicerca}">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <div class="form-group row">
+
+                    <div class="col">
+                        <label class="col-sm-16 col-form-label">Ragione Sociale </label>
+                        <input type="text" th:field="*{denominazione}" class="form-control" maxlength="90" autocomplete="off"/>
+                    </div>
+                    <div class="col" style="margin-left:15px">
+                        <label class="col-sm-16 col-form-label">Referente </label>
+                        <input type="text" th:field="*{referente}" class="form-control" maxlength="45" autocomplete="off"/>
+                    </div>
+                    <div class="col" style="margin-left:15px">
+                        <label class="col-sm-16 col-form-label">Email </label>
+                        <input type="email" th:field="*{email}" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="45" autocomplete="off"/>
+                    </div>
+                    <div class="col" style="margin-left:15px;"><br>
+                        <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                    </div>
+                    <div class="col" style="margin-left:15px;"><br>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div th:if="${message}" class="alert alert-success text-center" id="success-alert" >
+            [[${message}]]
+        </div>
+        <div>
+            <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
+                    <label class="col-sm-16 col-form-label">Numero di righe</label>
+                    <select class="form-control maxRows" name="state">
+                        <option value="5000">Show ALL Rows</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%"  style="background-color:white;">
+                <thead class="thead" id="tabella-blu">
+                    <tr>
+                        <th>Ragione Sociale</th>
+                        <th>Referente</th>
+                        <th>Email</th>
+                        <th>Cellulare</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody id="valori-tabella">
+                    <th:block th:each="fornitore : ${listFornitori}">
+                        <tr>
+                            <td>[[${fornitore.denominazione}]]</td>
+                            <td>[[${fornitore.referente}]]</td>
+                            <td>[[${fornitore.email}]]</td>
+                            <td>[[${fornitore.cellulare}]]</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Actions: edit and delete">
+                                    <a class="btn btn-info btn-lg btn-icon mr-3" th:href="@{'/fornitori/modifica/' + ${fornitore.id}}"><i class="fas fa-pen"></i></a>
+                                    <a class="btn btn-info btn-lg btn-icon" th:href="@{'/fornitori/elimina/' + ${fornitore.id}}"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+                <div class='pagination-container' >
+                    <nav>
+                        <ul class="pagination">
+
+                            <li data-page="prev" >
+                                <span> < <span class="sr-only">(current)</span></span>
+                            </li>
+                            <!--	Here the JS Function Will Add the Rows -->
+                            <li data-page="next" class="prev">
+                                <span> > <span class="sr-only">(current)</span></span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/pagination.js}"></script>
+<script type="text/javascript" th:src="@{/js/sortable.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/fornitori.js}"></script>
+</body>
+</html>

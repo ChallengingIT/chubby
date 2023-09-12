@@ -1,0 +1,147 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>Gestione Candidati</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/popper.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <style th:inline="text">
+        #logout {
+            /*background-color: [[@{(${colorBackground})}]];*/
+        }
+    </style>
+</head>
+<body style="background-color: #ffb700">
+<nav th:fragment="sidebar" id="sidebar">
+    <div class="custom-menu">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+            <i class="fa fa-bars"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="p-4" >
+        <div sec:authorize="isAuthenticated()"> Autenticato come <span sec:authentication="name"></span></div>
+        <h1><a th:href="@{/bacheca}" class="logo">WE-HUB <span>Inno-Tek</span></a></h1>
+        <ul class="list-unstyled components mb-5" >
+            <span sec:authorize="hasRole('ADMIN')" >
+                <li id="bacheca">
+                    <a th:href="@{/bacheca}"><span class="fa fa-home mr-3"></span> Dashboard</a>
+                </li>
+                <li class="businessdev">
+                    <a href="#"><span class="fa fa-address-book mr-3"></span> Business Dev</a>
+                    <ul class="ul_submenu list-unstyled components" style="display: none;">
+                       <li class="aziende">
+                            <a th:href="@{/aziende}"><span class="fa fa-briefcase mr-3"></span> Aziende</a>
+                        </li>
+                        <li class="keypeople">
+                            <a th:href="@{/keypeople}"><span class="fa fa-book mr-3"></span> Key People</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="need">
+                    <a th:href="@{/need}"><span class="fa fa-paper-plane mr-3"></span> Need</a>
+                </li>
+                <li class="staffing">
+                    <a th:href="@{/staffing}"><span class="fa fa-user mr-3"></span> Recruiting</a>
+                </li>
+                <li id="progetti">
+                    <a th:href="@{/progetti}"><span class="fa fa-tasks mr-3"></span> Progetti</a>
+                </li>
+                <li id="amministrazione">
+                    <a href="#"><span class="fa fa-sitemap mr-3"></span> Amministrazione</a>
+                    <ul class="ul_submenu list-unstyled components" style="display: none;">
+                       <li id="fatturazioneattiva">
+                            <a th:href="@{/fatturazione/attiva}"><span class="fas fa-money-check-alt mr-3"></span> Fatturazione Attiva</a>
+                        </li>
+                        <li id="fatturazionepassiva">
+                            <a th:href="@{/fatturazione/passiva}"><span class="fa fa-id-badge mr-3"></span> Fatturazione Passiva</a>
+                        </li>
+                    </ul>
+                </li>
+                <li id="tesoreria">
+                    <a th:href="@{/tesoreria}"><span class="fa fa-credit-card mr-3"></span> Tesoreria</a>
+                </li>
+                <li class="anagrafiche">
+                    <a href="#"><span class="fas fa-users mr-3"></span> Anagrafiche</a>
+                    <ul class="ul_submenu list-unstyled components" style="display: none;">
+                        <li class="dipendenti">
+                            <a th:href="@{/hr}"><span class="fa fa-male mr-3"></span> Dipendenti</a>
+                        </li>
+                        <li class="fornitori">
+                            <a th:href="@{/fornitori}"><span class="fa fa-industry mr-3"></span> Fornitori</a>
+                        </li>
+                    </ul>
+                </li>
+            </span>
+            <span sec:authorize="hasRole('BM')" >
+                <li class="businessdev">
+                    <a href="#"><span class="fa fa-address-book mr-3"></span> Business Dev</a>
+                    <ul class="ul_submenu list-unstyled components" style="display: none;">
+                       <li class="aziende">
+                            <a th:href="@{/aziende}"><span class="fa fa-briefcase mr-3"></span> Aziende</a>
+                        </li>
+                        <li class="keypeople">
+                            <a th:href="@{/keypeople}"><span class="fa fa-book mr-3"></span> Key People</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="need">
+                    <a th:href="@{/need}"><span class="fa fa-paper-plane mr-3"></span> Need</a>
+                </li>
+                <li class="staffing">
+                    <a th:href="@{/staffing}"><span class="fa fa-user mr-3"></span> Recruiting</a>
+                </li>
+                <li class="anagrafiche">
+                    <a href="#"><span class="fas fa-users mr-3"></span> Anagrafiche</a>
+                    <ul class="ul_submenu list-unstyled components" style="display: none;">
+                        <li class="dipendenti">
+                            <a th:href="@{/hr}"><span class="fa fa-male mr-3"></span> Dipendenti</a>
+                        </li>
+                        <li class="fornitori">
+                            <a th:href="@{/fornitori}"><span class="fa fa-industry mr-3"></span> Fornitori</a>
+                        </li>
+                    </ul>
+                </li>
+            </span>
+            <span sec:authorize="hasRole('RECRUITER')" >
+                <li class="need">
+                    <a th:href="@{/need}"><span class="fa fa-paper-plane mr-3"></span> Need</a>
+                </li>
+                <li class="staffing">
+                    <a th:href="@{/staffing}"><span class="fa fa-user mr-3"></span> Recruiting</a>
+                </li>
+            </span>
+            <span sec:authorize="hasRole('USER')" >
+                 <li id="timesheet">
+                    <a th:href="@{/timesheet/user}"><span class="fa fa-home mr-3"></span> Timesheet</a>
+                </li>
+            </span>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <input type="submit" value="Logout" class="btn btn-outline-warning btn-lg mt-4"/>
+                </form>
+            </li>
+        </ul>
+
+        <div class="footer">
+            <p> Copyright &copy;2022 All rights reserved </p>
+        </div>
+
+    </div>
+</nav>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/sidebar.js}"></script>
+</body>
+</html>

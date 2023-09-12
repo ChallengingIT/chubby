@@ -1,0 +1,374 @@
+#logout {
+  color: white;
+  padding: 3px 4px;
+  text-decoration: none;
+  background-color: #ffb700;
+  margin: 4px 2px;
+  margin-top: 15px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: none;
+}
+#tabella-blu {
+  background: black;
+  color: white;
+  text-align: center;
+}
+#tabella-blu-due {
+  background: black;
+  color: white;
+  text-align: center;
+}
+#tabella-blu-tre {
+  background: black;
+  color: white;
+  text-align: center;
+}
+#valori-tabella {
+  text-align: center;
+}
+#valori-tabella-due {
+  text-align: center;
+}
+#valori-tabella-tre {
+  text-align: center;
+}
+
+#valori-tabella-quattro {
+  text-align: center;
+}
+
+.dimensione-max {
+  word-wrap: break-word;
+  max-width: 150px;
+}
+.ajs-cancel {
+    display:none;
+}
+.col-form-label{
+    color: black;
+}
+.border-secondary{
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 5rem 4rem;
+}
+
+.mb-4{
+    text-align:center;
+    text-transform:uppercase;
+}
+
+.listaSkill{
+    margin-top: -12px;
+    margin-bottom: 0.3em;
+    color:white;
+    list-style: none;
+    padding-left: 20px;
+}
+#dtBasicExample_filter{
+
+    display:none;
+}
+#dtBasicExample2_filter{
+
+    display:none;
+}
+#dtBasicExample3_filter{
+
+    display:none;
+}
+.dataTables_length{
+    color:black;
+    font-weight: bolder;
+}
+.dataTables_info{
+    display:none;
+}
+.paginate_button{
+    color:black;
+    cursor:pointer;
+}
+.dataTables_paginate{
+    font-weight: bolder;
+}
+
+select{
+    color: black;
+}
+
+.labelMod{
+    text-decoration: underline;
+    margin-bottom: 7px;
+    margin-top: -12px;
+    color:black;
+}
+
+/*.border-sec{
+    margin-left: 9px;
+}*/
+
+rect[fill*="#ffffff"]{
+    fill: transparent;
+}
+
+rect[fill*="#f4b400"]{
+    fill: blue;
+}
+
+path[fill*="#f4b400"]{
+        fill: blue;
+}
+
+text{
+    fill: black !important;
+}
+
+.fifty {
+  overflow:hidden;
+  width:50px;
+ }
+
+
+.form-control-textarea{display:block;width:100%;height:130px;padding:6px 12px;font-size:14px;line-height:1.42857143;color:#000;background-color:rgb(236,236,236);background-image:none;border:1px solid #ccc;border-radius:4px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s}
+
+
+.multiselect {
+  width: 310px;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+  overflow-y: scroll;
+  max-height: 150px;
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+
+
+#checkboxes label {
+  display: block;
+  margin-top: -2px;
+}
+
+#checkboxes label:hover {
+  background-color: #1e90ff;
+}
+
+#checkboxes input[type="checkbox"] {
+  margin-left: 18px;
+  margin-right: 7px;
+}
+
+.riga-interna{
+    margin-bottom: -10px;
+}
+
+.select-long{
+    max-width:310px;
+    border-radius:5px;
+    border-color:transparent;
+}
+
+.inner{
+
+    max-height: 150px;
+
+}
+.form-btn-wrapper {
+  width: 50%; 
+  margin: 0 auto;
+}
+.add-data-form {
+  width: 70%; 
+  margin: 0 auto;
+}
+.bacheca-grid {
+  min-width: 300px;
+  width: 100%;
+  max-width: 465px;
+}
+.btn-icon {
+  color: black;
+}
+.candidate-form-file_info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.candidate-form_span {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.candidate-form-file_info-label {
+justify-self: flex-start !important;
+}
+@media (max-width: 1020px) {
+  .form-btn-wrapper {
+    width: 70%;
+  }
+  #bacheca-row {
+    justify-content: center !important;
+    width: 90%;
+    margin: 0 auto;
+  }
+  #bacheca-row-2 {
+      width: 90%;
+      margin: 0 auto;
+    }
+}
+@media (max-width: 768px) {
+  .border-secondary{
+    padding: 2rem 1rem;
+}
+.add-data-form {
+  width: 80%;
+  margin: 0 auto;
+}
+.candidate-form_span {
+  flex-direction: column;
+}
+}
+
+@media (max-width: 425px) {
+  .form-btn-wrapper {
+    width: 100%;
+  }
+.add-data-form {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+}
+#content {
+  width: 100%;
+  margin: 0;
+  height: 100%;
+ }
+}
+
+#inputTable{
+  width: 100% !important;
+  border:none;
+  text-align:center;
+  background-color: transparent;
+}
+
+.openBtn {
+    display: flex;
+    justify-content: left;
+}
+.openButton {
+    border: none;
+    border-radius: 5px;
+    background-color: #1c87c9;
+    color: white;
+    padding: 14px 20px;
+    cursor: pointer;
+    position: fixed;
+}
+.loginPopup {
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+.formPopup {
+    display: none;
+    background-color:white;
+    border-radius:15px;
+    text-align-last: center;
+    position: fixed;
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, 5%);
+    border: 3px solid #999999;
+    z-index: 9;
+}
+.formContainer {
+    max-width: 300px;
+    padding: 20px;
+    background-color: #fff;
+}
+.formContainer input[type=text],
+.formContainer input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 20px 0;
+    border: none;
+    background: #eee;
+}
+.formContainer input[type=text]:focus,
+.formContainer input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+.formContainer .btn {
+    padding: 12px 20px;
+    border: none;
+    background-color: #8ebf42;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+.formContainer .cancel {
+    background-color: #cc0000;
+}
+.formContainer .btn:hover,
+.openButton:hover {
+    opacity: 1;
+}
+
+.fade.in {
+  opacity: 1;
+}
+.modal.in .modal-dialog {
+  -webkit-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+.modal-backdrop.in {
+  opacity: 0.5;
+}
+
+.shiny:hover{
+    background-color: #ffb700 !important;
+    color: black !important;
+}
+.dropup .dropdown-toggle::after{
+    display:none !important;
+}
+
+.dropdown-toggle::after{
+    display:none !important;
+}
+
+.esteso{
+  overflow:hidden;
+  white-space: nowrap;
+}
+
+#row-scrollable{
+    max-height: 50%;
+}

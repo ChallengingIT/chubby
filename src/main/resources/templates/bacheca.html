@@ -1,0 +1,139 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>[[${titoloPagina}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/loader.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+
+<body style="background-color: #ffb700"><!-- th:style="'background-color: '+@{${colorBackground}}+';'"-->
+    <div class="wrapper d-flex align-items-stretch" style="overflow: hidden;">
+
+        <div th:replace="~{sidebar}"> </div>
+
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+            <h1 class="mb-4"><b>Analisi sito</b></h1>
+            <div th:if="${messaggioCompleanno}" class="alert alert-success text-center" id="success-alert" >
+                [[${messaggioCompleanno}]]
+            </div>
+            <div class="row align-items-end justify-content-between" id="bacheca-row" style="margin-top: 34px;">
+                <div class="col border-sec rounded p-3 bacheca-grid" style="width:400px; height:300px;">
+                    <h2 class="mb-4"><b>Need prioritari</b></h2>
+                    <table class="table table-striped" cellspacing="0" width="100%">
+                        <thead class="thead" style="text-align:center;">
+                            <tr>
+                                <th>Priorità</th>
+                                <th>Descrizione</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="valori-tabella">
+                            <th:block th:each="need : ${listNeedOrdinati}">
+                                <tr>
+                                    <td>[[${need.priorita}]]</td>
+                                    <td><a th:href="@{'/need/match/' + ${need.id}}">[[${need.descrizione}]]</a>
+                                    </td>
+                                    <td th:text="${#dates.format(need.dataRichiesta, 'dd/MM/yyyy')}"></td>
+                                </tr>
+                            </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col border-sec rounded p-3 bacheca-grid" style="width:400px; height:300px;">
+                    <h2 class="mb-4"><b>Andamento Need</b></h2>
+                    <table class="table table-striped" cellspacing="0" width="100%">
+                        <thead class="thead" style="text-align:center;">
+                        <tr>
+                            <th>Week</th>
+                            <th>Vinti</th>
+                            <th>Persi</th>
+                            <th>Chiusi</th>
+                            <th>Prioritari</th>
+                        </tr>
+                        </thead>
+                        <tbody id="valori-tabella-tre">
+                        <th:block th:each="data : ${needData}">
+                            <tr>
+                                <td>[[${data.settimana}]]</td>
+                                <td>[[${data.vinti}]]</td>
+                                <td>[[${data.persi}]]</td>
+                                <td>[[${data.chiusi}]]</td>
+                                <td>[[${data.prioritari}]]</td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row align-items-end justify-content-between " id="bacheca-row-2" style="margin-top: 15px;">
+                <div class="col border-sec rounded p-3 mt-4 bacheca-grid" style="width:400px; height:300px;">
+                    <h2 class="mb-4"><b>Prossimi aggiornamenti</b></h2>
+                    <table class="table table-striped table-responsive-xl" cellspacing="0" width="100%" height="300px">
+                        <thead class="thead" style="text-align:center;">
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Data</th>
+                                <th>Ora</th>
+                                <th>Candidato</th>
+                                <th>Owner</th>
+                            </tr>
+                        </thead>
+                        <tbody id="valori-tabella-due">
+                            <th:block th:each="intervista : ${listIntervisteImminenti}">
+                                <tr>
+                                    <td>[[${intervista.tipo.descrizione}]]</td>
+                                    <td>[[${intervista.dataAVideo}]]</td>
+                                    <td>[[${intervista.oraAVideo}]]</td>
+                                    <td>[[${intervista.candidato.cognome}]]</td>
+                                    <td>[[${intervista.owner.descrizione}]]</td>
+                                </tr>
+                            </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col border-sec rounded p-3 mt-4 bacheca-grid" style="width:400px; height:300px;">
+                    <h2 class="mb-4"><b>Dashboard Incontri</b></h2>
+                    <table class="table table-striped" cellspacing="0" width="100%">
+                        <thead class="thead" style="text-align:center;">
+                            <tr>
+                                <th>Week</th>
+                                <th:block th:each="owner : ${listOwner}">
+                                    <th>[[${owner.descrizione}]]</th>
+                                </th:block>
+                            </tr>
+                        </thead>
+                        <tbody id="valori-tabella-quattro">
+                        <th:block th:each="incontri : ${dashboardIncontri}">
+                            <tr>
+                                <td>[[${incontri.settimana}]]</td>
+                                <th:block th:each="occorrenza : ${incontri.occorrenzeOwner}">
+                                    <td>[[${occorrenza.occorrenze}]]</td>
+                                </th:block>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/pages/bacheca.js}"></script>
+</body>
+</html>

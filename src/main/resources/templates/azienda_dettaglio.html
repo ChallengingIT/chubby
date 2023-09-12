@@ -1,0 +1,360 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy">
+  <title>[[${titoloPagina}]]</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link th:href="@{/css/bootstrap-5.1.3/bootstrap.min.css}" rel="stylesheet" />
+  <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+  <link th:href="@{/css/style.css}" rel="stylesheet" />
+  <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+  <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/bootstrap-5.1.3/bootstrap.bundle.js}"></script>
+  <script type="text/javascript" th:src="@{/js/bootstrap-select.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/jquery.dropdown.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+  <div class="wrapper d-flex align-items-stretch">
+    <div th:replace="~{sidebar}">  </div>
+
+    <div id="content" class="p-4 p-md-5 pt-5">
+      <h1 class="mb-4"><b>[[${titoloPagina}]]</b></h1>
+      <div th:object="${cliente}">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{denominazione}">
+        <input type="hidden" th:field="*{provincia}">
+        <input type="hidden" th:field="*{email}">
+        <input type="hidden" th:field="*{status}">
+        <input type="hidden" th:field="*{tipologia}">
+        <input type="hidden" th:field="*{telefono}">
+        <input type="hidden" th:field="*{citta}">
+        <input type="hidden" th:field="*{paese}">
+        <input type="hidden" th:field="*{owner}">
+        <input type="hidden" th:field="*{needs}">
+        <div class="row">
+          <div class="col-lg-3 col-md-3">
+            <div class="row border border-dark">
+              <div class="col">
+                <div class="row bg-dark">
+                <h2 class="text-white">Informazioni contatto</h2>
+                  <div class="bg-white">
+                    <div class="col-sm-8">
+                      <p class="col-form-label">Nome:<b> [[${cliente.denominazione}]]</b></p>
+                      <a th:href="${cliente.sito}" target="_blank">[[${cliente.sito}]]</a>
+                    </div>
+                  </div>
+                </div>
+              <div class="row bg-white p-3">
+                <div class="col text-center">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="|#modalNota|" title="Aggiungi Nota">
+                    <i class="fas fa-sticky-note"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="|#modalMail|" title="Notifica Invio Email">
+                    <i class="fa fa-envelope"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="|#modalPhone|" title="Notifica Telefonata">
+                    <i class="fa fa-phone"></i>
+                  </button>
+                </div>
+              </div>
+              </div>
+            </div>
+            <div class="row border border-dark">
+              <div class="col">
+                <div class="row bg-dark">
+                  <div class="col-sm-2">
+                      <i class="fa fa-eye information"></i>
+                  </div>
+                  <div class="col-sm-10">
+                    <h4 class="text-white">Informazioni su questa azienda</h4>
+                  </div>
+                  <div id="information" class="bg-white">
+                    <p class="col-form-label">Nome<br><b> [[${cliente.denominazione}]]</b></p>
+                    <p class="col-form-label">Settore<br><b> [[${cliente.settoreMercato}]]</b></p>
+                    <p class="col-form-label">Email<br><b> [[${cliente.email}]]</b></p>
+                    <p class="col-form-label">Telefono<br><b> [[${cliente.telefono}]]</b></p>
+                    <p class="col-form-label">Owner<br><b> [[${cliente.owner.nome}]] [[${cliente.owner.cognome}]]</b></p>
+                    <p class="col-form-label">Tipologia<br><b> [[${cliente.tipologia}]]</b></p>
+                    <p class="col-form-label">PI<br><b> [[${cliente.pi}]]</b></p>
+                    <p class="col-form-label">Paese<br><b> [[${cliente.paese}]]</b></p>
+                    <p class="col-form-label">Citta'<br><b> [[${cliente.citta}]]</b></p>
+                  </div>
+                </div>
+                <!--<div class="row bg-white p-3">
+                  <div class="col text-center">
+                    <button type="button" class="btn btn-primary information">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </div>
+                </div>-->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <div class="row border border-dark">
+              <div class="col">
+                <div class="row bg-dark">
+                  <h2 class="text-center text-white">Comunicazioni</h2>
+                </div>
+                <div class="row bg-white">
+                  <div class="bg-white">
+                    <div class="col-sm-3 text-center"><b>Need Aperti</b><br> [[${needAperti}]]</div>
+                    <div class="col-sm-3 text-center"><b>Need Vinti</b><br> [[${needVinti}]]</div>
+                    <div class="col-sm-6 text-center"><b>Data Ultima Attivita'</b><br> [[${dataUltimaAttivita}]]</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="row bg-dark">
+                  <h2 class="text-center text-white">Attività</h2> <br>
+                  <form th:action="@{'/aziende/dettaglio/ricerca/' + ${cliente.id}}" method="get" th:object="${ricercaAttivita}">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <div class="form-group row">
+
+                      <div class="col" style="margin-left:15px">
+                        <label class="col-sm-16 col-form-label text-white">Tipologia </label>
+                        <select th:field="*{tipologia.id}" class="form-control">
+                          <option th:value="null" th:text="---"></option>
+                          <option th:each="i : ${listaTipologie}" th:value="${i.getId()}"
+                                  th:text="${i.getDescrizione()}"></option>
+                        </select>
+                      </div>
+                      <div class="col" style="margin-left:15px">
+                        <label class="col-sm-16 col-form-label text-white">Owner </label>
+                        <select th:field="*{owner.id}" class="form-control">
+                          <option th:value="null" th:text="---"></option>
+                          <option th:each="i : ${listaOwner}" th:value="${i.getId()}"
+                                  th:text="${i.getDescrizione()}"></option>
+                        </select>
+                      </div>
+                      <div class="col" style="margin-left:15px;"><br>
+                        <input type="submit" class="btn btn-primary m-2"
+                               style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div id="row-scrollable" class="row border border-dark bg-white overflow-auto">
+                  <span th:if=" ${listaAttivita.isEmpty()}">
+                    <span class="col-form-label">Non sono presenti attività su questa azienda</span>
+                  </span>
+                  <span th:each="a : ${listaAttivita}">
+                    <div class="row-form border p-2">
+                      <div class="form-row p-2">
+                        <div class="col-sm-3 text-center">
+                          [[${a.tipologia.descrizione}]] di <br> [[${a.owner.nome}]] [[${a.owner.cognome}]]
+                        </div>
+                        <div class="col-sm-3 text-center">
+                           <span th:if="${a.keyPeople != null}">
+                              Contatto: <br><span class="col-form-label" th:text="${a.keyPeople.nome}"></span>
+                           </span>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                          Orario <br> [[${a.data}]]
+                        </div>
+                      </div>
+                      <div class="form-row p-2">
+                        <span class="col-form-label" th:text="${a.note}"></span><br>
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-3">
+            <div class="row border border-dark">
+              <div class="col">
+                <div class="row bg-dark">
+                  <h2 class="text-center text-white">Contatti</h2>
+                </div>
+                <div class="row bg-white">
+                  <span th:if=" ${cliente.keyPeoples.isEmpty()}">
+                    <span class="col-form-label">Il cliente non ha contatti.</span>
+                  </span>
+                  <span th:each="j : ${cliente.keyPeoples}">
+                    <div class="row-form border p-2">
+                      Nome: <span class="col-form-label" th:text="${j.nome}"></span><br>
+                      Ruolo: <span class="col-form-label" th:text="${j.ruolo}"></span><br>
+                      Email: <span class="col-form-label">
+                            <a th:href="@{mailto:{to}(to=${j.email})}"> [[${j.email}]]</a>
+                      </span><br>
+                      Telefono: <span class="col-form-label">
+                        <a th:href="@{callto:{to}(to=${j.cellulare})}"> [[${j.cellulare}]]</a>
+                      </span>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row border border-dark">
+              <div class="col">
+                <div class="row bg-dark">
+                  <h2 class="text-center text-white">Need</h2>
+                </div>
+                <div class="row bg-white  ">
+                <span th:if=" ${cliente.needs.isEmpty()}">
+                <span class="col-form-label">Il cliente non ha needs.</span>
+              </span>
+              <span th:each="i : ${cliente.needs}">
+                <span class="col-form-label">
+                  [[${i.id}]]. <a th:href="@{'/need/match/' + ${i.id}}">[[${i.descrizione}]]</a>
+                </span>
+              </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row form-btn-wrapper mt-5 justify-content-center">
+          <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div th:id="|modalMail|" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrazione Email inviata</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form th:action="@{'/aziende/attivita/salva/'+ ${cliente.id} + '/2'}" method="post" th:object="${nuovaAttivita}">
+          <input type="hidden" th:field="*{cliente}">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col">
+                <label class="col-form-label">Owner</label>
+                <select th:field="*{owner.id}" class="form-control select-medium" required>
+                  <option th:value="null"> Seleziona un Owner</option>
+                  <option th:each="k : ${listaOwner}" th:value="${k.getId()}"
+                          th:text="${k.getDescrizione()}"></option>
+                </select>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">Contatto</label>
+                <select th:field="*{keyPeople.id}" class="form-control select-medium">
+                  <option th:value="null"> Seleziona un Contatto</option>
+                  <option th:each="j : ${cliente.keyPeoples}" th:value="${j.getId()}"
+                          th:text="${j.getNome()}"></option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label class="col-form-label">Commento</label>
+                <textarea th:field="*{note}" class="form-control-textarea" maxlength="4000"
+                          autocomplete="off"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Salva</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div th:id="|modalPhone|" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrazione Chiamata effettuata</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form th:action="@{'/aziende/attivita/salva/'+ ${cliente.id} + '/3'}" method="post" th:object="${nuovaAttivita}">
+          <input type="hidden" th:field="*{cliente}">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col">
+                <label class="col-form-label">Owner</label>
+                <select th:field="*{owner.id}" class="form-control select-medium" required>
+                  <option th:value="null"> Seleziona un Owner</option>
+                  <option th:each="k : ${listaOwner}" th:value="${k.getId()}"
+                          th:text="${k.getDescrizione()}"></option>
+                </select>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">Contatto</label>
+                <select th:field="*{keyPeople.id}" class="form-control select-medium">
+                  <option th:value="null"> Seleziona un Contatto</option>
+                  <option th:each="j : ${cliente.keyPeoples}" th:value="${j.getId()}"
+                          th:text="${j.getNome()}"></option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label class="col-form-label">Commento</label>
+                <textarea th:field="*{note}" class="form-control-textarea" maxlength="4000"
+                          autocomplete="off"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Salva</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div th:id="|modalNota|" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Inserimento nota attività</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form th:action="@{'/aziende/attivita/salva/'+ ${cliente.id} + '/1'}" method="post" th:object="${nuovaAttivita}">
+          <input type="hidden" th:field="*{cliente}">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col">
+                <label class="col-form-label">Owner</label>
+                <select th:field="*{owner.id}" class="form-control select-medium" required>
+                  <option th:value="null"> Seleziona un Owner</option>
+                  <option th:each="k : ${listaOwner}" th:value="${k.getId()}"
+                          th:text="${k.getDescrizione()}"></option>
+                </select>
+              </div>
+              <div class="form-group col">
+                <label for="education_level" class="col-form-label">Contatto</label>
+                <select id="education_level" th:field="*{keyPeople.id}" class="form-control select-medium">
+                  <option th:value="null"> Seleziona un Contatto</option>
+                  <option th:each="j : ${cliente.keyPeoples}" th:value="${j.getId()}"
+                          th:text="${j.getNome()}"></option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label class="col-form-label">Commento</label>
+                <textarea th:field="*{note}" class="form-control-textarea" maxlength="4000"
+                          autocomplete="off"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Salva</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" th:src="@{/js/pages/azienda_dettaglio.js}"></script>
+  <script type="text/javascript" th:src="@{/js/pages/history_back.js}"></script>
+</body>
+</html>

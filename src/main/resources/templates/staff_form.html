@@ -1,0 +1,205 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>[[${titoloPagina}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap-select.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <link th:href="@{/css/jquery.dropdown.min.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap-select.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.dropdown.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+    <div class="wrapper d-flex align-items-stretch">
+
+        <div th:replace="~{sidebar}"> </div>
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+            <h1 class="mb-4"><b>[[${titoloPagina}]]</b></h1>
+            <form th:action="@{/hr/staff/salva}" method="post" th:object="${staff}" enctype="multipart/form-data"
+                class="add-data-form">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{files}">
+                <input type="hidden" th:field="*{timesheet}">
+                <input type="hidden" th:field="*{progetti}">
+                <div th:if="${message}" class="alert alert-danger text-center" id="success-alert">
+                    [[${message}]]
+                </div>
+                <div class="form border border-secondary rounded">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Nome</label>
+                            <input type="text" th:field="*{nome}" class="form-control" required maxlength="45"
+                                autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Cognome</label>
+                            <input type="text" th:field="*{cognome}" class="form-control" required maxlength="45"
+                                autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Data di Nascita</label>
+                            <input type="date" lang="it-IT" th:field="*{dataNascita}" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Luogo di Nascita</label>
+                            <input type="text" lang="it-IT" th:field="*{luogoNascita}" class="form-control"/>
+                        </div>
+                        <div class="form-group col">
+                            <label for="email" class="col-form-label">E-mail</label>
+                            <input id="email" type="email" th:field="*{email}" class="form-control" required
+                                minlength="8" maxlength="45" autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Cellulare</label>
+                            <input type="text" th:field="*{cellulare}" class="form-control" maxlength="20"
+                                autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label" for="residenza">Residenza</label>
+                            <input id="residenza" type="text" th:field="*{citta}" class="form-control" maxlength="45"
+                                autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label" for="startdate">Data Inizio</label>
+                            <input id="startdate" type="date" th:field="*{dataInizio}" class="form-control" autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label" for="enddate">Scadenza Contratto</label>
+                            <input id="enddate" type="date" th:field="*{dataScadenza}" class="form-control" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label" for="experience">Anni di Esperienza</label>
+                            <input id="experience" type="number" step="0.01" th:field="*{anniEsperienza}"
+                                class="form-control" max="99" autocomplete="off" required/>
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label" for="education_level">Livello Scolastico</label>
+                            <select id="education_level" th:field="*{livelloScolastico.id}"
+                                    class="form-control select-medium" required>
+                                <option th:value="null"> Seleziona un Livello</option>
+                                <option th:each="j : ${listaLivelliScolastici}" th:value="${j.getId()}"
+                                        th:text="${j.getDescrizione()}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label" for="faculty">Facoltà</label>
+                            <select id="faculty" th:field="*{facolta.id}" class="form-control select-medium">
+                                <option th:value="null"> Seleziona una Facoltà</option>
+                                <option th:each="k : ${listaFacolta}" th:value="${k.getId()}"
+                                        th:text="${k.getDescrizione()}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label">IBAN</label>
+                            <input type="text" th:field="*{iban}" class="form-control" maxlength="45"
+                                   autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Codice Fiscale</label>
+                            <input type="text" th:field="*{codFiscale}" class="form-control" maxlength="30"
+                                   autocomplete="off" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">RAL/Tariffa</label>
+                            <input type="text" th:field="*{ral}" class="form-control" maxlength="100"
+                                   autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label" for="job_title">Job Title</label>
+                            <select id="job_title" th:field="*{tipologia.id}" class="form-control select-medium" required>
+                                <option th:value="null"> Seleziona una Job Title</option>
+                                <option th:each="i : ${listaTipologie}" th:value="${i.getId()}"
+                                        th:text="${i.getDescrizione()}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Seleziona le Skills</label>
+                            <select class="form-control selectpicker" th:field="*{skills}" id="skill" multiple>
+
+                                <option th:each="skill : ${listaSkillOrdinata}" th:value="${skill.id}"
+                                        th:text="${skill.descrizione}">skill
+                                </option>
+
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label" for="contract">Tipologia Contratto</label>
+                            <select id="contract" th:field="*{tipologiaContratto.id}" class="form-control select-medium" required>
+                                <option th:value="null"> Seleziona una Tipologia</option>
+                                <option th:each="i : ${listaTipologieContratto}" th:value="${i.getId()}"
+                                        th:text="${i.getDescrizione()}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Note</label>
+                            <textarea th:field="*{note}" class="form-control-textarea" maxlength="2000"
+                                autocomplete="off"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Allegati</label>
+                            <span th:if="${staff.files != null}">
+                                <span th:if="${#arrays.length(staff.files) != 0}">
+                                    <th:block th:each="file : ${staff.files}">
+                                        <div class="form-row">
+                                            <div class="col-6">
+                                                <label class="candidate-form-file_info-label">[[${file.descrizione}]]</label>
+                                            </div>
+                                             <div class="col-6">
+                                                 <div class="row">
+                                                     <div class="col-6">
+                                                         <a th:href="@{'/files/download/file/'+${file.id}}" style="color:blue;"> Download </a>
+                                                     </div>
+                                                    <div class="col-6">
+                                                        <a th:href="@{'/files/elimina/file/'+${file.id}+'/'+${staff.id}}" style="color:red;"> Elimina </a>
+                                                    </div>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </span>
+                            </span>
+                        </div>
+                        <input type="file" name="file" class="form-control" multiple>
+                    </div>
+                    <div class="row form-btn-wrapper mt-5">
+                        <button type="submit" class="col-5  mr-auto btn btn-lg btn-primary">Salva</button>
+                        <button type="button" class="col-5  ml-auto btn btn-lg btn-secondary"
+                            id="bottoneIndietro">Indietro</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/pages/staff_form.js}"></script>
+    <script type="text/javascript" th:src="@{/js/pages/history_back.js}"></script>
+</body>
+</html>

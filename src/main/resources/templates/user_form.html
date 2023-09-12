@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <title>[[${titoloPagina}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h1 class="mb-4"><b>[[${titoloPagina}]]</b></h1>
+        <form th:action="@{/hr/salva/utente}" method="post" th:object="${user}"
+              class="add-data-form">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input type="hidden" th:field="*{enabled}">
+            <div th:if="${message}" class="alert alert-danger text-center" id="success-alert" >
+                [[${message}]]
+            </div>
+            <div class="border border-secondary rounded p-3">
+                <div class="row">
+                    <div class="col">
+                        <label class="col col-form-label">Username</label>
+                        <input type="text" th:field="*{username}" class="form-control" required maxlength="50" autocomplete="off"/>
+                    </div>
+                    <div class="col">
+                        <label class="col col-form-label">Password</label>
+                        <input type="text" th:field="*{password}" class="form-control" required  maxlength="120" autocomplete="off"/>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-form-label" for="authorities">Ruolo</label>
+                        <select th:field="*{authority.id.authority}" class="form-control select-medium" id="authorities">
+                            <option th:value="ROLE_ADMIN" th:text="ADMIN"></option>
+                            <option th:value="ROLE_BM" th:text="BM"></option>
+                            <option th:value="ROLE_RECRUITER" th:text="RECRUITER"></option>
+                            <option th:value="ROLE_USER" th:text="USER"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <div class="row form-btn-wrapper mt-5">
+                    <button type="submit" class="col-5 btn btn-lg btn-primary">Salva</button>
+                    <span class="col-2"></span>
+                    <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/pages/user_form.js}"></script>
+<script type="text/javascript" th:src="@{/js/pages/history_back.js}"></script>
+</body>
+</html>

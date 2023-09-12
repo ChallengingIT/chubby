@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Innotek" pattern="src:*..*||lib:*..*||test:*..*" />
+</component>

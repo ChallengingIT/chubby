@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to WEHUB</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body style="background-color: #ffb700">
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <div class="row">
+            <div class="col">
+                <h2 class="mb-4">WE-HUB</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4 class="mb-4">Benvenuti su We-Hub, il nuovo sito per la gestione interna dell'azienda, dalla ricerca del candidato alla sua assunzione.</h4>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
