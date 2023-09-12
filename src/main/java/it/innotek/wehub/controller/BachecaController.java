@@ -42,7 +42,7 @@ public class BachecaController {
         model.addAttribute("dashboardIncontri", getDashboardIncontri());
         model.addAttribute("listOwner",         serviceOwner.listAll());
         model.addAttribute("listNeedOrdinati",  serviceNeed.getNeedOrdinati());
-        model.addAttribute("colorBackground",   "#ffb700");
+        model.addAttribute("colorBackground",   "#14d928");
 
         StringBuilder    messaggioCompleanno = null;
         List<Intervista> interviste          = serviceIntervista.listIntervisteImminenti();
