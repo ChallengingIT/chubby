@@ -978,3 +978,10 @@ org.hibernate.TransientPropertyValueException: object references an unsaved tran
 2023-09-30 14:34:41,655 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
 2023-09-30 14:34:41,656 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
 2023-09-30 14:34:49,528 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 8.363 seconds (process running for 9.105)
+2023-09-30 14:44:59,308 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 19000 (C:\Users\dpagn\IdeaProjects\we-hub - challenging\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub - challenging)
+2023-09-30 14:44:59,309 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-30 14:44:59,310 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-30 14:45:10,013 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 11.285 seconds (process running for 12.016)
+2023-09-30 14:45:34,914 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-7] bacheca
+2023-09-30 14:45:35,078 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-7] Lista interviste e staff recuperate
+2023-09-30 14:45:35,079 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-7] Lista interviste imminenti

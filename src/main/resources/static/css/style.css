@@ -2141,11 +2141,11 @@ fieldset:disabled a.btn {
 
 .btn-info {
   color: #fff;
-  background-color: #ffb700;
-  border-color: #ffb700; }
+  background-color: #14d928;
+  border-color: #14d928; }
   .btn-info:hover {
     color: #fff;
-    background-color: #ffb700;
+    background-color: #14d928;
     border-color: black; }
   .btn-info:focus, .btn-info.focus {
     -webkit-box-shadow: 0 0 0 0.2rem rgba(58, 176, 195, 0.5);
@@ -8229,7 +8229,7 @@ h1, h2, h3, h4, h5,
       color: #fff; }
       #sidebar h1 .logo span {
         font-size: 14px;
-        color: #ffb700;
+        color: #14d928;
         display: block; }
   #sidebar ul.components {
     padding: 0; }
@@ -8245,7 +8245,7 @@ h1, h2, h3, h4, h5,
       color: rgba(255, 255, 255, 0.6);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
       #sidebar ul li a span {
-        color: #ffb700; }
+        color: #14d928; }
       #sidebar ul li a:hover {
         color: #fff; }
     #sidebar ul li.active > a {

@@ -48,7 +48,7 @@ public class BachecaController {
             model.addAttribute("dashboardIncontri", getDashboardIncontri());
             model.addAttribute("listOwner", ownerRepository.findAll());
             model.addAttribute("listNeedOrdinati", needRepository.findNeedOrdinati());
-            model.addAttribute("colorBackground", "#ffb700");
+            model.addAttribute("colorBackground", "#14d928");
 
             StringBuilder    messaggioCompleanno = null;
             List<Intervista> interviste          = intervistaRepository.findIntervisteImminenti();
