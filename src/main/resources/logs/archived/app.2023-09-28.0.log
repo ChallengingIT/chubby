@@ -1,0 +1,456 @@
+2023-09-28 15:48:51,910 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 32424 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 15:48:51,912 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 15:48:51,913 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 15:49:01,572 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 10.23 seconds (process running for 11.066)
+2023-09-28 15:49:25,169 DEBUG i.i.w.c.HRController [https-jsse-nio-8080-exec-4] bacheca
+2023-09-28 15:49:25,422 DEBUG i.i.w.c.HRController [https-jsse-nio-8080-exec-4] Lista interviste e staff recuperate
+2023-09-28 15:49:25,423 DEBUG i.i.w.c.HRController [https-jsse-nio-8080-exec-4] Lista interviste imminenti
+2023-09-28 15:53:19,808 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 11180 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 15:53:19,810 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 15:53:19,810 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 15:53:31,072 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 11.84 seconds (process running for 12.678)
+2023-09-28 15:54:21,837 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-3] bacheca
+2023-09-28 15:54:22,305 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-3] Lista interviste e staff recuperate
+2023-09-28 15:54:22,306 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-3] Lista interviste imminenti
+2023-09-28 16:05:47,047 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 47988 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 16:05:47,049 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 16:05:47,050 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 16:06:09,914 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 23.536 seconds (process running for 24.507)
+2023-09-28 16:06:19,685 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-4] bacheca
+2023-09-28 16:06:20,210 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-4] Lista interviste e staff recuperate
+2023-09-28 16:06:20,212 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-4] Lista interviste imminenti
+2023-09-28 16:06:49,682 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-7] Incorrect string value: '\xEF\x83\xA0 15...' for column 'note' at row 1
+2023-09-28 16:06:49,703 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-7] could not execute statement
+2023-09-28 16:08:47,964 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 48044 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 16:08:47,967 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 16:08:47,969 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 16:09:00,201 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 12.827 seconds (process running for 13.803)
+2023-09-28 16:09:31,797 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-8] Incorrect string value: '\xEF\x83\xA0 15...' for column 'note' at row 1
+2023-09-28 16:09:31,824 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-8] could not execute statement
+2023-09-28 16:18:59,382 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 50436 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 16:18:59,384 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 16:18:59,384 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 16:19:17,874 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 19.238 seconds (process running for 21.754)
+2023-09-28 16:19:52,033 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-10] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:19:52,048 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-10] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:23:33,355 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 47948 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 16:23:33,357 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 16:23:33,358 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 16:23:46,421 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 13.722 seconds (process running for 14.624)
+2023-09-28 16:24:21,659 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-7] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:24:21,676 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-7] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:30:35,761 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-1] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:30:35,763 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-1] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:31:35,997 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-4] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:31:35,998 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-4] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:36:03,646 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-5] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:36:03,648 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-5] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:43:36,445 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-6] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:43:36,446 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-6] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:48:24,358 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 11272 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 16:48:24,360 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 16:48:24,362 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 16:48:37,997 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 14.585 seconds (process running for 16.545)
+2023-09-28 16:48:47,024 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-7] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:48:47,034 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-7] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 16:49:02,614 ERROR o.h.e.j.s.SqlExceptionHelper [https-jsse-nio-8080-exec-4] Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+2023-09-28 16:49:02,615 ERROR i.i.w.c.CandidatoController [https-jsse-nio-8080-exec-4] JDBC exception executing SQL [ SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
+      (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,  
+      (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
+ FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
+ where c.id = sc.id_candidato
+ and c.id = tc.id_candidato
+ and c.id = lc.id_candidato
+ and c.id = ttc.id_candidato
+ and if(? is not null, c.nome LIKE ?, 1=1)
+ and if(? is not null, c.cognome LIKE ?, 1=1)
+ and if(? is not null, c.email LIKE ?, 1=1)
+ and if(? is not null, tc.id_tipologia = ?, 1=1)
+ and if(? is not null, sc.id_stato=?, 1=1)
+ and if(? is not null, ttc.id_tipo=?, 1=1)
+ limit 80
+]
+2023-09-28 17:04:39,148 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-9] bacheca
+2023-09-28 17:04:39,347 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-9] Lista interviste e staff recuperate
+2023-09-28 17:04:39,350 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-9] Lista interviste imminenti
+2023-09-28 17:05:15,725 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 4036 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 17:05:15,727 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 17:05:15,728 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 17:05:27,593 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 12.381 seconds (process running for 13.547)
+2023-09-28 17:05:28,092 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-6] bacheca
+2023-09-28 17:05:28,326 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-6] Lista interviste e staff recuperate
+2023-09-28 17:05:28,327 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-6] Lista interviste imminenti
+2023-09-28 17:17:19,688 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 2104 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 17:17:19,689 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 17:17:19,690 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 17:17:29,326 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 10.227 seconds (process running for 11.141)
+2023-09-28 17:17:42,446 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-1] bacheca
+2023-09-28 17:17:42,900 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-1] Lista interviste e staff recuperate
+2023-09-28 17:17:42,901 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-1] Lista interviste imminenti
+2023-09-28 17:20:11,568 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 14068 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 17:20:11,570 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 17:20:11,571 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 17:20:21,599 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 10.607 seconds (process running for 11.481)
+2023-09-28 17:21:01,205 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 8164 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 17:21:01,207 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 17:21:01,208 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 17:21:11,765 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 11.147 seconds (process running for 12.801)
+2023-09-28 17:38:01,490 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 2520 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
+2023-09-28 17:38:01,493 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 17:38:01,494 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 17:38:17,288 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 16.46 seconds (process running for 17.739)
+2023-09-28 18:00:17,055 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 4600 (C:\Users\Administrator\IdeaProjects\we-hub\target\classes started by Administrator in C:\Users\Administrator\IdeaProjects\we-hub)
+2023-09-28 18:00:17,057 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-28 18:00:17,058 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-28 18:00:25,352 ERROR c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Exception during pool initialization.
+java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:159)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:117)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:80)
+	at org.springframework.jdbc.support.JdbcUtils.extractDatabaseMetaData(JdbcUtils.java:336)
+	at org.springframework.boot.jdbc.DatabaseDriver.fromDataSource(DatabaseDriver.java:321)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.getDatabaseDriver(PlatformPlaceholderDatabaseDriverResolver.java:137)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.determinePlatform(PlatformPlaceholderDatabaseDriverResolver.java:131)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.lambda$resolveAll$0(PlatformPlaceholderDatabaseDriverResolver.java:96)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.resolveAll(PlatformPlaceholderDatabaseDriverResolver.java:121)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.resolveAll(PlatformPlaceholderDatabaseDriverResolver.java:96)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer.resolveSchemaLocations(JdbcSessionDataSourceScriptDatabaseInitializer.java:86)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer.getSettings(JdbcSessionDataSourceScriptDatabaseInitializer.java:74)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer.<init>(JdbcSessionDataSourceScriptDatabaseInitializer.java:48)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionConfiguration.jdbcSessionDataSourceScriptDatabaseInitializer(JdbcSessionConfiguration.java:65)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:139)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:645)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1417)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1337)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:548)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1417)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1337)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:548)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:201)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:261)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:235)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4875)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:871)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:846)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:871)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:241)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:428)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:913)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:485)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:123)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:104)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:488)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:210)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:183)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:161)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:578)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:434)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1304)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1293)
+	at it.innotek.wehub.WeHubApplication.main(WeHubApplication.java:66)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+2023-09-28 18:00:25,363 ERROR o.s.b.w.e.t.TomcatStarter [restartedMain] Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'sessionRepositoryFilterRegistration' defined in class path resource [org/springframework/boot/autoconfigure/session/SessionRepositoryFilterConfiguration.class]: Unsatisfied dependency expressed through method 'sessionRepositoryFilterRegistration' parameter 1: Error creating bean with name 'springSessionRepositoryFilter' defined in class path resource [org/springframework/session/config/annotation/web/http/SpringHttpSessionConfiguration.class]: Unsatisfied dependency expressed through method 'springSessionRepositoryFilter' parameter 0: Error creating bean with name 'jdbcSessionDataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/session/JdbcSessionConfiguration.class]: Failed to instantiate [org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer]: Factory method 'jdbcSessionDataSourceScriptDatabaseInitializer' threw exception with message: Unable to detect database type
+2023-09-28 18:00:25,497 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:164)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:578)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:434)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1304)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1293)
+	at it.innotek.wehub.WeHubApplication.main(WeHubApplication.java:66)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:142)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:104)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:488)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:210)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:183)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:161)
+	... 13 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sessionRepositoryFilterRegistration' defined in class path resource [org/springframework/boot/autoconfigure/session/SessionRepositoryFilterConfiguration.class]: Unsatisfied dependency expressed through method 'sessionRepositoryFilterRegistration' parameter 1: Error creating bean with name 'springSessionRepositoryFilter' defined in class path resource [org/springframework/session/config/annotation/web/http/SpringHttpSessionConfiguration.class]: Unsatisfied dependency expressed through method 'springSessionRepositoryFilter' parameter 0: Error creating bean with name 'jdbcSessionDataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/session/JdbcSessionConfiguration.class]: Failed to instantiate [org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer]: Factory method 'jdbcSessionDataSourceScriptDatabaseInitializer' threw exception with message: Unable to detect database type
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:798)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:548)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:201)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:261)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:235)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4875)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:871)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:846)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:871)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:241)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:428)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:913)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:485)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:123)
+	... 18 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'springSessionRepositoryFilter' defined in class path resource [org/springframework/session/config/annotation/web/http/SpringHttpSessionConfiguration.class]: Unsatisfied dependency expressed through method 'springSessionRepositoryFilter' parameter 0: Error creating bean with name 'jdbcSessionDataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/session/JdbcSessionConfiguration.class]: Failed to instantiate [org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer]: Factory method 'jdbcSessionDataSourceScriptDatabaseInitializer' threw exception with message: Unable to detect database type
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:798)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:548)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1417)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1337)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	... 58 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jdbcSessionDataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/session/JdbcSessionConfiguration.class]: Failed to instantiate [org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer]: Factory method 'jdbcSessionDataSourceScriptDatabaseInitializer' threw exception with message: Unable to detect database type
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:645)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1417)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1337)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	... 72 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer]: Factory method 'jdbcSessionDataSourceScriptDatabaseInitializer' threw exception with message: Unable to detect database type
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:171)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	... 88 common frames omitted
+Caused by: java.lang.IllegalStateException: Unable to detect database type
+	at org.springframework.util.Assert.state(Assert.java:76)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.determinePlatform(PlatformPlaceholderDatabaseDriverResolver.java:132)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.lambda$resolveAll$0(PlatformPlaceholderDatabaseDriverResolver.java:96)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.resolveAll(PlatformPlaceholderDatabaseDriverResolver.java:121)
+	at org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver.resolveAll(PlatformPlaceholderDatabaseDriverResolver.java:96)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer.resolveSchemaLocations(JdbcSessionDataSourceScriptDatabaseInitializer.java:86)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer.getSettings(JdbcSessionDataSourceScriptDatabaseInitializer.java:74)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionDataSourceScriptDatabaseInitializer.<init>(JdbcSessionDataSourceScriptDatabaseInitializer.java:48)
+	at org.springframework.boot.autoconfigure.session.JdbcSessionConfiguration.jdbcSessionDataSourceScriptDatabaseInitializer(JdbcSessionConfiguration.java:65)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:139)
+	... 89 common frames omitted
