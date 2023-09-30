@@ -272,7 +272,7 @@ public class IntervistaController {
         Email               email = new Email();
         Map<String, Object> mappa = new HashMap<>();
 
-        email.setFrom("sviluppo@inno-tek.it");
+        email.setFrom("sviluppo@challenging.cloud");
         email.setTo(emailOwner);
         mappa.put("nome", nomeOwner);
         mappa.put("cognome", cognomeOwner);

@@ -985,3 +985,15 @@ org.hibernate.TransientPropertyValueException: object references an unsaved tran
 2023-09-30 14:45:34,914 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-7] bacheca
 2023-09-30 14:45:35,078 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-7] Lista interviste e staff recuperate
 2023-09-30 14:45:35,079 DEBUG i.i.w.c.BachecaController [https-jsse-nio-8080-exec-7] Lista interviste imminenti
+2023-09-30 14:49:22,148 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 14232 (C:\Users\dpagn\IdeaProjects\we-hub - challenging\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub - challenging)
+2023-09-30 14:49:22,150 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-30 14:49:22,151 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-30 14:49:34,895 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 13.541 seconds (process running for 14.482)
+2023-09-30 14:51:23,718 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 18176 (C:\Users\dpagn\IdeaProjects\we-hub - challenging\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub - challenging)
+2023-09-30 14:51:23,719 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-30 14:51:23,720 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-30 14:51:34,193 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 11.049 seconds (process running for 11.728)
+2023-09-30 14:53:58,550 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 17612 (C:\Users\dpagn\IdeaProjects\we-hub - challenging\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub - challenging)
+2023-09-30 14:53:58,551 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2023-09-30 14:53:58,552 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2023-09-30 14:54:10,041 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 12.016 seconds (process running for 13.158)

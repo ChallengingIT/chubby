@@ -237,12 +237,12 @@ public class AssociazioneController {
 
         Staff  staff     = new Staff();
         String nomeEmail = candidato.getNome().charAt(0) + "." + candidato.getCognome();
-        String email     = nomeEmail.toLowerCase() + "@inno-tek.it";
+        String email     = nomeEmail.toLowerCase() + "@challenging.cloud";
 
         if (controllaMailDuplicata(email)) {
 
             nomeEmail = candidato.getNome() + "." + candidato.getCognome();
-            email     = nomeEmail.toLowerCase()+"@inno-tek.it";
+            email     = nomeEmail.toLowerCase()+"@challenging.cloud";
         };
 
         staff.setAnniEsperienza(candidato.getAnniEsperienza());

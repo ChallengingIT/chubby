@@ -343,7 +343,7 @@ public class HRController {
         Email               email = new Email();
         Map<String, Object> mappa = new HashMap<>();
 
-        email.setFrom("sviluppo@inno-tek.it");
+        email.setFrom("sviluppo@challenging.cloud");
         email.setTo(staff.getEmail());
         mappa.put("nome", staff.getNome());
         mappa.put("cognome", staff.getCognome());

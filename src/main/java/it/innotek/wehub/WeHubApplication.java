@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,7 @@ public class WeHubApplication {
 				Email               emailDaInviare = new Email();
 				Map<String, Object> mappa          = new HashMap<>();
 
-				emailDaInviare.setFrom("sviluppo@inno-tek.it");
+				emailDaInviare.setFrom("sviluppo@challenging.cloud");
 				emailDaInviare.setTo(email.getEmailOwner());
 				mappa.put("nome", email.getNomeOwner());
 				mappa.put("cognome", email.getCognomeOwner());
