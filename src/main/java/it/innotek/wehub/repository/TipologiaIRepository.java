@@ -5,8 +5,13 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.TipologiaI;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TipologiaIRepository extends CrudRepository<TipologiaI, Integer> {
-    Long countById(Integer id);
+import java.util.List;
+
+@Repository
+public interface TipologiaIRepository extends JpaRepository<TipologiaI, Integer> {
+
+    List<TipologiaI> findAllByOrderByIdAsc();
 }

@@ -19,7 +19,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap-select.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -43,21 +43,7 @@
                         <input type="number" th:field="*{priorita}" class="form-control" max="4" required/>
                     </div>
                     <div class="col">
-                        <label class="col-form-label">Job Description</label>
-                        <input type="text" th:field="*{jobDescription}" class="form-control" maxlength="90"/>
-                    </div>
-                </div><br>
-                <div class="form-group row">
-                    <div class="col">
-                        <label class="col-form-label">Anni di Esperienza</label>
-                        <input type="number" th:field="*{anniEsperienza}" class="form-control" maxlength="2"/>
-                    </div>
-                    <div class="col">
-                        <label class="col-form-label">Numero di Risorse</label>
-                        <input type="number" th:field="*{numeroRisorse}" min="1" class="form-control" maxlength="2"/>
-                    </div>
-                    <div class="col">
-                        <label class="col-form-label">Data Richiesta</label>
+                        <label class="col-form-label">Week</label>
                         <input type="week" th:field="*{week}" class="form-control" required/>
                     </div>
                 </div><br>
@@ -78,9 +64,9 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label class="col-form-label">Livello Scolastico</label>
-                        <select th:field="*{livelloScolastico.id}" class="form-control select-medium">
-                            <option th:each="j : ${listaLivelliScolastici}" th:value="${j.getId()}" th:text="${j.getDescrizione()}"></option>
+                        <label class="col-form-label">Owner</label>
+                        <select th:field="*{owner.id}" class="form-control select-medium">
+                            <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
                     </div>
                 </div><br>
@@ -92,7 +78,17 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label class="col-form-label">Seleziona le Skills</label>
+                        <label class="col-form-label">Head Counter</label>
+                        <input type="number" th:field="*{numeroRisorse}" min="1" class="form-control" maxlength="2"/>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Seniority</label>
+                        <input type="number" th:field="*{anniEsperienza}" class="form-control" maxlength="2"/>
+                    </div>
+                </div><br>
+                <div class="form-group row">
+                    <div class="col">
+                        <label class="col-form-label">Skills</label>
                         <select class="form-control selectpicker" th:field="*{skills}" id="skill" multiple>
 
                             <option th:each="skill : ${listaSkillOrdinata}"
@@ -100,14 +96,6 @@
                                     th:text="${skill.descrizione}">skill
                             </option>
 
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col">
-                        <label class="col-form-label">Owner</label>
-                        <select th:field="*{owner.id}" class="form-control select-medium">
-                            <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
                     </div>
                     <div class="col">

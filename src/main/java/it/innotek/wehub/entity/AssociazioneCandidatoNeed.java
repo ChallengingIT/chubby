@@ -47,6 +47,15 @@ public class AssociazioneCandidatoNeed implements Serializable {
     @ToString.Exclude
     private Need need;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "owner_associazione",
+        joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Owner owner;
+
     @Column(nullable = false, name = "data_modifica")
     private Date dataModifica;
 

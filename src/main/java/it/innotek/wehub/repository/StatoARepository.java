@@ -5,15 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.StatoA;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface StatoARepository extends CrudRepository<StatoA, Integer> {
-
-    Long countById(Integer id);
-
-    @Query(value=" SELECT * FROM statoa order by id", nativeQuery=true)
-    List<StatoA> findAllOrdered();
+@Repository
+public interface StatoARepository extends JpaRepository<StatoA, Integer> {
 }

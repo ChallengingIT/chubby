@@ -7,11 +7,12 @@ package it.innotek.wehub.controller;
 import it.innotek.wehub.entity.TipologiaProgetto;
 import it.innotek.wehub.entity.staff.Staff;
 import it.innotek.wehub.entity.timesheet.Progetto;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.ClienteService;
-import it.innotek.wehub.service.ProgettoService;
-import it.innotek.wehub.service.StaffService;
+import it.innotek.wehub.repository.ClienteRepository;
+import it.innotek.wehub.repository.ProgettoRepository;
+import it.innotek.wehub.repository.StaffRepository;
 import it.innotek.wehub.util.UtilLib;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,47 +29,54 @@ import java.util.stream.Collectors;
 public class ProgettoController {
 
     @Autowired
-    private ProgettoService serviceProgetto;
+    private ProgettoRepository progettoRepository;
     @Autowired
-    private ClienteService  serviceCliente;
+    private ClienteRepository clienteRepository;
     @Autowired
-    private StaffService    serviceStaff;
+    private StaffRepository   staffRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProgettoController.class);
 
     @RequestMapping
     public String getProgetti(Model model){
+        try {
+            List<Progetto> listProgetti = progettoRepository.findAll();
 
-        List<Progetto> listProgetti = serviceProgetto.listAll();
+            for (Progetto progetto : listProgetti) {
+                if (( null != progetto.getTipologia() ) && progetto.getTipologia().getId() != 1) {
+                    if (null != progetto.getStaff()) {
+                        progetto.setDurataEffettiva(progettoRepository.getOreEffettive(progetto.getId(), progetto.getStaff().getId()));
+                    } else {
+                        progetto.setDurataEffettiva(0);
+                    }
 
-        for (Progetto progetto : listProgetti) {
-            if (progetto.getTipologia().getId() != 1) {
-                if (null != progetto.getStaff()) {
-                    progetto.setDurataEffettiva(serviceProgetto.getOreEffettive(progetto.getId(), progetto.getStaff().getId()));
-                } else {
-                    progetto.setDurataEffettiva(0);
+                    if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() )) {
+                        progetto.setMolTotale(( progetto.getMargine() * progetto.getDurataStimata() ) + progetto.getDurataEffettiva());
+                    } else {
+                        progetto.setMolTotale(0);
+                    }
+
+                    if (null != progetto.getRate()) {
+                        progetto.setValoreTotale(progetto.getRate() * ( progetto.getDurataStimata() - progetto.getDurataEffettiva() ));
+                    } else {
+                        progetto.setValoreTotale(0);
+                    }
+
+                    progettoRepository.save(progetto);
                 }
-
-                if ((null != progetto.getDurataStimata()) && (null != progetto.getMargine())) {
-                    progetto.setMolTotale(( progetto.getMargine() * progetto.getDurataStimata() ) + progetto.getDurataEffettiva());
-                } else {
-                    progetto.setMolTotale(0);
-                }
-
-                if (null != progetto.getRate()) {
-                    progetto.setValoreTotale(progetto.getRate() * ( progetto.getDurataStimata() - progetto.getDurataEffettiva() ));
-                } else {
-                    progetto.setValoreTotale(0);
-                }
-
-                serviceProgetto.save(progetto);
             }
+
+            model.addAttribute("listProgetti", listProgetti);
+            model.addAttribute("progettoRicerca", new Progetto());
+            model.addAttribute("listaAziende", clienteRepository.findAll());
+            model.addAttribute("listaDipendenti", staffRepository.findAll());
+
+            return "progetti";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("listProgetti",    listProgetti);
-        model.addAttribute("progettoRicerca", new Progetto());
-        model.addAttribute("listaAziende",    serviceCliente.listAll());
-        model.addAttribute("listaDipendenti", serviceStaff.listAll());
-
-        return "progetti";
     }
 
     @RequestMapping("/ricerca")
@@ -76,138 +84,164 @@ public class ProgettoController {
         Model model,
         Progetto progetto
     ){
-        String         denominazione = ((null != progetto.getDescription()) && !progetto.getDescription().isEmpty()) ? progetto.getDescription() : null;
-        Integer        idCliente     = ((null != progetto.getCliente()) && (null != progetto.getCliente().getId())) ? progetto.getCliente().getId() : null;
-        List<Progetto> listProgetti  = serviceProgetto.listRicerca(denominazione, idCliente);
+        try {
+            String         denominazione = ( ( null != progetto.getDescription() ) && !progetto.getDescription().isEmpty() ) ? progetto.getDescription() : null;
+            Integer        idCliente     = ( ( null != progetto.getCliente() ) && ( null != progetto.getCliente().getId() ) ) ? progetto.getCliente().getId() : null;
+            List<Progetto> listProgetti  = progettoRepository.ricercaByDenominazioneAndIdCliente(denominazione, idCliente);
 
-        model.addAttribute("listProgetti",    listProgetti);
-        model.addAttribute("progettoRicerca", progetto);
-        model.addAttribute("listaAziende",    serviceCliente.listAll());
-        model.addAttribute("listaDipendenti", serviceStaff.listAll());
+            model.addAttribute("listProgetti", listProgetti);
+            model.addAttribute("progettoRicerca", progetto);
+            model.addAttribute("listaAziende", clienteRepository.findAll());
+            model.addAttribute("listaDipendenti", staffRepository.findAll());
 
-        return "progetti";
+            return "progetti";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/aggiungi")
     public String showNewForm(Model model){
+        try {
+            if (null != model.getAttribute("progetto")) {
+                model.addAttribute("progetto", model.getAttribute("progetto"));
+            } else {
+                model.addAttribute("progetto", new Progetto());
+            }
 
-        if (null != model.getAttribute("progetto")){
-            model.addAttribute("progetto", model.getAttribute("progetto"));
-        } else {
-            model.addAttribute("progetto", new Progetto());
+            model.addAttribute("titoloPagina", "Aggiungi un nuovo progetto");
+            model.addAttribute("listaAziende", clienteRepository.findAll());
+            model.addAttribute("listaDipendenti", staffRepository.findAll());
+
+            return "progetto_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("titoloPagina",    "Aggiungi un nuovo progetto");
-        model.addAttribute("listaAziende",    serviceCliente.listAll());
-        model.addAttribute("listaDipendenti", serviceStaff.listAll());
-
-        return "progetto_form";
     }
 
     @RequestMapping("/salva")
     public String saveProgetto(
         Progetto progetto,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
-
-        if (null != progetto.getMargine()) {
-            if (null != progetto.getRate()) {
-                progetto.setMarginePerc(progetto.getMargine()/progetto.getRate());
+    ) {
+        try {
+            if (null != progetto.getMargine()) {
+                if (null != progetto.getRate()) {
+                    progetto.setMarginePerc(progetto.getMargine() / progetto.getRate());
+                } else {
+                    progetto.setMarginePerc(0);
+                }
             } else {
                 progetto.setMarginePerc(0);
             }
-        } else {
-            progetto.setMarginePerc(0);
-        }
-        progetto.setDurataEffettiva(0);
+            progetto.setDurataEffettiva(0);
 
-        if ((null != progetto.getDurataStimata()) && (null != progetto.getMargine())) {
-            progetto.setMolTotale( (progetto.getMargine()*progetto.getDurataStimata()) + progetto.getDurataEffettiva());
-        } else {
-            progetto.setMolTotale(0);
-        }
+            if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() )) {
+                progetto.setMolTotale(( progetto.getMargine() * progetto.getDurataStimata() ) + progetto.getDurataEffettiva());
+            } else {
+                progetto.setMolTotale(0);
+            }
 
-        if (null != progetto.getRate()) {
-            progetto.setValoreTotale(progetto.getRate() * (progetto.getDurataStimata() - progetto.getDurataEffettiva()));
-        } else {
-            progetto.setValoreTotale(0);
-        }
+            if (null != progetto.getRate()) {
+                progetto.setValoreTotale(progetto.getRate() * ( progetto.getDurataStimata() - progetto.getDurataEffettiva() ));
+            } else {
+                progetto.setValoreTotale(0);
+            }
 
-        if (null != progetto.getId()) {
+            if (null != progetto.getId()) {
 
-            Progetto progettoVecchio = serviceProgetto.get(progetto.getId());
-            Staff    staff           = serviceStaff.getStaffByIdProgetto(progetto.getId());
+                Progetto progettoVecchio = progettoRepository.findById(progetto.getId()).get();
+                Staff    staff           = staffRepository.findByProgetto_Id(progetto.getId());
 
-            if (staff.getId().equals(progetto.getStaff().getId())) {
+                if (null == staff) {
+                    TipologiaProgetto tipologia = new TipologiaProgetto();
+                    tipologia.setId(2);
+                    progetto.setTipologia(tipologia);
+                    progettoRepository.save(progetto);
 
-                LocalDate dataInizioVecchia = progettoVecchio.getInizio();
-                LocalDate dataFineVecchia   = progettoVecchio.getScadenza();
-                LocalDate dataInizio        = progetto.getInizio();
-                LocalDate dataFine          = progetto.getScadenza();
+                    staff = staffRepository.findById(progetto.getStaff().getId()).get();
 
-                if (!dataInizioVecchia.isEqual(dataInizio)) {
-                    if (dataInizio.getMonthValue() != dataInizioVecchia.getMonthValue() || dataInizio.getYear() != dataInizioVecchia.getYear()) {
+                    staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
+                    staffRepository.save(staff);
+                } else if (staff.getId().equals(progetto.getStaff().getId())) {
 
-                        LocalDate dataInizioMod;
-                        LocalDate dataInizioVecchiaMod;
+                    LocalDate dataInizioVecchia = progettoVecchio.getInizio();
+                    LocalDate dataFineVecchia   = progettoVecchio.getScadenza();
+                    LocalDate dataInizio        = progetto.getInizio();
+                    LocalDate dataFine          = progetto.getScadenza();
 
-                        if (dataInizio.isAfter(dataInizioVecchia)) {
-                            dataInizioMod        = LocalDate.of(dataInizio.getYear(), dataInizio.getMonthValue(), 1).minusDays(1);
-                            dataInizioVecchiaMod = LocalDate.of(dataInizioVecchia.getYear(), dataInizioVecchia.getMonthValue(), 1);
+                    if (!dataInizioVecchia.isEqual(dataInizio)) {
+                        if (dataInizio.getMonthValue() != dataInizioVecchia.getMonthValue() || dataInizio.getYear() != dataInizioVecchia.getYear()) {
 
-                            staff.setTimesheet(UtilLib.rimuoviProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataInizioVecchiaMod, dataInizioMod));
+                            LocalDate dataInizioMod;
+                            LocalDate dataInizioVecchiaMod;
 
-                        } else {
-                            dataInizioMod        = LocalDate.of(dataInizio.getYear(), dataInizio.getMonthValue(), 1);
-                            dataInizioVecchiaMod = LocalDate.of(dataInizioVecchia.getYear(), dataInizioVecchia.getMonthValue(), 1).minusDays(1);
+                            if (dataInizio.isAfter(dataInizioVecchia)) {
+                                dataInizioMod        = LocalDate.of(dataInizio.getYear(), dataInizio.getMonthValue(), 1).minusDays(1);
+                                dataInizioVecchiaMod = LocalDate.of(dataInizioVecchia.getYear(), dataInizioVecchia.getMonthValue(), 1);
 
-                            staff.setTimesheet(UtilLib.aggiornaProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataInizioMod, dataInizioVecchiaMod));
+                                staff.setTimesheet(UtilLib.rimuoviProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataInizioVecchiaMod, dataInizioMod));
+
+                            } else {
+                                dataInizioMod        = LocalDate.of(dataInizio.getYear(), dataInizio.getMonthValue(), 1);
+                                dataInizioVecchiaMod = LocalDate.of(dataInizioVecchia.getYear(), dataInizioVecchia.getMonthValue(), 1).minusDays(1);
+
+                                staff.setTimesheet(UtilLib.aggiornaProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataInizioMod, dataInizioVecchiaMod));
+                            }
                         }
                     }
-                }
-                if (!dataFineVecchia.isEqual(dataFine)) {
+                    if (!dataFineVecchia.isEqual(dataFine)) {
 
-                    if (dataFine.getMonthValue() != dataFineVecchia.getMonthValue() || dataFine.getYear() != dataFineVecchia.getYear()) {
-                        if (dataFine.isBefore(dataFineVecchia)) {
+                        if (dataFine.getMonthValue() != dataFineVecchia.getMonthValue() || dataFine.getYear() != dataFineVecchia.getYear()) {
+                            if (dataFine.isBefore(dataFineVecchia)) {
 
-                            LocalDate dataFineMod        = LocalDate.of(dataFine.getYear(), dataFine.getMonthValue(), UtilLib.calcolaFineMese(dataFine.getMonthValue(), dataFine.getYear())).plusDays(1);
-                            LocalDate dataFineVecchiaMod = LocalDate.of(dataFineVecchia.getYear(), dataFineVecchia.getMonthValue(), UtilLib.calcolaFineMese(dataFineVecchia.getMonthValue(), dataFineVecchia.getYear()));
+                                LocalDate dataFineMod        = LocalDate.of(dataFine.getYear(), dataFine.getMonthValue(), UtilLib.calcolaFineMese(dataFine.getMonthValue(), dataFine.getYear())).plusDays(1);
+                                LocalDate dataFineVecchiaMod = LocalDate.of(dataFineVecchia.getYear(), dataFineVecchia.getMonthValue(), UtilLib.calcolaFineMese(dataFineVecchia.getMonthValue(), dataFineVecchia.getYear()));
 
-                            staff.setTimesheet(UtilLib.rimuoviProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataFineMod, dataFineVecchiaMod));
-                        } else {
-                            LocalDate dataFineVecchiaMod = LocalDate.of(dataFineVecchia.getYear(), dataFineVecchia.getMonthValue(), UtilLib.calcolaFineMese(dataFineVecchia.getMonthValue(), dataFineVecchia.getYear())).plusDays(1);
-                            LocalDate dataFineMod        = LocalDate.of(dataFine.getYear(), dataFine.getMonthValue(), UtilLib.calcolaFineMese(dataFine.getMonthValue(), dataFine.getYear()));
+                                staff.setTimesheet(UtilLib.rimuoviProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataFineMod, dataFineVecchiaMod));
+                            } else {
+                                LocalDate dataFineVecchiaMod = LocalDate.of(dataFineVecchia.getYear(), dataFineVecchia.getMonthValue(), UtilLib.calcolaFineMese(dataFineVecchia.getMonthValue(), dataFineVecchia.getYear())).plusDays(1);
+                                LocalDate dataFineMod        = LocalDate.of(dataFine.getYear(), dataFine.getMonthValue(), UtilLib.calcolaFineMese(dataFine.getMonthValue(), dataFine.getYear()));
 
-                            staff.setTimesheet(UtilLib.aggiornaProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataFineVecchiaMod, dataFineMod));
+                                staff.setTimesheet(UtilLib.aggiornaProgettoCalendarioConDate(staff.getTimesheet(), progetto, dataFineVecchiaMod, dataFineMod));
+                            }
                         }
                     }
+
+                    TipologiaProgetto tipologia = new TipologiaProgetto();
+                    tipologia.setId(2);
+                    progetto.setTipologia(tipologia);
+                    progettoRepository.save(progetto);
+
+                    staffRepository.save(staff);
+                } else {
+                    ra.addFlashAttribute("message", "Il progetto e' associato ad un dipendente diverso, cancellare il progetto per riassegnarne uno nuovo");
+                    return "redirect:/progetti/modifica/" + progetto.getId();
                 }
+            } else {
 
                 TipologiaProgetto tipologia = new TipologiaProgetto();
                 tipologia.setId(2);
                 progetto.setTipologia(tipologia);
-                serviceProgetto.save(progetto);
+                progettoRepository.save(progetto);
 
-                serviceStaff.save(staff);
-            } else {
-                ra.addFlashAttribute("message", "Il progetto e' associato ad un dipendente diverso, cancellare il progetto per riassegnarne uno nuovo");
-                return "redirect:/progetti/modifica/"+progetto.getId();
+                Staff staff = staffRepository.findById(progetto.getStaff().getId()).get();
+
+                staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
+                staffRepository.save(staff);
+
             }
-        } else {
+            ra.addFlashAttribute("message", "Il progetto e' stato salvato con successo");
+            return "redirect:/progetti";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-            TipologiaProgetto tipologia = new TipologiaProgetto();
-            tipologia.setId(2);
-            progetto.setTipologia(tipologia);
-            serviceProgetto.save(progetto);
-
-            Staff staff = serviceStaff.get(progetto.getStaff().getId());
-
-            staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
-            serviceStaff.save(staff);
-
+            return "error";
         }
-        ra.addFlashAttribute("message", "Il progetto e' stato salvato con successo");
-        return "redirect:/progetti";
     }
 
     @RequestMapping("/modifica/{id}")
@@ -217,18 +251,19 @@ public class ProgettoController {
         RedirectAttributes ra
     ){
         try {
-            Progetto progetto = serviceProgetto.get(id);
+            Progetto progetto = progettoRepository.findById(id).get();
 
-            model.addAttribute("progetto",        progetto);
-            model.addAttribute("titoloPagina",    "Modifica progetto");
-            model.addAttribute("listaAziende",    serviceCliente.listAll());
-            model.addAttribute("listaDipendenti", serviceStaff.listAll());
+            model.addAttribute("progetto", progetto);
+            model.addAttribute("titoloPagina", "Modifica progetto");
+            model.addAttribute("listaAziende", clienteRepository.findAll());
+            model.addAttribute("listaDipendenti", staffRepository.findAll());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/progetti";
+            return "progetto_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "progetto_form";
     }
 
     @RequestMapping("/elimina/{id}")
@@ -237,28 +272,36 @@ public class ProgettoController {
         RedirectAttributes ra
     ){
         try {
-            serviceProgetto.delete(id);
+            progettoRepository.deleteById(id);
 
             ra.addFlashAttribute("message", "Il progetto e' stato cancellato con successo");
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage() );
+            return "redirect:/progetti";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "redirect:/progetti";
     }
 
     @RequestMapping("/match/{idProgetto}")
     public String showMatchForm(
         @PathVariable("idProgetto") Integer idProgetto,
         Model model
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            model.addAttribute("progetto", progettoRepository.findById(idProgetto).get());
+            model.addAttribute("titoloPagina", "Associazione staff progetto");
+            model.addAttribute("listStaffNonAssociati", staffRepository.findStaffNonAssociati(idProgetto));
+            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
+            model.addAttribute("staffRicerca", new Staff());
 
-        model.addAttribute("progetto",              serviceProgetto.get(idProgetto));
-        model.addAttribute("titoloPagina",          "Associazione staff progetto");
-        model.addAttribute("listStaffNonAssociati", serviceStaff.getStaffNonAssociati(idProgetto));
-        model.addAttribute("listStaffAssociati",    serviceStaff.getStaffAssociati(idProgetto));
-        model.addAttribute("staffRicerca",          new Staff());
+            return "liste_match_progetto";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "liste_match_progetto";
+            return "error";
+        }
     }
 
     @RequestMapping("/ricerca/match/{idProgetto}")
@@ -266,28 +309,25 @@ public class ProgettoController {
         @PathVariable("idProgetto") Integer idProgetto,
         Model model,
         Staff staff
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            String nome    = ( ( null != staff.getNome() ) && !staff.getNome().isEmpty() ) ? staff.getNome() : null;
+            String cognome = ( ( null != staff.getCognome() ) && !staff.getCognome().isEmpty() ) ? staff.getCognome() : null;
+            String email   = ( ( null != staff.getEmail() ) && !staff.getEmail().isEmpty() ) ? staff.getEmail() : null;
 
-        String nome    = ((null != staff.getNome()) && !staff.getNome().isEmpty() ) ? staff.getNome() : null;
-        String cognome = ((null != staff.getCognome()) && !staff.getCognome().isEmpty() ) ? staff.getCognome() : null;
-        String email   = ((null != staff.getEmail()) && !staff.getEmail().isEmpty()) ? staff.getEmail() : null;
+            model.addAttribute("listStaffNonAssociati", staffRepository.ricercaStaffNonAssociati(idProgetto, nome, cognome, email));
 
-        model.addAttribute(
-            "listStaffNonAssociati",
-            serviceStaff.getRicercaStaffNonAssociati(
-                idProgetto,
-                nome,
-                cognome,
-                email
-            )
-        );
+            model.addAttribute("progetto", progettoRepository.findById(idProgetto).get());
+            model.addAttribute("titoloPagina", "Match del need");
+            model.addAttribute("staffRicerca", staff);
+            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
 
-        model.addAttribute("progetto",           serviceProgetto.get(idProgetto));
-        model.addAttribute("titoloPagina",       "Match del need");
-        model.addAttribute("staffRicerca",       staff);
-        model.addAttribute("listStaffAssociati", serviceStaff.getStaffAssociati(idProgetto));
+            return "liste_match_progetto";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "liste_match_progetto";
+            return "error";
+        }
     }
 
     @RequestMapping("/associa/{idProgetto}/{idStaff}")
@@ -298,26 +338,27 @@ public class ProgettoController {
         RedirectAttributes ra
     ){
         try {
-            Progetto progetto = serviceProgetto.get(idProgetto);
-            Staff    staff    = serviceStaff.get(idStaff);
+            Progetto progetto = progettoRepository.findById(idProgetto).get();
+            Staff    staff    = staffRepository.findById(idStaff).get();
 
             staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
             staff.getProgetti().add(progetto);
 
-            serviceStaff.save(staff);
+            staffRepository.save(staff);
 
-            model.addAttribute("progetto",              progetto);
-            model.addAttribute("titoloPagina",          "Match del progetto");
-            model.addAttribute("listStaffNonAssociati", serviceStaff.getStaffNonAssociati(idProgetto));
-            model.addAttribute("listStaffAssociati",    serviceStaff.getStaffAssociati(idProgetto));
-            model.addAttribute("staffRicerca",          new Staff());
+            model.addAttribute("progetto", progetto);
+            model.addAttribute("titoloPagina", "Match del progetto");
+            model.addAttribute("listStaffNonAssociati", staffRepository.findStaffNonAssociati(idProgetto));
+            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
+            model.addAttribute("staffRicerca", new Staff());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/progetti/match"+idProgetto;
+            return "liste_match_progetto";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        return "liste_match_progetto";
     }
 
     @RequestMapping("/rimuovi/{idProgetto}/{idStaff}")
@@ -328,31 +369,26 @@ public class ProgettoController {
         RedirectAttributes ra
     ){
         try {
-            Progetto progetto = serviceProgetto.get(idProgetto);
-            Staff    staff    = serviceStaff.get(idStaff);
+            Progetto progetto = progettoRepository.findById(idProgetto).get();
+            Staff    staff    = staffRepository.findById(idStaff).get();
 
-            staff.setProgetti(
-                staff.getProgetti()
-                     .stream()
-                     .filter(p -> !p.getId().equals(idProgetto))
-                     .collect(Collectors.toList())
-            );
+            staff.setProgetti(staff.getProgetti().stream().filter(p -> !p.getId().equals(idProgetto)).collect(Collectors.toList()));
 
             staff.setTimesheet(UtilLib.rimuoviProgettoCalendario(staff.getTimesheet(), idProgetto));
 
-            serviceStaff.save(staff);
+            staffRepository.save(staff);
 
-            model.addAttribute("progetto",              progetto);
-            model.addAttribute("titoloPagina",          "Match del progetto");
-            model.addAttribute("listStaffNonAssociati", serviceStaff.getStaffNonAssociati(idProgetto));
-            model.addAttribute("listStaffAssociati",    serviceStaff.getStaffAssociati(idProgetto));
-            model.addAttribute("staffRicerca",          new Staff());
+            model.addAttribute("progetto", progetto);
+            model.addAttribute("titoloPagina", "Match del progetto");
+            model.addAttribute("listStaffNonAssociati", staffRepository.findStaffNonAssociati(idProgetto));
+            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
+            model.addAttribute("staffRicerca", new Staff());
 
-        } catch(ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/progetti/match"+idProgetto;
+            return "liste_match_progetto";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        return "liste_match_progetto";
     }
 }

@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Tipologia;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TipologiaRepository extends CrudRepository<Tipologia, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface TipologiaRepository extends JpaRepository<Tipologia, Integer> {
 }

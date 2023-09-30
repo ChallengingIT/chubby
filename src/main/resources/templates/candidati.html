@@ -19,7 +19,7 @@
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
 
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
     <div class="wrapper d-flex align-items-stretch" style="overflow: hidden;">
 
@@ -31,7 +31,7 @@
             <div>
                 <a th:href="@{/staffing/aggiungi}" class="btn btn-info btn-lg"
                     style=" background-color: black; border-radius: 10px;">
-                    <span class="glyphicon glyphicon-plus"></span> Aggiungi Staffing
+                    <span class="glyphicon glyphicon-plus"></span> Aggiungi Candidato
                 </a>
             </div>
             <br>
@@ -100,9 +100,9 @@
                     </select>
                 </div>
                 <table class="sortable table table-striped table-bordered table-sm table-responsive-lg"
-                       cellspacing="0" width="100%" style="background-color:white;">
+                        style="background-color:white;">
                     <thead class="thead" id="tabella-blu">
-                        <tr>
+                        <tr class="tr1">
                             <th class="align-middle">Nome</th>
                             <th class="align-middle">E-mail</th>
                             <th class="align-middle">Job Title</th>
@@ -117,9 +117,9 @@
                             <th class="align-middle">Azioni</th>
                         </tr>
                     </thead>
-                    <tbody id="valori-tabella">
+                    <tbody class="table1" id="valori-tabella">
                         <th:block th:each="candidato : ${listCandidati}">
-                            <tr>
+                            <tr class="tr1">
                                 <td class="fifty esteso">[[${candidato.nome}]] [[${candidato.cognome}]]</td>
                                 <td>[[${candidato.email}]]</td>
                                 <td>[[${candidato.tipologia.descrizione}]]</td>
@@ -148,10 +148,12 @@
                                 <td th:text="${#dates.format(candidato.dataUltimoContatto, 'dd/MM/yyyy')}"></td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="#" class="col mr-2 btn-info btn-lg btn-icon" th:title="${candidato.note}">
+                                        <a href="#" data-toggle="modal" data-target="#modalNote" th:attr="data-target='#modalNote'+${candidato.id}"
+                                           class="col mr-2 btn-info btn-lg btn-icon" >
                                             <i class="fas fa-solid fa-comment"></i>
                                         </a>
-                                        <a href="#" class="col sbtn btn-info btn-lg btn-icon" th:title="${candidato.ral}">
+                                        <a href="#" data-toggle="modal" data-target="#modalRal" th:attr="data-target='#modalRal'+${candidato.id}"
+                                           class="col sbtn btn-info btn-lg btn-icon">
                                             <i class="fas fa-euro-sign"></i>
                                         </a>
                                     </div>
@@ -160,7 +162,7 @@
                                         class="btn btn-info btn-lg btn-icon"><i class="fas fa-solid fa-user-clock"></i></a>
                                 </td>
                                 <td>
-                                    <a th:href="@{'/staffing/associazioni/' + ${candidato.id}}"
+                                    <a th:href="@{'/associazioni/' + ${candidato.id}}"
                                         class="btn btn-info btn-lg btn-icon"><i class="fas fa-solid fa-briefcase"></i></a>
                                 </td>
                                 <td>
@@ -200,6 +202,42 @@
                                     </div>
                                 </td>
                             </tr>
+                            <div class="modal fade in" th:id="modalRal+${candidato.id}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Ral</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span class="col-form-label">[[${candidato.ral}]]</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Indietro</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade in" th:id="modalNote+${candidato.id}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Note</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span class="col-form-label">[[${candidato.note}]]</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Indietro</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="modal fade in" th:id="modalDelete+${candidato.id}">
                                 <div class="modal-dialog">
                                     <div class="modal-content">

@@ -7,11 +7,13 @@ package it.innotek.wehub.controller;
 import it.innotek.wehub.entity.staff.Staff;
 import it.innotek.wehub.entity.timesheet.*;
 import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.MeseService;
-import it.innotek.wehub.service.ProgettoService;
-import it.innotek.wehub.service.StaffService;
+import it.innotek.wehub.repository.MeseRepository;
+import it.innotek.wehub.repository.ProgettoRepository;
+import it.innotek.wehub.repository.StaffRepository;
 import it.innotek.wehub.util.UtilLib;
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -33,85 +35,76 @@ import java.util.List;
 public class TimesheetController {
 
     @Autowired
-    private StaffService    serviceStaff;
+    private StaffRepository    staffRepository;
     @Autowired
-    private ProgettoService serviceProgetto;
+    private ProgettoRepository progettoRepository;
     @Autowired
-    private MeseService     serviceMese;
+    private MeseRepository     meseRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(TimesheetController.class);
 
     @PreAuthorize("hasRole(@roles.USER)")
     @RequestMapping("/user")
-    public String timesheet(Model model) throws ElementoNonTrovatoException {
+    public String timesheet(Model model) {
+        try {
+            Authentication auth     = SecurityContextHolder.getContext().getAuthentication();
+            String         username = ( (User)auth.getPrincipal() ).getUsername();
+            Staff          staff    = staffRepository.findByUsername(username);
+            LocalDate      local    = LocalDate.now();
+            Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), local.getYear());
+            Mese           mese;
 
-        Authentication auth     = SecurityContextHolder.getContext().getAuthentication();
-        String         username = ((User)auth.getPrincipal()).getUsername();
-        Staff          staff    = serviceStaff.getByUsername(username);
-        LocalDate      local    = LocalDate.now();
-        Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), local.getYear());
-        Mese           mese;
+            if (null != anno) {
+                mese = UtilLib.prendiMese(anno.getMesi(), local.getMonthValue());
 
-        if (null != anno) {
-            mese = UtilLib.prendiMese(anno.getMesi(), local.getMonthValue());
+                if (null == mese) {
+                    mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
+                }
 
-            if (null == mese) {
+            } else {
+                anno = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
             }
 
-        } else {
-            anno = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
-        }
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(staff.getId());
+            mese.setDays(giorni);
 
-        mese.setDays(giorni);
+            for (Progetto progetto : progettiStaff) {
 
-        for (Progetto progetto: progettiStaff) {
-
-            if (
-                UtilLib.progettoNelMese(
-                    mese,
-                    progetto.getId(),
-                    progetto.getTipologia().getId()
-                )
-            ) {
-                progetti.add(progetto);
+                if (UtilLib.progettoNelMese(mese, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(anno.getAnno(), mese.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(anno.getAnno(), mese.getValue(), UtilLib.calcolaFineMese(mese.getValue(), anno.getAnno()));
+
+            model.addAttribute("mese", mese);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(mese.getDescription()));
+            model.addAttribute("meseInviato", mese.isInviato());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("numeroMese", mese.getValue());
+            model.addAttribute("annoCorrente", anno.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", staff.getId());
+            model.addAttribute("totaleOre", UtilLib.contaOre(mese.getDays()));
+
+            if (null != model.getAttribute("message")) {
+                model.addAttribute("message", model.getAttribute("message"));
+            }
+            return "timesheet_user";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                anno.getAnno(),
-                mese.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                anno.getAnno(),
-                mese.getValue(),
-                UtilLib.calcolaFineMese(mese.getValue(),anno.getAnno())
-            );
-
-        model.addAttribute("mese",              mese);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(mese.getDescription()));
-        model.addAttribute("meseInviato",       mese.isInviato());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("numeroMese",        mese.getValue());
-        model.addAttribute("annoCorrente",      anno.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           staff.getId());
-        model.addAttribute("totaleOre",         UtilLib.contaOre(mese.getDays()));
-
-        if (null != model.getAttribute("message")) {
-            model.addAttribute("message", model.getAttribute("message"));
-        }
-        return "timesheet_user";
     }
 
     @PreAuthorize("hasRole(@roles.USER)")
@@ -120,76 +113,65 @@ public class TimesheetController {
         @PathVariable("anno") Integer annoI,
         @PathVariable("mese") Integer meseI,
         Model model
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Authentication auth     = SecurityContextHolder.getContext().getAuthentication();
+            String         username = ( (User)auth.getPrincipal() ).getUsername();
+            Staff          staff    = staffRepository.findByUsername(username);
+            Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
+            Mese           mese;
 
-        Authentication auth     = SecurityContextHolder.getContext().getAuthentication();
-        String         username = ((User)auth.getPrincipal()).getUsername();
-        Staff          staff    = serviceStaff.getByUsername(username);
-        Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
-        Mese           mese;
+            if (null != anno) {
+                mese = UtilLib.prendiMese(anno.getMesi(), meseI);
 
-        if (null != anno) {
-            mese = UtilLib.prendiMese(anno.getMesi(), meseI);
-
-            if (null == mese) {
+                if (null == mese) {
+                    mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
+                }
+            } else {
+                anno = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
             }
-        } else {
-            anno = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
-        }
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(staff.getId());
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
 
-        mese.setDays(giorni);
+            mese.setDays(giorni);
 
-        for (Progetto progetto: progettiStaff) {
+            for (Progetto progetto : progettiStaff) {
 
-            if (
-                UtilLib.progettoNelMese(
-                    mese,
-                    progetto.getId(),
-                    progetto.getTipologia().getId()
-                )
-            ) {
-                progetti.add(progetto);
+                if (UtilLib.progettoNelMese(mese, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(anno.getAnno(), mese.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(anno.getAnno(), mese.getValue(), UtilLib.calcolaFineMese(mese.getValue(), anno.getAnno()));
+
+            model.addAttribute("mese", mese);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(mese.getDescription()));
+            model.addAttribute("meseInviato", mese.isInviato());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("numeroMese", mese.getValue());
+            model.addAttribute("annoCorrente", anno.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", staff.getId());
+            model.addAttribute("totaleOre", UtilLib.contaOre(mese.getDays()));
+
+            if (null != model.getAttribute("message")) {
+                model.addAttribute("message", model.getAttribute("message"));
+            }
+
+            return "timesheet_user";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                anno.getAnno(),
-                mese.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                anno.getAnno(),
-                mese.getValue(),
-                UtilLib.calcolaFineMese(mese.getValue(),anno.getAnno())
-            );
-
-        model.addAttribute("mese",              mese);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(mese.getDescription()));
-        model.addAttribute("meseInviato",       mese.isInviato());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("numeroMese",        mese.getValue());
-        model.addAttribute("annoCorrente",      anno.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           staff.getId());
-        model.addAttribute("totaleOre",         UtilLib.contaOre(mese.getDays()));
-
-        if (null != model.getAttribute("message")) {
-            model.addAttribute("message", model.getAttribute("message"));
-        }
-
-        return "timesheet_user";
     }
 
     @RequestMapping("/user/aggiorna/{id}/{anno}/{mese}")
@@ -200,146 +182,123 @@ public class TimesheetController {
         AggiornaTimesheet aggiorna,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff  staff     = staffRepository.findById(id).get();
+            String controllo = controllaAggiornamento(aggiorna);
 
-        Staff  staff     = serviceStaff.get(id);
-        String controllo = controllaAggiornamento(aggiorna);
-
-        if (!controllo.equals("")) {
-            ra.addFlashAttribute("message", controllo);
-            return "redirect:/timesheet/user/"+annoI+"/"+meseI;
-        }
-        if (null == aggiorna.getDataFinePeriodo()) {
-
-            Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
-            Mese   mese   = UtilLib.prendiMese(anno.getMesi(), aggiorna.getData().getMonthValue());
-            Giorno giorno = UtilLib.prendiGiorno(mese.getDays(), aggiorna.getData().getDayOfMonth());
-
-            if (null != giorno) {
-                staff.setTimesheet(UtilLib.aggiornaOreCalendario(staff.getTimesheet(), anno, mese, giorno, aggiorna));
+            if (!controllo.equals("")) {
+                ra.addFlashAttribute("message", controllo);
+                return "redirect:/timesheet/user/" + annoI + "/" + meseI;
             }
-        } else {
+            if (null == aggiorna.getDataFinePeriodo()) {
 
-            if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 ||
-                    (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 &&
-                            Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1)) {
+                Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   mese   = UtilLib.prendiMese(anno.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giorno = UtilLib.prendiGiorno(mese.getDays(), aggiorna.getData().getDayOfMonth());
 
-                ra.addFlashAttribute("message", "Il range di date supera un mese");
+                if (null != giorno) {
+                    staff.setTimesheet(UtilLib.aggiornaOreCalendario(staff.getTimesheet(), anno, mese, giorno, aggiorna));
+                }
+            } else {
 
-                return "redirect:/timesheet/user/"+annoI+"/"+meseI;
+                if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 || ( Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 && Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1 )) {
 
-            }
+                    ra.addFlashAttribute("message", "Il range di date supera un mese");
 
-            Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
-            Mese   meseInizio   = UtilLib.prendiMese(annoInizio.getMesi(), aggiorna.getData().getMonthValue());
-            Giorno giornoInizio = UtilLib.prendiGiorno(meseInizio.getDays(), aggiorna.getData().getDayOfMonth());
-            Anno   annoFine     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getDataFinePeriodo().getYear());
+                    return "redirect:/timesheet/user/" + annoI + "/" + meseI;
 
-            if (null != giornoInizio) {
+                }
 
-                if (aggiorna.getData().getMonthValue() != aggiorna.getDataFinePeriodo().getMonthValue()) {
+                Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   meseInizio   = UtilLib.prendiMese(annoInizio.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giornoInizio = UtilLib.prendiGiorno(meseInizio.getDays(), aggiorna.getData().getDayOfMonth());
+                Anno   annoFine     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getDataFinePeriodo().getYear());
 
-                    staff.setTimesheet(
-                        UtilLib.aggiornaCalendarioCompletaMese(
-                            staff.getTimesheet(),
-                            annoInizio,
-                            giornoInizio,
-                            aggiorna
-                        )
-                    );
+                if (null != giornoInizio) {
 
-                    staff.setTimesheet(
-                        UtilLib.aggiornaCalendarioInizioMese(
-                            staff.getTimesheet(),
-                            annoFine,
-                            aggiorna
-                        )
-                    );
+                    if (aggiorna.getData().getMonthValue() != aggiorna.getDataFinePeriodo().getMonthValue()) {
 
-                } else {
-                    staff.setTimesheet(
-                        UtilLib.aggiornaCalendario(
-                            staff.getTimesheet(),
-                            annoInizio,
-                            meseInizio,
-                            giornoInizio,
-                            aggiorna
-                        )
-                    );
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioCompletaMese(staff.getTimesheet(), annoInizio, giornoInizio, aggiorna));
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioInizioMese(staff.getTimesheet(), annoFine, aggiorna));
+
+                    } else {
+                        staff.setTimesheet(UtilLib.aggiornaCalendario(staff.getTimesheet(), annoInizio, meseInizio, giornoInizio, aggiorna));
+                    }
                 }
             }
+
+            staffRepository.save(staff);
+
+            return "redirect:/timesheet/user/" + annoI + "/" + meseI;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        serviceStaff.save(staff);
-
-        return "redirect:/timesheet/user/"+annoI+"/"+meseI;
     }
 
     @RequestMapping("/user/successivo/{id}/{anno}/{mese}")
-    public String getTimesheetSuccessivo(@PathVariable("id") Integer id, @PathVariable("anno") Integer anno, @PathVariable("mese") Integer mese, Model model, RedirectAttributes ra) throws ElementoNonTrovatoException {
+    public String getTimesheetSuccessivo(@PathVariable("id") Integer id, @PathVariable("anno") Integer anno, @PathVariable("mese") Integer mese, Model model, RedirectAttributes ra) {
+        try {
+            Staff staff = staffRepository.findById(id).get();
+            Anno  annoObj;
+            Mese  meseObj;
 
-        Staff     staff   = serviceStaff.get(id);
-        Anno      annoObj;
-        Mese      meseObj;
+            if (mese == 12) {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno + 1);
+            } else {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
+            }
 
-        if (mese == 12) {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno+1);
-        } else {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
-        }
+            if (null != annoObj) {
+                meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese + 1 == 13 ? 1 : mese + 1);
 
-        if (null != annoObj) {
-            meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese + 1 == 13 ? 1 : mese + 1);
+                if (null == meseObj) {
+                    meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
+                }
 
-            if (null == meseObj) {
+            } else {
+                annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
             }
 
-        } else {
-            annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
-        }
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(staff.getId());
+            meseObj.setDays(giorni);
 
-        meseObj.setDays(giorni);
-
-        for (Progetto progetto: progettiStaff) {
-            if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
-                progetti.add(progetto);
+            for (Progetto progetto : progettiStaff) {
+                if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
+
+            model.addAttribute("mese", meseObj);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
+            model.addAttribute("meseInviato", meseObj.isInviato());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("numeroMese", meseObj.getValue());
+            model.addAttribute("annoCorrente", annoObj.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", id);
+            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+
+            return "timesheet_user";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                UtilLib.calcolaFineMese(meseObj.getValue(),annoObj.getAnno())
-            );
-
-        model.addAttribute("mese",              meseObj);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(meseObj.getDescription()));
-        model.addAttribute("meseInviato",       meseObj.isInviato());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("numeroMese",        meseObj.getValue());
-        model.addAttribute("annoCorrente",      annoObj.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           id);
-        model.addAttribute("totaleOre",         UtilLib.contaOre(meseObj.getDays()));
-
-        return "timesheet_user";
     }
 
     @RequestMapping("/user/precedente/{id}/{anno}/{mese}")
@@ -349,69 +308,64 @@ public class TimesheetController {
         @PathVariable("mese") Integer mese,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff staff = staffRepository.findById(id).get();
+            Anno  annoObj;
+            Mese  meseObj;
 
-        Staff staff = serviceStaff.get(id);
-        Anno  annoObj;
-        Mese  meseObj;
+            if (mese == 1) {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno - 1);
+            } else {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
+            }
 
-        if (mese == 1) {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno - 1);
-        } else {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
-        }
+            if (null != annoObj) {
+                meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese - 1 == 0 ? 12 : mese - 1);
 
-        if (null != annoObj) {
-            meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese - 1 == 0 ? 12 : mese - 1);
-
-            if (null == meseObj) {
+                if (null == meseObj) {
+                    meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
+                }
+            } else {
+                annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
             }
-        } else {
-            annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
-        }
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(staff.getId());
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
 
-        meseObj.setDays(giorni);
+            meseObj.setDays(giorni);
 
-        for (Progetto progetto: progettiStaff) {
-            if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
-                progetti.add(progetto);
+            for (Progetto progetto : progettiStaff) {
+                if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
+
+            model.addAttribute("mese", meseObj);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
+            model.addAttribute("numeroMese", meseObj.getValue());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("meseInviato", meseObj.isInviato());
+            model.addAttribute("annoCorrente", annoObj.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", id);
+            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+
+            return "timesheet_user";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                UtilLib.calcolaFineMese(meseObj.getValue(),annoObj.getAnno())
-            );
-
-        model.addAttribute("mese",              meseObj);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(meseObj.getDescription()));
-        model.addAttribute("numeroMese",        meseObj.getValue());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("meseInviato",       meseObj.isInviato());
-        model.addAttribute("annoCorrente",      annoObj.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           id);
-        model.addAttribute("totaleOre",         UtilLib.contaOre(meseObj.getDays()));
-
-        return "timesheet_user";
     }
 
     @RequestMapping("/user/salva/{id}/{anno}/{mese}")
@@ -421,64 +375,70 @@ public class TimesheetController {
         @PathVariable("mese") Integer mese,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff        staff   = staffRepository.findById(id).get();
+            Anno         annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
+            Mese         meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese);
+            List<Giorno> giorni  = UtilLib.ordinaGiorni(meseObj.getDays());
 
-        Staff        staff   = serviceStaff.get(id);
-        Anno         annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
-        Mese         meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese);
-        List<Giorno> giorni  = UtilLib.ordinaGiorni(meseObj.getDays());
+            for (Giorno giorno : giorni) {
+                List<Giorno> giorniUguali   = UtilLib.prendiGiorniUguali(giorni, giorno.getGiorno());
+                boolean      ferie          = false;
+                boolean      malattia       = false;
+                int          oreTotali      = 0;
+                Progetto     progettoGiorno = giorno.getProgetto();
 
-        for (Giorno giorno : giorni) {
-            List<Giorno> giorniUguali   = UtilLib.prendiGiorniUguali(giorni, giorno.getGiorno());
-            boolean      ferie          = false;
-            boolean      malattia       = false;
-            int          oreTotali      = 0;
-            Progetto     progettoGiorno = giorno.getProgetto();
+                for (Giorno g : giorniUguali) {
+                    Progetto progetto = g.getProgetto();
+                    if (null != progetto && progetto.getTipologia().getId() == 1) {
 
-            for (Giorno g : giorniUguali) {
-                Progetto progetto = g.getProgetto();
-                if (null != progetto && progetto.getTipologia().getId()==1) {
+                        if (g.isFerie()) {
+                            ferie = true;
+                        }
 
-                    if (g.isFerie()) {
-                        ferie=true;
-                    }
+                        if (g.isMalattia()) {
+                            malattia = true;
+                        }
 
-                    if (g.isMalattia()) {
-                        malattia = true;
-                    }
-
-                } else {
-                    oreTotali += g.getOreTotali();
-                }
-            }
-
-            if (ferie || malattia) {
-                if (oreTotali > 0) {
-                    ra.addFlashAttribute("message","Errore nel calcolo delle ore nei giorni di ferie");
-                    return "redirect:/timesheet/user/"+anno+"/"+mese;
-                }
-            }
-
-            if (null != progettoGiorno && progettoGiorno.getTipologia().getId() != 1) {
-
-                if (giorno.getOreTotali() != 0) {
-
-                    Progetto progetto = serviceProgetto.get(progettoGiorno.getId());
-
-                    if (controlloTemporaleProgetto(giorno.getData(), progetto)) {
-                        ra.addFlashAttribute("message","Errore caricamento ore in giorni non consentiti dal progetto " + progetto.getDescription());
-                        return "redirect:/timesheet/user/"+id+"/"+anno+"/"+mese;
+                    } else {
+                        oreTotali += g.getOreTotali();
                     }
                 }
+
+                if (ferie || malattia) {
+                    if (oreTotali > 0) {
+                        ra.addFlashAttribute("message", "Errore nel calcolo delle ore nei giorni di ferie");
+                        return "redirect:/timesheet/user/" + anno + "/" + mese;
+                    }
+                }
+
+                if (null != progettoGiorno && progettoGiorno.getTipologia().getId() != 1) {
+
+                    if (giorno.getOreTotali() != 0) {
+
+                        Progetto progetto = progettoRepository.findById(progettoGiorno.getId()).get();
+
+                        if (controlloTemporaleProgetto(giorno.getData(), progetto)) {
+                            ra.addFlashAttribute("message", "Errore caricamento ore in giorni non consentiti dal progetto " + progetto.getDescription());
+                            return "redirect:/timesheet/user/" + id + "/" + anno + "/" + mese;
+                        }
+                    }
+                }
             }
+            meseObj.setDays(giorni);
+            meseObj.setInviato(true);
+
+            meseRepository.save(meseObj);
+
+            return "redirect:/timesheet/user/" + anno + "/" + mese;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        meseObj.setDays(giorni);
-        meseObj.setInviato(true);
-
-        serviceMese.save(meseObj);
-
-        return "redirect:/timesheet/user/"+anno+"/"+mese;
     }
+
     public String controllaAggiornamento(AggiornaTimesheet aggiorna){
 
         String  errore                   = "";
@@ -538,67 +498,62 @@ public class TimesheetController {
         @PathVariable("mese") Integer meseI,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff staff = staffRepository.findById(id).get();
+            Anno  anno  = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
+            Mese  mese;
 
-        Staff staff = serviceStaff.get(id);
-        Anno  anno  = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
-        Mese  mese;
+            if (null != anno) {
+                mese = UtilLib.prendiMese(anno.getMesi(), meseI);
 
-        if (null != anno) {
-            mese = UtilLib.prendiMese(anno.getMesi(), meseI);
-
-            if (null == mese) {
+                if (null == mese) {
+                    mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
+                }
+            } else {
+                anno = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
             }
-        } else {
-            anno = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
-        }
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(id);
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(id);
 
-        mese.setDays(giorni);
+            mese.setDays(giorni);
 
-        for (Progetto progetto: progettiStaff) {
-            if (UtilLib.progettoNelMese(mese, progetto.getId(), progetto.getTipologia().getId())) {
-                progetti.add(progetto);
+            for (Progetto progetto : progettiStaff) {
+                if (UtilLib.progettoNelMese(mese, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(anno.getAnno(), mese.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(anno.getAnno(), mese.getValue(), UtilLib.calcolaFineMese(mese.getValue(), anno.getAnno()));
+
+            model.addAttribute("mese", mese);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(mese.getDescription()));
+            model.addAttribute("meseInviato", mese.isInviato());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("numeroMese", mese.getValue());
+            model.addAttribute("annoCorrente", anno.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", id);
+            model.addAttribute("totaleOre", UtilLib.contaOre(mese.getDays()));
+
+            if (null != model.getAttribute("message")) {
+                model.addAttribute("message", model.getAttribute("message"));
+            }
+
+            return "timesheet";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                anno.getAnno(),
-                mese.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                anno.getAnno(),
-                mese.getValue(),
-                UtilLib.calcolaFineMese(mese.getValue(),anno.getAnno())
-            );
-
-        model.addAttribute("mese",              mese);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(mese.getDescription()));
-        model.addAttribute("meseInviato",       mese.isInviato());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("numeroMese",        mese.getValue());
-        model.addAttribute("annoCorrente",      anno.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           id);
-        model.addAttribute("totaleOre",         UtilLib.contaOre(mese.getDays()));
-
-        if (null != model.getAttribute("message")) {
-            model.addAttribute("message", model.getAttribute("message"));
-        }
-
-        return "timesheet";
     }
 
     @RequestMapping("/staff/aggiorna/{id}/{anno}/{mese}")
@@ -609,79 +564,61 @@ public class TimesheetController {
         AggiornaTimesheet aggiorna,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff  staff     = staffRepository.findById(id).get();
+            String controllo = controllaAggiornamento(aggiorna);
 
-        Staff  staff     = serviceStaff.get(id);
-        String controllo = controllaAggiornamento(aggiorna);
-
-        if (!controllo.equals("")) {
-            ra.addFlashAttribute("message", controllo);
-            return "redirect:/timesheet/staff/"+id+"/"+annoI+"/"+meseI;
-        }
-
-        if (null == aggiorna.getDataFinePeriodo()) {
-
-            Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
-            Mese   mese   = UtilLib.prendiMese(anno.getMesi(), aggiorna.getData().getMonthValue());
-            Giorno giorno = UtilLib.prendiGiorno(mese.getDays(), aggiorna.getData().getDayOfMonth());
-
-            if (null != giorno) {
-                staff.setTimesheet(UtilLib.aggiornaOreCalendario(staff.getTimesheet(), anno, mese, giorno, aggiorna));
-            }
-        } else {
-            if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 ||
-                (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 &&
-                    Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1)) {
-
-                ra.addFlashAttribute("message", "Il range di date supera un mese");
-
-                return "redirect:/timesheet/staff/"+id+"/"+annoI+"/"+meseI;
-
+            if (!controllo.equals("")) {
+                ra.addFlashAttribute("message", controllo);
+                return "redirect:/timesheet/staff/" + id + "/" + annoI + "/" + meseI;
             }
 
-            Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
-            Mese   meseInizio   = UtilLib.prendiMese(annoInizio.getMesi(), aggiorna.getData().getMonthValue());
-            Giorno giornoInizio = UtilLib.prendiGiorno(meseInizio.getDays(), aggiorna.getData().getDayOfMonth());
-            Anno   annoFine     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getDataFinePeriodo().getYear());
+            if (null == aggiorna.getDataFinePeriodo()) {
 
-            if (null != giornoInizio) {
+                Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   mese   = UtilLib.prendiMese(anno.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giorno = UtilLib.prendiGiorno(mese.getDays(), aggiorna.getData().getDayOfMonth());
 
-                if (aggiorna.getData().getMonthValue() != aggiorna.getDataFinePeriodo().getMonthValue()) {
+                if (null != giorno) {
+                    staff.setTimesheet(UtilLib.aggiornaOreCalendario(staff.getTimesheet(), anno, mese, giorno, aggiorna));
+                }
+            } else {
+                if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 || ( Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 && Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1 )) {
 
-                    staff.setTimesheet(
-                        UtilLib.aggiornaCalendarioCompletaMese(
-                            staff.getTimesheet(),
-                            annoInizio,
-                            giornoInizio,
-                            aggiorna
-                        )
-                    );
+                    ra.addFlashAttribute("message", "Il range di date supera un mese");
 
-                    staff.setTimesheet(
-                        UtilLib.aggiornaCalendarioInizioMese(
-                            staff.getTimesheet(),
-                            annoFine,
-                            aggiorna
-                        )
-                    );
+                    return "redirect:/timesheet/staff/" + id + "/" + annoI + "/" + meseI;
 
-                } else {
-                    staff.setTimesheet(
-                        UtilLib.aggiornaCalendario(
-                            staff.getTimesheet(),
-                            annoInizio,
-                            meseInizio,
-                            giornoInizio,
-                            aggiorna
-                        )
-                    );
+                }
+
+                Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   meseInizio   = UtilLib.prendiMese(annoInizio.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giornoInizio = UtilLib.prendiGiorno(meseInizio.getDays(), aggiorna.getData().getDayOfMonth());
+                Anno   annoFine     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getDataFinePeriodo().getYear());
+
+                if (null != giornoInizio) {
+
+                    if (aggiorna.getData().getMonthValue() != aggiorna.getDataFinePeriodo().getMonthValue()) {
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioCompletaMese(staff.getTimesheet(), annoInizio, giornoInizio, aggiorna));
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioInizioMese(staff.getTimesheet(), annoFine, aggiorna));
+
+                    } else {
+                        staff.setTimesheet(UtilLib.aggiornaCalendario(staff.getTimesheet(), annoInizio, meseInizio, giornoInizio, aggiorna));
+                    }
                 }
             }
+
+            staffRepository.save(staff);
+
+            return "redirect:/timesheet/staff/" + id + "/" + annoI + "/" + meseI;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        serviceStaff.save(staff);
-
-        return "redirect:/timesheet/staff/"+id+"/"+annoI+"/"+meseI;
     }
 
     @RequestMapping("/staff/successivo/{id}/{anno}/{mese}")
@@ -691,70 +628,65 @@ public class TimesheetController {
         @PathVariable("mese") Integer mese,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff staff = staffRepository.findById(id).get();
+            Anno  annoObj;
+            Mese  meseObj;
 
-        Staff staff   = serviceStaff.get(id);
-        Anno  annoObj;
-        Mese  meseObj;
+            if (mese == 12) {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno + 1);
+            } else {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
+            }
 
-        if (mese == 12) {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno + 1);
-        } else {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
-        }
+            if (null != annoObj) {
+                meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese + 1 == 13 ? 1 : mese + 1);
 
-        if (null != annoObj) {
-            meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese + 1 == 13 ? 1 : mese + 1);
-
-            if (null == meseObj) {
+                if (null == meseObj) {
+                    meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
+                }
+            } else {
+                annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
             }
-        } else {
-            annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
-        }
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(id);
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(id);
 
-        meseObj.setDays(giorni);
+            meseObj.setDays(giorni);
 
-        for (Progetto progetto: progettiStaff) {
+            for (Progetto progetto : progettiStaff) {
 
-            if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
-                progetti.add(progetto);
+                if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
+
+            model.addAttribute("mese", meseObj);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
+            model.addAttribute("meseInviato", meseObj.isInviato());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("numeroMese", meseObj.getValue());
+            model.addAttribute("annoCorrente", annoObj.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", id);
+            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+
+            return "timesheet";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                UtilLib.calcolaFineMese(meseObj.getValue(),annoObj.getAnno())
-            );
-
-        model.addAttribute("mese",              meseObj);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(meseObj.getDescription()));
-        model.addAttribute("meseInviato",       meseObj.isInviato());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("numeroMese",        meseObj.getValue());
-        model.addAttribute("annoCorrente",      annoObj.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           id);
-        model.addAttribute("totaleOre",         UtilLib.contaOre(meseObj.getDays()));
-
-        return "timesheet";
     }
 
     @RequestMapping("/staff/precedente/{id}/{anno}/{mese}")
@@ -764,70 +696,65 @@ public class TimesheetController {
         @PathVariable("mese") Integer mese,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Staff staff   = staffRepository.findById(id).get();
+            Anno  annoObj = null;
+            Mese  meseObj = null;
 
-        Staff staff = serviceStaff.get(id);
-        Anno annoObj = null;
-        Mese meseObj = null;
+            if (mese == 1) {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno - 1);
+            } else {
+                annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
+            }
 
-        if (mese == 1) {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno - 1);
-        } else {
-            annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
-        }
+            if (null != annoObj) {
+                meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese - 1 == 0 ? 12 : mese - 1);
 
-        if (null != annoObj) {
-            meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese - 1 == 0 ? 12 : mese - 1);
-
-            if (null == meseObj) {
+                if (null == meseObj) {
+                    meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
+                }
+            } else {
+                annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
                 meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
             }
-        } else {
-            annoObj = UtilLib.ordinaAnni(staff.getTimesheet().getAnni()).stream().findFirst().get();
-            meseObj = UtilLib.ordinaMesi(annoObj.getMesi()).stream().findFirst().get();
-        }
 
-        List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
-        List<Progetto> progetti      = new ArrayList<>();
-        List<Progetto> progettiStaff = serviceProgetto.getByIdStaff(id);
+            List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
+            List<Progetto> progetti      = new ArrayList<>();
+            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(id);
 
-        meseObj.setDays(giorni);
+            meseObj.setDays(giorni);
 
-        for (Progetto progetto: progettiStaff) {
+            for (Progetto progetto : progettiStaff) {
 
-            if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
-                progetti.add(progetto);
+                if (UtilLib.progettoNelMese(meseObj, progetto.getId(), progetto.getTipologia().getId())) {
+                    progetti.add(progetto);
+                }
             }
+
+            LocalDate dataInizio = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), 1);
+
+            LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
+
+            model.addAttribute("mese", meseObj);
+            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
+            model.addAttribute("numeroMese", meseObj.getValue());
+            model.addAttribute("dataInizio", dataInizio);
+            model.addAttribute("dataFine", dataFine);
+            model.addAttribute("meseInviato", meseObj.isInviato());
+            model.addAttribute("annoCorrente", annoObj.getAnno());
+            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
+            model.addAttribute("listaProgetti", progetti);
+            model.addAttribute("numeroProgetti", progetti.size());
+            model.addAttribute("idStaff", id);
+            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+
+            return "timesheet";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        LocalDate dataInizio =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                1
-            );
-
-        LocalDate dataFine =
-            LocalDate.of(
-                annoObj.getAnno(),
-                meseObj.getValue(),
-                UtilLib.calcolaFineMese(meseObj.getValue(),annoObj.getAnno())
-            );
-
-        model.addAttribute("mese",              meseObj);
-        model.addAttribute("meseCorrente",      UtilLib.meseItaliano(meseObj.getDescription()));
-        model.addAttribute("numeroMese",        meseObj.getValue());
-        model.addAttribute("dataInizio",        dataInizio);
-        model.addAttribute("dataFine",          dataFine);
-        model.addAttribute("meseInviato",       meseObj.isInviato());
-        model.addAttribute("annoCorrente",      annoObj.getAnno());
-        model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-        model.addAttribute("listaProgetti",     progetti);
-        model.addAttribute("numeroProgetti",    progetti.size());
-        model.addAttribute("idStaff",           id);
-        model.addAttribute("totaleOre",         UtilLib.contaOre(meseObj.getDays()));
-
-        return "timesheet";
     }
 
     @RequestMapping("/staff/salva/{id}/{anno}/{mese}")
@@ -838,67 +765,71 @@ public class TimesheetController {
         Model model,
         RedirectAttributes ra
     ) throws ElementoNonTrovatoException, MessagingException {
+        try {
+            Staff        staff   = staffRepository.findById(id).get();
+            Anno         annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
+            Mese         meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese);
+            List<Giorno> giorni  = UtilLib.ordinaGiorni(meseObj.getDays());
 
-        Staff        staff   = serviceStaff.get(id);
-        Anno         annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
-        Mese         meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese);
-        List<Giorno> giorni  = UtilLib.ordinaGiorni(meseObj.getDays());
+            for (Giorno giorno : giorni) {
+                List<Giorno> giorniUguali   = UtilLib.prendiGiorniUguali(giorni, giorno.getGiorno());
+                boolean      ferie          = false;
+                boolean      malattia       = false;
+                int          oreTotali      = 0;
+                Progetto     progettoGiorno = giorno.getProgetto();
 
-        for (Giorno giorno : giorni) {
-            List<Giorno> giorniUguali   = UtilLib.prendiGiorniUguali(giorni, giorno.getGiorno());
-            boolean      ferie          = false;
-            boolean      malattia       = false;
-            int          oreTotali      = 0;
-            Progetto     progettoGiorno = giorno.getProgetto();
+                for (Giorno g : giorniUguali) {
 
-            for (Giorno g : giorniUguali) {
+                    Progetto progetto = g.getProgetto();
 
-                Progetto progetto = g.getProgetto();
-
-                if ((null != progetto) && progetto.getTipologia().getId() == 1) {
-                    if (g.isFerie()) {
-                        ferie = true;
-                    }
-                    if (g.isMalattia()) {
-                        malattia = true;
-                    }
-                } else {
-                    oreTotali += g.getOreTotali();
-                }
-            }
-
-            if (ferie || malattia) {
-                if (oreTotali > 0) {
-                    ra.addFlashAttribute("message","Errore nel calcolo delle ore nei giorni di ferie");
-                    return "redirect:/timesheet/staff/"+id+"/"+anno+"/"+mese;
-                }
-            }
-
-            if ((null != progettoGiorno) && progettoGiorno.getTipologia().getId() != 1) {
-                if (giorno.getOreTotali() != 0) {
-
-                    Progetto progetto = serviceProgetto.get(progettoGiorno.getId());
-
-                    if (controlloTemporaleProgetto(giorno.getData(), progetto)) {
-                        ra.addFlashAttribute("message","Errore caricamento ore in giorni non consentiti dal progetto " + progetto.getDescription());
-                        return "redirect:/timesheet/staff/"+id+"/"+anno+"/"+mese;
+                    if (( null != progetto ) && progetto.getTipologia().getId() == 1) {
+                        if (g.isFerie()) {
+                            ferie = true;
+                        }
+                        if (g.isMalattia()) {
+                            malattia = true;
+                        }
+                    } else {
+                        oreTotali += g.getOreTotali();
                     }
                 }
+
+                if (ferie || malattia) {
+                    if (oreTotali > 0) {
+                        ra.addFlashAttribute("message", "Errore nel calcolo delle ore nei giorni di ferie");
+                        return "redirect:/timesheet/staff/" + id + "/" + anno + "/" + mese;
+                    }
+                }
+
+                if (( null != progettoGiorno ) && progettoGiorno.getTipologia().getId() != 1) {
+                    if (giorno.getOreTotali() != 0) {
+
+                        Progetto progetto = progettoRepository.findById(progettoGiorno.getId()).get();
+
+                        if (controlloTemporaleProgetto(giorno.getData(), progetto)) {
+                            ra.addFlashAttribute("message", "Errore caricamento ore in giorni non consentiti dal progetto " + progetto.getDescription());
+                            return "redirect:/timesheet/staff/" + id + "/" + anno + "/" + mese;
+                        }
+                    }
+                }
             }
+            meseObj.setDays(giorni);
+            meseObj.setInviato(true);
+
+            meseRepository.save(meseObj);
+
+            return "redirect:/timesheet/staff/" + id + "/" + anno + "/" + mese;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        meseObj.setDays(giorni);
-        meseObj.setInviato(true);
-
-        serviceMese.save(meseObj);
-
-        return "redirect:/timesheet/staff/"+id+"/"+anno+"/"+mese;
     }
 
     public boolean controlloTemporaleProgetto(
         LocalDate data,
         Progetto progetto
     ){
-
         return data.isBefore(progetto.getInizio()) || data.isAfter(progetto.getScadenza());
     }
 }

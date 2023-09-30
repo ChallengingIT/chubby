@@ -6,10 +6,12 @@ package it.innotek.wehub.controller;
 
 import it.innotek.wehub.entity.*;
 import it.innotek.wehub.entity.staff.Staff;
-import it.innotek.wehub.service.IntervistaService;
-import it.innotek.wehub.service.NeedService;
-import it.innotek.wehub.service.OwnerService;
-import it.innotek.wehub.service.StaffService;
+import it.innotek.wehub.repository.IntervistaRepository;
+import it.innotek.wehub.repository.NeedRepository;
+import it.innotek.wehub.repository.OwnerRepository;
+import it.innotek.wehub.repository.StaffRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,72 +29,87 @@ import java.util.stream.Collectors;
 public class BachecaController {
 
     @Autowired
-    private NeedService       serviceNeed;
+    private NeedRepository       needRepository;
     @Autowired
-    private OwnerService      serviceOwner;
+    private OwnerRepository      ownerRepository;
     @Autowired
-    private IntervistaService serviceIntervista;
+    private IntervistaRepository intervistaRepository;
     @Autowired
-    private StaffService      serviceStaff;
+    private StaffRepository      staffRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(BachecaController.class);
 
     @RequestMapping
     public String bacheca(Model model){
+        try {
+            logger.debug("bacheca");
 
-        model.addAttribute("needData",          getNeedData());
-        model.addAttribute("dashboardIncontri", getDashboardIncontri());
-        model.addAttribute("listOwner",         serviceOwner.listAll());
-        model.addAttribute("listNeedOrdinati",  serviceNeed.getNeedOrdinati());
-        model.addAttribute("colorBackground",   "#14d928");
+            model.addAttribute("needData", getNeedData());
+            model.addAttribute("dashboardIncontri", getDashboardIncontri());
+            model.addAttribute("listOwner", ownerRepository.findAll());
+            model.addAttribute("listNeedOrdinati", needRepository.findNeedOrdinati());
+            model.addAttribute("colorBackground", "#ffb700");
 
-        StringBuilder    messaggioCompleanno = null;
-        List<Intervista> interviste          = serviceIntervista.listIntervisteImminenti();
-        List<Staff>      staffs              = serviceStaff.listAll();
-        int              count               = 0;
+            StringBuilder    messaggioCompleanno = null;
+            List<Intervista> interviste          = intervistaRepository.findIntervisteImminenti();
+            List<Staff>      staffs              = staffRepository.findAll();
+            int              count               = 0;
 
-        for (Staff staff: staffs) {
+            logger.debug("Lista interviste e staff recuperate");
 
-            LocalDate locale = staff.getDataNascita().toLocalDate();
-            LocalDate oggi   = LocalDate.now();
+            for (Staff staff : staffs) {
 
-            if (locale.getMonthValue() == oggi.getMonthValue() && locale.getDayOfMonth() == oggi.getDayOfMonth()) {
-                if (count == 0) {
-                    messaggioCompleanno = new StringBuilder("- Oggi e' il compleanno di ");
-                    count++;
+                LocalDate locale = staff.getDataNascita().toLocalDate();
+                LocalDate oggi   = LocalDate.now();
+
+                if (locale.getMonthValue() == oggi.getMonthValue() && locale.getDayOfMonth() == oggi.getDayOfMonth()) {
+                    if (count == 0) {
+                        messaggioCompleanno = new StringBuilder("- Oggi e' il compleanno di ");
+                        count++;
+                    }
+                    messaggioCompleanno.append(staff.getNome()).append(" ").append(staff.getCognome()).append(" - ");
                 }
-                messaggioCompleanno.append(staff.getNome()).append(" ").append(staff.getCognome()).append(" - ");
             }
+
+            DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatterOra  = DateTimeFormatter.ofPattern("HH:mm");
+
+            for (Intervista intervista : interviste) {
+
+                String data = intervista.getDataAggiornamento().format(formatterData);
+                String ora  = intervista.getDataAggiornamento().format(formatterOra);
+
+                intervista.setDataAVideo(data);
+                intervista.setOraAVideo(ora);
+            }
+
+            logger.debug("Lista interviste imminenti", interviste.toArray());
+
+            model.addAttribute("listIntervisteImminenti", interviste);
+
+            if (messaggioCompleanno != null) {
+                model.addAttribute("messaggioCompleanno", messaggioCompleanno.toString());
+            }
+
+            return "bacheca";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formatterOra  = DateTimeFormatter.ofPattern("HH:mm");
-
-        for (Intervista intervista : interviste) {
-
-            String data = intervista.getDataAggiornamento().format(formatterData);
-            String ora  = intervista.getDataAggiornamento().format(formatterOra);
-
-            intervista.setDataAVideo(data);
-            intervista.setOraAVideo(ora);
-        }
-
-        model.addAttribute("listIntervisteImminenti", interviste);
-
-        if (messaggioCompleanno != null) {
-            model.addAttribute("messaggioCompleanno", messaggioCompleanno.toString());
-        }
-
-        return "bacheca";
     }
+
     private List<OccorrenzeIncontro> getDashboardIncontri() {
 
         List<OccorrenzeIncontro> list                    = new ArrayList<>();
-        List<Intervista>         listIntervistaOwnerCur  = serviceIntervista.getIntervisteSettimanaCur();
-        List<Intervista>         listIntervistaOwnerMeno = serviceIntervista.getIntervisteSettimanaCurMeno();
-        List<Intervista>         listIntervistaOwnerPiu  = serviceIntervista.getIntervisteSettimanaCurPiu();
-        Integer                  week                    = serviceNeed.getWeek();
-        Integer                  weekPre                 = serviceNeed.getWeekPre();
-        Integer                  weekSuc                 = serviceNeed.getWeekSuc();
-        List<Owner>              owners                  = serviceOwner.listAll();
+        List<Intervista>         listIntervistaOwnerCur  = intervistaRepository.findIntervisteSettimanaCur();
+        List<Intervista>         listIntervistaOwnerMeno = intervistaRepository.findIntervisteSettimanaCurMeno();
+        List<Intervista>         listIntervistaOwnerPiu  = intervistaRepository.findIntervisteSettimanaCurPiu();
+        Integer                  week                    = needRepository.findWeek();
+        Integer                  weekPre                 = needRepository.findWeekPre();
+        Integer                  weekSuc                 = needRepository.findWeekSuc();
+        List<Owner>              owners                  = ownerRepository.findAll();
         OccorrenzeIncontro       occorrenzaPre           = new OccorrenzeIncontro();
         OccorrenzeIncontro       occorrenza              = new OccorrenzeIncontro();
         OccorrenzeIncontro       occorrenzaSuc           = new OccorrenzeIncontro();
@@ -151,12 +168,12 @@ public class BachecaController {
     }
 
     private List<OccorrenzeNeed> getNeedData() {
-        List<Need>           listNeedPre = serviceNeed.getNeedSettimanaCurMeno();
-        List<Need>           listNeedCur = serviceNeed.getNeedSettimanaCur();
-        List<Need>           listNeedSuc = serviceNeed.getNeedSettimanaCurPiu();
-        Integer              week        = serviceNeed.getWeek();
-        Integer              weekPre     = serviceNeed.getWeekPre();
-        Integer              weekSuc     = serviceNeed.getWeekSuc();
+        List<Need>           listNeedPre = needRepository.findNeedSettimanaCurMeno();
+        List<Need>           listNeedCur = needRepository.findNeedSettimanaCur();
+        List<Need>           listNeedSuc = needRepository.findNeedSettimanaCurPiu();
+        Integer              week        = needRepository.findWeek();
+        Integer              weekPre     = needRepository.findWeekPre();
+        Integer              weekSuc     = needRepository.findWeekSuc();
         List<OccorrenzeNeed> listAttuali = new ArrayList<>();
         Integer              chiusiP     = contaOccorrenzeNeeds(listNeedPre, 5);
         Integer              persiP      = contaOccorrenzeNeeds(listNeedPre, 4);
@@ -207,5 +224,4 @@ public class BachecaController {
         }
         return count;
     }
-
 }

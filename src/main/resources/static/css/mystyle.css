@@ -2,7 +2,7 @@
   color: white;
   padding: 3px 4px;
   text-decoration: none;
-  background-color: #14d928;
+  background-color: #ffb700;
   margin: 4px 2px;
   margin-top: 15px;
   border-radius: 16px;
@@ -353,7 +353,7 @@ justify-self: flex-start !important;
 }
 
 .shiny:hover{
-    background-color: #14d928 !important;
+    background-color: #ffb700 !important;
     color: black !important;
 }
 .dropup .dropdown-toggle::after{

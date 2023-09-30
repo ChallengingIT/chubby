@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.timesheet.Mese;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MeseRepository extends CrudRepository<Mese, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface MeseRepository extends JpaRepository<Mese, Integer> {
 }

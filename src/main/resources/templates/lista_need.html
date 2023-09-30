@@ -9,15 +9,15 @@
     <meta http-equiv="Content-Security-Policy">
     <title>Lista Need </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap-5.1.3/bootstrap.min.css}" rel="stylesheet" />
     <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
     <script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
-    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap-5.1.3/bootstrap.bundle.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -28,7 +28,7 @@
         <h1 class="mb-4"><b>Need</b></h1>
         <div>
             <a class="btn btn-info btn-lg" th:href="@{/need/aggiungi}" style=" background-color: black; border-radius: 10px;">
-                <span class="glyphicon glyphicon-plus"></span> Aggiungi un nuovo need
+                <span class="glyphicon glyphicon-plus"></span> Aggiungi nuovo need
             </a>
         </div>
         <br>
@@ -91,9 +91,9 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-lg" cellspacing="0" width="100%"  style="background-color:white;">
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-lg"   style="background-color:white;">
                 <thead class="thead" id="tabella-blu">
-                <tr>
+                <tr class="tr1">
                     <th class="align-middle">#</th>
                     <th class="align-middle">Week</th>
                     <th class="align-middle">Priorita</th>
@@ -106,9 +106,9 @@
                     <th class="align-middle">Azioni</th>
                 </tr>
                 </thead>
-                <tbody  id="valori-tabella">
-                <th:block th:each="need : ${listNeed}">
-                    <tr>
+                <tbody class="table1" id="valori-tabella">
+                <th:block th:each="need, i : ${listNeed}">
+                    <tr class="tr1">
                         <td>[[${need.id}]]</td>
                         <td>[[${need.week}]]</td>
                         <td>[[${need.priorita}]]</td>
@@ -120,17 +120,52 @@
                             </span>
 
                         </td>
-                        <td>[[${need.jobDescription}]]</td>
+                        <td>[[${need.descrizione}]]</td>
                         <td>[[${need.owner.descrizione}]]</td>
                         <td>[[${need.stato.descrizione}]]</td>
                         <td>
-                            <span th:if="${(need.stato.id != 3 && need.stato.id != 4 && need.stato.id != 5)
-                            || need.cliente != null}">
-                                <a class="btn btn-info btn-lg btn-icon" th:href="@{'/need/match/' + ${need.id}}">
-                                    <i class="fas fa-solid fa-magnifying-glass"></i></a>
-                            </span>
+                            <div class="btn-group" role="group" aria-label="Actions: edit and delete">
+                                <button type="button" class="btn btn-info btn-lg btn-icon mr-3" data-bs-toggle="modal" th:data-bs-target="|#dayModal${i.index}|" title="Cambia Stato">
+                                    <i class="fas fa-sticky-note"></i>
+                                </button>
+                                <span th:if="${(need.stato.id != 3 && need.stato.id != 4 && need.stato.id != 5)
+                                || need.cliente != null}">
+                                    <a class="btn btn-info btn-lg btn-icon" th:href="@{'/need/match/' + ${need.id}}">
+                                        <i class="fas fa-solid fa-magnifying-glass"></i></a>
+                                </span>
+                            </div>
                         </td>
                     </tr>
+
+                    <!-- Modal -->
+                    <div th:id="|dayModal${i.index}|" class="modal" tabindex="-1"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Cambia Stato al need</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form th:action="@{'/need/salva/stato/' + ${need.id}}" method="post" th:object="${needStato}">
+                                    <div class="modal-body">
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label class="col-form-label">Stato</label>
+                                                <select th:field="*{stato.id}" class="form-control select-medium">
+                                                    <option th:each="j : ${listaStatiN}" th:value="${j.getId()}" th:text="${j.getDescrizione()}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Salva</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancella</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                 </th:block>
                 </tbody>
             </table>
@@ -152,6 +187,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" th:src="@{/js/pagination.js}"></script>
 <script type="text/javascript" th:src="@{/js/sortable.js}"></script>
 <script type="text/javascript" th:src="@{/js/pages/lista_need.js}"></script>

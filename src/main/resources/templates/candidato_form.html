@@ -22,7 +22,7 @@
     <script type="text/javascript" th:src="@{/js/jquery.dropdown.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
     <div class="wrapper d-flex align-items-stretch">
 
         <div th:replace="~{sidebar}"> </div>
@@ -161,13 +161,13 @@
                         <div class="form-group col">
                             <label for="job_title" class="col-form-label">Job Title</label>
                             <select id="job_title" th:field="*{tipologia.id}" class="form-control select-medium" required>
-                                <option th:value="null"> Seleziona una Job Title</option>
+                                <option th:value="null"> Seleziona un Job Title</option>
                                 <option th:each="i : ${listaTipologie}" th:value="${i.getId()}"
                                     th:text="${i.getDescrizione()}"></option>
                             </select>
                         </div>
                         <div class="form-group col">
-                            <label class="col-form-label">Data Ultimo Contatto</label>
+                            <label class="col-form-label">Data Inserimento</label>
                             <span th:if="${candidato.dataUltimoContatto == null }">
                                 <input type="date" lang="it-IT" th:field="*{dataUltimoContatto}" id="newDate"
                                        class="form-control" required/>
@@ -189,14 +189,21 @@
 
                         <div class="form-group col">
                             <label class="col-form-label">Owner </label>
-                            <select th:field="*{owner.id}" id="listaOwner" class="form-control select-medium" required>
-                                <option th:value="null" th:text="---"></option>
+                            <select th:field="*{owner.id}" id="listaOwner" class="form-control select-medium">
                                 <option th:each="i : ${listOwner}" th:value="${i.id}" th:text="${i.descrizione}"></option>
                             </select>
                         </div>
 
                         <div class="form-group col">
-                            <label class="col-form-label">Seleziona le Skills</label>
+                            <label class="col-form-label">
+                                Seleziona le Skills
+                                <span th:unless="${candidato.id == null}">
+                                    <a th:href="@{'/staffing/modifica/noskills/' + ${candidato.id}}"
+                                       class="col sbtn btn-info btn-lg btn-icon" style="margin: 0;">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </span>
+                            </label>
                             <select class="form-control selectpicker" th:field="*{skills}" id="skill" multiple>
 
                                 <option th:each="skill : ${listaSkillOrdinata}" th:value="${skill.id}"

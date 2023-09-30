@@ -5,14 +5,13 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.FileCandidato;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface FileCandidatoRepository extends CrudRepository<FileCandidato, Integer> {
+@Repository
+public interface FileCandidatoRepository extends JpaRepository<FileCandidato, Integer> {
 
-    Long countById(Integer id);
-
-    @Procedure(procedureName  = "elimina_file_vecchi")
-    void removeFileDoppione(@Param("lista_candidato_id") String listId, @Param("tipologia") Integer tipologia);
+    @Procedure
+    void elimina_file_vecchi(String lista_candidato_id, Integer tipologia);
 }

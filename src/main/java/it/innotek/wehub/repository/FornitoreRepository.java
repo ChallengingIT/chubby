@@ -4,27 +4,24 @@
 
 package it.innotek.wehub.repository;
 
-import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.Fornitore;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface FornitoreRepository extends CrudRepository<Fornitore, Integer> {
+@Repository
+public interface FornitoreRepository extends JpaRepository<Fornitore, Integer> {
 
-    Long countById(Integer id);
+    @Query(value= """
+         SELECT f.*
+         FROM fornitore f
+         where if(?1 is not null, f.denominazione like %?1%, 1=1)
+         and if(?2 is not null, f.referente like %?2%, 1=1)
+         and if(?3 is not null, f.email like %?3%, 1=1)
+        """, nativeQuery=true)
+    List<Fornitore> ricercaByDenominazioneAndReferenteAndEmail(String denominazione, String referente, String email);
 
-    @Query(value=" SELECT f.* \n" +
-            "             FROM fornitore f\n" +
-            "             where if(:denominazione is not null, f.denominazione like %:denominazione%, 1=1)\n" +
-            "             and if(:referente is not null, f.referente like %:referente%, 1=1)\n"+
-            "             and if(:email is not null, f.email like %:email%, 1=1) ", nativeQuery=true)
-    List<Fornitore> findRicerca(@Param("denominazione") String denominazione, @Param("referente") String referente, @Param("email") String email);
-
-    @Query(value=" SELECT if(count(*)=1,1,0)\n" +
-            "FROM fornitore c\n" +
-            "where denominazione = :denominazione ", nativeQuery=true)
-    Integer checkDenominazione(@Param("denominazione") String denominazione);
+    List<Fornitore> findByDenominazione(String denominazione);
 }

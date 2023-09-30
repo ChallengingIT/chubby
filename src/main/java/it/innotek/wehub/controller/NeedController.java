@@ -5,8 +5,9 @@
 package it.innotek.wehub.controller;
 
 import it.innotek.wehub.entity.*;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.*;
+import it.innotek.wehub.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,97 +24,116 @@ import java.util.Optional;
 public class NeedController {
 
     @Autowired
-    private CandidatoService    serviceCandidato;
+    private CandidatoRepository    candidatoRepository;
     @Autowired
-    private ClienteService      serviceCliente;
+    private ClienteRepository      clienteRepository;
     @Autowired
-    private TipologiaNService   serviceTipologiaN;
+    private TipologiaNRepository   tipologiaNRepository;
     @Autowired
-    private StatoNService       serviceStatoN;
+    private StatoNRepository       statoNRepository;
     @Autowired
-    private OwnerService        serviceOwner;
+    private OwnerRepository        ownerRepository;
     @Autowired
-    private LivelloService      serviceLivelli;
+    private LivelloRepository      livelloRepository;
     @Autowired
-    private SkillService        serviceSkill;
+    private SkillRepository        skillRepository;
     @Autowired
-    private NeedService         serviceNeed;
+    private NeedRepository         needRepository;
     @Autowired
-    private TipologiaService    serviceTipologia;
+    private TipologiaRepository    tipologiaRepository;
     @Autowired
-    private StatoCService       serviceStatoC;
+    private StatoCRepository       statoCRepository;
     @Autowired
-    private TipoService         serviceTipo;
+    private TipoRepository         tipoRepository;
     @Autowired
-    private AssociazioniService serviceAssociazione;
+    private AssociazioniRepository associazioniRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(NeedController.class);
 
     @RequestMapping
     public String showNeedList(Model model){
+        try {
+            List<Need> listNeed = needRepository.findAll();
 
-        List<Need> listNeed = serviceNeed.listAll();
-
-        for (Need need : listNeed) {
-            if (need.getCliente() != null) {
-                Optional<Cliente> cliente = serviceCliente.getById(need.getCliente().getId());
-                cliente.ifPresent(need::setCliente);
+            for (Need need : listNeed) {
+                if (need.getCliente() != null) {
+                    Optional<Cliente> cliente = clienteRepository.findById(need.getCliente().getId());
+                    cliente.ifPresent(need::setCliente);
+                }
             }
+
+            model.addAttribute("listNeed", listNeed);
+            model.addAttribute("needRicerca", new Need());
+            model.addAttribute("needStato", new Need());
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaAziende", clienteRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
+
+            return "lista_need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("listNeed",        listNeed);
-        model.addAttribute("needRicerca",     new Need());
-        model.addAttribute("listaTipologieN", serviceTipologiaN.listAll());
-        model.addAttribute("listaOwner",      serviceOwner.listAll());
-        model.addAttribute("listaAziende",    serviceCliente.listAll());
-        model.addAttribute("listaStatiN",     serviceStatoN.listAll());
-
-        return "lista_need";
     }
 
     @RequestMapping("/ricerca")
     public String showRicercaList(
         Model model,
         Need need
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Integer    idCliente   = ( null != need.getCliente() ) ? need.getCliente().getId() : null;
+            Integer    idStato     = ( null != need.getStato() ) ? need.getStato().getId() : null;
+            Integer    idTipologia = ( null != need.getTipologia() ) ? need.getTipologia().getId() : null;
+            Integer    idOwner     = ( null != need.getOwner() ) ? need.getOwner().getId() : null;
+            String     settimana   = ( ( null != need.getWeek() ) && !need.getWeek().isEmpty() ) ? need.getWeek() : null;
+            List<Need> listNeed    = needRepository.ricerca(idCliente, idStato, need.getPriorita(), idTipologia, settimana, idOwner);
 
-        Integer    idCliente   = (null != need.getCliente())                             ? need.getCliente().getId()   : null;
-        Integer    idStato     = (null != need.getStato())                               ? need.getStato().getId()     : null;
-        Integer    idTipologia = (null != need.getTipologia())                           ? need.getTipologia().getId() : null;
-        Integer    idOwner     = (null != need.getOwner())                               ? need.getOwner().getId()     : null;
-        String     settimana   = ((null != need.getWeek()) && !need.getWeek().isEmpty()) ? need.getWeek()              : null;
-        List<Need> listNeed    = serviceNeed.listRicerca(idCliente, idStato, need.getPriorita(), idTipologia, settimana, idOwner);
+            for (Need needFor : listNeed) {
+                Cliente cliente = clienteRepository.findById(needFor.getCliente().getId()).get();
+                needFor.setCliente(cliente);
+            }
 
-        for(Need needFor : listNeed){
-            Cliente cliente = serviceCliente.get(needFor.getCliente().getId());
-            needFor.setCliente(cliente);
+            model.addAttribute("listNeed", listNeed);
+            model.addAttribute("needRicerca", need);
+            model.addAttribute("needStato", new Need());
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaAziende", clienteRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
+
+            return "lista_need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("listNeed",        listNeed);
-        model.addAttribute("needRicerca",     need);
-        model.addAttribute("listaTipologieN", serviceTipologiaN.listAll());
-        model.addAttribute("listaAziende",    serviceCliente.listAll());
-        model.addAttribute("listaOwner",      serviceOwner.listAll());
-        model.addAttribute("listaStatiN",     serviceStatoN.listAll());
-
-        return "lista_need";
     }
 
     @RequestMapping("/{idCliente}")
     public String showNeedIdList(
         @PathVariable("idCliente") Integer idCliente,
         Model model
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Cliente    cliente  = clienteRepository.findById(idCliente).get();
+            List<Need> listNeed = needRepository.findByCliente_Id(idCliente);
 
-        Cliente    cliente  = serviceCliente.get(idCliente);
-        List<Need> listNeed = serviceNeed.listAllByCLiente(idCliente);
+            model.addAttribute("listNeed", listNeed);
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("needRicerca", new Need());
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
 
-        model.addAttribute("listNeed",        listNeed);
-        model.addAttribute("cliente",         cliente);
-        model.addAttribute("needRicerca",     new Need());
-        model.addAttribute("listaTipologieN", serviceTipologiaN.listAll());
-        model.addAttribute("listaOwner",      serviceOwner.listAll());
-        model.addAttribute("listaStatiN",     serviceStatoN.listAll());
+            return "lista_need_cliente";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "lista_need_cliente";
+            return "error";
+        }
     }
 
     @RequestMapping("/ricerca/{idCliente}")
@@ -121,79 +141,129 @@ public class NeedController {
         @PathVariable("idCliente") Integer idCliente,
         Model model,
         Need need
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Cliente    cliente     = clienteRepository.findById(idCliente).get();
+            Integer    idStato     = ( null != need.getStato() ) ? need.getStato().getId() : null;
+            Integer    idTipologia = ( null != need.getTipologia() ) ? need.getTipologia().getId() : null;
+            String     settimana   = ( ( null != need.getWeek() ) && !need.getWeek().isEmpty() ) ? need.getWeek() : null;
+            Integer    idOwner     = ( null != need.getOwner() ) ? need.getOwner().getId() : null;
+            List<Need> listNeed    = needRepository.ricerca(idCliente, idStato, need.getPriorita(), idTipologia, settimana, idOwner);
 
-        Cliente    cliente     = serviceCliente.get(idCliente);
-        Integer    idStato     = (null != need.getStato())                               ? need.getStato().getId()     : null;
-        Integer    idTipologia = (null != need.getTipologia())                           ? need.getTipologia().getId() : null;
-        String     settimana   = ((null != need.getWeek()) && !need.getWeek().isEmpty()) ? need.getWeek()              : null;
-        Integer    idOwner     = (null != need.getOwner())                               ? need.getOwner().getId()     : null;
-        List<Need> listNeed    = serviceNeed.listRicerca(idCliente,idStato, need.getPriorita(), idTipologia, settimana, idOwner);
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("listNeed", listNeed);
+            model.addAttribute("needRicerca", need);
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
 
-        model.addAttribute("cliente",         cliente);
-        model.addAttribute("listNeed",        listNeed);
-        model.addAttribute("needRicerca",     need);
-        model.addAttribute("listaTipologieN", serviceTipologiaN.listAll());
-        model.addAttribute("listaOwner",      serviceOwner.listAll());
-        model.addAttribute("listaStatiN",     serviceStatoN.listAll());
+            return "lista_need_cliente";
 
-        return "lista_need_cliente";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
-
 
     @RequestMapping("/aggiungi/{idCliente}")
     public String showNewForm(
         @PathVariable("idCliente") Integer idCliente,
         Model model
     ){
-        model.addAttribute("need",                   new Need());
-        model.addAttribute("idCliente",              idCliente);
-        model.addAttribute("titoloPagina",           "Aggiungi un nuovo need");
-        model.addAttribute("listaLivelliScolastici", serviceLivelli.listAll());
-        model.addAttribute("listaSkillOrdinata",     serviceSkill.listAll());
-        model.addAttribute("listaTipologieN",        serviceTipologiaN.listAll());
-        model.addAttribute("listaOwner",             serviceOwner.listAll());
-        model.addAttribute("listaStatiN",            serviceStatoN.listAll());
+        try {
+            model.addAttribute("need", new Need());
+            model.addAttribute("idCliente", idCliente);
+            model.addAttribute("titoloPagina", "Aggiungi nuovo need");
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
 
-        return "need_cliente_form";
+            return "need_cliente_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/aggiungi")
     public String showNewForm(Model model){
+        try {
+            model.addAttribute("need", new Need());
+            model.addAttribute("titoloPagina", "Aggiungi nuovo need");
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
+            model.addAttribute("listaAziende", clienteRepository.findAll());
 
-        model.addAttribute("need",                   new Need());
-        model.addAttribute("titoloPagina",           "Aggiungi un nuovo need");
-        model.addAttribute("listaLivelliScolastici", serviceLivelli.listAll());
-        model.addAttribute("listaSkillOrdinata",     serviceSkill.listAll());
-        model.addAttribute("listaTipologieN",        serviceTipologiaN.listAll());
-        model.addAttribute("listaOwner",             serviceOwner.listAll());
-        model.addAttribute("listaStatiN",            serviceStatoN.listAll());
-        model.addAttribute("listaAziende",           serviceCliente.listAll());
+            return "need_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "need_form";
+            return "error";
+        }
     }
 
     @RequestMapping("/salva")
     public String saveNeed(
         Need need,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Cliente                         cliente      = new Cliente();
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(need.getId());
+            List<Candidato>                 candidati    = candidatoRepository.findByNeed_Id(need.getId());
 
-        Cliente                         cliente            = new Cliente();
-        List<AssociazioneCandidatoNeed> associazioni       = serviceAssociazione.listAllByNeed(need.getId());
-        List<Candidato>                 candidati          = serviceCandidato.listAllByNeed(need.getId());
-        String                          descrizioneLivello = recuperaDescrizioneLivello(need.getLivelloScolastico().getId());
+            cliente.setId(need.getCliente().getId());
 
-        cliente.setId(need.getCliente().getId());
+            need.setCliente(cliente);
+            need.setAssociazioni(associazioni);
+            need.setCandidati(candidati);
 
-        need.getLivelloScolastico().setDescrizione(descrizioneLivello);
-        need.setCliente(cliente);
-        need.setAssociazioni(associazioni);
-        need.setCandidati(candidati);
+            needRepository.save(need);
+            ra.addFlashAttribute("message", "Il need è stato salvato con successo");
+            return "redirect:/need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        serviceNeed.save(need);
-        ra.addFlashAttribute("message", "Il need è stato salvato con successo");
-        return "redirect:/need";
+            return "error";
+        }
+    }
+
+    @RequestMapping("/salva/stato/{idNeed}")
+    public String saveStatoNeed(
+        @PathVariable("idNeed") Integer idNeed,
+        Need needStato,
+        Model model,
+        RedirectAttributes ra
+    ) {
+        try {
+            Need                            need         = needRepository.findById(idNeed).get();
+            Cliente                         cliente      = new Cliente();
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(need.getId());
+            List<Candidato>                 candidati    = candidatoRepository.findByNeed_Id(need.getId());
+
+            need.setStato(needStato.getStato());
+
+            cliente.setId(need.getCliente().getId());
+
+            need.setCliente(cliente);
+            need.setAssociazioni(associazioni);
+            need.setCandidati(candidati);
+
+            needRepository.save(need);
+            ra.addFlashAttribute("message", "Il need è stato salvato con successo");
+            return "redirect:/need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/salva/{idCliente}")
@@ -201,22 +271,25 @@ public class NeedController {
         @PathVariable("idCliente") Integer idCliente,
         Need need,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Cliente                         cliente      = new Cliente();
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(need.getId());
+            List<Candidato>                 candidati    = candidatoRepository.findByNeed_Id(need.getId());
 
-        Cliente                         cliente            = new Cliente();
-        List<AssociazioneCandidatoNeed> associazioni       = serviceAssociazione.listAllByNeed(need.getId());
-        List<Candidato>                 candidati          = serviceCandidato.listAllByNeed(need.getId());
-        String                          descrizioneLivello = recuperaDescrizioneLivello(need.getLivelloScolastico().getId());
+            cliente.setId(idCliente);
+            need.setCliente(cliente);
+            need.setAssociazioni(associazioni);
+            need.setCandidati(candidati);
 
-        cliente.setId(idCliente);
-        need.getLivelloScolastico().setDescrizione(descrizioneLivello);
-        need.setCliente(cliente);
-        need.setAssociazioni(associazioni);
-        need.setCandidati(candidati);
+            needRepository.save(need);
+            ra.addFlashAttribute("message", "Il need è stato salvato con successo");
+            return "redirect:/need/" + idCliente;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        serviceNeed.save(need);
-        ra.addFlashAttribute("message", "Il need è stato salvato con successo");
-        return "redirect:/need/"+idCliente;
+            return "error";
+        }
     }
 
     @RequestMapping("/modifica/{idCliente}/{id}")
@@ -227,60 +300,71 @@ public class NeedController {
         RedirectAttributes ra
     ){
         try {
-            Need need = serviceNeed.get(id);
+            Need need = needRepository.findById(id).get();
 
-            model.addAttribute("need",                   need);
-            model.addAttribute("idCliente",              idCliente);
-            model.addAttribute("titoloPagina",           "Modifica need");
-            model.addAttribute("listaLivelliScolastici", serviceLivelli.listAll());
-            model.addAttribute("listaSkillOrdinata",     serviceSkill.listAll());
-            model.addAttribute("listaTipologieN",        serviceTipologiaN.listAll());
-            model.addAttribute("listaOwner",             serviceOwner.listAll());
-            model.addAttribute("listaStatiN",            serviceStatoN.listAll());
+            model.addAttribute("need", need);
+            model.addAttribute("idCliente", idCliente);
+            model.addAttribute("titoloPagina", "Modifica need");
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStatiN", statoNRepository.findAll());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/need/"+idCliente;
+            return "need_cliente_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "need_cliente_form";
     }
 
     @RequestMapping("/elimina/{idCliente}/{id}")
-    public String deleteNeed(@PathVariable("idCliente") Integer idCliente, @PathVariable("id") Integer id, RedirectAttributes ra){
-
+    public String deleteNeed(
+        @PathVariable("idCliente") Integer idCliente,
+        @PathVariable("id") Integer id,
+        RedirectAttributes ra
+    ){
         try {
-            Need need = serviceNeed.get(id);
+            Need need = needRepository.findById(id).get();
 
-            for (AssociazioneCandidatoNeed associazione: need.getAssociazioni()) {
-                serviceAssociazione.delete(associazione.getId());
+            for (AssociazioneCandidatoNeed associazione : need.getAssociazioni()) {
+                associazioniRepository.deleteById(associazione.getId());
             }
 
-            serviceNeed.delete(id);
+            needRepository.deleteById(id);
             ra.addFlashAttribute("message", "Il need è stato cancellato con successo");
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
+            return "redirect:/need/" + idCliente;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "redirect:/need/"+idCliente;
     }
 
     @RequestMapping("/match/{idNeed}")
     public String showMatchForm(
         @PathVariable("idNeed") Integer idNeed,
         Model model
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            model.addAttribute("need", needRepository.findById(idNeed).get());
+            model.addAttribute("titoloPagina", "Match del need");
+            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.findCandidatiNonAssociati(idNeed));
+            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
+            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("candidatoRicerca", new Candidato());
 
-        model.addAttribute("need",                      serviceNeed.get(idNeed));
-        model.addAttribute("titoloPagina",              "Match del need");
-        model.addAttribute("listCandidatiNonAssociati", serviceCandidato.getCandidatiNonAssociati(idNeed));
-        model.addAttribute("listCandidatiAssociati",    serviceCandidato.getCandidatiAssociati(idNeed));
-        model.addAttribute("listAssociazioniNeed",      serviceAssociazione.listAllByNeed(idNeed));
-        model.addAttribute("listaTipologie",            serviceTipologia.listAll());
-        model.addAttribute("listaTipi",                 serviceTipo.listAll());
-        model.addAttribute("listaStatiC",               serviceStatoC.listAllOrdered());
-        model.addAttribute("candidatoRicerca",          new Candidato());
+            return "liste_match_need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "liste_match_need";
+            return "error";
+        }
     }
 
     @RequestMapping("/ricerca/match/{idNeed}")
@@ -288,52 +372,46 @@ public class NeedController {
         @PathVariable("idNeed") Integer idNeed,
         Model model,
         Candidato candidato
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Integer idTipologia         = ( null != candidato.getTipologia() ) ? candidato.getTipologia().getId() : null;
+            Integer idTipo              = ( null != candidato.getTipo() ) ? candidato.getTipo().getId() : null;
+            String  nome                = ( ( null != candidato.getNome() ) && !candidato.getNome().isEmpty() ) ? candidato.getNome() : null;
+            String  cognome             = ( ( null != candidato.getCognome() ) && !candidato.getCognome().isEmpty() ) ? candidato.getCognome() : null;
+            Double  anniEsperienzaRuolo = ( null != candidato.getAnniEsperienzaRuolo() ) ? candidato.getAnniEsperienzaRuolo() : null;
+            Integer anniMinimi          = null;
+            Integer anniMassimi         = null;
 
-        Integer idTipologia         = (null != candidato.getTipologia())                                      ? candidato.getTipologia().getId()   : null;
-        Integer idTipo              = (null != candidato.getTipo())                                           ? candidato.getTipo().getId()        : null;
-        String  nome                = ((null != candidato.getNome()) && !candidato.getNome().isEmpty())       ? candidato.getNome()                : null;
-        String  cognome             = ((null != candidato.getCognome()) && !candidato.getCognome().isEmpty()) ? candidato.getCognome()             : null;
-        Double  anniEsperienzaRuolo = (null != candidato.getAnniEsperienzaRuolo())                            ? candidato.getAnniEsperienzaRuolo() : null;
-        Integer anniMinimi          = null;
-        Integer anniMassimi         = null;
-
-        if (null != anniEsperienzaRuolo) {
-            if (anniEsperienzaRuolo == 0) {
-                anniMassimi = 1;
-            } else if (anniEsperienzaRuolo == 1) {
-                anniMinimi = 1;
-                anniMassimi = 2;
-            } else if (anniEsperienzaRuolo == 2) {
-                anniMinimi  = 2;
-                anniMassimi = 5;
-            } else {
-                anniMinimi  = 5;
+            if (null != anniEsperienzaRuolo) {
+                if (anniEsperienzaRuolo == 0) {
+                    anniMassimi = 1;
+                } else if (anniEsperienzaRuolo == 1) {
+                    anniMinimi  = 1;
+                    anniMassimi = 2;
+                } else if (anniEsperienzaRuolo == 2) {
+                    anniMinimi  = 2;
+                    anniMassimi = 5;
+                } else {
+                    anniMinimi = 5;
+                }
             }
+
+            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.ricercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi));
+
+            model.addAttribute("need", needRepository.findById(idNeed).get());
+            model.addAttribute("titoloPagina", "Match del need");
+            model.addAttribute("candidatoRicerca", candidato);
+            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
+            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            return "liste_match_need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute(
-            "listCandidatiNonAssociati",
-            serviceCandidato.getRicercaCandidatiNonAssociati(
-                idNeed,
-                nome,
-                cognome,
-                idTipologia,
-                idTipo,
-                anniMinimi,
-                anniMassimi
-            )
-        );
-
-        model.addAttribute("need",                   serviceNeed.get(idNeed));
-        model.addAttribute("titoloPagina",           "Match del need");
-        model.addAttribute("candidatoRicerca",       candidato);
-        model.addAttribute("listAssociazioniNeed",   serviceAssociazione.listAllByNeed(idNeed));
-        model.addAttribute("listCandidatiAssociati", serviceCandidato.getCandidatiAssociati(idNeed));
-        model.addAttribute("listaTipologie",         serviceTipologia.listAll());
-        model.addAttribute("listaTipi",              serviceTipo.listAll());
-        model.addAttribute("listaStatiC",            serviceStatoC.listAllOrdered());
-        return "liste_match_need";
     }
 
     @RequestMapping("/associa/staffing/{idNeed}/{idCandidato}")
@@ -345,9 +423,9 @@ public class NeedController {
     ){
         try {
             AssociazioneCandidatoNeed associazione = new AssociazioneCandidatoNeed();
-            Candidato                 candidato    = serviceCandidato.get(idCandidato);
+            Candidato                 candidato    = candidatoRepository.findById(idCandidato).get();
             long                      millis       = System.currentTimeMillis();
-            Need                      need         = serviceNeed.get(idNeed);
+            Need                      need         = needRepository.findById(idNeed).get();
             StatoA                    statoa       = new StatoA();
 
             statoa.setId(1);
@@ -356,27 +434,29 @@ public class NeedController {
             associazione.setNeed(need);
             associazione.setStato(statoa);
             associazione.setDataModifica(new Date(millis));
+            associazione.setOwner(need.getOwner());
 
-            serviceAssociazione.save(associazione);
+            associazioniRepository.save(associazione);
 
             candidato.getNeeds().add(need);
-            serviceCandidato.save(candidato);
+            candidatoRepository.save(candidato);
 
-            model.addAttribute("need",                      need);
-            model.addAttribute("titoloPagina",              "Match del need");
-            model.addAttribute("listCandidatiNonAssociati", serviceCandidato.getCandidatiNonAssociati(idNeed));
-            model.addAttribute("listAssociazioniNeed",      serviceAssociazione.listAllByNeed(idNeed));
-            model.addAttribute("listCandidatiAssociati",    serviceCandidato.getCandidatiAssociati(idNeed));
-            model.addAttribute("listaTipologie",            serviceTipologia.listAll());
-            model.addAttribute("listaTipi",                 serviceTipo.listAll());
-            model.addAttribute("listaStatiC",               serviceStatoC.listAllOrdered());
-            model.addAttribute("candidatoRicerca",          new Candidato());
+            model.addAttribute("need", need);
+            model.addAttribute("titoloPagina", "Match del need");
+            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.findCandidatiNonAssociati(idNeed));
+            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
+            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("candidatoRicerca", new Candidato());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/need/match/"+idNeed;
+            return "redirect:/need/match/" + idNeed;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "redirect:/need/match/"+idNeed;
     }
 
     @RequestMapping("/rimuovi/staffing/{idNeed}/{idCandidato}")
@@ -387,48 +467,50 @@ public class NeedController {
         RedirectAttributes ra
     ){
         try {
-            Need      need      = serviceNeed.get(idNeed);
-            Candidato candidato = serviceCandidato.get(idCandidato);
+            Need      need      = needRepository.findById(idNeed).get();
+            Candidato candidato = candidatoRepository.findById(idCandidato).get();
 
             candidato.getNeeds().remove(need);
             need.getCandidati().remove(candidato);
 
-            serviceCandidato.save(candidato);
-            serviceNeed.save(need);
+            candidatoRepository.save(candidato);
+            needRepository.save(need);
 
-            model.addAttribute("need",                      need);
-            model.addAttribute("titoloPagina",              "Match del need");
-            model.addAttribute("listCandidatiNonAssociati", serviceCandidato.getCandidatiNonAssociati(idNeed));
-            model.addAttribute("listCandidatiAssociati",    serviceCandidato.getCandidatiAssociati(idNeed));
-            model.addAttribute("listAssociazioniNeed",      serviceAssociazione.listAllByNeed(idNeed));
-            model.addAttribute("listaTipologie",            serviceTipologia.listAll());
-            model.addAttribute("listaTipi",                 serviceTipo.listAll());
-            model.addAttribute("listaStatiC",               serviceStatoC.listAllOrdered());
-            model.addAttribute("candidatoRicerca",          new Candidato());
+            model.addAttribute("need", need);
+            model.addAttribute("titoloPagina", "Match del need");
+            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.findCandidatiNonAssociati(idNeed));
+            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
+            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("candidatoRicerca", new Candidato());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/need/match/"+idNeed;
+            return "liste_match_need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "liste_match_need";
-    }
-
-    public String recuperaDescrizioneLivello(Integer id) throws ElementoNonTrovatoException {
-        return serviceLivelli.get(id).getDescrizione();
     }
 
     @RequestMapping("/associazioni/{idNeed}")
     public String showNeedAssociazioniList(
         @PathVariable("idNeed") Integer idNeed,
         Model model
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Need                            need             = needRepository.findById(idNeed).get();
+            List<AssociazioneCandidatoNeed> listAssociazioni = associazioniRepository.findByNeed_Id(idNeed);
 
-        Need                            need             = serviceNeed.get(idNeed);
-        List<AssociazioneCandidatoNeed> listAssociazioni = serviceAssociazione.listAllByNeed(idNeed);
+            model.addAttribute("listAssociazioni", listAssociazioni);
+            model.addAttribute("need", need);
 
-        model.addAttribute("listAssociazioni", listAssociazioni);
-        model.addAttribute("need",             need);
+            return "lista_associazioni_need";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "lista_associazioni_need";
+            return "error";
+        }
     }
 }

@@ -5,45 +5,36 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ClienteRepository extends CrudRepository<Cliente, Integer> {
+@Repository
+public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
-    Long countById(Integer id);
+    @Query(value= """
+         SELECT c.*
+         FROM cliente c
+         where if(?1 is not null, c.denominazione like %?1%, 1=1)
+         and if(?2 is not null, c.citta like ?2%, 1=1)
+        """, nativeQuery=true)
+    List<Cliente> ricercaByDenominazioneAndCitta(String denominazione, String citta);
 
-    @Query(value=" SELECT c.* \n" +
-            "             FROM cliente c\n" +
-            "             where if(:denominazione is not null, c.denominazione like %:denominazione%, 1=1)\n" +
-            "             and if(:citta is not null, c.citta=:citta, 1=1) ", nativeQuery=true)
-    List<Cliente> findRicerca(@Param("denominazione") String denominazione, @Param("citta") String citta);
+    List<Cliente> findByDenominazione(String denominazione);
 
+    List<Cliente> findByEmail(String email);
 
-    @Query(value=" SELECT if(count(*)=1,1,0)\n" +
-            "FROM cliente c\n" +
-            "where denominazione = :denominazione ", nativeQuery=true)
-    Integer checkDenominazione(@Param("denominazione") String denominazione);
-
-    @Query(value=" SELECT if(count(*)=1,1,0)\n" +
-            "FROM cliente c\n" +
-            "where email = :email ", nativeQuery=true)
-    Integer checkEmail(@Param("email") String email);
-
-    @Query(value=" SELECT c.*, co.id_owner, \n" +
-        "           (ifnull ((select id_prospection from cliente_prospection where id_cliente = c.id),null)) id_prospection, " +
-        "           (ifnull ((select id_qm from cliente_qm where id_cliente = c.id),null)) id_qm " +
-        "             FROM cliente c, cliente_owner co \n" +
-        "             where c.id = co.id_cliente " +
-        "             and if(:status is not null, c.status = :status, 1=1)\n " +
-        "             and if(:owner is not null, co.id_owner = :owner, 1=1)\n " +
-        "             and if(:tipologia is not null, c.tipologia = :tipologia, 1=1)\n " +
-        "             and if(:denominazione is not null, c.denominazione like %:denominazione%, 1=1) " ,nativeQuery=true)
-    List<Cliente> findRicercaAzienda(
-        @Param("status") Integer status,
-        @Param("owner") Integer owner,
-        @Param("tipologia") String tipologia,
-        @Param("denominazione") String denominazione);
+    @Query(value= """
+         SELECT c.*, co.id_owner,
+            (ifnull ((select id_prospection from cliente_prospection where id_cliente = c.id),null)) id_prospection,            (ifnull ((select id_qm from cliente_qm where id_cliente = c.id),null)) id_qm              FROM cliente c, cliente_owner co\s
+         where c.id = co.id_cliente
+         and if(?1 is not null, c.status = ?1, 1=1)
+         and if(?2 is not null, co.id_owner = ?2, 1=1)
+         and if(?3 is not null, c.tipologia like ?3%, 1=1)
+         and if(?4 is not null, c.denominazione like %?4%, 1=1)
+        """,nativeQuery=true)
+    List<Cliente> ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(
+        Integer status, Integer owner, String tipologia, String denominazione);
 }

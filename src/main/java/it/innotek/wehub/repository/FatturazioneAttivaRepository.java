@@ -5,21 +5,22 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.FatturazioneAttiva;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface FatturazioneAttivaRepository extends CrudRepository<FatturazioneAttiva, Integer> {
+@Repository
+public interface FatturazioneAttivaRepository extends JpaRepository<FatturazioneAttiva, Integer> {
 
-    Long countById(Integer id);
-
-    @Query(value=" SELECT fa.*, fc.id_cliente, sfa.id_stato \n" +
-                 " FROM fatturazione_attiva fa, fattura_cliente fc, stato_fatturazione_attiva sfa\n" +
-                 " where fa.id = fc.id_fattura\n" +
-                 " and fa.id = sfa.id_fattura\n" +
-                 "and if(:cliente is not null, fc.id_cliente = :cliente, 1=1)\n" +
-                 "and if(:stato is not null, sfa.id_stato = :stato, 1=1) ", nativeQuery=true)
-    List<FatturazioneAttiva> findRicerca(@Param("cliente") Integer cliente, @Param("stato") Integer stato);
+    @Query(value= """
+          SELECT fa.*, fc.id_cliente, sfa.id_stato
+          FROM fatturazione_attiva fa, fattura_cliente fc, stato_fatturazione_attiva sfa
+          where fa.id = fc.id_fattura
+          and fa.id = sfa.id_fattura
+          and if(?1 is not null, fc.id_cliente = ?1, 1=1)
+          and if(?2 is not null, sfa.id_stato = ?2, 1=1)
+         """, nativeQuery = true)
+    List<FatturazioneAttiva> ricercaByIdClienteAndIdStato(Integer idCliente, Integer idStato);
 }

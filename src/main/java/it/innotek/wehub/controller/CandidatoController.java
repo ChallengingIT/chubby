@@ -8,9 +8,12 @@ import it.innotek.wehub.entity.AssociazioneCandidatoNeed;
 import it.innotek.wehub.entity.Candidato;
 import it.innotek.wehub.entity.File;
 import it.innotek.wehub.entity.TipologiaF;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.*;
+import it.innotek.wehub.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,57 +31,61 @@ import java.util.List;
 public class CandidatoController {
 
     @Autowired
-    private CandidatoService     serviceCandidato;
+    private CandidatoRepository     candidatoRepository;
     @Autowired
-    private ClienteService       serviceCliente;
+    private TipologiaRepository     tipologiaRepository;
     @Autowired
-    private TipologiaService     serviceTipologia;
+    private FacoltaRepository       facoltaRepository;
     @Autowired
-    private FacoltaService       serviceFacolta;
+    private StatoCRepository        statoCRepository;
     @Autowired
-    private StatoCService        serviceStatoC;
+    private LivelloRepository       livelloRepository;
     @Autowired
-    private LivelloService       serviceLivelli;
+    private SkillRepository         skillRepository;
     @Autowired
-    private SkillService         serviceSkill;
+    private FileRepository          fileRepository;
     @Autowired
-    private FileService          serviceFile;
+    private FileCandidatoRepository fileCandidatoRepository;
     @Autowired
-    private FileCandidatoService serviceFileCandidato;
+    private OwnerRepository         ownerRepository;
     @Autowired
-    private OwnerService         serviceOwner;
+    private TipoRepository          tipoRepository;
     @Autowired
-    private TipoService          serviceTipo;
+    private FornitoreRepository     fornitoreRepository;
     @Autowired
-    private FornitoreService     serviceFornitore;
-    @Autowired
-    private AssociazioniService  serviceAssociazione;
-    @Autowired
-    private NeedService          serviceNeed;
+    private AssociazioniRepository  associazioniRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(CandidatoController.class);
 
     @RequestMapping
     public String showCandidatiList(Model model){
+        try {
+            Pageable        limit         = PageRequest.of(0, 60);
+            List<Candidato> listCandidati = candidatoRepository.findAll(limit).toList();
+            List<Integer>   listId        = new ArrayList<>();
 
-        List<Candidato> listCandidati = serviceCandidato.listAll();
-        List<Integer>   listId        = new ArrayList<>();
+            for (Candidato cand : listCandidati) {
+                listId.add(cand.getId());
+            }
 
-        for (Candidato cand : listCandidati) {
-            listId.add(cand.getId());
+            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 1);
+            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 2);
+
+            listCandidati = candidatoRepository.findAll(limit).toList();
+
+            model.addAttribute("listCandidati", listCandidati);
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("candidatoRicerca", new Candidato());
+            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
+            model.addAttribute("listaFacolta", facoltaRepository.findAll());
+            return "candidati";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        serviceFileCandidato.deleteFileVecchi(listId.toString(),1);
-        serviceFileCandidato.deleteFileVecchi(listId.toString(),2);
-
-        listCandidati = serviceCandidato.listAll();
-
-        model.addAttribute("listCandidati",    listCandidati);
-        model.addAttribute("listaTipologie",   serviceTipologia.listAll());
-        model.addAttribute("listaTipi",        serviceTipo.listAll());
-        model.addAttribute("listaStatiC",      serviceStatoC.listAllOrdered());
-        model.addAttribute("candidatoRicerca", new Candidato());
-        model.addAttribute("listaFornitori",   serviceFornitore.listAll());
-        model.addAttribute("listaFacolta",     serviceFacolta.listAll());
-        return "candidati";
     }
 
     @RequestMapping("/ricerca")
@@ -86,34 +93,40 @@ public class CandidatoController {
         Model model,
         Candidato candidato
     ){
-        Integer idTipologia = candidato.getTipologia() != null ? candidato.getTipologia().getId() : null;
-        Integer idStato     = candidato.getStato() != null ? candidato.getStato().getId() : null;
-        Integer idTipo      = candidato.getTipo() != null ? candidato.getTipo().getId() : null;
-        String  nome        = ( candidato.getNome() != null && !candidato.getNome().isEmpty() ) ? candidato.getNome() : null;
-        String  cognome     = ( candidato.getCognome() != null && !candidato.getCognome().isEmpty() ) ? candidato.getCognome() : null;
-        String  email       = ( candidato.getEmail() != null && !candidato.getEmail().isEmpty()) ? candidato.getEmail() : null;
+        try {
+            Integer idTipologia = candidato.getTipologia() != null ? candidato.getTipologia().getId() : null;
+            Integer idStato     = candidato.getStato() != null ? candidato.getStato().getId() : null;
+            Integer idTipo      = candidato.getTipo() != null ? candidato.getTipo().getId() : null;
+            String  nome        = ( candidato.getNome() != null && !candidato.getNome().isEmpty() ) ? candidato.getNome() : null;
+            String  cognome     = ( candidato.getCognome() != null && !candidato.getCognome().isEmpty() ) ? candidato.getCognome() : null;
+            String  email       = ( candidato.getEmail() != null && !candidato.getEmail().isEmpty() ) ? candidato.getEmail() : null;
 
-        List<Candidato> listCandidati = serviceCandidato.listRicerca(nome, cognome, email, idTipologia, idStato, idTipo);
-        List<Integer>   listId = new ArrayList<>();
+            List<Candidato> listCandidati = candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, idTipologia, idStato, idTipo);
+            List<Integer>   listId        = new ArrayList<>();
 
-        for (Candidato cand : listCandidati) {
-            listId.add(cand.getId());
+            for (Candidato cand : listCandidati) {
+                listId.add(cand.getId());
+            }
+
+            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 1);
+            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 2);
+
+            listCandidati = candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, idTipologia, idStato, idTipo);
+
+            model.addAttribute("listCandidati", listCandidati);
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("candidatoRicerca", candidato);
+            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
+            model.addAttribute("listaFacolta", facoltaRepository.findAll());
+
+            return "candidati";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        serviceFileCandidato.deleteFileVecchi(listId.toString(),1);
-        serviceFileCandidato.deleteFileVecchi(listId.toString(),2);
-
-        listCandidati = serviceCandidato.listRicerca(nome,cognome,email,idTipologia,idStato,idTipo);
-
-        model.addAttribute("listCandidati",    listCandidati);
-        model.addAttribute("listaTipologie",   serviceTipologia.listAll());
-        model.addAttribute("listaTipi",        serviceTipo.listAll());
-        model.addAttribute("listaStatiC",      serviceStatoC.listAllOrdered());
-        model.addAttribute("candidatoRicerca", candidato);
-        model.addAttribute("listaFornitori",   serviceFornitore.listAll());
-        model.addAttribute("listaFacolta",     serviceFacolta.listAll());
-
-        return "candidati";
     }
 
     @RequestMapping("/aggiungi")
@@ -121,24 +134,29 @@ public class CandidatoController {
         Model model,
         RedirectAttributes ra
     ){
+        try {
+            if (null != model.getAttribute("candidato")) {
+                model.addAttribute("candidato", model.getAttribute("candidato"));
+            } else {
+                model.addAttribute("candidato", new Candidato());
+            }
 
-        if (null != model.getAttribute("candidato")) {
-            model.addAttribute("candidato", model.getAttribute("candidato"));
-        } else {
-            model.addAttribute("candidato", new Candidato());
+            model.addAttribute("titoloPagina", "Aggiungi candidato");
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
+            model.addAttribute("listaFacolta", facoltaRepository.findAll());
+            model.addAttribute("listOwner", ownerRepository.findAll());
+
+            return "candidato_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("titoloPagina",           "Aggiungi staffing");
-        model.addAttribute("listaTipologie",         serviceTipologia.listAll());
-        model.addAttribute("listaTipi",              serviceTipo.listAll());
-        model.addAttribute("listaStatiC",            serviceStatoC.listAllOrdered());
-        model.addAttribute("listaLivelliScolastici", serviceLivelli.listAll());
-        model.addAttribute("listaSkillOrdinata",     serviceSkill.listAll());
-        model.addAttribute("listaFornitori",         serviceFornitore.listAll());
-        model.addAttribute("listaFacolta",           serviceFacolta.listAll());
-        model.addAttribute("listOwner",              serviceOwner.listAll());
-
-        return "candidato_form";
     }
 
     @RequestMapping("/salva")
@@ -148,64 +166,70 @@ public class CandidatoController {
         Candidato candidato,
         Model model,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            if (controllaMailDuplicata(candidato.getEmail())) {
 
-        if (controllaMailDuplicata(candidato.getEmail()) == 1) {
+                ra.addFlashAttribute("message", "Email già associata ad un altro profilo");
 
-            ra.addFlashAttribute("message", "Email già associata ad un altro profilo" );
-
-            if (candidato.getId() == null) {
-                ra.addFlashAttribute(candidato);
-                return "redirect:/staffing/aggiungi";
+                if (candidato.getId() == null) {
+                    ra.addFlashAttribute(candidato);
+                    return "redirect:/staffing/aggiungi";
+                }
             }
-        }
 
-        String descrizioneTipologia = recuperaDescrizioneTipologia(candidato.getTipologia().getId());
-        String descrizioneLivello   = recuperaDescrizioneLivello(candidato.getLivelloScolastico().getId());
+            String descrizioneTipologia = recuperaDescrizioneTipologia(candidato.getTipologia().getId());
+            String descrizioneLivello   = recuperaDescrizioneLivello(candidato.getLivelloScolastico().getId());
 
-        candidato.getTipologia().setDescrizione(descrizioneTipologia);
-        candidato.getLivelloScolastico().setDescrizione(descrizioneLivello);
+            candidato.getTipologia().setDescrizione(descrizioneTipologia);
+            candidato.getLivelloScolastico().setDescrizione(descrizioneLivello);
 
-        if (null == candidato.getRating()) {
-            candidato.setRating(0.0);
-        }
-
-        if (null == candidato.getFornitore()) {
-            candidato.setFornitore(null);
-        }
-
-        if (null != candidato.getFacolta()) {
-            if (null == candidato.getFacolta().getId()) {
-                candidato.setFacolta(null);
+            if (null == candidato.getRating()) {
+                candidato.setRating(0.0);
             }
+
+            if (null == candidato.getFornitore()) {
+                candidato.setFornitore(null);
+            }
+
+            if (null != candidato.getFacolta()) {
+                if (null == candidato.getFacolta().getId()) {
+                    candidato.setFacolta(null);
+                }
+            }
+
+            candidatoRepository.save(candidato);
+
+            boolean modifica = false;
+            Integer idCandidato;
+
+            if (null != candidato.getId()) {
+                modifica = true;
+            }
+
+            if (modifica) {
+                idCandidato = candidato.getId();
+            } else {
+                idCandidato = candidatoRepository.findMaxId().intValue();
+            }
+
+            if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty()) {
+
+                uploadFileVoid(file, idCandidato, 1, ra);
+            }
+            if (( null != cf.getOriginalFilename() ) && !cf.getOriginalFilename().isEmpty()) {
+
+                uploadFileVoid(cf, idCandidato, 2, ra);
+            }
+
+            ra.addFlashAttribute("message", "Il candidato è stato salvato con successo");
+            return "redirect:/intervista/" + idCandidato;
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        serviceCandidato.save(candidato);
-
-        boolean modifica = false;
-        Integer idCandidato;
-
-        if (null != candidato.getId()) {
-            modifica=true;
-        }
-
-        if (modifica) {
-            idCandidato = candidato.getId();
-        } else {
-            idCandidato = serviceCandidato.getUltimoId();
-        }
-
-        if ((null != file.getOriginalFilename()) && !file.getOriginalFilename().isEmpty()) {
-
-            uploadFileVoid(file, idCandidato,1, ra);
-        }
-        if ((null != cf.getOriginalFilename()) && !cf.getOriginalFilename().isEmpty()) {
-
-            uploadFileVoid(cf, idCandidato,2, ra);
-        }
-
-        ra.addFlashAttribute("message", "Il candidato è stato salvato con successo" );
-        return "redirect:/intervista/" + idCandidato;
     }
 
     @RequestMapping("/visualizza/{id}")
@@ -215,24 +239,24 @@ public class CandidatoController {
         RedirectAttributes ra
     ) {
         try {
-            Candidato candidato = serviceCandidato.get(id);
+            Candidato candidato = candidatoRepository.findById(id).get();
 
-            model.addAttribute("candidato",              candidato);
-            model.addAttribute("titoloPagina",           "Modifica staffing");
-            model.addAttribute("listaTipologie",         serviceTipologia.listAll());
-            model.addAttribute("listaTipi",              serviceTipo.listAll());
-            model.addAttribute("listaStatiC",            serviceStatoC.listAllOrdered());
-            model.addAttribute("listaLivelliScolastici", serviceLivelli.listAll());
-            model.addAttribute("listaSkillOrdinata",     serviceSkill.listAll());
-            model.addAttribute("listaFacolta",           serviceFacolta.listAll());
-            model.addAttribute("listaFornitori",         serviceFornitore.listAll());
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("titoloPagina", "Modifica staffing");
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaFacolta", facoltaRepository.findAll());
+            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/staffing";
+            return "candidato_visualizza_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        return "candidato_visualizza_form";
     }
 
     @RequestMapping("/modifica/{id}")
@@ -242,24 +266,57 @@ public class CandidatoController {
         RedirectAttributes ra
     ) {
         try {
-            Candidato candidato = serviceCandidato.get(id);
+            Candidato candidato = candidatoRepository.findById(id).get();
 
-            model.addAttribute("candidato",              candidato);
-            model.addAttribute("titoloPagina",           "Modifica staffing");
-            model.addAttribute("listaTipologie",         serviceTipologia.listAll());
-            model.addAttribute("listaTipi",              serviceTipo.listAll());
-            model.addAttribute("listaStatiC",            serviceStatoC.listAllOrdered());
-            model.addAttribute("listaLivelliScolastici", serviceLivelli.listAll());
-            model.addAttribute("listaSkillOrdinata",     serviceSkill.listAll());
-            model.addAttribute("listaFacolta",           serviceFacolta.listAll());
-            model.addAttribute("listOwner",              serviceOwner.listAll());
-            model.addAttribute("listaFornitori",         serviceFornitore.listAll());
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("titoloPagina", "Modifica staffing");
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaFacolta", facoltaRepository.findAll());
+            model.addAttribute("listOwner", ownerRepository.findAll());
+            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/staffing";
+            return "candidato_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "candidato_form";
+    }
+
+    @RequestMapping("/modifica/noskills/{id}")
+    public String showEditFormNoSkills(
+        @PathVariable("id") Integer id,
+        Candidato candidatoInput,
+        Model model,
+        RedirectAttributes ra
+    ) {
+        try {
+            Candidato candidato = candidatoRepository.findById(id).get();
+
+            candidato.setSkills(null);
+
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("titoloPagina", "Modifica staffing");
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipi", tipoRepository.findAll());
+            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
+            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
+            model.addAttribute("listaFacolta", facoltaRepository.findAll());
+            model.addAttribute("listOwner", ownerRepository.findAll());
+            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
+
+            return "candidato_form";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/elimina/{id}")
@@ -268,28 +325,34 @@ public class CandidatoController {
         RedirectAttributes ra
     ){
         try {
-            Candidato candidato = serviceCandidato.get(id);
+            Candidato candidato = candidatoRepository.findById(id).get();
 
             for (AssociazioneCandidatoNeed associazione : candidato.getAssociazioni()) {
-                serviceAssociazione.delete(associazione.getId());
+                associazioniRepository.deleteById(associazione.getId());
             }
 
-            serviceCandidato.delete(id);
-            ra.addFlashAttribute("message", "Il candidato è stato cancellato con successo" );
+            candidatoRepository.deleteById(id);
+            ra.addFlashAttribute("message", "Il candidato è stato cancellato con successo");
 
-        } catch(ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage() );
+            return "redirect:/staffing";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        return "redirect:/staffing";
     }
 
     @RequestMapping("/ottieni/{id}")
     public void getCandidato(
         @PathVariable("id") Integer id,
         Model model
-    ) throws ElementoNonTrovatoException {
-        model.addAttribute("candidatoToUse", serviceCandidato.get(id));
+    ) {
+        try {
+            model.addAttribute("candidatoToUse", candidatoRepository.findById(id).get());
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+        }
     }
 
     public void uploadFileVoid(
@@ -319,23 +382,23 @@ public class CandidatoController {
             candidato.setId(idCandidato);
             fileOggettoCandidato.setCandidato(candidato);
 
-            serviceFile.save(fileOggettoCandidato);
+            fileRepository.save(fileOggettoCandidato);
 
         } catch (Exception e) {
             ra.addFlashAttribute("message", e.getMessage() );
         }
     }
 
-    public String recuperaDescrizioneTipologia(Integer id) throws ElementoNonTrovatoException {
-        return serviceTipologia.get(id).getDescrizione();
+    public String recuperaDescrizioneTipologia(Integer id) {
+        return tipologiaRepository.findById(id).get().getDescrizione();
     }
 
-    public String recuperaDescrizioneLivello(Integer id) throws ElementoNonTrovatoException {
-        return serviceLivelli.get(id).getDescrizione();
+    public String recuperaDescrizioneLivello(Integer id) {
+        return livelloRepository.findById(id).get().getDescrizione();
     }
 
-    public Integer controllaMailDuplicata(String email) {
-        return serviceCandidato.controllaEmail(email);
+    public boolean controllaMailDuplicata(String email) {
+        List<Candidato> candidati = candidatoRepository.findByEmail(email);
+        return ((null != candidati) && !candidati.isEmpty());
     }
-
 }

@@ -5,7 +5,7 @@
 package it.innotek.wehub;
 
 import it.innotek.wehub.entity.timesheet.Email;
-import it.innotek.wehub.service.TimedEmailService;
+import it.innotek.wehub.repository.TimedEmailRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class EmailSenderService {
     private final SpringTemplateEngine templateEngine;
 
     @Autowired
-    private TimedEmailService serviceTimedEmail;
+    private TimedEmailRepository timedEmailRepository;
 
     public EmailSenderService(
         JavaMailSender emailSender,
@@ -97,7 +97,7 @@ public class EmailSenderService {
 
                         helper.setText(html, true);
 
-                        serviceTimedEmail.updateEmailTemporizzata(idEmail, 1);
+                        timedEmailRepository.updateInviataByEmailCandidato(1, idEmail);
 
                         emailSender.send(message);
 

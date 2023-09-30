@@ -136,6 +136,15 @@ public class Intervista implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
+        name = "intervista_next_owner",
+        joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Owner nextOwner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
             name = "stato_intervista",
             joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "id_stato", referencedColumnName = "id")

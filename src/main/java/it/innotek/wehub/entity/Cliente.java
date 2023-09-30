@@ -59,7 +59,7 @@ public class Cliente  implements Serializable {
     @Column(length = 45)
     private String fax;
 
-    @Column(nullable = false, unique = true, length = 45)
+    @Column(unique = true, length = 45)
     private String email;
 
     @Column(length = 45)
@@ -125,7 +125,7 @@ public class Cliente  implements Serializable {
     @ToString.Exclude
     private Prospection prospection;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
         name = "progetto_cliente",
         joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),

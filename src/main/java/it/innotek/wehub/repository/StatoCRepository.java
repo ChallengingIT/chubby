@@ -5,16 +5,12 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.StatoC;
-import it.innotek.wehub.entity.Tipologia;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface StatoCRepository extends CrudRepository<StatoC, Integer> {
-
-    Long countById(Integer id);
-
-    @Query(value=" SELECT * FROM statoc order by id", nativeQuery=true)
-    List<StatoC> findAllOrdered();
+@Repository
+public interface StatoCRepository extends JpaRepository<StatoC, Integer> {
+    List<StatoC> findAllByOrderByIdAsc();
 }

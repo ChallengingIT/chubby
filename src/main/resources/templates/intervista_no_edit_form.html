@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 <div class="wrapper d-flex align-items-stretch">
 
     <div th:replace="~{sidebar}">  </div>
@@ -136,7 +136,7 @@
                 <br>
                 <div class="form-group row">
                     <div class="col">
-                        <label class="col col-form-label">Principali competenze rispetto al ruolo</label>
+                        <label class="col col-form-label">Principali competenze vs ruolo</label>
                         <input type="text" th:field="*{competenze}" class="form-control"  maxlength="90" disabled/>
                     </div>
                     <div class="col">
@@ -194,16 +194,20 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label class="col col-form-label">Data Pros. Aggiornamento</label>
-                        <input type="datetime-local" lang="it-IT" th:field="*{dataAggiornamento}" class="form-control"/>
+                        <label class="col col-form-label">Preavviso</label>
+                        <input type="text" th:field="*{preavviso}" class="form-control" maxlength="45" disabled/>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col">
-                        <label class="col col-form-label">Preavviso</label>
-                        <input type="text" th:field="*{preavviso}" class="form-control" maxlength="45" disabled/>
+                        <label class="col col-form-label">Next Deadline</label>
+                        <input type="datetime-local" lang="it-IT" th:field="*{dataAggiornamento}" class="form-control" disabled/>
                     </div>
                     <div class="col">
+                        <label class="col col-form-label">Owner next deadline</label>
+                        <select th:field="*{nextOwner.id}" class="form-control select-medium" disabled>
+                            <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
                     </div>
                     <div class="col">
                     </div>

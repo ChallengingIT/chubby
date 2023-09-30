@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -41,19 +41,21 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%" style="background-color:white;">
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"  style="background-color:white;">
                 <thead class="thead" id="tabella-blu-tre">
-                <tr>
+                <tr class="tr1">
                     <th>Data</th>
                     <th>Tipologia</th>
                     <th>Job Title</th>
                     <th>Nome</th>
                     <th>Stato</th>
+                    <th>Owner</th>
+                    <th>Elimina</th>
                 </tr>
                 </thead>
-                <tbody  style=" text-align: center;">
+                <tbody  class="table1" style=" text-align: center;">
                 <th:block th:each="associazione : ${listAssociazioniNeed}">
-                    <tr>
+                    <tr class="tr1">
                         <td>[[${associazione.dataModifica}]]</td>
                         <td>[[${associazione.candidato.tipo.descrizione}]]</td>
                         <td>[[${associazione.candidato.tipologia.descrizione}]]</td>
@@ -62,6 +64,17 @@
                             <span th:unless="${associazione.stato == null}">
                                 [[${associazione.stato.descrizione}]]
                             </span>
+                        </td>
+                        <td>
+                            <span th:unless="${associazione.owner == null}">
+                                [[${associazione.owner.descrizione}]]
+                            </span>
+                        </td>
+
+                        <td>
+                            <a th:href="@{'/associazioni/elimina/' + ${need.id} + '/' + ${associazione.id}}"  class="btn btn-info btn-lg">
+                                <i class="fas fa-trash"></i>
+                            </a>
                         </td>
                     </tr>
                 </th:block>
@@ -84,7 +97,7 @@
         </div>
         <br>
         <div>
-            <h2 class="mb-4"><b>Lista Candidati Associati</b></h2>
+            <h2 class="mb-4"><b>Candidati Associati</b></h2>
             <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
                     <label class="col-sm-16 col-form-label">Numero di righe</label>
                     <select class="form-control maxRows2" name="state">
@@ -97,21 +110,22 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%" style="background-color:white;">
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"  style="background-color:white;">
                 <thead class="thead" id="tabella-blu-due">
-                <tr>
+                <tr class="tr2">
                     <th>E-mail</th>
                     <th>Nome</th>
                     <th>Job Title</th>
                     <th>Rating</th>
                     <th>Stato</th>
                     <th>Contatto</th>
-                    <th>Azioni</th>
+                    <th>Elimina</th>
+                    <th>Status</th>
                 </tr>
                 </thead>
-                <tbody  style=" text-align: center;">
+                <tbody  class="table2" style=" text-align: center;">
                 <th:block th:each="candidato : ${listCandidatiAssociati}">
-                    <tr>
+                    <tr class="tr2">
                         <td>[[${candidato.email}]]</td>
                         <td><a th:href="@{'/staffing/modifica/' + ${candidato.id}}">[[${candidato.cognome}]] [[${candidato.nome}]]</a></td>
                         <td>[[${candidato.tipologia.descrizione}]]</td>
@@ -122,6 +136,11 @@
                             </span>
                         </td>
                         <td th:text="${#dates.format(candidato.dataUltimoContatto, 'dd/MM/yyyy')}"></td>
+                        <td>
+                            <a th:href="@{'/associazioni/elimina/candidato/' + ${need.id} + '/' + ${candidato.id}}"  class="btn btn-info btn-lg">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
                         <td>
                             <a th:href="@{'/associazioni/aggiungi/' + ${need.id} +'/'+  ${candidato.id}}"  class="btn btn-info btn-lg">Aggiorna</a>
                         </td>
@@ -137,7 +156,7 @@
                                 <span> < <span class="sr-only">(current)</span></span>
                             </li>
                             <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev">
+                            <li data-page="next" class="prev2">
                                 <span> > <span class="sr-only">(current)</span></span>
                             </li>
                         </ul>
@@ -202,9 +221,9 @@
                     <option value="100">100</option>
                 </select>
             </div>
-            <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%"  style="background-color:white;">
+            <table class="table table-striped table-bordered table-sm sortable table-responsive-md"   style="background-color:white;">
                 <thead class="thead" id="tabella-blu">
-                <tr>
+                <tr class="tr3">
                     <th>E-mail</th>
                     <th>Nome</th>
                     <th>Job Title</th>
@@ -214,9 +233,9 @@
                     <th>Azioni</th>
                 </tr>
                 </thead>
-                <tbody  id="valori-tabella">
+                <tbody  class="table3" id="valori-tabella">
                 <th:block th:each="candidato : ${listCandidatiNonAssociati}">
-                    <tr>
+                    <tr class="tr3">
                         <td>[[${candidato.email}]]</td>
                         <td><a th:href="@{'/staffing/modifica/' + ${candidato.id}}">[[${candidato.cognome}]] [[${candidato.nome}]]</a></td>
                         <td>[[${candidato.tipologia.descrizione}]]</td>
@@ -242,7 +261,7 @@
                             <span> < <span class="sr-only">(current)</span></span>
                         </li>
                         <!--	Here the JS Function Will Add the Rows -->
-                        <li data-page="next" class="prev">
+                        <li data-page="next" class="prev3">
                             <span> > <span class="sr-only">(current)</span></span>
                         </li>
                     </ul>

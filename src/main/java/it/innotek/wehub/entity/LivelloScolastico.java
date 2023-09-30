@@ -44,15 +44,6 @@ public class LivelloScolastico implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "livello_need",
-        joinColumns = @JoinColumn(name = "id_livello", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<Need> needs;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(
         name = "livello_staff",
         joinColumns = @JoinColumn(name = "id_livello", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "id_staff", referencedColumnName = "id")

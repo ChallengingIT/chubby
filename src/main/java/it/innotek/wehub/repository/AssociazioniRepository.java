@@ -5,58 +5,37 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.AssociazioneCandidatoNeed;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
 
-public interface AssociazioniRepository extends CrudRepository<AssociazioneCandidatoNeed, Integer> {
+@Repository
+public interface AssociazioniRepository extends JpaRepository<AssociazioneCandidatoNeed, Integer> {
 
-    Long countById(Integer id);
+    void deleteByCandidato_Id(Integer IdCandidato);
 
-    @Query(value=" SELECT acn.*, ca.id_candidato, na.id_need, sa.id_stato \n" +
-            "      FROM associazione_candidato_need acn, candidato_associazione ca, need_associazione na, stato_associazione sa\n" +
-            "      where acn.id = ca.id_associazione\n" +
-            "      and acn.id = na.id_associazione\n" +
-            "      and acn.id = sa.id_associazione\n" +
-            "      and ca.id_candidato = :idCandidato\n" +
-            "      order by acn.data_modifica ", nativeQuery=true)
-    List<AssociazioneCandidatoNeed> findAllByCandidato(@Param("idCandidato") Integer idCandidato);
+    List<AssociazioneCandidatoNeed> findByNeed_IdAndCandidato_IdAndStato_IdAndDataModifica(Integer id, Integer id1, Integer id2, Date dataModifica);
 
-    @Query(value=" SELECT acn.*, ca.id_candidato, na.id_need, sa.id_stato \n" +
-            "      FROM associazione_candidato_need acn, candidato_associazione ca, need_associazione na, stato_associazione sa\n" +
-            "      where acn.id = ca.id_associazione\n" +
-            "      and acn.id = na.id_associazione\n" +
-            "      and acn.id = sa.id_associazione\n" +
-            "      and na.id_need = :idNeed\n" +
-            "      order by acn.data_modifica ", nativeQuery=true)
-    List<AssociazioneCandidatoNeed> findAllByNeed(@Param("idNeed") Integer idNeed);
+    List<AssociazioneCandidatoNeed> findByCandidato_Id(Integer id);
 
-    @Query(value=" SELECT acn.*, ca.id_candidato, na.id_need, sa.id_stato \n" +
-            "      FROM associazione_candidato_need acn, candidato_associazione ca, need_associazione na, stato_associazione sa, need_cliente nc\n" +
-            "      where acn.id = ca.id_associazione\n" +
-            "      and acn.id = na.id_associazione\n" +
-            "      and acn.id = sa.id_associazione\n" +
-            "      and na.id_need = nc.id_need\n" +
-            "      and ca.id_candidato = :idCandidato\n" +
-            "      and if(:idStato is not null, sa.id_stato =:idStato, 1=1) " +
-            "      and if(:idCliente is not null, nc.id_cliente =:idCliente, 1=1) " +
-            "      and if(:dataModifica is not null, acn.data_modifica<=:dataModifica, 1=1)" +
-            "      order by acn.data_modifica ", nativeQuery=true)
-    List<AssociazioneCandidatoNeed> findRicerca(@Param("idCandidato") Integer idCandidato, @Param("idCliente") Integer idCliente, @Param("idStato") Integer idStato, @Param("dataModifica") Date dataModifica);
+    List<AssociazioneCandidatoNeed> findByNeed_Id(Integer idNeed);
 
-
-
-    @Query(value=" SELECT acn.*, ca.id_candidato, na.id_need, sa.id_stato \n" +
-            "      FROM associazione_candidato_need acn, candidato_associazione ca, need_associazione na, stato_associazione sa\n" +
-            "      where acn.id = ca.id_associazione\n" +
-            "      and acn.id = na.id_associazione\n" +
-            "      and acn.id = sa.id_associazione\n" +
-            "      and ca.id_candidato = :idCandidato\n"+
-            "      and na.id_need = :idNeed\n"+
-            "      and sa.id_stato = :idStato\n"+
-            "      and acn.data_modifica = :dataModifica\n", nativeQuery=true)
-    List<AssociazioneCandidatoNeed> findAssociazione(@Param("idNeed") Integer idNeed,@Param("idCandidato") Integer idCandidato, @Param("idStato") Integer idStato, @Param("dataModifica") Date dataModifica);
+    @Query(value= """
+         SELECT acn.*, ca.id_candidato, na.id_need, sa.id_stato, oa.id_owner
+              FROM associazione_candidato_need acn, candidato_associazione ca, owner_associazione oa, need_associazione na, stato_associazione sa, need_cliente nc
+              where acn.id = ca.id_associazione
+              and acn.id = na.id_associazione
+              and acn.id = oa.id_associazione
+              and acn.id = sa.id_associazione
+              and na.id_need = nc.id_need
+              and ca.id_candidato = ?1
+              and if(?3 is not null, sa.id_stato = ?3, 1=1)
+              and if(?2 is not null, nc.id_cliente = ?2, 1=1)
+              and if(?4 is not null, acn.data_modifica <= ?4, 1=1)
+              order by acn.data_modifica
+        """, nativeQuery=true)
+    List<AssociazioneCandidatoNeed> ricercaByCandidato_IdAndCliente_IdAndStato_IdAndDataModifica(Integer idCandidato, Integer idCliente, Integer idStato, Date dataModifica);
 }

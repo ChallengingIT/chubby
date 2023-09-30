@@ -26,7 +26,7 @@ function getPagination(table) {
       var trnum = 0; // reset tr counter
       var maxRows = parseInt($(this).val()); // get Max Rows from select option
 
-      var totalRows = $(table + ' tbody tr').length; // numbers of rows
+      var totalRows = $(table + ' .table1 .tr1').length; // numbers of rows
 
       if (maxRows == 5000) {
         $('.pagination').hide();
@@ -38,7 +38,7 @@ function getPagination(table) {
           }
       }
 
-      $(table + ' tr:gt(0)').each(function() {
+      $(table + ' .tr1:gt(0)').each(function() {
         // each TR in  table and not the header
         trnum++; // Start Counter
         if (trnum > maxRows) {
@@ -97,7 +97,7 @@ function getPagination(table) {
         $('.pagination [data-page="' + lastPage + '"]').addClass('active'); // add active class to the clicked
         // $(this).addClass('active');					// add active class to the clicked
 	  	limitPagging();
-        $(table + ' tr:gt(0)').each(function() {
+        $(table + ' .tr1:gt(0)').each(function() {
           // each tr in table not the header
           trIndex++; // tr index counter
           // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
@@ -128,7 +128,7 @@ $('.maxRows2')
       var trnum = 0; // reset tr counter
       var maxRows = parseInt($(this).val()); // get Max Rows from select option
 
-      var totalRows = $(table + ' tbody tr').length; // numbers of rows
+      var totalRows = $(table + ' .table2 .tr2').length; // numbers of rows
 
       if (maxRows == 5000) {
         $('.pagination2').hide();
@@ -140,7 +140,7 @@ $('.maxRows2')
           }
       }
 
-      $(table + ' tr:gt(0)').each(function() {
+      $(table + ' .tr2:gt(0)').each(function() {
         // each TR in  table and not the header
         trnum++; // Start Counter
         if (trnum > maxRows) {
@@ -158,7 +158,7 @@ $('.maxRows2')
         //	numbers of pages
         for (var i = 1; i <= pagenum; ) {
           // for each page append pagination li
-          $('.pagination2 .prev')
+          $('.pagination2 .prev2')
             .before(
               '<li data-page="' +
                 i +
@@ -199,7 +199,7 @@ $('.maxRows2')
         $('.pagination2 [data-page="' + lastPage + '"]').addClass('active'); // add active class to the clicked
         // $(this).addClass('active');					// add active class to the clicked
 	  	limitPagging();
-        $(table + ' tr:gt(0)').each(function() {
+        $(table + ' .tr2:gt(0)').each(function() {
           // each tr in table not the header
           trIndex++; // tr index counter
           // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
@@ -231,7 +231,7 @@ $('.maxRows2')
           var trnum = 0; // reset tr counter
           var maxRows = parseInt($(this).val()); // get Max Rows from select option
 
-          var totalRows = $(table + ' tbody tr').length; // numbers of rows
+          var totalRows = $(table + ' .table3 .tr3').length; // numbers of rows
 
           if (maxRows == 5000) {
             $('.pagination3').hide();
@@ -243,7 +243,7 @@ $('.maxRows2')
               }
           }
 
-          $(table + ' tr:gt(0)').each(function() {
+          $(table + ' .tr3:gt(0)').each(function() {
             // each TR in  table and not the header
             trnum++; // Start Counter
             if (trnum > maxRows) {
@@ -261,7 +261,7 @@ $('.maxRows2')
             //	numbers of pages
             for (var i = 1; i <= pagenum; ) {
               // for each page append pagination li
-              $('.pagination3 .prev')
+              $('.pagination3 .prev3')
                 .before(
                   '<li data-page="' +
                     i +
@@ -302,7 +302,7 @@ $('.maxRows2')
             $('.pagination3 [data-page="' + lastPage + '"]').addClass('active'); // add active class to the clicked
             // $(this).addClass('active');					// add active class to the clicked
     	  	limitPagging();
-            $(table + ' tr:gt(0)').each(function() {
+            $(table + ' .tr3:gt(0)').each(function() {
               // each tr in table not the header
               trIndex++; // tr index counter
               // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out

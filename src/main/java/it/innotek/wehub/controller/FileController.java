@@ -7,8 +7,11 @@ package it.innotek.wehub.controller;
 import it.innotek.wehub.entity.File;
 import it.innotek.wehub.entity.staff.FileStaffId;
 import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.*;
+import it.innotek.wehub.repository.FileRepository;
+import it.innotek.wehub.repository.FileStaffRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeTypeUtils;
@@ -23,25 +26,31 @@ import java.io.OutputStream;
 public class FileController {
 
     @Autowired
-    private FileService serviceFile;
+    private FileRepository      fileRepository;
     @Autowired
-    private FileStaffService serviceFileStaff;
+    private FileStaffRepository fileStaffRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @RequestMapping("/download/file/{id}")
     public void downloadFile(
         @PathVariable Integer id,
         HttpServletResponse resp
     ) throws IOException, ElementoNonTrovatoException {
+        try {
+            File   dbFile    = fileRepository.findById(id).get();
+            byte[] byteArray = dbFile.getData();
 
-        File   dbFile    = serviceFile.get(id);
-        byte[] byteArray = dbFile.getData();
+            resp.setContentType(MimeTypeUtils.APPLICATION_OCTET_STREAM.getType());
+            resp.setHeader("Content-Disposition", "attachment; filename=" + dbFile.getDescrizione());
+            resp.setContentLength(byteArray.length);
 
-        resp.setContentType(MimeTypeUtils.APPLICATION_OCTET_STREAM.getType());
-        resp.setHeader("Content-Disposition", "attachment; filename=" + dbFile.getDescrizione());
-        resp.setContentLength(byteArray.length);
+            try (OutputStream os = resp.getOutputStream()) {
+                os.write(byteArray, 0, byteArray.length);
+            }
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        try (OutputStream os = resp.getOutputStream()) {
-            os.write(byteArray, 0, byteArray.length);
         }
     }
 
@@ -49,16 +58,21 @@ public class FileController {
     public String eliminaFile(
         @PathVariable Integer idf,
         @PathVariable Integer ids
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            FileStaffId fileStaffId = new FileStaffId();
+            fileStaffId.setIdFile(idf);
+            fileStaffId.setIdStaff(ids);
 
-        FileStaffId fileStaffId = new FileStaffId();
-        fileStaffId.setIdFile(idf);
-        fileStaffId.setIdStaff(ids);
+            fileStaffRepository.deleteById(fileStaffId);
 
-        serviceFileStaff.delete(fileStaffId);
+            fileRepository.deleteById(idf);
 
-        serviceFile.delete(idf);
+            return "redirect:/hr/staff/modifica/" + ids;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "redirect:/hr/staff/modifica/"+ids;
+            return "error";
+        }
     }
 }

@@ -22,7 +22,7 @@
         }
     </style>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 <nav th:fragment="sidebar" id="sidebar">
     <div class="custom-menu">
         <button type="button" id="sidebarCollapse" class="btn btn-primary">
@@ -55,7 +55,7 @@
                 <li class="staffing">
                     <a th:href="@{/staffing}"><span class="fa fa-user mr-3"></span> Recruiting</a>
                 </li>
-                <!--<li id="progetti">
+                <li id="progetti">
                     <a th:href="@{/progetti}"><span class="fa fa-tasks mr-3"></span> Progetti</a>
                 </li>
                 <li id="amministrazione">
@@ -82,7 +82,7 @@
                             <a th:href="@{/fornitori}"><span class="fa fa-industry mr-3"></span> Fornitori</a>
                         </li>
                     </ul>
-                </li>-->
+                </li>
             </span>
             <span sec:authorize="hasRole('BM')" >
                 <li class="businessdev">
@@ -102,7 +102,7 @@
                 <li class="staffing">
                     <a th:href="@{/staffing}"><span class="fa fa-user mr-3"></span> Recruiting</a>
                 </li>
-                <!--<li class="anagrafiche">
+                <li class="anagrafiche">
                     <a href="#"><span class="fas fa-users mr-3"></span> Anagrafiche</a>
                     <ul class="ul_submenu list-unstyled components" style="display: none;">
                         <li class="dipendenti">
@@ -112,7 +112,7 @@
                             <a th:href="@{/fornitori}"><span class="fa fa-industry mr-3"></span> Fornitori</a>
                         </li>
                     </ul>
-                </li>-->
+                </li>
             </span>
             <span sec:authorize="hasRole('RECRUITER')" >
                 <li class="need">
@@ -122,11 +122,11 @@
                     <a th:href="@{/staffing}"><span class="fa fa-user mr-3"></span> Recruiting</a>
                 </li>
             </span>
-            <!--<span sec:authorize="hasRole('USER')" >
+            <span sec:authorize="hasRole('USER')" >
                  <li id="timesheet">
                     <a th:href="@{/timesheet/user}"><span class="fa fa-home mr-3"></span> Timesheet</a>
                 </li>
-            </span>-->
+            </span>
             <li>
                 <form th:action="@{/logout}" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

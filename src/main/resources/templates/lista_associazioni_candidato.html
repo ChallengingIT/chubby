@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -69,24 +69,26 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%"  style="background-color:white;">
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"   style="background-color:white;">
                 <thead class="thead" id="tabella-blu">
-                <tr>
+                <tr class="tr1">
                     <th>Need</th>
                     <th>Cliente</th>
                     <th>Priorità</th>
                     <th>Stato</th>
+                    <th>Descrizione</th>
                     <th>Week</th>
                     <th>Azioni</th>
                 </tr>
                 </thead>
-                <tbody  id="valori-tabella">
+                <tbody  class="table1" id="valori-tabella">
                 <th:block th:each="need : ${listNeed}">
-                    <tr>
+                    <tr class="tr1">
                         <td>[[${need.descrizione}]]</a></td>
                         <td>[[${need.cliente.denominazione}]]</td>
                         <td>[[${need.priorita}]]</td>
                         <td>[[${need.stato.descrizione}]]</td>
+                        <td>[[${need.descrizione}]]</td>
                         <td>[[${need.week}]]</td>
                         <td>
                             <a th:href="@{'/associazioni/associa/' + ${need.id} +'/'+  ${candidato.id}}"
@@ -126,9 +128,9 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%" style="background-color:white;">
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"  style="background-color:white;">
                 <thead class="thead" id="tabella-blu-due">
-                <tr>
+                <tr class="tr2">
                     <th>Need</th>
                     <th>Cliente</th>
                     <th>Priorità</th>
@@ -137,9 +139,9 @@
                 </tr>
                 </thead>
                 <!--Lista dei need già associati al candidato-->
-                <tbody id="valori-tabella-due">
+                <tbody class="table2" id="valori-tabella-due">
                 <th:block th:each="associazione : ${listAssociazioni}">
-                    <tr>
+                    <tr class="tr2">
                         <td>[[${associazione.need.descrizione}]]</a></td>
                         <td>[[${associazione.need.cliente.denominazione}]]</td>
                         <td>[[${associazione.need.priorita}]]</td>
@@ -157,7 +159,7 @@
                                 <span> < <span class="sr-only">(current)</span></span>
                             </li>
                             <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev">
+                            <li data-page="next" class="prev2">
                                 <span> > <span class="sr-only">(current)</span></span>
                             </li>
                         </ul>

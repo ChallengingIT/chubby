@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.StatoFP;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface StatoFPRepository extends CrudRepository<StatoFP, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface StatoFPRepository extends JpaRepository<StatoFP, Integer> {
 }

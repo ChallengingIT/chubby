@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Tipo;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TipoRepository extends CrudRepository<Tipo, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface TipoRepository extends JpaRepository<Tipo, Integer> {
 }

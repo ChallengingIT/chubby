@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Province;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProvinceRepository extends CrudRepository<Province, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface ProvinceRepository extends JpaRepository<Province, Integer> {
 }

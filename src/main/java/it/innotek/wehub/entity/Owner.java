@@ -61,6 +61,24 @@ public class Owner implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
+        name = "intervista_next_owner",
+        joinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<Intervista> nextInterviste;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "owner_associazione",
+        joinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<AssociazioneCandidatoNeed> associazioni;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
         name = "need_owner",
         joinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id")

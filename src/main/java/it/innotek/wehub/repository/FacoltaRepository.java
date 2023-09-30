@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Facolta;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface FacoltaRepository extends CrudRepository<Facolta, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface FacoltaRepository extends JpaRepository<Facolta, Integer> {
 }

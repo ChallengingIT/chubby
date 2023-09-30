@@ -6,14 +6,13 @@ package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.staff.FileStaff;
 import it.innotek.wehub.entity.staff.FileStaffId;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface FileStaffRepository extends CrudRepository<FileStaff, FileStaffId> {
+@Repository
+public interface FileStaffRepository extends JpaRepository<FileStaff, FileStaffId> {
 
-    Long countById(FileStaffId id);
-
-    @Procedure(procedureName  = "elimina_file_vecchi_staff")
-    void removeFileDoppione(@Param("lista_staff_id") String listId, @Param("tipologia") Integer tipologia);
+    @Procedure
+    void elimina_file_vecchi_staff(String lista_staff_id, Integer tipologia);
 }

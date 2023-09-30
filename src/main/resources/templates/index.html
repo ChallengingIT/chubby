@@ -17,25 +17,13 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body th:style="'background-image:url(' + @{/images/logo.png} + ');
+                 background-repeat: no-repeat, repeat;
+                 background-size: cover;'">
 <div class="wrapper d-flex align-items-stretch">
 
     <div th:replace="~{sidebar}">  </div>
 
-
-    <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5 pt-5">
-        <div class="row">
-            <div class="col">
-                <h2 class="mb-4">WE-HUB</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <h4 class="mb-4">Benvenuti su We-Hub, il nuovo sito per la gestione interna dell'azienda, dalla ricerca del candidato alla sua assunzione.</h4>
-            </div>
-        </div>
-    </div>
 </div>
 </body>
 </html>

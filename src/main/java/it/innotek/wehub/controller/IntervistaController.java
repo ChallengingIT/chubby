@@ -10,8 +10,9 @@ import it.innotek.wehub.entity.Intervista;
 import it.innotek.wehub.entity.Owner;
 import it.innotek.wehub.entity.TimedEmail;
 import it.innotek.wehub.entity.timesheet.Email;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.*;
+import it.innotek.wehub.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,38 +31,46 @@ import java.util.Map;
 public class IntervistaController {
 
     @Autowired
-    private CandidatoService   serviceCandidato;
+    private CandidatoRepository  candidatoRepository;
     @Autowired
-    private TipologiaService   serviceTipologia;
+    private TipologiaRepository  tipologiaRepository;
     @Autowired
-    private TipologiaIService  serviceTipologiaI;
+    private TipologiaIRepository tipologiaIRepository;
     @Autowired
-    private StatoCService      serviceStatoC;
+    private StatoCRepository     statoCRepository;
     @Autowired
-    private OwnerService       serviceOwner;
+    private OwnerRepository      ownerRepository;
     @Autowired
-    private IntervistaService  serviceIntervista;
+    private IntervistaRepository intervistaRepository;
     @Autowired
-    private EmailSenderService serviceEmail;
+    private EmailSenderService   serviceEmail;
     @Autowired
-    private TimedEmailService  serviceTimedEmail;
+    private TimedEmailRepository timedEmailRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(IntervistaController.class);
 
     @RequestMapping("/{idCandidato}")
     public String showIntervistaIdList(
         @PathVariable("idCandidato") Integer idCandidato,
         Model model
-    ) throws ElementoNonTrovatoException {
-        Candidato        candidato      = serviceCandidato.get(idCandidato);
-        List<Intervista> listInterviste = serviceIntervista.listAllByCandidato(idCandidato);
+    ) {
+        try {
+            Candidato        candidato      = candidatoRepository.findById(idCandidato).get();
+            List<Intervista> listInterviste = intervistaRepository.findByCandidato_Id(idCandidato);
 
-        model.addAttribute("listInterviste",     listInterviste);
-        model.addAttribute("candidato",          candidato);
-        model.addAttribute("listaOwner",         serviceOwner.listAll());
-        model.addAttribute("listaStati",         serviceStatoC.listAllOrdered());
-        model.addAttribute("intervistaRicerca",  new Intervista());
-        model.addAttribute("ultimoIdIntervista", serviceCandidato.getUltimoIdIntervista(idCandidato));
+            model.addAttribute("listInterviste", listInterviste);
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("intervistaRicerca", new Intervista());
+            model.addAttribute("ultimoIdIntervista", candidatoRepository.findUltimoIdIntervistaCandidato(idCandidato));
 
-        return "lista_interviste_candidato";
+            return "lista_interviste_candidato";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/ricerca/{idCandidato}")
@@ -69,46 +78,58 @@ public class IntervistaController {
         @PathVariable("idCandidato") Integer idCandidato,
         Model model,
         Intervista intervista
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Integer          idStato        = intervista.getStato() != null ? intervista.getStato().getId() : null;
+            Date             dataColloquio  = ( intervista.getDataColloquio() != null ) ? intervista.getDataColloquio() : null;
+            List<Intervista> listInterviste = intervistaRepository.ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(idStato, null, dataColloquio, idCandidato);
+            Candidato        candidato      = candidatoRepository.findById(idCandidato).get();
 
-        Integer          idStato        = intervista.getStato() != null ? intervista.getStato().getId() : null;
-        Date             dataColloquio  = ( intervista.getDataColloquio() != null ) ? intervista.getDataColloquio() : null;
-        List<Intervista> listInterviste = serviceIntervista.listRicerca(idStato, null, dataColloquio, idCandidato);
-        Candidato        candidato      = serviceCandidato.get(idCandidato);
+            model.addAttribute("listInterviste", listInterviste);
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("intervistaRicerca", intervista);
+            model.addAttribute("ultimoIdIntervista", candidatoRepository.findUltimoIdIntervistaCandidato(idCandidato));
 
-        model.addAttribute("listInterviste",     listInterviste);
-        model.addAttribute("candidato",          candidato);
-        model.addAttribute("listaOwner",         serviceOwner.listAll());
-        model.addAttribute("listaStati",         serviceStatoC.listAllOrdered());
-        model.addAttribute("intervistaRicerca",  intervista);
-        model.addAttribute("ultimoIdIntervista", serviceCandidato.getUltimoIdIntervista(idCandidato));
+            return "lista_interviste_candidato";
 
-        return "lista_interviste_candidato";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/aggiungi/{idCandidato}")
     public String showNewForm(
         @PathVariable("idCandidato") Integer idCandidato,
         Model model
-    ) throws ElementoNonTrovatoException {
-        Candidato  candidato        = serviceCandidato.get(idCandidato);
-        Intervista ultimaIntervista = serviceIntervista.getUltimaByIdCandidato(idCandidato);
+    ) {
+        try {
+            Candidato  candidato        = candidatoRepository.findById(idCandidato).get();
+            Intervista ultimaIntervista = intervistaRepository.findByCandidato_IdOrderByIdAsc(idCandidato);
 
-        if (null != ultimaIntervista) {
-            model.addAttribute("intervista", ultimaIntervista);
-        } else {
-            model.addAttribute("intervista", new Intervista());
+            if (null != ultimaIntervista) {
+                model.addAttribute("intervista", ultimaIntervista);
+            } else {
+                model.addAttribute("intervista", new Intervista());
+            }
+
+            model.addAttribute("titoloPagina", "Aggiungi un nuovo incontro");
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("modifica", 0);
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaTipologieI", tipologiaIRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
+
+            return "intervista_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("titoloPagina",    "Aggiungi un nuovo incontro");
-        model.addAttribute("candidato",       candidato);
-        model.addAttribute("modifica",        0);
-        model.addAttribute("listaTipologie",  serviceTipologia.listAll());
-        model.addAttribute("listaTipologieI", serviceTipologiaI.listAll());
-        model.addAttribute("listaOwner",      serviceOwner.listAll());
-        model.addAttribute("listaStati",      serviceStatoC.listAllOrdered());
-
-        return "intervista_form";
     }
 
     @RequestMapping("/salva/{idCandidato}/{modifica}")
@@ -117,54 +138,40 @@ public class IntervistaController {
         Intervista intervista,
         @PathVariable("modifica") Integer modifica,
         RedirectAttributes ra
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Candidato candidato    = candidatoRepository.findById(idCandidato).get();
+            Integer   idIntervista = intervista.getId();
 
-        Candidato candidato    = serviceCandidato.get(idCandidato);
-        Integer   idIntervista = intervista.getId();
+            intervista.setCandidato(candidato);
 
-        intervista.setCandidato(candidato);
+            if (( null != idIntervista ) && modifica == 0) {
+                intervista.setId(idIntervista + 1);
+            }
 
-        if ((null != idIntervista) && modifica == 0) {
-            intervista.setId(idIntervista+1);
+            intervistaRepository.save(intervista);
+
+            candidato.setRating(ricalcoloRating(intervista));
+            candidato.setStato(intervista.getStato());
+
+            candidatoRepository.save(candidato);
+
+            Owner owner = ownerRepository.findById(intervista.getNextOwner().getId()).get();
+
+            salvaEmailTemporizzata(owner.getEmail(), owner.getNome(), owner.getCognome(), candidato.getNome(), candidato.getCognome(), candidato.getEmail(), candidato.getCellulare(), intervista.getDataAggiornamento(), 0);
+
+            Long idEmailTemporizzata = timedEmailRepository.findMaxId();
+
+            inviaEmail(owner.getEmail(), owner.getNome(), owner.getCognome(), candidato.getNome(), candidato.getCognome(), candidato.getEmail(), candidato.getCellulare(), intervista.getDataAggiornamento(), idEmailTemporizzata);
+
+            ra.addFlashAttribute("message", "l'incontro è stato salvato con successo");
+            return "redirect:/intervista/" + idCandidato;
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        serviceIntervista.save(intervista);
-
-        candidato.setRating(ricalcoloRating(intervista));
-        candidato.setStato(intervista.getStato());
-
-        serviceCandidato.save(candidato);
-
-        Owner owner = serviceOwner.get(intervista.getOwner().getId());
-
-        salvaEmailTemporizzata(
-            owner.getEmail(),
-            owner.getNome(),
-            owner.getCognome(),
-            candidato.getNome(),
-            candidato.getCognome(),
-            candidato.getEmail(),
-            candidato.getCellulare(),
-            intervista.getDataAggiornamento(),
-            0
-        );
-
-        Long idEmailTemporizzata = serviceTimedEmail.getUltimoId();
-
-        inviaEmail(
-            owner.getEmail(),
-            owner.getNome(),
-            owner.getCognome(),
-            candidato.getNome(),
-            candidato.getCognome(),
-            candidato.getEmail(),
-            candidato.getCellulare(),
-            intervista.getDataAggiornamento(),
-            idEmailTemporizzata
-        );
-
-        ra.addFlashAttribute("message", "l'incontro è stato salvato con successo");
-        return "redirect:/intervista/"+idCandidato;
     }
 
     @RequestMapping("/modifica/{idCandidato}/{id}")
@@ -172,25 +179,27 @@ public class IntervistaController {
         @PathVariable("idCandidato") Integer idCandidato,
         @PathVariable("id") Integer id,
         Model model,
-        RedirectAttributes ra) {
+        RedirectAttributes ra
+    ) {
         try {
-            Candidato  candidato  = serviceCandidato.get(idCandidato);
-            Intervista intervista = serviceIntervista.get(id);
+            Candidato  candidato  = candidatoRepository.findById(idCandidato).get();
+            Intervista intervista = intervistaRepository.findById(id).get();
 
-            model.addAttribute("intervista",      intervista);
-            model.addAttribute("titoloPagina",    "Modifica incontro");
-            model.addAttribute("candidato",       candidato);
-            model.addAttribute("modifica",        1);
-            model.addAttribute("listaTipologie",  serviceTipologia.listAll());
-            model.addAttribute("listaOwner",      serviceOwner.listAll());
-            model.addAttribute("listaStati",      serviceStatoC.listAllOrdered());
-            model.addAttribute("listaTipologieI", serviceTipologiaI.listAll());
+            model.addAttribute("intervista", intervista);
+            model.addAttribute("titoloPagina", "Modifica incontro");
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("modifica", 1);
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaTipologieI", tipologiaIRepository.findAllByOrderByIdAsc());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/intervista/"+idCandidato;
+            return "intervista_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "intervista_form";
     }
 
     @RequestMapping("/visualizza/{idCandidato}/{id}")
@@ -201,23 +210,24 @@ public class IntervistaController {
         RedirectAttributes ra
     ){
         try {
-            Candidato  candidato  = serviceCandidato.get(idCandidato);
-            Intervista intervista = serviceIntervista.get(id);
+            Candidato  candidato  = candidatoRepository.findById(idCandidato).get();
+            Intervista intervista = intervistaRepository.findById(id).get();
 
-            model.addAttribute("intervista",      intervista);
-            model.addAttribute("titoloPagina",    "Visualizza incontro");
-            model.addAttribute("candidato",       candidato);
-            model.addAttribute("titoloPagina",    "Gestisci Incontro");
-            model.addAttribute("listaTipologie",  serviceTipologia.listAll());
-            model.addAttribute("listaOwner",      serviceOwner.listAll());
-            model.addAttribute("listaStati",      serviceStatoC.listAllOrdered());
-            model.addAttribute("listaTipologieI", serviceTipologiaI.listAll());
+            model.addAttribute("intervista", intervista);
+            model.addAttribute("titoloPagina", "Visualizza incontro");
+            model.addAttribute("candidato", candidato);
+            model.addAttribute("titoloPagina", "Gestisci Incontro");
+            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
+            model.addAttribute("listaOwner", ownerRepository.findAll());
+            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
+            model.addAttribute("listaTipologieI", tipologiaIRepository.findAllByOrderByIdAsc());
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/intervista/"+idCandidato;
+            return "intervista_no_edit_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "intervista_no_edit_form";
     }
 
     @RequestMapping("/elimina/{idCandidato}/{id}")
@@ -227,12 +237,14 @@ public class IntervistaController {
         RedirectAttributes ra
     ){
         try {
-            serviceIntervista.delete(id);
+            intervistaRepository.deleteById(id);
             ra.addFlashAttribute("message", "L'incontro è stato cancellato con successo");
-        } catch(ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
+            return "redirect:/intervista/" + idCandidato;
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "redirect:/intervista/"+idCandidato;
     }
 
     public Double ricalcoloRating(Intervista intervista){
@@ -299,6 +311,6 @@ public class IntervistaController {
                 inviata
             );
 
-        serviceTimedEmail.save(emailTemporizzata);
+        timedEmailRepository.save(emailTemporizzata);
     }
 }

@@ -41,15 +41,6 @@ public class Need implements Serializable {
     @Column(name = "data_richiesta")
     private Date dataRichiesta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "livello_need",
-            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_livello", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private LivelloScolastico livelloScolastico;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "skill_need",
@@ -91,9 +82,6 @@ public class Need implements Serializable {
 
     @Column(length = 2, nullable = false, name="priorita")
     private Integer priorita;
-
-    @Column(length = 90, name="job_description")
-    private String jobDescription;
 
     @Column(length = 15, name="week")
     private String week;

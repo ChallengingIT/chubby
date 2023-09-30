@@ -17,3 +17,7 @@
   });
 
 })(jQuery);
+
+$('.form-control').bind("cut copy paste",function(e) {
+    e.preventDefault();
+});

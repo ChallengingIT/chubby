@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -28,7 +28,7 @@
         <h1 class="mb-4"><b>Lista Need di [[${cliente.denominazione}]]</b> </h1>
         <div>
             <a class="btn btn-info btn-lg" th:href="@{'/need/aggiungi/' + ${cliente.id}}" style=" background-color: black; border-radius: 10px;">
-                <span class="glyphicon glyphicon-plus"></span> Aggiungi un nuovo need
+                <span class="glyphicon glyphicon-plus"></span> Aggiungi nuovo need
             </a>
         </div>
         <br>
@@ -84,30 +84,30 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md" cellspacing="0" width="100%"  style="background-color:white;">
+                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"   style="background-color:white;">
                 <thead class="thead" id="tabella-blu">
-                <tr>
+                <tr class="tr1">
                     <th class="align-middle">#</th>
                     <th>Week</th>
                     <th>Priorita</th>
                     <th>Ambito</th>
                     <th>Tipo</th>
-                    <th>Descrizione</th>
                     <th>Owner</th>
+                    <th>Descrizione</th>
                     <th>Stato</th>
                     <th>Azioni</th>
                 </tr>
                 </thead>
-                <tbody  id="valori-tabella">
+                <tbody class="table1" id="valori-tabella">
                 <th:block th:each="need : ${listNeed}">
-                    <tr>
+                    <tr class="tr1">
                         <td>[[${need.id}]]</td>
                         <td>[[${need.week}]]</td>
                         <td>[[${need.priorita}]]</td>
                         <td>[[${need.tipologia.descrizione}]]</td>
                         <td>[[${need.tipo}]]</td>
-                        <td>[[${need.jobDescription}]]</td>
                         <td>[[${need.owner.descrizione}]]</td>
+                        <td>[[${need.descrizione}]]</td>
                         <td>[[${need.stato.descrizione}]]</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Actions: edit and delete">

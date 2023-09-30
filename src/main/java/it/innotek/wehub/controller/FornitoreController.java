@@ -5,9 +5,10 @@
 package it.innotek.wehub.controller;
 
 import it.innotek.wehub.entity.Fornitore;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
-import it.innotek.wehub.service.CandidatoService;
-import it.innotek.wehub.service.FornitoreService;
+import it.innotek.wehub.repository.CandidatoRepository;
+import it.innotek.wehub.repository.FornitoreRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,18 +21,28 @@ import java.util.List;
 @Controller
 @RequestMapping("/fornitori")
 public class FornitoreController {
-    @Autowired private FornitoreService serviceFornitore;
-    @Autowired private CandidatoService serviceCandidato;
+
+    @Autowired
+    private FornitoreRepository fornitoreRepository;
+    @Autowired
+    private CandidatoRepository candidatoRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(FornitoreController.class);
 
     @RequestMapping
     public String showFornitoriList(Model model){
+        try {
+            List<Fornitore> listFornitori = fornitoreRepository.findAll();
 
-        List<Fornitore> listFornitori = serviceFornitore.listAll();
+            model.addAttribute("listFornitori", listFornitori);
+            model.addAttribute("fornitoreRicerca", new Fornitore());
 
-        model.addAttribute("listFornitori",    listFornitori);
-        model.addAttribute("fornitoreRicerca", new Fornitore());
+            return "fornitori";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
 
-        return "fornitori";
+            return "error";
+        }
     }
 
     @RequestMapping("/ricerca")
@@ -39,29 +50,40 @@ public class FornitoreController {
         Model model,
         Fornitore fornitore
     ){
-        String          denominazione = ((null != fornitore.getDenominazione()) && !fornitore.getDenominazione().isEmpty() ) ? fornitore.getDenominazione() : null;
-        String          referente     = ((null != fornitore.getReferente()) && !fornitore.getReferente().isEmpty() ) ? fornitore.getReferente() : null;
-        String          email         = ((null != fornitore.getEmail()) && !fornitore.getEmail().isEmpty()) ? fornitore.getEmail() : null;
-        List<Fornitore> listFornitori = serviceFornitore.listRicerca(denominazione,referente,email);
+        try {
+            String          denominazione = ( ( null != fornitore.getDenominazione() ) && !fornitore.getDenominazione().isEmpty() ) ? fornitore.getDenominazione() : null;
+            String          referente     = ( ( null != fornitore.getReferente() ) && !fornitore.getReferente().isEmpty() ) ? fornitore.getReferente() : null;
+            String          email         = ( ( null != fornitore.getEmail() ) && !fornitore.getEmail().isEmpty() ) ? fornitore.getEmail() : null;
+            List<Fornitore> listFornitori = fornitoreRepository.ricercaByDenominazioneAndReferenteAndEmail(denominazione, referente, email);
 
-        model.addAttribute("listFornitori",    listFornitori);
-        model.addAttribute("fornitoreRicerca", fornitore);
+            model.addAttribute("listFornitori", listFornitori);
+            model.addAttribute("fornitoreRicerca", fornitore);
 
-        return "fornitori";
+            return "fornitori";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/aggiungi")
     public String showNewForm(Model model){
+        try {
+            if (model.getAttribute("fornitore") != null) {
+                model.addAttribute("fornitore", model.getAttribute("fornitore"));
+            } else {
+                model.addAttribute("fornitore", new Fornitore());
+            }
 
-        if (model.getAttribute("fornitore") != null) {
-            model.addAttribute("fornitore", model.getAttribute("fornitore"));
-        } else {
-            model.addAttribute("fornitore", new Fornitore());
+            model.addAttribute("titoloPagina", "Aggiungi un nuovo fornitore");
+
+            return "fornitore_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        model.addAttribute("titoloPagina", "Aggiungi un nuovo fornitore");
-
-        return "fornitore_form";
     }
 
     @RequestMapping("/salva")
@@ -69,20 +91,26 @@ public class FornitoreController {
         Fornitore fornitore,
         RedirectAttributes ra
     ){
-        if (controllaDenominazioneDuplicata(fornitore.getDenominazione()) == 1) {
+        try {
+            if (controllaDenominazioneDuplicata(fornitore.getDenominazione())) {
 
-            ra.addFlashAttribute("message", "Denominazione già associata ad un altro fornitore");
+                ra.addFlashAttribute("message", "Denominazione già associata ad un altro fornitore");
 
-            if (null == fornitore.getId()) {
-                ra.addFlashAttribute("fornitore", fornitore);
+                if (null == fornitore.getId()) {
+                    ra.addFlashAttribute("fornitore", fornitore);
 
-                return "redirect:/fornitori/aggiungi";
+                    return "redirect:/fornitori/aggiungi";
+                }
             }
-        }
-        serviceFornitore.save(fornitore);
-        ra.addFlashAttribute("message", "Il fornitore è stato salvato con successo");
+            fornitoreRepository.save(fornitore);
+            ra.addFlashAttribute("message", "Il fornitore è stato salvato con successo");
 
-        return "redirect:/fornitori";
+            return "redirect:/fornitori";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
     @RequestMapping("/modifica/{id}")
@@ -92,14 +120,15 @@ public class FornitoreController {
         RedirectAttributes ra
     ){
         try {
-            model.addAttribute("fornitore",    serviceFornitore.get(id));
+            model.addAttribute("fornitore", fornitoreRepository.findById(id).get());
             model.addAttribute("titoloPagina", "Modifica fornitore");
 
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-            return "redirect:/fornitori";
+            return "fornitore_form";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-        return "fornitore_form";
     }
 
     @RequestMapping("/elimina/{id}")
@@ -108,20 +137,24 @@ public class FornitoreController {
         RedirectAttributes ra
     ){
         try {
-            if (serviceCandidato.getAssociatiFornitori(id) == 1) {
+            if (candidatoRepository.findFornitoriAssociati(id) == 1) {
                 ra.addFlashAttribute("message", "Il fornitore è associato ad alcuni candidati e non può essere cancellato");
                 return "redirect:/fornitori";
             }
-            serviceFornitore.delete(id);
+            fornitoreRepository.deleteById(id);
             ra.addFlashAttribute("message", "Il fornitore è stato cancellato con successo");
-        } catch (ElementoNonTrovatoException e) {
-            ra.addFlashAttribute("message", e.getMessage());
-        }
 
-        return "redirect:/fornitori";
+            return "redirect:/fornitori";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
+        }
     }
 
-    public Integer controllaDenominazioneDuplicata(String denominazione){
-        return serviceFornitore.controllaDenominazione(denominazione);
+    public boolean controllaDenominazioneDuplicata(String denominazione){
+        List<Fornitore> fornitori = fornitoreRepository.findByDenominazione(denominazione);
+        return ((null != fornitori) && !fornitori.isEmpty());
     }
 }

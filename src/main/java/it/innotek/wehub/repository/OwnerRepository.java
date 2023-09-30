@@ -5,8 +5,9 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Owner;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OwnerRepository extends CrudRepository<Owner, Integer> {
-    Long countById(Integer id);
+@Repository
+public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 }

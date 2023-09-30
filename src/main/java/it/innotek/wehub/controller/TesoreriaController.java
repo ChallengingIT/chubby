@@ -7,13 +7,12 @@ package it.innotek.wehub.controller;
 import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.FatturazionePassiva;
 import it.innotek.wehub.entity.Tesoreria;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
+import it.innotek.wehub.repository.ClienteRepository;
+import it.innotek.wehub.repository.FatturazionePassivaRepository;
 import it.innotek.wehub.repository.TesoreriaRepository;
-import it.innotek.wehub.service.ClienteService;
-import it.innotek.wehub.service.FatturazionePassivaService;
-import it.innotek.wehub.service.TesoreriaService;
 import it.innotek.wehub.util.UtilLib;
-import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,80 +23,89 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Controller
-@Log
 @RequestMapping("/tesoreria")
 public class TesoreriaController {
 
     @Autowired
-    private TesoreriaRepository        tesoreriaRepository;
+    private TesoreriaRepository           tesoreriaRepository;
     @Autowired
-    private ClienteService             serviceCliente;
+    private ClienteRepository             clienteRepository;
     @Autowired
-    private TesoreriaService           serviceTesoreria;
-    @Autowired
-    private FatturazionePassivaService serviceFattPass;
+    private FatturazionePassivaRepository fatturazionePassivaRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(TesoreriaController.class);
 
     @RequestMapping
     public String showTesoreriaList(Model model){
+        try {
+            String    meseCorrente   = UtilLib.meseItaliano(LocalDate.now().getMonth().name());
+            int       annoCorrente   = LocalDate.now().getYear();
+            Tesoreria tesoreria      = tesoreriaRepository.findByMeseAndAnno(meseCorrente, annoCorrente);
+            Tesoreria nuovaTesoreria = new Tesoreria();
 
-        String    meseCorrente   = UtilLib.meseItaliano(LocalDate.now().getMonth().name());
-        int       annoCorrente   = LocalDate.now().getYear();
-        Tesoreria tesoreria      = serviceTesoreria.getSelected(meseCorrente, annoCorrente);
-        Tesoreria nuovaTesoreria = new Tesoreria();
+            if (null == tesoreria) {
 
-        if (null == tesoreria) {
+                nuovaTesoreria.setMese(meseCorrente);
+                nuovaTesoreria.setAnno(annoCorrente);
 
-            nuovaTesoreria.setMese(meseCorrente);
-            nuovaTesoreria.setAnno(annoCorrente);
+                tesoreriaRepository.save(nuovaTesoreria);
 
-            serviceTesoreria.save(nuovaTesoreria);
+                tesoreria = tesoreriaRepository.findByMeseAndAnno(meseCorrente, annoCorrente);
+            }
 
-            tesoreria = serviceTesoreria.getSelected(meseCorrente, annoCorrente);
+            tesoreria.setClienti(clienteRepository.findAll());
+
+            LocalDate localDate = LocalDate.of(annoCorrente, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+
+            tesoreria.setFatture(fatturazionePassivaRepository.findByScadenzaLessThan(localDate));
+
+            model.addAttribute("tesoreria", tesoreria);
+            model.addAttribute("tesoreriaRicerca", new Tesoreria());
+
+            return "tesoreria";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        tesoreria.setClienti(serviceCliente.listAll());
-
-        LocalDate localDate = LocalDate.of(annoCorrente, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
-
-        tesoreria.setFatture(serviceFattPass.getFattureDaPagare(localDate));
-
-        model.addAttribute("tesoreria",        tesoreria);
-        model.addAttribute("tesoreriaRicerca", new Tesoreria());
-
-        return "tesoreria";
     }
 
     @RequestMapping("/ricerca")
     public String showTesoreriaRicerca(
         Model model,
         Tesoreria tesoreriaRicerca
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            String    meseRicerca = tesoreriaRicerca.getMese();
+            int       annoRicerca = ( null == tesoreriaRicerca.getAnno() ) ? LocalDate.now().getYear() : tesoreriaRicerca.getAnno();
+            Tesoreria tesoreria   = tesoreriaRepository.findByMeseAndAnno(meseRicerca, annoRicerca);
 
-        String    meseRicerca = tesoreriaRicerca.getMese();
-        int       annoRicerca = (null == tesoreriaRicerca.getAnno()) ? LocalDate.now().getYear() : tesoreriaRicerca.getAnno();
-        Tesoreria tesoreria   = serviceTesoreria.getSelected(meseRicerca, annoRicerca);
+            if (null == tesoreria) {
+                Tesoreria nuovaTesoreria = new Tesoreria();
+                nuovaTesoreria.setMese(meseRicerca);
+                nuovaTesoreria.setId(tesoreriaRepository.findMaxId() + 1);
+                nuovaTesoreria.setAnno(annoRicerca);
 
-        if (null == tesoreria) {
-            Tesoreria nuovaTesoreria = new Tesoreria();
-            nuovaTesoreria.setMese(meseRicerca);
-            nuovaTesoreria.setId(serviceTesoreria.getMaxId()+1);
-            nuovaTesoreria.setAnno(annoRicerca);
+                tesoreriaRepository.save(nuovaTesoreria);
 
-            serviceTesoreria.save(nuovaTesoreria);
+                tesoreria = tesoreriaRepository.findByMeseAndAnno(meseRicerca, annoRicerca);
+            }
 
-            tesoreria = serviceTesoreria.getSelected(meseRicerca, annoRicerca);
+            tesoreria.setClienti(clienteRepository.findAll());
+
+            LocalDate localDate = LocalDate.of(annoRicerca, numeroMese(meseRicerca), 28);
+
+            tesoreria.setFatture(fatturazionePassivaRepository.findByScadenzaLessThan(localDate));
+
+            model.addAttribute("tesoreria", tesoreria);
+            model.addAttribute("tesoreriaRicerca", tesoreriaRicerca);
+
+            return "tesoreria";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        tesoreria.setClienti(serviceCliente.listAll());
-
-        LocalDate localDate = LocalDate.of(annoRicerca,numeroMese(meseRicerca), 28);
-
-        tesoreria.setFatture(serviceFattPass.getFattureDaPagare(localDate));
-
-        model.addAttribute("tesoreria",        tesoreria);
-        model.addAttribute("tesoreriaRicerca", tesoreriaRicerca);
-
-        return "tesoreria";
     }
 
     @RequestMapping("/salva")
@@ -105,46 +113,52 @@ public class TesoreriaController {
         RedirectAttributes ra,
         Tesoreria tesoreria,
         Model model
-    ) throws ElementoNonTrovatoException {
+    ) {
+        try {
+            Double totaleSpese   = 0D;
+            Double totaleIncassi = 0D;
 
-        Double totaleSpese   = 0D;
-        Double totaleIncassi = 0D;
+            for (Cliente cliente : tesoreria.getClienti()) {
 
-        for (Cliente cliente : tesoreria.getClienti()) {
+                if (( null != cliente.getGuadagno() ) && !cliente.getGuadagno().isEmpty()) {
 
-            if ((null != cliente.getGuadagno()) && !cliente.getGuadagno().isEmpty()) {
+                    Cliente clienteUpdate = clienteRepository.findById(cliente.getId()).get();
+                    clienteUpdate.setGuadagno(cliente.getGuadagno());
 
-                Cliente clienteUpdate = serviceCliente.get(cliente.getId());
-                clienteUpdate.setGuadagno(cliente.getGuadagno());
+                    totaleIncassi += Double.parseDouble(cliente.getGuadagno());
 
-                totaleIncassi += Double.parseDouble(cliente.getGuadagno());
-
-                serviceCliente.save(clienteUpdate);
+                    clienteRepository.save(clienteUpdate);
+                }
             }
+
+            for (FatturazionePassiva fattura : tesoreria.getFatture()) {
+                FatturazionePassiva fatturaUpdate = fatturazionePassivaRepository.findById(fattura.getId()).get();
+
+                fatturaUpdate.setImporto(fattura.getImporto());
+
+                totaleSpese += Double.parseDouble(fattura.getImporto());
+
+                fatturazionePassivaRepository.save(fatturaUpdate);
+            }
+
+            totaleSpese += Double.parseDouble(( tesoreria.getF24() != null && !tesoreria.getF24().isEmpty() ) ? tesoreria.getF24() : "0");
+            totaleSpese += Double.parseDouble(( tesoreria.getIva() != null && !tesoreria.getIva().isEmpty() ) ? tesoreria.getIva() : "0");
+            totaleSpese += Double.parseDouble(( tesoreria.getStipendi() != null && !tesoreria.getStipendi().isEmpty() ) ? tesoreria.getStipendi() : "0");
+
+            tesoreria.setTotaleSpese(new DecimalFormat("#.##").format(totaleSpese));
+            tesoreria.setTotaleIncassi(new DecimalFormat("#.##").format(totaleIncassi));
+
+            tesoreriaRepository.save(tesoreria);
+
+            ra.addFlashAttribute("message", "La tesoreria e' aggiornata con successo");
+
+            return "redirect:/tesoreria";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "error";
         }
-
-        for (FatturazionePassiva fattura : tesoreria.getFatture()) {
-            FatturazionePassiva fatturaUpdate = serviceFattPass.get(fattura.getId());
-
-            fatturaUpdate.setImporto(fattura.getImporto());
-
-            totaleSpese += Double.parseDouble(fattura.getImporto());
-
-            serviceFattPass.save(fatturaUpdate);
-        }
-
-        totaleSpese += Double.parseDouble((tesoreria.getF24()      != null && !tesoreria.getF24().isEmpty())      ? tesoreria.getF24()      : "0");
-        totaleSpese += Double.parseDouble((tesoreria.getIva()      != null && !tesoreria.getIva().isEmpty())      ? tesoreria.getIva()      : "0");
-        totaleSpese += Double.parseDouble((tesoreria.getStipendi() != null && !tesoreria.getStipendi().isEmpty()) ? tesoreria.getStipendi() : "0");
-
-        tesoreria.setTotaleSpese(new DecimalFormat("#.##").format(totaleSpese));
-        tesoreria.setTotaleIncassi(new DecimalFormat("#.##").format(totaleIncassi));
-
-        tesoreriaRepository.save(tesoreria);
-
-        ra.addFlashAttribute("message", "La tesoreria e' aggiornata con successo");
-
-        return "redirect:/tesoreria";
     }
 
     public int numeroMese(String mese){
