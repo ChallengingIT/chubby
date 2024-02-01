@@ -13,17 +13,16 @@ import it.innotek.wehub.util.UtilLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/associazioni")
 public class AssociazioneController {
 
@@ -46,80 +45,50 @@ public class AssociazioneController {
 
     private static final Logger logger = LoggerFactory.getLogger(AssociazioneController.class);
 
-    @RequestMapping("/ricerca/{idCandidato}")
-    public String showRicercaAssociazioniList(
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model,
-        AssociazioneCandidatoNeed associazione
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public AssociazioneCandidatoNeed findById(
+        @PathVariable("id") Integer id
+    ){
+        logger.info("Associazione by id");
+
+        return associazioniRepository.findById(id).get();
+    }
+
+    @GetMapping("/react/stati")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<StatoA> findStati(){
+        logger.info("Stati associazione");
+
+        return statoARepository.findAll();
+    }
+
+    @PostMapping("/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveAssociazione(
+        @RequestBody Map<String,String> associazione
     ) {
+        logger.info("Salva associazione");
 
         try {
-            Need       needAssociazione      = associazione.getNeed();
-            StatoA     statoAssociazione     = associazione.getStato();
-            Date       dataAssociazione      = associazione.getDataModifica();
-            Integer    idCliente             = needAssociazione != null ? ( needAssociazione.getCliente() != null ? needAssociazione.getCliente().getId() : null ) : null;
-            Integer    idStato               = statoAssociazione != null ? statoAssociazione.getId() : null;
-            List<Need> listaNeedsAssociabili = needRepository.findNeedAssociabiliCandidato(idCandidato);
-            List<AssociazioneCandidatoNeed> listAssociazioni  =
-                associazioniRepository.ricercaByCandidato_IdAndCliente_IdAndStato_IdAndDataModifica(
-                    idCandidato,
-                    idCliente,
-                    idStato,
-                    dataAssociazione
-                );
 
-            model.addAttribute("listAssociazioni",    listAssociazioni);
-            model.addAttribute("associazioneRicerca", associazione);
-            model.addAttribute("listaAziende",        clienteRepository.findAll());
-            model.addAttribute("listaStatiA",         statoARepository.findAll());
-            model.addAttribute("candidato",           candidatoRepository.findById(idCandidato).get());
-            model.addAttribute("listNeed",            listaNeedsAssociabili);
+            AssociazioneCandidatoNeed associazioneEntity = new AssociazioneCandidatoNeed();
 
-            return "lista_associazioni_candidato";
+            if(associazione.get("id") != null) {
+                associazioneEntity = associazioniRepository.findById(Integer.parseInt(associazione.get("id"))).get();
 
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
+                logger.debug("Associazione trovata si procede in modifica");
+            }
 
-            return "error";
-        }
-    }
+            trasformaMappaInAssociazione(associazioneEntity, associazione);
 
-    @RequestMapping("/aggiungi/{idNeed}/{idCandidato}")
-    public String showNewForm(@PathVariable("idNeed") Integer idNeed, @PathVariable("idCandidato") Integer idCandidato, Model model ) {
+            logger.debug("Associazione trasformata");
 
-        try {
-            Candidato                 candidato    = candidatoRepository.findById(idCandidato).get();
-            Need                      need         = needRepository.findById(idNeed).get();
-            AssociazioneCandidatoNeed associazione = new AssociazioneCandidatoNeed();
-
-            associazione.setNeed(need);
-            associazione.setCandidato(candidato);
-
-            model.addAttribute("associazione", associazione);
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStati", statoARepository.findAll());
-            model.addAttribute("titoloPagina", "Modifica stato associazione");
-
-            return "associazione_form";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva")
-    public String saveFornitore(AssociazioneCandidatoNeed associazione, RedirectAttributes ra) {
-
-        try {
-            Integer                         idNeed       = associazione.getNeed().getId();
-            Integer                         idCandidato  = associazione.getCandidato().getId();
-            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_IdAndCandidato_IdAndStato_IdAndDataModifica(idNeed, idCandidato, associazione.getStato().getId(), associazione.getDataModifica());
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_IdAndCandidato_IdAndStato_IdAndDataModifica(associazioneEntity.getNeed().getId(), associazioneEntity.getCandidato().getId(), associazioneEntity.getStato().getId(), associazioneEntity.getDataModifica());
 
             if (( null == associazioni ) || associazioni.isEmpty()) {
-                if (associazione.getStato().getId() == 11) {  //Staffato
-                    Need    need    = needRepository.findById(associazione.getNeed().getId()).get();
+                if (associazioneEntity.getStato().getId() == 11) {  //Staffato
+                    Need    need    = needRepository.findById(associazioneEntity.getNeed().getId()).get();
                     Integer risorse = need.getNumeroRisorse();
 
                     need.setNumeroRisorse(risorse - 1);
@@ -132,13 +101,13 @@ public class AssociazioneController {
                     }
 
                     needRepository.save(need);
-                    associazioniRepository.save(associazione);
+                    associazioniRepository.save(associazioneEntity);
 
-                    Candidato candidato = candidatoRepository.findById(idCandidato).get();
+                    Candidato candidato = candidatoRepository.findById(associazioneEntity.getCandidato().getId()).get();
                     Staff     staff     = trasformaCandidatoInStaff(candidato);
                     Calendar  calendar  = Calendar.getInstance();
 
-                    calendar.setTime(associazione.getDataModifica());
+                    calendar.setTime(associazioneEntity.getDataModifica());
 
                     int               anno       = calendar.get(Calendar.YEAR);
                     int               mese       = calendar.get(Calendar.MONTH) + 1;
@@ -156,93 +125,166 @@ public class AssociazioneController {
                     staff.setTimesheet(calendario);
                     staffRepository.save(staff);
 
-                    candidatoRepository.deleteById(idCandidato);
+                    candidatoRepository.deleteById(0);
 
-                    return "redirect:/need";
+                    return "OK";
                 }
 
-                associazioniRepository.save(associazione);
+                associazioniRepository.save(associazioneEntity);
 
-                ra.addFlashAttribute("message", "L'associazione è stata salvata con successo");
+                logger.debug("Associazione inserita correttamente");
 
-                return "redirect:/need/match/" + idNeed;
+                return "OK";
             } else {
-                ra.addFlashAttribute("message", "Associazione già presente");
-                return "redirect:/associazioni/aggiungi/" + idNeed + "/" + idCandidato;
+
+                logger.debug("Associazione duplicata");
+
+                return "DUPLICATO";
             }
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/elimina/{idNeed}/{id}")
-    public String deleteAssociazione(
-        @PathVariable("idNeed") Integer idNeed,
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra) {
+    @DeleteMapping("/react/rimuovi/associa/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String showRimuoviCandidatiForm(
+        @PathVariable("id") Integer id
+    ){
+        logger.info("Associazione rimuovi associa");
 
         try {
 
             associazioniRepository.deleteById(id);
 
-            return "redirect:/need/match/" + idNeed;
+            logger.debug("Associazione " + id + " rimossa");
 
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/elimina/candidato/{idNeed}/{idCandidato}")
-    public String deleteNeddCandidato(
-        @PathVariable("idNeed") Integer idNeed,
-        @PathVariable("idCandidato") Integer idCandidato,
-        RedirectAttributes ra) {
+    @DeleteMapping("/react/rimuovi/candidato/associa")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String deleteNeedCandidato(
+        @RequestParam("idNeed") Integer idNeed,
+        @RequestParam("idCandidato") Integer idCandidato
+    ) {
+
+        logger.info("Elimina associazione candidato");
 
         try {
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByCandidato_Id(idCandidato);
+
+            logger.debug("Associazioni trovate");
+
             Need need = needRepository.findById(idNeed).get();
-            Candidato candidato = candidatoRepository.findById(idCandidato).get();
-
-            List<AssociazioneCandidatoNeed> associazioni =
-                candidato.getAssociazioni()
-                         .stream()
-                         .filter(a -> a.getNeed().getId() == idNeed)
-                         .toList();
-
-            candidato.getNeeds().remove(need);
-            candidato.getAssociazioni().removeAll(associazioni);
-            candidatoRepository.save(candidato);
-
-            need.getAssociazioni().removeAll(associazioni);
-
-            needRepository.save(need);
+            need.getCandidati().removeIf(s -> Objects.equals(s.getId(), idCandidato));
 
             for (AssociazioneCandidatoNeed associazione: associazioni) {
                 associazioniRepository.deleteById(associazione.getId());
+
+                logger.debug("Associazione " +associazione.getId()+ " rimossa");
+
             }
 
-            return "redirect:/need/match/" + idNeed;
+            needRepository.save(need);
+
+            logger.debug("Associazione aggiornata");
+
+            return "OK";
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
+    @GetMapping("/react/match/associabili/{idCandidato}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Need> showMatchForm(
+        @PathVariable("idCandidato") Integer idCandidato
+    ) {
+        logger.info("Need associabili al candidato: " + idCandidato);
+
+        return needRepository.findNeedAssociabiliCandidato(idCandidato);
+
+    }
+
+    @RequestMapping("/react/candidato/{idCandidato}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<AssociazioneCandidatoNeed> showAssociazioniCandidatoList(
+        @PathVariable("idCandidato") Integer idCandidato
+    ){
+        logger.info("Associazioni del candidato");
+
+        return associazioniRepository.findByCandidato_Id(idCandidato);
+
+    }
+
+    @PostMapping("/react/associa")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String showAssociaCandidatiForm(
+        @RequestParam("idNeed") Integer idNeed,
+        @RequestParam("idCandidato") Integer idCandidato
+    ){
+        logger.info("Associa");
+
+        try {
+            AssociazioneCandidatoNeed associazione = new AssociazioneCandidatoNeed();
+            long                      millis       = System.currentTimeMillis();
+            Need                      need         = needRepository.findById(idNeed).get();
+            Candidato                 candidato    = candidatoRepository.findById(idCandidato).get();
+            StatoA                    statoa       = new StatoA();
+
+            logger.debug("Trovato need con id: " + idNeed + " e candidato con id: "+ idCandidato);
+
+            statoa.setId(1);
+            statoa.setDescrizione("Pool");
+            associazione.setStato(statoa);
+            associazione.setDataModifica(new Date(millis));
+
+            need.getCandidati().add(candidato);
+
+            associazione.setNeed(need);
+            associazione.setCandidato(candidato);
+
+            Owner owner = new Owner();
+            owner.setId(1);
+
+            associazione.setOwner(owner);
+
+            associazioniRepository.save(associazione);
+
+            logger.debug("Associazione salvata correttamente");
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
+
     private Staff trasformaCandidatoInStaff(Candidato candidato){
+
+        logger.debug("Trasforma candidato in staff");
 
         Staff  staff     = new Staff();
         String nomeEmail = candidato.getNome().charAt(0) + "." + candidato.getCognome();
-        String email     = nomeEmail.toLowerCase() + "@challenging.cloud";
+        String email     = nomeEmail.toLowerCase() + "@inno-tek.it";
 
         if (controllaMailDuplicata(email)) {
 
             nomeEmail = candidato.getNome() + "." + candidato.getCognome();
-            email     = nomeEmail.toLowerCase()+"@challenging.cloud";
+            email     = nomeEmail.toLowerCase()+"@inno-tek.it";
         };
 
         staff.setAnniEsperienza(candidato.getAnniEsperienza());
@@ -263,77 +305,41 @@ public class AssociazioneController {
     }
 
     public boolean controllaMailDuplicata(String email) {
+        logger.debug("Controlla mail duplicata");
 
         return !staffRepository.findByEmail(email).isEmpty();
     }
 
-    @RequestMapping("/{idCandidato}")
-    public String showAssociazioniCandidatoList(
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model
-    ){
-        try {
-            Candidato                       candidato             = candidatoRepository.findById(idCandidato).get();
-            List<AssociazioneCandidatoNeed> listAssociazioni      = associazioniRepository.findByCandidato_Id(idCandidato);
-            List<Need>                      listaNeedsAssociabili = needRepository.findNeedAssociabiliCandidato(idCandidato);
+    public AssociazioneCandidatoNeed trasformaMappaInAssociazione(AssociazioneCandidatoNeed associazione, Map<String,String> associazioneMap) {
 
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("associazioneRicerca", new AssociazioneCandidatoNeed());
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStatiA", statoARepository.findAll());
-            model.addAttribute("listNeed", listaNeedsAssociabili);
-            model.addAttribute("listAssociazioni", listAssociazioni);
+        logger.debug("Trasforma mappa in associazione");
 
-            return "lista_associazioni_candidato";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
+        if (associazioneMap.get("stato") != null) {
+            StatoA statoAssociazione = new StatoA();
+            statoAssociazione.setId(Integer.parseInt(associazioneMap.get("stato")));
+            associazione.setStato(statoAssociazione);
         }
-    }
 
-    @RequestMapping("/associa/{idNeed}/{idCandidato}")
-    public String showAssociazioniAssociaCandidato(
-        @PathVariable("idCandidato") Integer idCandidato,
-        @PathVariable("idNeed") Integer idNeed,
-        Model model,
-        RedirectAttributes ra
-    ) {
+        associazione.setDataModifica(associazioneMap.get("dataModifica") != null ? Date.valueOf(associazioneMap.get("dataModifica")) : null);
 
-        try {
-            AssociazioneCandidatoNeed       associazione          = new AssociazioneCandidatoNeed();
-            StatoA                          statoa                = new StatoA();
-            Need                            need                  = needRepository.findById(idNeed).get();
-            Candidato                       candidato             = candidatoRepository.findById(idCandidato).get();
-            long                            millis                = System.currentTimeMillis();
-            List<AssociazioneCandidatoNeed> listAssociazioni      = associazioniRepository.findByCandidato_Id(idCandidato);
-            List<Need>                      listaNeedsAssociabili = needRepository.findNeedAssociabiliCandidato(idCandidato);
-
-            statoa.setId(1);
+        if (associazioneMap.get("idCandidato") != null) {
+            Candidato candidato = new Candidato();
+            candidato.setId(Integer.parseInt(associazioneMap.get("idCandidato")));
             associazione.setCandidato(candidato);
-            associazione.setNeed(need);
-            associazione.setStato(statoa);
-            associazione.setDataModifica(new Date(millis));
-
-            associazioniRepository.save(associazione);
-
-            candidato.getNeeds().add(need);
-            candidatoRepository.save(candidato);
-
-            model.addAttribute("listAssociazioni", listAssociazioni);
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("associazioneRicerca", new AssociazioneCandidatoNeed());
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStatiA", statoARepository.findAll());
-            model.addAttribute("listaNeed", listaNeedsAssociabili);
-            model.addAttribute("listAssociazioni", listAssociazioni);
-
-            return "redirect:/associazioni/" + idCandidato;
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
         }
+
+        if (associazioneMap.get("idNeed") != null) {
+            Need need = new Need();
+            need.setId(Integer.parseInt(associazioneMap.get("idNeed")));
+            associazione.setNeed(need);
+        }
+
+        if (associazioneMap.get("idOwner") != null) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(associazioneMap.get("idOwner")));
+            associazione.setOwner(owner);
+        }
+
+        return associazione;
     }
 }

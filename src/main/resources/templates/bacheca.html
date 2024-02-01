@@ -12,7 +12,6 @@
     <title>[[${titoloPagina}]]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
     <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
@@ -22,20 +21,47 @@
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
 
-<body style="background-color: #14d928"><!-- th:style="'background-color: '+@{${colorBackground}}+';'"-->
+<body style="background-color: #ffb700"><!-- th:style="'background-color: '+@{${colorBackground}}+';'"-->
     <div class="wrapper d-flex align-items-stretch" style="overflow: hidden;">
 
         <div th:replace="~{sidebar}"> </div>
 
         <!-- Page Content  -->
-        <div id="content" class="p-4 p-md-5 pt-5">
-            <h1 class="mb-4"><b>Analisi sito</b></h1>
+        <div id="content">
             <div th:if="${messaggioCompleanno}" class="alert alert-success text-center" id="success-alert" >
                 [[${messaggioCompleanno}]]
             </div>
-            <div class="row align-items-end justify-content-between" id="bacheca-row" style="margin-top: 34px;">
-                <div class="col border-sec rounded p-3 bacheca-grid" style="width:400px; height:300px;">
-                    <h2 class="mb-4"><b>Need prioritari</b></h2>
+
+            <span th:unless="${listaProssimiAggiornamenti == null || listaProssimiAggiornamenti.isEmpty()}">
+                <div class="row align-items-start justify-content-between" id="bacheca-row-3" style="margin-top: 5%;">
+                    <div class="col border-sec rounded p-3 bacheca-grid">
+                        <h2 class="mb-4">
+                            <b><i class="fas fa-exclamation-triangle fa-spin"></i> Prossimi aggiornamenti</b>
+                        </h2>
+                        <table class="table table-striped">
+                            <thead class="thead" style="text-align:center;">
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Data Aggiornamento</th>
+                                <th>Candidato</th>
+                            </tr>
+                            </thead>
+                            <tbody class="valori-tabella">
+                                <th:block th:each="intervista : ${listaProssimiAggiornamenti}">
+                                    <tr>
+                                        <td>[[${intervista.tipo.descrizione}]]</td>
+                                        <td>[[${intervista.dataAggiornamento}]]</td>
+                                    </tr>
+                                </th:block>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </span>
+
+            <div class="row align-items-start justify-content-between" id="bacheca-row" style="margin-top: 5%;">
+                <div class="col border-sec rounded p-3 bacheca-grid" style="background-color: #f9f9f9;">
+                    <h2 class="mb-4"><b>Need Prioritari</b></h2>
                     <table class="table table-striped">
                         <thead class="thead" style="text-align:center;">
                             <tr>
@@ -44,7 +70,7 @@
                                 <th>Data</th>
                             </tr>
                         </thead>
-                        <tbody id="valori-tabella">
+                        <tbody class="valori-tabella">
                             <th:block th:each="need : ${listNeedOrdinati}">
                                 <tr>
                                     <td>[[${need.priorita}]]</td>
@@ -56,7 +82,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col border-sec rounded p-3 bacheca-grid" style="width:400px; height:300px;">
+                <div class="col border-sec rounded p-3 bacheca-grid" style="background-color: #f9f9f9;">
                     <h2 class="mb-4"><b>Andamento Need</b></h2>
                     <table class="table table-striped" >
                         <thead class="thead" style="text-align:center;">
@@ -68,7 +94,7 @@
                             <th>Prioritari</th>
                         </tr>
                         </thead>
-                        <tbody id="valori-tabella-tre">
+                        <tbody class="valori-tabella">
                         <th:block th:each="data : ${needData}">
                             <tr>
                                 <td>[[${data.settimana}]]</td>
@@ -82,33 +108,8 @@
                     </table>
                 </div>
             </div>
-            <div class="row align-items-end justify-content-between " id="bacheca-row-2" style="margin-top: 15px;">
-                <div class="col border-sec rounded p-3 mt-4 bacheca-grid" style="width:400px; height:300px;">
-                    <h2 class="mb-4"><b>Prossimi aggiornamenti</b></h2>
-                    <table class="table table-striped table-responsive-xl"  height="300px">
-                        <thead class="thead" style="text-align:center;">
-                            <tr>
-                                <th>Tipo</th>
-                                <th>Data</th>
-                                <th>Ora</th>
-                                <th>Candidato</th>
-                                <th>Owner</th>
-                            </tr>
-                        </thead>
-                        <tbody id="valori-tabella-due">
-                            <th:block th:each="intervista : ${listIntervisteImminenti}">
-                                <tr>
-                                    <td>[[${intervista.tipo.descrizione}]]</td>
-                                    <td>[[${intervista.dataAVideo}]]</td>
-                                    <td>[[${intervista.oraAVideo}]]</td>
-                                    <td>[[${intervista.candidato.cognome}]]</td>
-                                    <td>[[${intervista.owner.descrizione}]]</td>
-                                </tr>
-                            </th:block>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col border-sec rounded p-3 mt-4 bacheca-grid" style="width:400px; height:300px;">
+            <div class="row align-items-start justify-content-between " id="bacheca-row-2" style="margin-top: 5%;">
+                <div class="col border-sec rounded p-3 mt-4 bacheca-grid" style="background-color: #f9f9f9;">
                     <h2 class="mb-4"><b>Dashboard Incontri</b></h2>
                     <table class="table table-striped" >
                         <thead class="thead" style="text-align:center;">
@@ -119,7 +120,7 @@
                                 </th:block>
                             </tr>
                         </thead>
-                        <tbody id="valori-tabella-quattro">
+                        <tbody class="valori-tabella">
                         <th:block th:each="incontri : ${dashboardIncontri}">
                             <tr>
                                 <td>[[${incontri.settimana}]]</td>

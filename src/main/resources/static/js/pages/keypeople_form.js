@@ -1,5 +1,6 @@
-$('li').removeClass('active');
-$('.businessdev').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.businessdev').click();
+$('.keypeople').addClass('active');
 
 $(document).ready(function() {
     setTimeout(function() {

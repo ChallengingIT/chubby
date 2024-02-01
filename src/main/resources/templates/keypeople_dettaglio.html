@@ -19,221 +19,59 @@
   <script type="text/javascript" th:src="@{/js/jquery.dropdown.min.js}"></script>
   <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 <div class="wrapper d-flex align-items-stretch">
   <div th:replace="~{sidebar}">  </div>
 
   <div id="content" class="p-4 p-md-5 pt-5">
     <h1 class="mb-4"><b>[[${titoloPagina}]]</b></h1>
-    <div class="row">
-      <div class="col-lg-6 col-md-6">
-        <div class="row border border-dark m-3">
-          <div class="col">
-            <div class="row bg-dark">
-              <h2 class="text-white">Informazioni su questo contatto</h2>
-              <div class="bg-white">
-                <p class="col-form-label">Nome: <b>[[${keyPeople.nome}]]</b> </p>
-                <p class="col-form-label">Ruolo:<b> [[${keyPeople.ruolo}]]</b></p>
-                <p class="col-form-label">Email:<b> [[${keyPeople.email}]]</b></p>
-                <p class="col-form-label">Telefono:<b> [[${keyPeople.cellulare}]]</b></p>
-                <p class="col-form-label">Status:<b> [[${keyPeople.status}]]</b></p>
+    <div th:object="${keypeople}">
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+      <input type="hidden" th:field="*{id}">
+      <input type="hidden" th:field="*{nome}">
+      <input type="hidden" th:field="*{cellulare}">
+      <input type="hidden" th:field="*{email}">
+      <input type="hidden" th:field="*{azienda}">
+      <input type="hidden" th:field="*{attivita}">
+      <input type="hidden" th:field="*{owner}">
+
+      <div class="row text-center">
+        <div class="col-sm-6">
+          <h3 class="text-left pl-4" style="color:gray;">Informazioni KeyPeople</h3>
+          <div id="information" class="bg-white" style="border-radius:10px;">
+            <div class="row pb-2 pt-2 pl-4"><div class="col-sm-4">Nome:</div><div class="col-sm-8" style="color:black;"><b> [[${keypeople.nome}]]</b></div></div>
+            <div class="row pb-2 pl-4"><div class="col-sm-4">Azienda:</div><div class="col-sm-8" style="color:black;"><b> [[${keypeople.azienda.denominazione}]]</b></div></div>
+            <div class="row pb-2 pl-4"><div class="col-sm-4">Email:</div><div class="col-sm-8" style="color:black;"><b> [[${keypeople.email}]]</b></div></div>
+            <div class="row pb-2 pl-4"><div class="col-sm-4">Cellulare:</div><div class="col-sm-8" style="color:black;"><b> [[${keypeople.cellulare}]]</b></div></div>
+            <div class="row pb-2 pl-4"><div class="col-sm-4">Owner:</div><div class="col-sm-8" style="color:black;"><b> [[${keypeople.owner.nome}]] [[${keypeople.owner.cognome}]]</b></div></div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <h2 class="text-left" style="color:gray;">Attività</h2>
+          <div class="row border bg-white overflow-auto" style="border-radius:10px;">
+            <span th:if=" ${listaAttivita.isEmpty()}">
+              <span class="col-form-label pl-4">Non sono presenti attività</span>
+            </span>
+            <span th:each="a : ${listaAttivita}">
+              <div class="row-form boxShadow">
+                <div class="form-row">
+                  <div class="col-sm-6 text-left">
+                    [[${a.tipologia.descrizione}]] di [[${a.owner.nome}]] [[${a.owner.cognome}]]
+                  </div>
+                  <div class="col-sm-6 text-center">
+                    Orario: [[${a.data}]]
+                  </div>
+                </div>
+                <div class="form-row">
+                  <span class="col-form-label" th:text="${a.note}"></span><br>
+                </div>
               </div>
-            </div>
-            <div class="row bg-white">
-              <div class="col text-center m-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="|#modalMail|">
-                  <i class="fa fa-envelope"></i>
-                </button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="|#modalPhone|">
-                  <i class="fa fa-phone"></i>
-                </button>
-                <button type="button" class="btn btn-primary">
-                  <i class="fa fa-linkedin-in"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+            </span>
         </div>
-        <div class="row border border-dark m-3">
-          <div class="col">
-            <div class="row bg-dark">
-              <h2 class="text-white">Prospection</h2>
-              <div id="prospection" class="bg-white">
-                <label class="col-form-label">Oggetto Incontro</label>
-                <p class="col-form-label">oggetto TO DO</p>
-                <label class="col-form-label">Partecipanti</label>
-                <p class="col-form-label">Elenco Partecipanti to do</p>
-                <label class="col-form-label">Data incontro</label>
-                <p class="col-form-label">Data to do</p>
-                <label class="col-form-label">Stato</label>
-                <p class="col-form-label">Testo stato</p>
-              </div>
-            </div>
-            <div class="row bg-white">
-              <div class="col text-center m-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        th:data-bs-target="|#modalConfermaProspection|">
-                  <i class="fa fa-check"></i>
-                </button>
-                <button type="button" class="btn btn-primary prospection">
-                  <i class="fa fa-eye"></i>
-                </button>
-                <button type="button" class="btn btn-primary">
-                  <i class="fa fa-info"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row border border-dark m-3">
-          <div class="col">
-            <div class="row bg-dark">
-              <h2 class="text-white">QM</h2>
-              <div id="qm" class="bg-white">
-                <label class="col-form-label">Oggetto Incontro</label>
-                <p class="col-form-label">oggetto TO DO</p>
-                <label class="col-form-label">Partecipanti</label>
-                <p class="col-form-label">Elenco Partecipanti to do</p>
-                <label class="col-form-label">Data incontro</label>
-                <p class="col-form-label">Data to do</p>
-              </div>
-            </div>
-            <div class="row bg-white">
-              <div class="col text-center m-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        th:data-bs-target="|#modalConfermaQm|">
-                  <i class="fa fa-check"></i>
-                </button>
-                <button type="button" class="btn btn-primary qm">
-                  <i class="fa fa-eye"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 col-md-6">
-        <div class="row border border-dark m-3">
-          <div class="col">
-            <div class="row bg-dark">
-              <h2 class="text-center text-white">Comunicazioni Recenti</h2>
-            </div>
-            <div class="row bg-white">
-              <span class="col-form-label bg-white"
-                    th:text="${keyPeople.comunicazioniRecenti != null} ?
-                 ${keyPeople.comunicazioniRecenti} : 'Non ci sono comunicazioni'"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row border border-dark m-3">
-          <div class="col">
-            <div class="row bg-dark">
-              <h2 class="text-center text-white">Need del cliente</h2>
-            </div>
-            <div class="row bg-white">
-              <p class="col-form-label">Elencazione need to do</p>
-            </div>
-          </div>
-        </div>
-        <div class="row border border-dark m-3">
-          <div class="col">
-            <div class="row bg-dark">
-              <h2 class="text-center text-white">Trattative</h2>
-            </div>
-            <div class="row bg-white">
-              <p class="col-form-label">Note Trattative</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row form-btn-wrapper mt-5">
-        <button type="button" class="col-5 btn btn-lg btn-secondary"
-                id="bottoneIndietro">Indietro</button>
-      </div>
-    </div>
-  </div>
-  <div th:id="|modalPhone|" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Conferma Chiamata effettuata</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <p>La chiamata è stata effettuata con successo?</p>
-          <p><input type="radio" value=”si” checked> Si </input></p>
-          <p><input type="radio" value=”no”> No </input></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
-          <button type="button" class="btn btn-primary">Conferma Telefonata</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div th:id="|modalConfermaProspection|" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Conferma Prospection</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group row">
-            <div class="col">
-              <label class="col-form-label">Oggetto Incontro</label>
-              <input type="text" class="form-control" required maxlength="90" autocomplete="off"/>
-            </div>
-            <div class="col">
-              <label class="col-form-label">Partecipanti </label>
-              <input type="text" class="form-control" maxlength="90" autocomplete="off"/>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col">
-              <label class="col-form-label">Data Incontro </label>
-              <input type="date" class="form-control"/>
-            </div>
-            <div class="col">
-              <label class="col-form-label">Stato </label>
-              <input type="text" class="form-control" maxlength="90" autocomplete="off"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
-          <button type="button" class="btn btn-primary">Conferma Incontro</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div th:id="|modalConfermaQm|" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Conferma Prospection</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group row">
-            <div class="col">
-              <label class="col-form-label">Oggetto Incontro</label>
-              <input type="text" class="form-control" required maxlength="90" autocomplete="off"/>
-            </div>
-            <div class="col">
-              <label class="col-form-label">Partecipanti </label>
-              <input type="text" class="form-control" maxlength="90" autocomplete="off"/>
-            </div>
-            <div class="col">
-              <label class="col-form-label">Data Incontro </label>
-              <input type="date" class="form-control"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
-          <button type="button" class="btn btn-primary">Conferma Incontro</button>
-        </div>
+      </div><br>
+
+      <div class="row form-btn-wrapper mt-5 justify-content-center">
+        <a th:href="@{/keypeople/ricerca}" class="col-5 btn btn-lg btn-secondary">Indietro</a>
       </div>
     </div>
   </div>

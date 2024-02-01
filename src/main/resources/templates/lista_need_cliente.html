@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -28,53 +28,57 @@
         <h1 class="mb-4"><b>Lista Need di [[${cliente.denominazione}]]</b> </h1>
         <div>
             <a class="btn btn-info btn-lg" th:href="@{'/need/aggiungi/' + ${cliente.id}}" style=" background-color: black; border-radius: 10px;">
-                <span class="glyphicon glyphicon-plus"></span> Aggiungi nuovo need
+                Aggiungi Need
             </a>
         </div>
         <br>
         <div>
             <form th:action="@{'/need/ricerca/' + ${cliente.id}}" method="get" th:object="${needRicerca}">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <div class="form-group row">
-                    <div class="col" >
-                        <label class="col-sm-16 col-form-label">Tipologia</label>
-                        <select th:field="*{tipologia.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
-                            <option th:each="i : ${listaTipologieN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
-                        </select>
-                    </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Priorità </label>
-                        <input type="number" th:field="*{priorita}" class="form-control" max="4" autocomplete="off"/>
-                    </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Stato</label>
-                        <select th:field="*{stato.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
-                            <option th:each="i : ${listaStatiN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
-                        </select>
-                    </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Ownership</label>
-                        <select th:field="*{owner.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
+                <div class="row rowFind">
+                    <div class="col-3">
+                        <br>
+                        <select th:field="*{owner.id}" class="form-control borderRadius18" id="ricercaOwner">
+                            <option th:value="null">Seleziona un Owner</option>
                             <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
+                        <br>
+                        <select th:field="*{tipologia.id}" class="form-control borderRadius18" id="ricercaTipologia">
+                            <option th:value="null">Seleziona una Tipologia</option>
+                            <option th:each="i : ${listaTipologieN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
+                        <br>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Settimana </label>
-                        <input type="week" th:field="*{week}" class="form-control"/>
+                    <div class="col-3">
+                        <br>
+                        <input type="number" placeholder="Priorità" th:field="*{priorita}"
+                               class="form-control borderRadius18" id="ricercaPriorita" max="4" autocomplete="off"/>
+                        <br>
+                        <select th:field="*{stato.id}" class="form-control borderRadius18" id="ricercaStato">
+                            <option th:value="null">Seleziona uno Stato</option>
+                            <option th:each="i : ${listaStatiN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
+                        <br>
                     </div>
-                    <div class="col" style="margin-left:15px;"><br>
-                        <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                    <div class="col-3">
+                        <br>
+                        <br>
+                        <input type="week" th:field="*{week}" class="form-control borderRadius18" id="ricercaWeek"/>
+                        <br>
+                    </div>
+                    <div class="col-3" style="text-align:center;">
+                        <br><br>
+                        <input type="submit" class="btn btn-primary m-2" id="btnFind3" value="Cerca">
+                        <br>
+                        <a href="#" id="btnReset">Ripristina</a>
                     </div>
                 </div>
             </form>
         </div>
         <div>
-            <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
+            <div class="form-group mt-5" style="width:11%;"> 	<!--		Show Numbers Of Rows 		-->
                     <label class="col-sm-16 col-form-label">Numero di righe</label>
-                    <select class="form-control maxRows" name="state">
+                    <select class="form-control maxRows" style="border-radius:20px;" name="state">
                         <option value="5000">Show ALL Rows</option>
                         <option value="10">10</option>
                         <option value="15">15</option>
@@ -84,44 +88,66 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"   style="background-color:white;">
-                <thead class="thead" id="tabella-blu">
-                <tr class="tr1">
-                    <th class="align-middle">#</th>
-                    <th>Week</th>
+            <div class=" table-responsive-sm">
+                <table class="table table-sm sortable" style="background-color:#f9f9f9;border-radius:25px;">
+                <thead id="tabella-new">
+                <tr class="tr1 noborder boxShadow">
+                    <th class="align-middle pl-5">#</th>
+                    <th>Week<br>Descrizione</th>
                     <th>Priorita</th>
-                    <th>Ambito</th>
-                    <th>Tipo</th>
+                    <th>Tipologia</th>
                     <th>Owner</th>
-                    <th>Descrizione</th>
+                    <th>Headcount</th>
                     <th>Stato</th>
                     <th>Azioni</th>
                 </tr>
+                <tr class="tr1 noborder boxShadow">
+                </tr>
                 </thead>
-                <tbody class="table1" id="valori-tabella">
+                <tbody class="table1">
                 <th:block th:each="need : ${listNeed}">
-                    <tr class="tr1">
-                        <td>[[${need.id}]]</td>
-                        <td>[[${need.week}]]</td>
+                    <tr class="tr1 noborder">
+                        <td class="pl-5">[[${need.id}]]</td>
+                        <td>[[${need.week}]]<br>[[${need.descrizione}]]</td>
                         <td>[[${need.priorita}]]</td>
                         <td>[[${need.tipologia.descrizione}]]</td>
-                        <td>[[${need.tipo}]]</td>
                         <td>[[${need.owner.descrizione}]]</td>
-                        <td>[[${need.descrizione}]]</td>
+                        <td>[[${need.numeroRisorse}]]</td>
                         <td>[[${need.stato.descrizione}]]</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Actions: edit and delete">
-                                <a class="btn btn-info btn-lg btn-icon mr-3" th:href="@{'/need/modifica/' + ${cliente.id} +'/'+  ${need.id}}">
+                                <a class="btn-info btn-lg btn-icon mr-3" th:href="@{'/need/modifica/' + ${cliente.id} +'/'+  ${need.id}}">
                                     <i class="fas fa-pen"></i></a>
-                                <a class="btn btn-info btn-lg btn-icon" th:href="@{'/need/elimina/' + ${cliente.id} +'/'+ ${need.id}}">
-                                     <i class="fas fa-trash"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#modalDelete" th:attr="data-target='#modalDelete'+${need.id}"
+                                   class="col btn-danger btn-lg btn-icon" style="margin: 0;"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
+                    <div class="modal fade in" th:id="modalDelete+${need.id}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Cancellazione Need</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="col-form-label">Stai per cancellare il need selezionato, continuare? </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Indietro</button>
+                                    <a type="submit" class="btn btn-primary" th:href="@{'/need/elimina/' + ${cliente.id} +'/'+ ${need.id}}">
+                                        <i class="fa fa-check"></i>Conferma</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </th:block>
                 </tbody>
             </table>
-                <div class='pagination-container' >
+            </div>
+            <div class='pagination-container' >
                     <nav>
                         <ul class="pagination">
 
@@ -139,8 +165,7 @@
         </div>
         <div class="row form-btn-wrapper mt-5" style="text-align:center;">
             <div class="col">
-                <button type="button" class="col-5 ml-auto btn btn-lg btn-secondary"
-                        id="bottoneIndietro">Indietro</button>
+                <a th:href="@{/aziende/ricerca} + '?denominazione=' + ${cliente.denominazione}" class="col-5 btn btn-lg btn-secondary">Indietro</a>
             </div>
         </div>
     </div>

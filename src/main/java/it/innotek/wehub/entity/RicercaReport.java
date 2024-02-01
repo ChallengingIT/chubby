@@ -6,12 +6,14 @@ package it.innotek.wehub.entity;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Data
 public class RicercaReport implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     private Integer anno;
     private Integer mese;

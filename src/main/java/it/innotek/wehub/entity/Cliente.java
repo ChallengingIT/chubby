@@ -4,16 +4,17 @@
 
 package it.innotek.wehub.entity;
 
-import it.innotek.wehub.entity.timesheet.Progetto;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -21,9 +22,7 @@ import java.util.*;
 @ToString
 @RequiredArgsConstructor
 @Table(name = "cliente")
-public class Cliente  implements Serializable {
-
-    private static final long serialVersionUID = 6529685398267757690L;
+public class Cliente implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +31,11 @@ public class Cliente  implements Serializable {
     @Column(nullable = false, unique = true, length = 90)
     private String denominazione;
 
-    @Column(length = 90)
-    private String referente;
+    @Column(length = 45, name = "sede_operativa")
+    private String sedeOperativa;
+
+    @Column(length = 45, name = "sede_legale")
+    private String sedeLegale;
 
     @Column(length = 45)
     private String pi;
@@ -53,12 +55,6 @@ public class Cliente  implements Serializable {
     @Column(length = 45, nullable = false)
     private String provincia;
 
-    @Column(length = 45)
-    private String telefono;
-
-    @Column(length = 45)
-    private String fax;
-
     @Column(unique = true, length = 45)
     private String email;
 
@@ -68,20 +64,11 @@ public class Cliente  implements Serializable {
     @Column(length = 45,name="codice_destinatario")
     private String codiceDestinatario;
 
-    @Column(name="pa")
-    private boolean pa;
-
     @Column(length = 45,name="codice_pa")
     private String codicePa;
 
     @Column(length = 90)
     private String sito;
-
-    @Column(name="antiriciclaggio")
-    private boolean antiriciclaggio;
-
-    @Column(name="privacy")
-    private boolean privacy;
 
     @Column(length = 2000, name = "note")
     private String note;
@@ -116,73 +103,6 @@ public class Cliente  implements Serializable {
     @ToString.Exclude
     private Owner owner;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "cliente_prospection",
-        joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_prospection", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Prospection prospection;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "progetto_cliente",
-        joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_progetto", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<Progetto> progetto;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "cliente_qm",
-        joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_qm", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Qm qm;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "need_cliente",
-            joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<Need> needs = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "key_people_cliente",
-        joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<KeyPeople> keyPeoples;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "attivita_cliente",
-        joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_attivita", referencedColumnName = "id")
-
-    )
-    @ToString.Exclude
-    private List<Attivita> attivita;
-
-    @Column(length = 20, name = "guadagno")
-    private String guadagno;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "fattura_cliente",
-        joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_fattura", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<FatturazioneAttiva> fatture;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "tesoreria_cliente",
@@ -190,7 +110,10 @@ public class Cliente  implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "id_tesoreria", referencedColumnName = "id")
     )
     @ToString.Exclude
-    private List<Tesoreria> tesorerie;
+    private List<Tesoreria> tesorerie  = new ArrayList<>();
+
+    @Column(length = 20, name = "guadagno")
+    private String guadagno;
 
     @Override
     public boolean equals(Object o) {

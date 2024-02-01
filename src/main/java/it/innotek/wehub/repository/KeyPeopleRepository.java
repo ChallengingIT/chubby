@@ -17,12 +17,14 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
 
   Optional<KeyPeople> findByNome(String nome);
 
+  List<KeyPeople> findByCliente_Id(Integer idCliente);
+
   @Query(value= """
        SELECT k.*, ko.id_owner, kc.id_cliente
        FROM key_people k, key_people_owner ko, key_people_cliente kc
        where k.id = ko.id_key_people
        and k.id = kc.id_key_people
-       and if(?1 is not null, k.status like ?1%, 1=1)
+       and if(?1 is not null, k.status = ?1, 1=1)
        and if(?2 is not null, kc.id_cliente = ?2, 1=1)
        and if(?3 is not null, ko.id_owner = ?3, 1=1)
       """,nativeQuery=true)

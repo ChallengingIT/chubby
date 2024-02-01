@@ -4,12 +4,16 @@
 
 package it.innotek.wehub.entity;
 
-import lombok.*;
-import org.hibernate.Hibernate;
-
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,7 +25,8 @@ import java.util.Objects;
 @Table( name = "file_candidato")
 public class FileCandidato implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @EmbeddedId
     private FileCandidatoId id;

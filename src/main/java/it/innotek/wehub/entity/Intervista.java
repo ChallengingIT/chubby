@@ -4,11 +4,15 @@
 
 package it.innotek.wehub.entity;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -22,7 +26,8 @@ import java.util.Objects;
 @Table( name = "intervista")
 public class Intervista implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,8 +57,23 @@ public class Intervista implements Serializable {
     @Column(length = 45)
     private String recapiti;
 
-    @Column(length = 45)
-    private String intervistatore;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "intervista_owner",
+        joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Owner owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "intervista_next_owner",
+        joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Owner nextOwner;
 
     @Column(length = 2, name="aderenza_posizione")
     private Integer aderenza;
@@ -75,6 +95,15 @@ public class Intervista implements Serializable {
 
     @Column(length = 2, name="inglese")
     private Integer inglese;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "candidato_intervista",
+        joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Candidato candidato;
 
     @Column(length = 120, name="descrizione_candidato")
     private String descrizioneCandidato;
@@ -127,39 +156,12 @@ public class Intervista implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "intervista_owner",
-            joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Owner owner;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "intervista_next_owner",
-        joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Owner nextOwner;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
             name = "stato_intervista",
             joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "id_stato", referencedColumnName = "id")
     )
     @ToString.Exclude
     private StatoC stato;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "candidato_intervista",
-            joinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    public Candidato candidato;
 
     @Override
     public boolean equals(Object o) {

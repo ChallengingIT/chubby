@@ -4,10 +4,14 @@
 
 package it.innotek.wehub.entity;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
@@ -20,7 +24,8 @@ import java.util.Objects;
 @Table( name = "fatturazione_attiva")
 public class FatturazioneAttiva implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +39,15 @@ public class FatturazioneAttiva implements Serializable {
 
     @Column(name = "data_scadenza")
     private Date dataScadenza;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "fattura_cliente",
+        joinColumns = @JoinColumn(name = "id_fattura", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Cliente cliente;
 
     @Column(length = 10)
     private String tariffa;
@@ -73,15 +87,6 @@ public class FatturazioneAttiva implements Serializable {
     )
     @ToString.Exclude
     private StatoFA stato;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "fattura_cliente",
-            joinColumns = @JoinColumn(name = "id_fattura", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Cliente cliente;
 
     @Override
     public boolean equals(Object o) {

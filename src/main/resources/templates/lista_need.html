@@ -9,7 +9,7 @@
     <meta http-equiv="Content-Security-Policy">
     <title>Lista Need </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link th:href="@{/css/bootstrap-5.1.3/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <link th:href="@{/font-awesome-5.15.4/css/all.css}" rel="stylesheet" />
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap-5.1.3/bootstrap.bundle.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -26,111 +26,113 @@
     <!-- Page Content  -->
     <div id="content" class="p-4 p-md-5 pt-5 d-flex flex-column">
         <h1 class="mb-4"><b>Need</b></h1>
-        <div>
-            <a class="btn btn-info btn-lg" th:href="@{/need/aggiungi}" style=" background-color: black; border-radius: 10px;">
-                <span class="glyphicon glyphicon-plus"></span> Aggiungi nuovo need
-            </a>
-        </div>
         <br>
-        <div>
+        <div style="margin-left:1%;">
             <form th:action="@{/need/ricerca}" method="get" th:object="${needRicerca}">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <div class="form-group row">
-                    <div class="col">
-                        <label class="col-sm-16 col-form-label">Azienda</label>
-                        <select th:field="*{cliente.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
+                <div class="row rowFind">
+                    <div class="col-3">
+                        <select th:field="*{cliente.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaAzienda">
+                            <option th:value="null">Azienda</option>
                             <option th:each="i : ${listaAziende}" th:value="${i.getId()}" th:text="${i.getDenominazione()}"></option>
                         </select>
-                    </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Tipologia</label>
-                        <select th:field="*{tipologia.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
+                        <select th:field="*{tipologia.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaTipologia">
+                            <option th:value="null">Tipologia</option>
                             <option th:each="i : ${listaTipologieN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Priorità </label>
-                        <input type="number" th:field="*{priorita}" class="form-control" max="4" autocomplete="off"/>
-                    </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Stato</label>
-                        <select th:field="*{stato.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
+                    <div class="col-3">
+                        <select th:field="*{owner.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaOwner">
+                            <option th:value="null">Owner</option>
+                            <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
+                        </select>
+                        <select th:field="*{stato.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaStato">
+                            <option th:value="null">Stato</option>
                             <option th:each="i : ${listaStatiN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Ownership</label>
-                        <select th:field="*{owner.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
-                            <option th:each="i : ${listaOwner}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
-                        </select>
+                    <div class="col-3">
+                        <input type="number" placeholder="Priorità" th:field="*{priorita}"
+                               class="form-control backSimilWhite borderRadius18" id="ricercaPriorita" max="4" autocomplete="off"/>
+                        <input type="week" th:field="*{week}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaWeek"/>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Settimana </label>
-                        <input type="week" th:field="*{week}" class="form-control"/>
-                    </div>
-                    <div class="col" style="margin-left:15px;"><br>
-                        <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                    <div class="col-3  pt-4" style="text-align:center;">
+                        <a href="#" id="btnReset">Ripristina</a>
+                        <input type="submit" class="btn btn-primary m-2" id="btnFind3" value="Cerca">
                     </div>
                 </div>
             </form>
         </div>
+        <br><br>
         <div>
-            <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
-                    <label class="col-sm-16 col-form-label">Numero di righe</label>
-                    <select class="form-control maxRows" name="state">
-                        <option value="5000">Show ALL Rows</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="70">70</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-lg"   style="background-color:white;">
-                <thead class="thead" id="tabella-blu">
-                <tr class="tr1">
-                    <th class="align-middle">#</th>
-                    <th class="align-middle">Week</th>
-                    <th class="align-middle">Priorita</th>
-                    <th class="align-middle">Ambito</th>
-                    <th class="align-middle">Tipo</th>
-                    <th class="align-middle">Azienda</th>
-                    <th class="align-middle">Descrizione</th>
-                    <th class="align-middle">Owner</th>
-                    <th class="align-middle">Stato</th>
-                    <th class="align-middle">Azioni</th>
-                </tr>
+            <table class="table table-sm sortable table-responsive-sm" style="background-color:#f9f9f9;border-radius:25px;">
+                <thead id="tabella-new">
+                    <tr class="tr1 noborder">
+                        <td colspan="3" style="padding-top: 2%;">
+                            <div class="row">
+                                <h1 style="color:grey;" class="pl-5"><b>Need</b></h1>
+                                <div style="margin-left:10%;">
+                                    <a th:href="@{/need/aggiungi}" class="btn btn-lg"
+                                       style=" background-color: #ffe4a0; border-radius: 10px; color:#ffb700;">  <span class="glyphicon glyphicon-plus"></span><b>Aggiungi Need</b></a>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="6" style="padding-top: 2%;">
+                            <div class="row"> 	<!--		Show Numbers Of Rows 		-->
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label style="padding-left: 16%;padding-top: 6%;">Numero di righe:</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <select class="form-control maxRows" style="border-radius:20px;" name="state">
+                                        <option value="5000">Show ALL Rows</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="70">70</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tr1 noborder boxShadow">
+                        <th class="align-middle pl-5">#</th>
+                        <th class="align-middle">Week<br>Descrizione</th>
+                        <th class="align-middle">Priorita</th>
+                        <th class="align-middle">Tipologia</th>
+                        <th class="align-middle">Azienda</th>
+                        <th class="align-middle">Owner</th>
+                        <th class="align-middle">Headcount</th>
+                        <th class="align-middle">Stato</th>
+                        <th class="align-middle">Azioni</th>
+                    </tr>
                 </thead>
-                <tbody class="table1" id="valori-tabella">
+                <tbody class="table1 boxShadow">
                 <th:block th:each="need, i : ${listNeed}">
-                    <tr class="tr1">
-                        <td>[[${need.id}]]</td>
-                        <td>[[${need.week}]]</td>
+                    <tr class="tr1 noborder">
+                        <td class="pl-5">[[${need.id}]]</td>
+                        <td>[[${need.week}]]<br>[[${need.descrizione}]]</td>
                         <td>[[${need.priorita}]]</td>
                         <td>[[${need.tipologia.descrizione}]]</td>
-                        <td>[[${need.tipo}]]</td>
-                        <td>
-                            <span th:unless="${need.cliente == null}">
-                                 <a th:href="@{'/need/' + ${need.cliente.id}}">[[${need.cliente.denominazione}]]</a>
-                            </span>
-
-                        </td>
-                        <td>[[${need.descrizione}]]</td>
+                        <td>[[${need.cliente.denominazione}]]</td>
                         <td>[[${need.owner.descrizione}]]</td>
+                        <td>[[${need.numeroRisorse}]]</td>
                         <td>[[${need.stato.descrizione}]]</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Actions: edit and delete">
-                                <button type="button" class="btn btn-info btn-lg btn-icon mr-3" data-bs-toggle="modal" th:data-bs-target="|#dayModal${i.index}|" title="Cambia Stato">
+                                <a type="button" class="btn-info btn-lg btn-icon mr-3" data-bs-toggle="modal" th:data-bs-target="|#dayModal${i.index}|" title="Cambia Stato">
                                     <i class="fas fa-sticky-note"></i>
-                                </button>
-                                <span th:if="${(need.stato.id != 3 && need.stato.id != 4 && need.stato.id != 5)
+                                </a>
+                                <a class="btn-info btn-lg btn-icon mr-3" title="Modifica" th:href="@{'/need/modifica/' + ${need.cliente.id} +'/'+  ${need.id}}">
+                                    <i class="fas fa-pen"></i></a>
+                                <span class="btn-info btn-lg btn-icon" th:if="${(need.stato.id != 3 && need.stato.id != 4 && need.stato.id != 5)
                                 || need.cliente != null}">
-                                    <a class="btn btn-info btn-lg btn-icon" th:href="@{'/need/match/' + ${need.id}}">
+                                    <a style="color:black;" th:href="@{'/need/match/' + ${need.id}}" title="Match">
                                         <i class="fas fa-solid fa-magnifying-glass"></i></a>
                                 </span>
                             </div>
@@ -146,7 +148,13 @@
                                     <h5 class="modal-title" id="exampleModalLabel">Cambia Stato al need</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <form th:action="@{'/need/salva/stato/' + ${need.id}}" method="post" th:object="${needStato}">
+                                <form th:action="@{'/need/salva/stato/' + ${need.id} +
+                                 '?idCliente=' + ${needRicerca.cliente != null ? (needRicerca.cliente.id != null ? needRicerca.cliente.id : 0) : 0} +
+                                 '&idTipologia=' + ${needRicerca.tipologia != null ? (needRicerca.tipologia.id != null ? needRicerca.tipologia.id : 0) : 0} +
+                                 '&priorita=' + ${needRicerca.priorita != null ? needRicerca.priorita : 0} +
+                                 '&idStato=' + ${needRicerca.stato != null ? (needRicerca.stato.id != null ? needRicerca.stato.id : 0) : 0} +
+                                 '&idOwner=' + ${needRicerca.owner != null ? (needRicerca.owner.id != null ? needRicerca.owner.id : 0) : 0} +
+                                 '&week=' + ${needRicerca.week != null ? needRicerca.week : ''}}" method="post"  th:object="${needStato}">
                                     <div class="modal-body">
                                         <div class="form-row">
                                             <div class="form-group col">
@@ -168,22 +176,34 @@
 
                 </th:block>
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="9" style="padding:0px;">
+                        <div class="row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3" style="padding-left: 3%">
+                                <div class='pagination-container' >
+                                    <nav>
+                                        <ul class="pagination">
+
+                                            <li data-page="prev" >
+                                                <span> < <span class="sr-only">(current)</span></span>
+                                            </li>
+                                            <!--	Here the JS Function Will Add the Rows -->
+                                            <li data-page="next" class="prev">
+                                                <span> > <span class="sr-only">(current)</span></span>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
             </table>
-                <div class='pagination-container' >
-                    <nav>
-                        <ul class="pagination">
-
-                            <li data-page="prev" >
-                                <span> < <span class="sr-only">(current)</span></span>
-                            </li>
-                            <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev">
-                                <span> > <span class="sr-only">(current)</span></span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
         </div>
     </div>
 </div>

@@ -19,7 +19,7 @@
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
 
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch" style="overflow: hidden;">
 
@@ -36,19 +36,17 @@
       <div>
           <form th:action="@{/hr/report/estrai}" method="get" th:object="${ricercaReport}">
               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-              <div class="form-group row">
-                  <div class="col">
-                      <label class="col-sm-16 col-form-label">Anno </label>
-                      <select th:field="*{anno}" class="form-control" required>
-                          <option th:value="null" th:text="---"></option>
+              <div class="row rowFind">
+                  <div class="col-4">
+                      <br>
+                      <select th:field="*{anno}" class="form-control" id="anno" required>
+                          <option th:value="null">Seleziona un Anno</option>
                           <option th:each="i : ${listaAnni}" th:value="${i}"
                                   th:text="${i}"></option>
                       </select>
-                  </div>
-                  <div class="col" style="margin-left:15px">
-                      <label class="col-sm-16 col-form-label">Mese </label>
-                      <select th:field="*{mese}" class="form-control" required>
-                          <option th:value="null" th:text="---"></option>
+                      <br>
+                      <select th:field="*{mese}" class="form-control" id="mese" required>
+                          <option th:value="null">Seleziona un Mese</option>
                           <option th:value="1" th:text="GENNAIO"></option>
                           <option th:value="2" th:text="FEBBRAIO"></option>
                           <option th:value="3" th:text="MARZO"></option>
@@ -62,18 +60,22 @@
                           <option th:value="11" th:text="NOVEMBRE"></option>
                           <option th:value="12" th:text="DICEMBRE"></option>
                       </select>
+                      <br>
                   </div>
-                  <div class="col" style="margin-left:15px">
-                      <label class="col-sm-16 col-form-label">Dal </label>
-                      <input type="number" th:field="*{giornoInizio}" class="form-control" min="1" max="31" autocomplete="off" />
+                  <div class="col-4">
+                      <br>
+                      <input type="number" th:field="*{giornoInizio}" class="form-control" min="1" max="31"
+                             placeholder="Dal" autocomplete="off" id="inizio"/>
+                      <br>
+                      <input type="number" th:field="*{giornoFine}" class="form-control" min="1" max="31"
+                             placeholder="Al" autocomplete="off" id="fine"/>
+                      <br>
                   </div>
-                  <div class="col" style="margin-left:15px">
-                      <label class="col-sm-16 col-form-label">Al </label>
-                      <input type="number" th:field="*{giornoFine}" class="form-control" min="1" max="31" autocomplete="off" />
-                  </div>
-                  <div class="col" style="margin-left:15px;"><br>
-                      <input type="submit" class="btn btn-primary m-2"
-                             style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                  <div class="col-4" style="text-align:center;">
+                      <br><br>
+                      <input type="submit" class="btn btn-primary m-2" id="btnFind4" value="Cerca">
+                      <br>
+                      <a href="#" id="btnReset">Ripristina</a>
                   </div>
               </div>
               <input type="hidden" th:field="*{anno}">
@@ -103,7 +105,7 @@
               </th:block>
             </tr>
           </thead>
-          <tbody class="table1" id="valori-tabella">
+          <tbody class="table1 valori-tabella">
             <th:block th:each="x : ${listaReport}">
               <tr class="tr1">
                 <td>

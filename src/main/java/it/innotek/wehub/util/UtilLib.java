@@ -181,6 +181,18 @@ public class UtilLib {
         return null;
     }
 
+    public static Anno prendiPrimoAnno(List<Anno> anni){
+
+        Anno annoMinimo = null;
+
+        if(null != anni){
+            anni.sort(Comparator.comparing(Anno::getAnno));
+            annoMinimo = anni.get(0);
+        }
+
+        return annoMinimo;
+    }
+
     public static Mese prendiMese(List<Mese> mesi, int meseRichiesto){
 
         Iterator<Mese> itMesi = mesi.stream().iterator();
@@ -192,6 +204,18 @@ public class UtilLib {
             }
         }
         return null;
+    }
+
+    public static Mese prendiPrimoMese(List<Mese> mesi){
+
+        Mese meseMinimo = null;
+
+        if(null != mesi){
+            mesi.sort(Comparator.comparing(Mese::getValue));
+            meseMinimo = mesi.get(0);
+        }
+
+        return meseMinimo;
     }
 
     public static Giorno prendiGiorno(List<Giorno> giorni, int giornoRichiesto){

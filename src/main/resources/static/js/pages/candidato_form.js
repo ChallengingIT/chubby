@@ -2,7 +2,7 @@ document.getElementById('theDate').value = '1970-01-01';
 
 document.getElementById('newDate').valueAsDate =  new Date();
 
-$('li').removeClass('active');
+$('.list-unstyled li').removeClass('active');
 $('.staffing').addClass('active');
 
 $(document).ready(function () {

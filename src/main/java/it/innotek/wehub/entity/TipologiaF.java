@@ -4,15 +4,15 @@
 
 package it.innotek.wehub.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,7 +23,8 @@ import java.util.Objects;
 @Table( name = "tipologief")
 public class TipologiaF implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +32,6 @@ public class TipologiaF implements Serializable {
 
     @Column(nullable = false, unique = true, length = 45)
     private String descrizione;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "tipologia_file",
-        joinColumns = @JoinColumn(name = "id_tipologia", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<File> files;
 
     @Override
     public boolean equals(Object o) {

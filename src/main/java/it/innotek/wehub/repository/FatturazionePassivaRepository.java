@@ -15,6 +15,8 @@ import java.util.List;
 @Repository
 public interface FatturazionePassivaRepository extends JpaRepository<FatturazionePassiva, Integer> {
 
+    List<FatturazionePassiva> findByFornitore_Id(Integer id);
+
     List<FatturazionePassiva> findByScadenzaLessThan(LocalDate scadenza);
 
     @Query(value= """

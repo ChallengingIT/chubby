@@ -51,13 +51,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
 
     @Query(value= """
            select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, stn.id_stato
-           from need n, need_cliente nc, livello_candidato lc, candidato c, tipologia_need tn, need_owner non, stato_need stn
+           from need n, need_cliente nc, candidato c, tipologia_need tn, need_owner non, stato_need stn
            where  n.id = nc.id_need
            and n.id = tn.id_need
            and n.id = non.id_need
-           and c.id = lc.id_candidato
            and n.id = stn.id_need
-           and n.anni_esperienza <= c.anni_esperienza
            and c.id = ?1
            and n.id not in (select id_need from need_candidato where id_need = n.id and id_candidato = ?1)
           """, nativeQuery=true)

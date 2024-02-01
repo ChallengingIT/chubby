@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -35,20 +35,21 @@
 
                     <div class="col">
                         <label class="col-sm-16 col-form-label">Nome </label>
-                        <input type="text" th:field="*{nome}" class="form-control" pattern="[A-Za-z]{0,45}" maxlength="45" autocomplete="off"/>
+                        <input type="text" th:field="*{nome}" class="form-control" id="nome" pattern="[A-Za-z]{0,45}" maxlength="45" autocomplete="off"/>
                     </div>
                     <div class="col" style="margin-left:15px">
                         <label class="col-sm-16 col-form-label">Cognome </label>
-                        <input type="text" th:field="*{cognome}" class="form-control" pattern="[A-Za-z]{0,45}" maxlength="45" autocomplete="off"/>
+                        <input type="text" th:field="*{cognome}" class="form-control" id="cognome" pattern="[A-Za-z]{0,45}" maxlength="45" autocomplete="off"/>
                     </div>
                     <div class="col" style="margin-left:15px">
                         <label class="col-sm-16 col-form-label">Email </label>
-                        <input type="email" th:field="*{email}" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="45" autocomplete="off"/>
+                        <input type="email" th:field="*{email}" class="form-control" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="45" autocomplete="off"/>
                     </div>
                     <div class="col" style="margin-left:15px;"><br>
                         <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
                     </div>
                 </div>
+                <input type="button" value="Ripristina" id="btnReset" class="btn-sm btn-primary">
             </form>
         </div>
         <div>
@@ -73,7 +74,7 @@
                     <th>Azioni</th>
                 </tr>
                 </thead>
-                <tbody  class="table1" id="valori-tabella">
+                <tbody  class="table1 valori-tabella">
                 <th:block th:each="staff : ${listStaffNonAssociati}">
                     <tr class="tr1">
                         <td>[[${staff.email}]]</td>

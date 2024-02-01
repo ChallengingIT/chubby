@@ -22,7 +22,7 @@
     <script type="text/javascript" th:src="@{/js/jquery.dropdown.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
     <div class="wrapper d-flex align-items-stretch">
 
         <div th:replace="~{sidebar}"> </div>
@@ -199,8 +199,8 @@
                                 Seleziona le Skills
                                 <span th:unless="${candidato.id == null}">
                                     <a th:href="@{'/staffing/modifica/noskills/' + ${candidato.id}}"
-                                       class="col sbtn btn-info btn-lg btn-icon" style="margin: 0;">
-                                        <i class="fas fa-trash"></i>
+                                       class="btn-lg btn-icon" style="margin: 0;">
+                                        <i class="fas fa-times" style="color: #ff0000;"></i>
                                     </a>
                                 </span>
                             </label>
@@ -244,8 +244,9 @@
                                         [[${candidato.files[0].descrizione}]]
                                         <a th:href="@{'/files/download/file/'+${candidato.files[0].id}}"
                                             style="color:powderblue;">
-                                            Download
+                                            <i class="fas fa-download" style="color: #00ccff;"></i>
                                         </a>
+                                        <a th:href="@{'/files/elimina/file/candidato/'+${candidato.files[0].id}+'/'+${candidato.id}}" style="color:red;"> <i class="fas fa-times" style="color: #ff0000;"></i> </a>
                                         <input type="file" name="file" class="form-control">
                                     </span>
                                     <span th:unless="${candidato.files[0].tipologia.id == 1}">
@@ -254,8 +255,9 @@
                                             [[${candidato.files[1].descrizione}]]
                                             <a th:href="@{'/files/download/file/'+${candidato.files[1].id}}"
                                                 style="color:powderblue;">
-                                                Download
+                                                <i class="fas fa-download" style="color: #00ccff;"></i>
                                             </a>
+                                            <a th:href="@{'/files/elimina/file/candidato/'+${candidato.files[1].id}+'/'+${candidato.id}}" style="color:red;"> <i class="fas fa-times" style="color: #ff0000;"></i> </a>
                                         </span>
                                         <input type="file" name="file" class="form-control">
                                     </span>
@@ -271,8 +273,9 @@
                                         [[${candidato.files[0].descrizione}]]
                                         <a th:href="@{'/files/download/file/'+${candidato.files[0].id}}"
                                             style="color:powderblue; margin-left: 5px;" disabled>
-                                            Download
+                                            <i class="fas fa-download" style="color: #00ccff;"></i>
                                         </a>
+                                        <a th:href="@{'/files/elimina/file/candidato/'+${candidato.files[0].id}+'/'+${candidato.id}}" style="color:red;"> <i class="fas fa-times" style="color: #ff0000;"></i> </a>
                                         <input type="file" name="cf" class="form-control">
                                     </span>
                                     <span th:unless="${candidato.files[0].tipologia.id == 2}">
@@ -281,8 +284,9 @@
                                             [[${candidato.files[1].descrizione}]]
                                             <a th:href="@{'/files/download/file/'+${candidato.files[1].id}}"
                                                 style="color:powderblue;" disabled>
-                                                Download
+                                                <i class="fas fa-download" style="color: #00ccff;"></i>
                                             </a>
+                                            <a th:href="@{'/files/elimina/file/candidato/'+${candidato.files[1].id}+'/'+${candidato.id}}" style="color:red;"> <i class="fas fa-times" style="color: #ff0000;"></i> </a>
                                         </span>
                                         <input type="file" name="cf" class="form-control">
                                     </span>
@@ -295,8 +299,8 @@
                     </div>
                     <div class="row form-btn-wrapper mt-5">
                         <button type="submit" class="col-5  mr-auto btn btn-lg btn-primary">Salva</button>
-                        <button type="button" class="col-5  ml-auto btn btn-lg btn-secondary"
-                            id="bottoneIndietro">Indietro</button>
+                        <a th:href="@{/staffing/ricerca} + '?email=' + ${candidato.email}"
+                           class="col-5  ml-auto btn btn-lg btn-secondary">Indietro</a>
                     </div>
                 </div>
             </form>

@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 <div class="wrapper d-flex align-items-stretch">
 
     <div th:replace="~{sidebar}">  </div>
@@ -214,7 +214,7 @@
                 </div>
                 <div class="row form-btn-wrapper mt-5" style="text-align:center;">
                     <div class="col">
-                        <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+                        <a th:href="@{'/intervista/ricerca/' + ${candidato.id}} + '?owner.id=' + ${intervista.owner.id}" class="col-5 btn btn-lg btn-secondary">Indietro</a>
                     </div>
                 </div>
             </div>

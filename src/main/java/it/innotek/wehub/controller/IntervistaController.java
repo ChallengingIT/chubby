@@ -5,28 +5,22 @@
 package it.innotek.wehub.controller;
 
 import it.innotek.wehub.EmailSenderService;
-import it.innotek.wehub.entity.Candidato;
-import it.innotek.wehub.entity.Intervista;
-import it.innotek.wehub.entity.Owner;
-import it.innotek.wehub.entity.TimedEmail;
-import it.innotek.wehub.entity.timesheet.Email;
+import it.innotek.wehub.entity.*;
 import it.innotek.wehub.repository.*;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/intervista")
 public class IntervistaController {
 
@@ -49,268 +43,181 @@ public class IntervistaController {
 
     private static final Logger logger = LoggerFactory.getLogger(IntervistaController.class);
 
-    @RequestMapping("/{idCandidato}")
-    public String showIntervistaIdList(
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model
-    ) {
-        try {
-            Candidato        candidato      = candidatoRepository.findById(idCandidato).get();
-            List<Intervista> listInterviste = intervistaRepository.findByCandidato_Id(idCandidato);
+    @GetMapping("/react/tipointervista")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<TipologiaI> getAllTipologiaIntervista()
+    {
+        logger.info("Tipologia interviste");
 
-            model.addAttribute("listInterviste", listInterviste);
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("intervistaRicerca", new Intervista());
-            model.addAttribute("ultimoIdIntervista", candidatoRepository.findUltimoIdIntervistaCandidato(idCandidato));
-
-            return "lista_interviste_candidato";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return tipologiaIRepository.findAll();
     }
 
-    @RequestMapping("/ricerca/{idCandidato}")
-    public String showRicercaFornitoriList(
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model,
-        Intervista intervista
+
+    @GetMapping("/react/{idCandidato}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Intervista> showIntervistaIdList(
+        @PathVariable("idCandidato") Integer idCandidato
     ) {
-        try {
-            Integer          idStato        = intervista.getStato() != null ? intervista.getStato().getId() : null;
-            Date             dataColloquio  = ( intervista.getDataColloquio() != null ) ? intervista.getDataColloquio() : null;
-            List<Intervista> listInterviste = intervistaRepository.ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(idStato, null, dataColloquio, idCandidato);
-            Candidato        candidato      = candidatoRepository.findById(idCandidato).get();
+        logger.info("Interviste candidato tramite id");
 
-            model.addAttribute("listInterviste", listInterviste);
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("intervistaRicerca", intervista);
-            model.addAttribute("ultimoIdIntervista", candidatoRepository.findUltimoIdIntervistaCandidato(idCandidato));
+        return intervistaRepository.findByCandidato_Id(idCandidato);
 
-            return "lista_interviste_candidato";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
     }
 
-    @RequestMapping("/aggiungi/{idCandidato}")
-    public String showNewForm(
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model
+    @PostMapping("/react/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveNeed(
+        @RequestParam("idCandidato") Integer idCandidato,
+        @RequestBody Map<String,String> intervistaMap,
+        @RequestParam("modifica") Integer modifica,
+        @RequestParam("note") @Nullable String note
     ) {
-        try {
-            Candidato  candidato        = candidatoRepository.findById(idCandidato).get();
-            Intervista ultimaIntervista = intervistaRepository.findByCandidato_IdOrderByIdAsc(idCandidato);
+        logger.info("Salva Intervista");
 
-            if (null != ultimaIntervista) {
-                model.addAttribute("intervista", ultimaIntervista);
-            } else {
-                model.addAttribute("intervista", new Intervista());
+        try {
+
+            Intervista intervista = new Intervista();
+
+            if(intervistaMap.get("id") != null) {
+                intervista = intervistaRepository.findById(Integer.parseInt(intervistaMap.get("id"))).get();
+
+                logger.debug("Intervista trovata si procede in modifica");
             }
 
-            model.addAttribute("titoloPagina", "Aggiungi un nuovo incontro");
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("modifica", 0);
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipologieI", tipologiaIRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
+            trasformaMappaInIntervista(intervista, intervistaMap);
 
-            return "intervista_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva/{idCandidato}/{modifica}")
-    public String saveNeed(
-        @PathVariable("idCandidato") Integer idCandidato,
-        Intervista intervista,
-        @PathVariable("modifica") Integer modifica,
-        RedirectAttributes ra
-    ) {
-        try {
             Candidato candidato    = candidatoRepository.findById(idCandidato).get();
             Integer   idIntervista = intervista.getId();
 
-            intervista.setCandidato(candidato);
+            candidato.setNote(note);
 
             if (( null != idIntervista ) && modifica == 0) {
-                intervista.setId(idIntervista + 1);
+                intervista.setId(intervistaRepository.findMaxId() + 1);
             }
+
+            List<Intervista> interviste = intervistaRepository.findByCandidato_Id(idCandidato);
+
+            interviste.add(intervista);
+
+            candidato.setRating(ricalcoloRating(interviste));
+            candidato.setStato(intervista.getStato());
+
+            intervista.setCandidato(candidato);
 
             intervistaRepository.save(intervista);
 
-            candidato.setRating(ricalcoloRating(intervista));
-            candidato.setStato(intervista.getStato());
+            logger.debug("Intervista salvata correttamente");
 
-            candidatoRepository.save(candidato);
-
-            Owner owner = ownerRepository.findById(intervista.getNextOwner().getId()).get();
-
-            salvaEmailTemporizzata(owner.getEmail(), owner.getNome(), owner.getCognome(), candidato.getNome(), candidato.getCognome(), candidato.getEmail(), candidato.getCellulare(), intervista.getDataAggiornamento(), 0);
-
-            Long idEmailTemporizzata = timedEmailRepository.findMaxId();
-
-            inviaEmail(owner.getEmail(), owner.getNome(), owner.getCognome(), candidato.getNome(), candidato.getCognome(), candidato.getEmail(), candidato.getCellulare(), intervista.getDataAggiornamento(), idEmailTemporizzata);
-
-            ra.addFlashAttribute("message", "l'incontro è stato salvato con successo");
-            return "redirect:/intervista/" + idCandidato;
+            return "OK";
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/modifica/{idCandidato}/{id}")
-    public String showEditForm(
-        @PathVariable("idCandidato") Integer idCandidato,
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ) {
-        try {
-            Candidato  candidato  = candidatoRepository.findById(idCandidato).get();
-            Intervista intervista = intervistaRepository.findById(id).get();
-
-            model.addAttribute("intervista", intervista);
-            model.addAttribute("titoloPagina", "Modifica incontro");
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("modifica", 1);
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaTipologieI", tipologiaIRepository.findAllByOrderByIdAsc());
-
-            return "intervista_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/visualizza/{idCandidato}/{id}")
-    public String showForm(
-        @PathVariable("idCandidato") Integer idCandidato,
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
+    @DeleteMapping("/react/elimina/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String deleteIntervista(
+        @PathVariable("id") Integer id
     ){
-        try {
-            Candidato  candidato  = candidatoRepository.findById(idCandidato).get();
-            Intervista intervista = intervistaRepository.findById(id).get();
+        logger.info("Elimina intervista");
 
-            model.addAttribute("intervista", intervista);
-            model.addAttribute("titoloPagina", "Visualizza incontro");
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("titoloPagina", "Gestisci Incontro");
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStati", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaTipologieI", tipologiaIRepository.findAllByOrderByIdAsc());
-
-            return "intervista_no_edit_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/elimina/{idCandidato}/{id}")
-    public String deleteNeed(
-        @PathVariable("idCandidato") Integer idCandidato,
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra
-    ){
         try {
             intervistaRepository.deleteById(id);
-            ra.addFlashAttribute("message", "L'incontro è stato cancellato con successo");
-            return "redirect:/intervista/" + idCandidato;
+
+            logger.debug("Intervista eliminata correttamente");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    public Double ricalcoloRating(Intervista intervista){
+    public Double ricalcoloRating(List<Intervista> interviste){
+        logger.debug("Ricalcolo rating");
 
-        return ((intervista.getAderenza()      != null ? intervista.getAderenza()      : 0) +
+        double rating = 0.0;
+
+        for (Intervista intervista : interviste) {
+            rating += (((intervista.getAderenza()      != null ? intervista.getAderenza()      : 0) +
                 (intervista.getCoerenza()      != null ? intervista.getCoerenza()      : 0) +
                 (intervista.getMotivazione()   != null ? intervista.getMotivazione()   : 0) +
                 (intervista.getStanding()      != null ? intervista.getStanding()      : 0) +
                 (intervista.getEnergia()       != null ? intervista.getEnergia()       : 0) +
                 (intervista.getComunicazione() != null ? intervista.getComunicazione() : 0) +
-                (intervista.getInglese()       != null ? intervista.getInglese()       : 0))/7.0;
+                (intervista.getInglese()       != null ? intervista.getInglese()       : 0))/7.0);
+        }
+
+        return rating/interviste.size();
     }
 
-    public void inviaEmail(
-        String emailOwner,
-        String nomeOwner,
-        String cognomeOwner,
-        String nomeCandidato,
-        String cognomeCandidato,
-        String emailCandidato,
-        String cellCandidato,
-        LocalDateTime dataAggiornamento,
-        Long idEmailTemporizzata
-    ){
-        Email               email = new Email();
-        Map<String, Object> mappa = new HashMap<>();
+    public void trasformaMappaInIntervista(Intervista staff, Map<String,String> staffMap) {
+        logger.debug("Trasforma mappa in intervista");
 
-        email.setFrom("sviluppo@challenging.cloud");
-        email.setTo(emailOwner);
-        mappa.put("nome", nomeOwner);
-        mappa.put("cognome", cognomeOwner);
-        mappa.put("nomeCandidato", nomeCandidato);
-        mappa.put("cognomeCandidato", cognomeCandidato);
-        mappa.put("mailCandidato", emailCandidato);
-        mappa.put("cellCandidato", cellCandidato);
-        email.setProperties(mappa);
-        email.setSubject("Reminder per intervista successiva a " + nomeCandidato + " " + cognomeCandidato);
-        email.setTemplate("reminder-email.html");
+        staff.setAnniEsperienza(staffMap.get("anniEsperienza") != null ? Integer.parseInt(staffMap.get("anniEsperienza")) : null);
+        staff.setAderenza(staffMap.get("aderenza") != null ? Integer.parseInt(staffMap.get("aderenza")) : null);
+        staff.setAttuale(staffMap.get("attuale") != null ? staffMap.get("attuale") : null);
+        staff.setCoerenza(staffMap.get("coerenza") != null ? Integer.parseInt(staffMap.get("coerenza")) : null);
+        staff.setCognome(staffMap.get("cognome") != null ? staffMap.get("cognome") : null);
+        staff.setCompetenze(staffMap.get("competenze") != null ? staffMap.get("competenze") : null);;
+        staff.setComunicazione(staffMap.get("comunicazione") != null ? Integer.parseInt(staffMap.get("comunicazione")) : null);
+        staff.setDataNascita(staffMap.get("dataNascita") != null ? Date.valueOf(staffMap.get("dataNascita")) : null);
 
-        serviceEmail.sendHtmlMessagePost(email, dataAggiornamento, idEmailTemporizzata);
-    }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-    public void salvaEmailTemporizzata(
-        String emailOwner,
-        String nomeOwner,
-        String cognomeOwner,
-        String nomeCandidato,
-        String cognomeCandidato,
-        String emailCandidato,
-        String cellCandidato,
-        LocalDateTime dataAggiornamento,
-        Integer inviata
-    ){
-        TimedEmail emailTemporizzata =
-            new TimedEmail(
-                nomeOwner,
-                cognomeOwner,
-                emailOwner,
-                nomeCandidato,
-                cognomeCandidato,
-                emailCandidato,
-                cellCandidato,
-                dataAggiornamento,
-                inviata
-            );
+        staff.setDataAggiornamento(staffMap.get("dataAggiornamento") != null ? LocalDateTime.parse(staffMap.get("dataAggiornamento"), formatter) : null);
+        staff.setDataAVideo(staffMap.get("dataAVideo") != null ? staffMap.get("dataAVideo") : null);
+        staff.setDataColloquio(staffMap.get("dataColloquio") != null ? Date.valueOf(staffMap.get("dataColloquio")) : null);
+        staff.setDescrizioneCandidato(staffMap.get("descrizioneCandidato") != null ? staffMap.get("descrizioneCandidato") : null);
+        staff.setNome(staffMap.get("nome") != null ? staffMap.get("nome") : null);
+        staff.setDescrizioneCandidatoUna(staffMap.get("descrizioneCandidatoUna") != null ? staffMap.get("descrizioneCandidatoUna") : null);
+        staff.setDesiderata(staffMap.get("desiderata") != null ? staffMap.get("desiderata") : null);
+        staff.setDisponibilita(staffMap.get("disponibilita") != null ? staffMap.get("disponibilita") : null);
+        staff.setEnergia(staffMap.get("energia") != null ? Integer.parseInt(staffMap.get("energia")) : null);
 
-        timedEmailRepository.save(emailTemporizzata);
+        if (staffMap.get("idNextOwner") != null) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(staffMap.get("idNextOwner")));
+
+            staff.setNextOwner(owner);
+        }
+
+        if (staffMap.get("idOwner") != null) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(staffMap.get("idOwner")));
+
+            staff.setOwner(owner);
+        }
+
+        staff.setInglese(staffMap.get("inglese") != null ? Integer.parseInt(staffMap.get("inglese")) : null);
+        staff.setMobilita(staffMap.get("mobilita") != null ? staffMap.get("mobilita") : null);
+        staff.setMotivazione(staffMap.get("motivazione") != null ? Integer.parseInt(staffMap.get("motivazione")) : null);
+        staff.setOraAVideo(staffMap.get("oraAVideo") != null ? staffMap.get("oraAVideo") : null);
+        staff.setPreavviso(staffMap.get("preavviso") != null ? staffMap.get("preavviso") : null);
+        staff.setProposta(staffMap.get("proposta") != null ? staffMap.get("proposta") : null);
+        staff.setRecapiti(staffMap.get("recapiti") != null ? staffMap.get("recapiti") : null);;
+        staff.setStanding(staffMap.get("standing") != null ? Integer.parseInt(staffMap.get("standing")) : null);
+        staff.setTeamSiNo(staffMap.get("teamSiNo") != null ? staffMap.get("teamSiNo") : null);
+        staff.setTipologia(staffMap.get("tipologia") != null ? staffMap.get("tipologia") : null);
+        staff.setValutazione(staffMap.get("valutazione") != null ? Integer.parseInt(staffMap.get("valutazione")) : null);
+
+        if (staffMap.get("stato") != null) {
+            StatoC stato = new StatoC();
+            stato.setId(Integer.parseInt(staffMap.get("stato")));
+
+            staff.setStato(stato);
+        }
+
+        if (staffMap.get("tipo") != null) {
+            TipologiaI tipo = new TipologiaI();
+            tipo.setId(Integer.parseInt(staffMap.get("tipo")));
+
+            staff.setTipo(tipo);
+        }
     }
 }
+

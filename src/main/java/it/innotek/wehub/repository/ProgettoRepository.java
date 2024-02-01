@@ -14,7 +14,9 @@ import java.util.List;
 @Repository
 public interface ProgettoRepository extends JpaRepository<Progetto, Integer> {
 
-    List<Progetto> findByStaff_Id(Integer id);
+    List<Progetto> findByIdStaff(Integer id);
+
+    List<Progetto> findByCliente_Id(Integer id);
 
     @Query(value= """
          SELECT distinct p.*, pc.id_cliente, ps.id_staff, tp.id_tipologia

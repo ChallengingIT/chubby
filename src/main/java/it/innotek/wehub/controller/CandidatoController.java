@@ -4,372 +4,270 @@
 
 package it.innotek.wehub.controller;
 
-import it.innotek.wehub.entity.AssociazioneCandidatoNeed;
-import it.innotek.wehub.entity.Candidato;
-import it.innotek.wehub.entity.File;
-import it.innotek.wehub.entity.TipologiaF;
+import it.innotek.wehub.entity.*;
 import it.innotek.wehub.repository.*;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/staffing")
 public class CandidatoController {
 
     @Autowired
-    private CandidatoRepository     candidatoRepository;
+    private CandidatoRepository candidatoRepository;
     @Autowired
-    private TipologiaRepository     tipologiaRepository;
+    private TipologiaRepository tipologiaRepository;
     @Autowired
-    private FacoltaRepository       facoltaRepository;
+    private FacoltaRepository facoltaRepository;
     @Autowired
-    private StatoCRepository        statoCRepository;
+    private StatoCRepository statoCRepository;
     @Autowired
-    private LivelloRepository       livelloRepository;
+    private LivelloRepository livelloRepository;
     @Autowired
-    private SkillRepository         skillRepository;
+    private SkillRepository skillRepository;
     @Autowired
-    private FileRepository          fileRepository;
+    private FileRepository fileRepository;
     @Autowired
-    private FileCandidatoRepository fileCandidatoRepository;
+    private IntervistaRepository intervistaRepository;
     @Autowired
-    private OwnerRepository         ownerRepository;
+    private OwnerRepository ownerRepository;
     @Autowired
-    private TipoRepository          tipoRepository;
+    private TipoRepository tipoRepository;
     @Autowired
-    private FornitoreRepository     fornitoreRepository;
+    private FornitoreRepository fornitoreRepository;
     @Autowired
-    private AssociazioniRepository  associazioniRepository;
+    private AssociazioniRepository associazioniRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CandidatoController.class);
 
-    @RequestMapping
-    public String showCandidatiList(Model model){
-        try {
-            Pageable        limit         = PageRequest.of(0, 60);
-            List<Candidato> listCandidati = candidatoRepository.findAll(limit).toList();
-            List<Integer>   listId        = new ArrayList<>();
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Candidato> getAll() {
+        logger.info("Candidati");
 
-            for (Candidato cand : listCandidati) {
-                listId.add(cand.getId());
-            }
-
-            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 1);
-            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 2);
-
-            listCandidati = candidatoRepository.findAll(limit).toList();
-
-            model.addAttribute("listCandidati", listCandidati);
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("candidatoRicerca", new Candidato());
-            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            return "candidati";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return candidatoRepository.findAll();
     }
 
-    @RequestMapping("/ricerca")
-    public String showRicercaCandidatiList(
-        Model model,
-        Candidato candidato
-    ){
-        try {
-            Integer idTipologia = candidato.getTipologia() != null ? candidato.getTipologia().getId() : null;
-            Integer idStato     = candidato.getStato() != null ? candidato.getStato().getId() : null;
-            Integer idTipo      = candidato.getTipo() != null ? candidato.getTipo().getId() : null;
-            String  nome        = ( candidato.getNome() != null && !candidato.getNome().isEmpty() ) ? candidato.getNome() : null;
-            String  cognome     = ( candidato.getCognome() != null && !candidato.getCognome().isEmpty() ) ? candidato.getCognome() : null;
-            String  email       = ( candidato.getEmail() != null && !candidato.getEmail().isEmpty() ) ? candidato.getEmail() : null;
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Candidato getAll(@PathVariable("id") Integer id) {
+        logger.info("Candidato tramite id");
 
-            List<Candidato> listCandidati = candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, idTipologia, idStato, idTipo);
-            List<Integer>   listId        = new ArrayList<>();
-
-            for (Candidato cand : listCandidati) {
-                listId.add(cand.getId());
-            }
-
-            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 1);
-            fileCandidatoRepository.elimina_file_vecchi(listId.toString(), 2);
-
-            listCandidati = candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, idTipologia, idStato, idTipo);
-
-            model.addAttribute("listCandidati", listCandidati);
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("candidatoRicerca", candidato);
-            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-
-            return "candidati";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return candidatoRepository.findById(id).get();
     }
 
-    @RequestMapping("/aggiungi")
-    public String showNewForm(
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            if (null != model.getAttribute("candidato")) {
-                model.addAttribute("candidato", model.getAttribute("candidato"));
-            } else {
-                model.addAttribute("candidato", new Candidato());
-            }
+    @GetMapping("/react/tipo")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Tipo> getAllTipo() {
+        logger.info("Tipi Candidato");
 
-            model.addAttribute("titoloPagina", "Aggiungi candidato");
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listOwner", ownerRepository.findAll());
-
-            return "candidato_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return tipoRepository.findAll();
     }
 
-    @RequestMapping("/salva")
+    @GetMapping("/react/skill")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Skill> getAllSkills() {
+        logger.info("Skills");
+
+        return skillRepository.findAll();
+    }
+
+    @GetMapping("/react/stato/candidato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<StatoC> getAllStatoC() {
+        logger.info("Stati Candidato");
+
+        return statoCRepository.findAllByOrderByIdAsc();
+    }
+
+    @GetMapping("/react/facolta")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Facolta> getAllFacolta() {
+        logger.info("Facoltà");
+
+        return facoltaRepository.findAll();
+    }
+
+    @GetMapping("/react/livello")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<LivelloScolastico> getAllLivello() {
+        logger.info("Livelli scolastici");
+
+        return livelloRepository.findAll();
+    }
+
+    @PostMapping("/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam("cf") MultipartFile cf,
-        Candidato candidato,
-        Model model,
-        RedirectAttributes ra
+        @RequestBody Map<String,String>  candidatoMap,
+        @RequestParam("skill") @Nullable List<Integer> skillList
     ) {
+        logger.info("Salva candidato");
+
         try {
-            if (controllaMailDuplicata(candidato.getEmail())) {
+            Candidato candidatoEntity = new Candidato();
 
-                ra.addFlashAttribute("message", "Email già associata ad un altro profilo");
+            if(candidatoMap.get("id") != null) {
+                candidatoEntity = candidatoRepository.findById(Integer.parseInt(candidatoMap.get("id"))).get();
 
-                if (candidato.getId() == null) {
-                    ra.addFlashAttribute(candidato);
-                    return "redirect:/staffing/aggiungi";
+                logger.debug("Candidato trovato si procede in modifica");
+            }
+
+             trasformaMappaInCandidato(candidatoEntity, candidatoMap, skillList);
+
+            if (controllaMailDuplicata(candidatoEntity.getEmail())) {
+
+                if (candidatoEntity.getId() == null) {
+                    logger.debug("Candidato duplicato, denominazione già presente");
+
+                    return "DUPLICATO";
                 }
             }
 
-            String descrizioneTipologia = recuperaDescrizioneTipologia(candidato.getTipologia().getId());
-            String descrizioneLivello   = recuperaDescrizioneLivello(candidato.getLivelloScolastico().getId());
-
-            candidato.getTipologia().setDescrizione(descrizioneTipologia);
-            candidato.getLivelloScolastico().setDescrizione(descrizioneLivello);
-
-            if (null == candidato.getRating()) {
-                candidato.setRating(0.0);
+            if (null == candidatoEntity.getRating()) {
+                candidatoEntity.setRating(0.0);
             }
 
-            if (null == candidato.getFornitore()) {
-                candidato.setFornitore(null);
-            }
-
-            if (null != candidato.getFacolta()) {
-                if (null == candidato.getFacolta().getId()) {
-                    candidato.setFacolta(null);
+            if (null != candidatoEntity.getFacolta()) {
+                if (null == candidatoEntity.getFacolta().getId()) {
+                    candidatoEntity.setFacolta(null);
                 }
             }
 
-            candidatoRepository.save(candidato);
+            /*if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty()) {
+                candidatoEntity.getFiles().removeIf(f -> f.getTipologia().getId() == 1);
+                candidatoEntity.getFiles().add(fileVoid(file, 1));
 
-            boolean modifica = false;
-            Integer idCandidato;
+                logger.debug("CV del candidato aggiornato");
+            }
+
+            if (( null != cf.getOriginalFilename() ) && !cf.getOriginalFilename().isEmpty()) {
+                candidatoEntity.getFiles().removeIf(f -> f.getTipologia().getId() == 2);
+                candidatoEntity.getFiles().add(fileVoid(cf, 2));
+
+                logger.debug("CF del candidato aggiornato");
+            }*/
+
+            candidatoRepository.save(candidatoEntity);
+            logger.debug("Candidato salvato correttamente");
+
+            return ""+candidatoEntity.getId();
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
+    @PostMapping("/react/staff/salva/file/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveCandidato(
+        @PathVariable("id") Integer id,
+        @RequestParam("tipo") Integer tipo,
+        @RequestParam("file") MultipartFile file
+    ) {
+        logger.info("Staff salva file");
+
+        try {
+
+            Candidato candidato =  candidatoRepository.findById(id).get();
 
             if (null != candidato.getId()) {
-                modifica = true;
+
+                if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty() && tipo == 1) {
+                    candidato.getFiles().removeIf(f -> f.getTipologia().getId() == 1);
+                    candidato.getFiles().add(fileVoid(file, 1));
+
+                    logger.debug("CV del candidato aggiornato");
+                }
+
+                if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty() && tipo == 2) {
+                    candidato.getFiles().removeIf(f -> f.getTipologia().getId() == 2);
+                    candidato.getFiles().add(fileVoid(file, 2));
+
+                    logger.debug("CF del candidato aggiornato");
+                }
+
+                candidatoRepository.save(candidato);
             }
 
-            if (modifica) {
-                idCandidato = candidato.getId();
-            } else {
-                idCandidato = candidatoRepository.findMaxId().intValue();
-            }
+            logger.debug("Salvataggio effettuato correttamente");
 
-            if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty()) {
-
-                uploadFileVoid(file, idCandidato, 1, ra);
-            }
-            if (( null != cf.getOriginalFilename() ) && !cf.getOriginalFilename().isEmpty()) {
-
-                uploadFileVoid(cf, idCandidato, 2, ra);
-            }
-
-            ra.addFlashAttribute("message", "Il candidato è stato salvato con successo");
-            return "redirect:/intervista/" + idCandidato;
+            return "OK";
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
-
-    @RequestMapping("/visualizza/{id}")
-    public String showForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
+    /*@CrossOrigin(origins = "*")
+    @PostMapping("/salva/file/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveCandidatoFile(
+        @PathVariable("id") Integer idCandidato,
+        @RequestParam("cv") MultipartFile file
     ) {
-        try {
-            Candidato candidato = candidatoRepository.findById(id).get();
+        logger.info("salva candidato");
 
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("titoloPagina", "Modifica staffing");
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
-
-            return "candidato_visualizza_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/modifica/{id}")
-    public String showEditForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ) {
-        try {
-            Candidato candidato = candidatoRepository.findById(id).get();
-
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("titoloPagina", "Modifica staffing");
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listOwner", ownerRepository.findAll());
-            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
-
-            return "candidato_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/modifica/noskills/{id}")
-    public String showEditFormNoSkills(
-        @PathVariable("id") Integer id,
-        Candidato candidatoInput,
-        Model model,
-        RedirectAttributes ra
-    ) {
-        try {
-            Candidato candidato = candidatoRepository.findById(id).get();
-
-            candidato.setSkills(null);
-
-            model.addAttribute("candidato", candidato);
-            model.addAttribute("titoloPagina", "Modifica staffing");
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listOwner", ownerRepository.findAll());
-            model.addAttribute("listaFornitori", fornitoreRepository.findAll());
-
-            return "candidato_form";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/elimina/{id}")
+       return "SCIAO BELO";
+    }*/
+    
+    @DeleteMapping("/elimina/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String deleteCandidato(
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra
+        @PathVariable("id") Integer id
     ){
-        try {
-            Candidato candidato = candidatoRepository.findById(id).get();
+        logger.info("Elimina candidato");
 
-            for (AssociazioneCandidatoNeed associazione : candidato.getAssociazioni()) {
-                associazioniRepository.deleteById(associazione.getId());
+        try {
+
+            List<Intervista> interviste = intervistaRepository.findByCandidato_Id(id);
+
+            for (Intervista intervista : interviste) {
+                intervistaRepository.deleteById(intervista.getId());
+
+                logger.debug("Eliminata intervista: " + intervista.getId());
+
             }
 
             candidatoRepository.deleteById(id);
-            ra.addFlashAttribute("message", "Il candidato è stato cancellato con successo");
 
-            return "redirect:/staffing";
+            logger.info("Candidato eliminato correttamente");
+
+            return "OK";
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/ottieni/{id}")
-    public void getCandidato(
-        @PathVariable("id") Integer id,
-        Model model
-    ) {
-        try {
-            model.addAttribute("candidatoToUse", candidatoRepository.findById(id).get());
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-        }
-    }
-
-    public void uploadFileVoid(
+    public File fileVoid(
         MultipartFile file,
-        Integer idCandidato,
-        Integer tipoFile,
-        RedirectAttributes ra
-    ) {
+        Integer tipoFile
+    )
+        throws Exception {
+        logger.debug("Creazione file");
+
         try {
-            String         descrizione          = file.getOriginalFilename();
+            String         descrizione          = Objects.requireNonNull(file.getOriginalFilename()).length() <= 90 ? file.getOriginalFilename() : file.getOriginalFilename().substring(0,89);
             byte[]         arrayByte            = file.getBytes();
             String         tipo                 = file.getContentType();
             File           fileOggettoCandidato = new File();
             java.util.Date date                 = new java.util.Date();
             java.sql.Date  sqlDate              = new Date(date.getTime());
             TipologiaF     tipologia            = new TipologiaF();
-            Candidato      candidato            = new Candidato();
 
             fileOggettoCandidato.setData(arrayByte);
             fileOggettoCandidato.setDataInserimento(new java.sql.Date(sqlDate.getTime()));
@@ -379,26 +277,94 @@ public class CandidatoController {
             tipologia.setId(tipoFile);
             fileOggettoCandidato.setTipologia(tipologia);
 
-            candidato.setId(idCandidato);
-            fileOggettoCandidato.setCandidato(candidato);
-
-            fileRepository.save(fileOggettoCandidato);
+            return fileOggettoCandidato;
 
         } catch (Exception e) {
-            ra.addFlashAttribute("message", e.getMessage() );
+            logger.error(e.toString());
+
+            throw new Exception(e);
         }
     }
 
-    public String recuperaDescrizioneTipologia(Integer id) {
-        return tipologiaRepository.findById(id).get().getDescrizione();
-    }
-
-    public String recuperaDescrizioneLivello(Integer id) {
-        return livelloRepository.findById(id).get().getDescrizione();
-    }
-
     public boolean controllaMailDuplicata(String email) {
+        logger.debug("Candidati controlla mail duplicata");
+
         List<Candidato> candidati = candidatoRepository.findByEmail(email);
         return ((null != candidati) && !candidati.isEmpty());
+    }
+
+    public void trasformaMappaInCandidato(Candidato candidato, Map<String,String> candidatoMap, List<Integer> skillList) {
+        logger.debug("Trasforma mappa in candidato");
+
+        if (candidatoMap.get("stato") != null) {
+            StatoC stato = new StatoC();
+            stato.setId(Integer.parseInt(candidatoMap.get("stato")));
+            candidato.setStato(stato);
+        }
+        candidato.setAnniEsperienza(candidatoMap.get("anniEsperienza") != null ? Double.parseDouble(candidatoMap.get("anniEsperienza")) : null);
+        candidato.setAnniEsperienzaRuolo(candidatoMap.get("anniEsperienzaRuolo") != null ? Double.parseDouble(candidatoMap.get("anniEsperienzaRuolo")) : null);
+        candidato.setCellulare(candidatoMap.get("cellulare") != null ? candidatoMap.get("cellulare") : null);
+        candidato.setCitta(candidatoMap.get("citta") != null ? candidatoMap.get("citta") : null);
+        candidato.setEmail(candidatoMap.get("email") != null ? candidatoMap.get("email") : null);
+        candidato.setNote(candidatoMap.get("note") != null ? candidatoMap.get("note") : null);;
+        candidato.setCognome(candidatoMap.get("cognome") != null ? candidatoMap.get("cognome") : null);
+        candidato.setDataNascita(candidatoMap.get("dataNascita") != null ? Date.valueOf(candidatoMap.get("dataNascita")) : null);
+        candidato.setDataUltimoContatto(candidatoMap.get("dataUltimoContatto") != null ? Date.valueOf(candidatoMap.get("dataUltimoContatto")) : null);
+        candidato.setDisponibilita(candidatoMap.get("disponibilita") != null ? candidatoMap.get("disponibilita") : null);
+
+        if (candidatoMap.get("facolta") != null) {
+            Facolta facolta = new Facolta();
+            facolta.setId(Integer.parseInt(candidatoMap.get("facolta")));
+
+            candidato.setFacolta(facolta);
+        }
+        if (candidatoMap.get("fornitore") != null) {
+            Fornitore fornitore = new Fornitore();
+            fornitore.setId(Integer.parseInt(candidatoMap.get("fornitore")));
+
+            candidato.setFornitore(fornitore);
+        }
+        if (candidatoMap.get("livelloScolastico") != null) {
+            LivelloScolastico livello = new LivelloScolastico();
+            livello.setId(Integer.parseInt(candidatoMap.get("livelloScolastico")));
+
+            candidato.setLivelloScolastico(livello);
+        }
+        candidato.setModalita(candidatoMap.get("modalita") != null ? Integer.parseInt(candidatoMap.get("modalita")) : null);
+        candidato.setNome(candidatoMap.get("nome") != null ? candidatoMap.get("nome") : null);
+
+        if (candidatoMap.get("owner") != null) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(candidatoMap.get("owner")));
+
+            candidato.setOwner(owner);
+        }
+        candidato.setRal(candidatoMap.get("ral") != null ? candidatoMap.get("ral") : null);
+        candidato.setRicerca(candidatoMap.get("ricerca") != null ? candidatoMap.get("ricerca") : null);
+
+        if (candidatoMap.get("tipo") != null) {
+            Tipo tipo = new Tipo();
+            tipo.setId(Integer.parseInt(candidatoMap.get("tipo")));
+
+            candidato.setTipo(tipo);
+        }
+
+        if (candidatoMap.get("tipologia") != null) {
+            Tipologia tipologia = new Tipologia();
+            tipologia.setId(Integer.parseInt(candidatoMap.get("tipologia")));
+
+            candidato.setTipologia(tipologia);
+        }
+
+        Set<Skill> skillListNew = new HashSet<>();
+
+        for (Integer skillId: skillList) {
+            Skill skill = new Skill();
+            skill.setId(skillId);
+
+            skillListNew.add(skill);
+        }
+
+        candidato.setSkills(skillListNew);
     }
 }

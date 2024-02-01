@@ -1,5 +1,6 @@
-$('li').removeClass('active');
-$('.businessdev').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.businessdev').click();
+$('.aziende').addClass('active');
 
 $(document).ready(function() {
     setTimeout(function() {

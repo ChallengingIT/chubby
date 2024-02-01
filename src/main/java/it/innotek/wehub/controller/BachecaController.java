@@ -13,9 +13,10 @@ import it.innotek.wehub.repository.StaffRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/bacheca")
 public class BachecaController {
 
@@ -40,15 +41,17 @@ public class BachecaController {
     private static final Logger logger = LoggerFactory.getLogger(BachecaController.class);
 
     @RequestMapping
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String bacheca(Model model){
         try {
             logger.debug("bacheca");
 
             model.addAttribute("needData", getNeedData());
             model.addAttribute("dashboardIncontri", getDashboardIncontri());
+            model.addAttribute("listaProssimiAggiornamenti", intervistaRepository.findAll());
             model.addAttribute("listOwner", ownerRepository.findAll());
             model.addAttribute("listNeedOrdinati", needRepository.findNeedOrdinati());
-            model.addAttribute("colorBackground", "#14d928");
+            model.addAttribute("colorBackground", "#ffb700");
 
             StringBuilder    messaggioCompleanno = null;
             List<Intervista> interviste          = intervistaRepository.findIntervisteImminenti();
@@ -160,9 +163,9 @@ public class BachecaController {
         Integer count = 0;
 
         for (Intervista intervista: lista) {
-            if (intervista.getOwner().getId() == idOwner) {
+            /*if (intervista.getOwner().getId() == idOwner) {
                 count++;
-            }
+            }*/
         }
         return count;
     }

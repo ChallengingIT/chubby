@@ -4,16 +4,16 @@
 
 package it.innotek.wehub.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,7 +24,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class KeyPeople implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,14 +58,14 @@ public class KeyPeople implements Serializable {
     @Column(length = 2000, name = "comunicazioni_recenti")
     private String comunicazioniRecenti;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
         name = "key_people_cliente",
         joinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     )
     @ToString.Exclude
-    private Cliente azienda;
+    private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
@@ -74,15 +75,6 @@ public class KeyPeople implements Serializable {
     )
     @ToString.Exclude
     private Owner owner;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "attivita_key_people",
-        joinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_attivita", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<Attivita> attivita;
 
     @Override
     public boolean equals(Object o) {

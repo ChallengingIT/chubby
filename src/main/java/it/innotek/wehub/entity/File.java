@@ -4,10 +4,14 @@
 
 package it.innotek.wehub.entity;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
@@ -20,7 +24,8 @@ import java.util.Objects;
 @Table( name = "file")
 public class File implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,15 +42,6 @@ public class File implements Serializable {
 
     @Column( name = "data_inserimento")
     private Date dataInserimento;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "file_candidato",
-            joinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    public Candidato candidato;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(

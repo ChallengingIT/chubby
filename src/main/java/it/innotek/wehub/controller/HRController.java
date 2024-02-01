@@ -6,34 +6,27 @@ package it.innotek.wehub.controller;
 
 import it.innotek.wehub.EmailSenderService;
 import it.innotek.wehub.entity.*;
-import it.innotek.wehub.entity.staff.FileStaff;
-import it.innotek.wehub.entity.staff.FileStaffId;
 import it.innotek.wehub.entity.staff.Staff;
+import it.innotek.wehub.entity.staff.StaffModificato;
 import it.innotek.wehub.entity.timesheet.*;
 import it.innotek.wehub.repository.*;
 import it.innotek.wehub.util.ExportExcel;
 import it.innotek.wehub.util.UtilLib;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/hr")
 public class HRController {
 
@@ -43,8 +36,6 @@ public class HRController {
     private SkillRepository              skillRepository;
     @Autowired
     private FileRepository               fileRepository;
-    @Autowired
-    private FileStaffRepository          fileStaffRepository;
     @Autowired
     private ProgettoRepository           progettoRepository;
     @Autowired
@@ -68,245 +59,249 @@ public class HRController {
 
     private static final Logger logger = LoggerFactory.getLogger(HRController.class);
 
-    @RequestMapping
-    public String getStaff(Model model){
-        try {
-            List<Staff>   listStaff = staffRepository.findAll();
-            LocalDate     local     = LocalDate.now();
-            List<Integer> listId    = new ArrayList<>();
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Staff> getAll()
+    {
+        logger.info("Staff");
 
-            for (Staff staff : listStaff) {
-                listId.add(staff.getId());
-            }
-
-            fileStaffRepository.elimina_file_vecchi_staff(listId.toString(), 1);
-            fileStaffRepository.elimina_file_vecchi_staff(listId.toString(), 2);
-
-            listStaff = staffRepository.findAll();
-
-            model.addAttribute("listStaff", listStaff);
-            model.addAttribute("staffRicerca", new Staff());
-            model.addAttribute("mese", local.getMonthValue());
-            model.addAttribute("anno", local.getYear());
-
-            if (null != model.getAttribute("message")) {
-                model.addAttribute("message", model.getAttribute("message"));
-            }
-            return "staff";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return staffRepository.findAll();
     }
 
-    @RequestMapping("/crea/utente")
-    public String creaUtente(Model model){
-        try {
-            model.addAttribute("user", new User());
-            model.addAttribute("titoloPagina", "Aggiungi un nuovo user");
+    @GetMapping("/react/modificato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<StaffModificato> getAllMenuTendina()
+    {
+        logger.info("Staff");
 
-            return "user_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
+        List<Staff> staffs = staffRepository.findAll();
 
-            return "error";
+        List<StaffModificato> staffModificati = new ArrayList<>();
+
+        for (Staff staff : staffs) {
+            StaffModificato staffModificato = new StaffModificato();
+
+            staffModificato.setCognome(staff.getCognome());
+            staffModificato.setEmail(staff.getEmail());
+            staffModificato.setId(staff.getId());
+            staffModificato.setNome(staff.getNome());
+            staffModificato.setNote(staff.getNote());
+            staffModificato.setAnniEsperienza(staff.getAnniEsperienza());
+            staffModificato.setCellulare(staff.getCellulare());
+            staffModificato.setCitta(staff.getCitta());
+            staffModificato.setCodFiscale(staff.getCodFiscale());
+            staffModificato.setDataInizio(staff.getDataInizio());
+            staffModificato.setDataNascita(staff.getDataNascita());
+            staffModificato.setDataScadenza(staff.getDataScadenza());
+            staffModificato.setFacolta(staff.getFacolta());
+            staffModificato.setFiles(staff.getFiles());
+            staffModificato.setLivelloScolastico(staff.getLivelloScolastico());
+            staffModificato.setIban(staff.getIban());
+            staffModificato.setLuogoNascita(staff.getLuogoNascita());
+            staffModificato.setRal(staff.getRal());
+            staffModificato.setSkills(staff.getSkills());
+            staffModificato.setStipendio(staff.getStipendio());
+            staffModificato.setTipologia(staff.getTipologia());
+            staffModificato.setTipologiaContratto(staff.getTipologiaContratto());
+
+            staffModificati.add(staffModificato);
         }
+
+        return staffModificati;
     }
 
-    @RequestMapping("/salva/utente")
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Staff getById(@PathVariable("id") Integer id)
+    {
+        logger.info("Staff tramite id");
+
+        return staffRepository.findById(id).get();
+    }
+
+    @GetMapping("/react/tipocontratto")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<TipologiaContratto> getAllTipoContratto()
+    {
+        logger.info("Tipi contratto");
+
+        return tipologiaContrattoRepository.findAll();
+    }
+
+    /*@CrossOrigin(origins = "*")
+    @PostMapping("/react/salva/utente")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String creaUtente(
-        Model model,
-        User user
+        @RequestBody User user
     ){
+        logger.debug("hr salva utente");
+
         try {
             user.setEnabled((byte)1);
             user.getAuthority().setUsername(user.getUsername());
 
-            Authority authority = user.getAuthority();
-
-            user.setAuthority(null);
-
-            BCryptPasswordEncoder encore = new BCryptPasswordEncoder();
-            user.setPassword(encore.encode(user.getPassword()));
+            //BCryptPasswordEncoder encore = new BCryptPasswordEncoder();
+            //user.setPassword(encore.encode(user.getPassword()));
 
             userRepository.save(user);
-            authorityRepository.save(authority);
 
-            return "redirect:/hr";
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
-    }
+    }*/
 
-    @RequestMapping("/staff/ricerca")
-    public String showRicercaCandidatiList(
-        Model model,
-        Staff staff
-    ){
-        try {
-            String        nome      = ( ( null != staff.getNome() ) && !staff.getNome().isEmpty() ) ? staff.getNome() : null;
-            String        cognome   = ( ( null != staff.getCognome() ) && !staff.getCognome().isEmpty() ) ? staff.getCognome() : null;
-            String        email     = ( ( null != staff.getEmail() ) && !staff.getEmail().isEmpty() ) ? staff.getEmail() : null;
-            LocalDate     local     = LocalDate.now();
-            List<Staff>   listStaff = staffRepository.ricercaByNomeAndCognomeAndEmail(nome, cognome, email);
-            List<Integer> listId    = new ArrayList<>();
-
-            for (Staff staffApp : listStaff) {
-                listId.add(staffApp.getId());
-            }
-
-            fileStaffRepository.elimina_file_vecchi_staff(listId.toString(), 1);
-            fileStaffRepository.elimina_file_vecchi_staff(listId.toString(), 2);
-
-            listStaff = staffRepository.ricercaByNomeAndCognomeAndEmail(nome, cognome, email);
-
-            model.addAttribute("listStaff", listStaff);
-            model.addAttribute("staffRicerca", staff);
-            model.addAttribute("mese", local.getMonthValue());
-            model.addAttribute("anno", local.getYear());
-            return "staff";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/staff/aggiungi")
-    public String showNewForm(
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            if (model.getAttribute("staff") != null) {
-                model.addAttribute("staff", model.getAttribute("staff"));
-            } else {
-                model.addAttribute("staff", new Staff());
-            }
-
-            model.addAttribute("titoloPagina", "Aggiungi Dipendente");
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipologieContratto", tipologiaContrattoRepository.findAll());
-
-            return "staff_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/staff/visualizza/{id}")
-    public String showForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            Staff staff = staffRepository.findById(id).get();
-
-            model.addAttribute("staff", staff);
-            model.addAttribute("titoloPagina", "Modifica dipendente");
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipologieContratto", tipologiaContrattoRepository.findAll());
-
-            return "staff_visualizza_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/staff/salva")
+    @PostMapping("/react/staff/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
-        @RequestParam("file") MultipartFile[] file,
-        Staff staff,
-        Model model,
-        RedirectAttributes ra
+        @RequestBody Map<String,String> staffMap,
+        @RequestParam ("skill") List<Integer> skillList
+
     ) {
+        logger.info("Salvataggio staff");
+
         try {
-            if (null != staff.getFacolta()) {
-                if (null == staff.getFacolta().getId()) {
-                    staff.setFacolta(null);
+
+            Staff staffEntity = new Staff();
+
+            if(staffMap.get("id") != null) {
+                staffEntity = staffRepository.findById(Integer.parseInt(staffMap.get("id"))).get();
+
+                logger.debug("Staff trovato si procede in modifica");
+            }
+
+            trasformaMappaInStaff(staffEntity, staffMap, skillList);
+
+            if (controllaMailDuplicata(staffEntity.getEmail())) {
+
+                if (staffEntity.getId() == null) {
+                    logger.debug("Staff duplicato");
+
+                    return "DUPLICATO";
                 }
             }
 
-            if (null != staff.getId()) {
-                staffRepository.save(staff);
-
-                for (MultipartFile f : file) {
-                    if (( null != f.getOriginalFilename() ) && !f.getOriginalFilename().isEmpty()) {
-                        uploadFileVoid(f, staff.getId(), 3, ra);
-                    }
+            if (null != staffEntity.getFacolta()) {
+                if (null == staffEntity.getFacolta().getId()) {
+                    staffEntity.setFacolta(null);
                 }
+            }
+
+            if (null != staffEntity.getId()) {
+
+                staffRepository.save(staffEntity);
+
+                logger.debug("Staff salvato correttamente");
+
             } else {
+
+                staffRepository.save(staffEntity);
+
+                Integer idStaff = staffEntity.getId();
+
                 Progetto          progetto  = new Progetto();
                 TipologiaProgetto tipologia = new TipologiaProgetto();
 
                 progetto.setDescription("Ferie, Permessi e Malattia");
                 tipologia.setId(1);
                 progetto.setTipologia(tipologia);
+                progetto.setIdStaff(idStaff);
 
                 progettoRepository.save(progetto);
 
-                Calendario calendario = creaCalendario(staff.getTimesheet(), progetto);
+                logger.debug("Progetto ferie permessi e malattia salvato correttamente");
 
-                staff.setTimesheet(calendario);
-                staff.getProgetti().add(progetto);
+                logger.debug("Creazione timesheet...");
 
-                staffRepository.save(staff);
+                Calendario calendario = creaCalendario(null, progetto);
 
-                for (MultipartFile f : file) {
+                logger.debug("Timesheet creato correttamente");
+                logger.debug(calendario.toString());
+                logger.debug(progetto.toString());
 
-                    if (( null != f.getOriginalFilename() ) && !f.getOriginalFilename().isEmpty()) {
-                        uploadFileVoid(f, staff.getId(), 3, ra);
-                    }
-                }
+                staffEntity.setTimesheet(calendario);
+                staffEntity.getProgetti().add(progetto);
+
+                staffRepository.save(staffEntity);
+
+                logger.debug("Staff salvato correttamente");
             }
-            ra.addFlashAttribute("message", "Il dipendente e' stato salvato con successo");
-            return "redirect:/hr";
+            return ""+staffEntity.getId();
             
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/staff/elimina/{id}")
+    @PostMapping("/react/staff/salva/file/{idStaff}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
+        @PathVariable("idStaff") Integer idStaff,
+        @RequestParam("file") MultipartFile file
     ) {
-        try {
-            staffRepository.deleteById(id);
+        logger.info("Staff salva file");
 
-            ra.addFlashAttribute("message", "Il dipendente e' stato eliminato con successo");
-            return "redirect:/hr";
+        try {
+
+            Staff staffEntity =  staffRepository.findById(idStaff).get();
+
+            if (null != staffEntity.getId()) {
+
+                if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty()) {
+                    staffEntity.getFiles().add(fileVoid(file, 3));
+                }
+
+                staffRepository.save(staffEntity);
+            }
+
+            logger.debug("Salvataggio effettuato correttamente");
+
+            return "OK";
+
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/staff/sollecito")
-    public String inviaSollecitoChiusuraTimesheet(
-        Model model,
-        RedirectAttributes ra
-    ) throws MessagingException {
+    @DeleteMapping("/react/staff/elimina/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveCandidato(
+        @PathVariable("id") Integer id
+    ) {
+        logger.info("Elimina staff");
+
+        try {
+
+            Staff staff = staffRepository.findById(id).get();
+
+            if (null != staff.getTimesheet()) {
+                calendarioRepository.deleteById(staff.getTimesheet().getId());
+            }
+
+            staffRepository.deleteById(id);
+
+            logger.debug("Eliminazione effettuata correttamente");
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
+    @PostMapping("/react/staff/sollecito")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String inviaSollecitoChiusuraTimesheet() {
+
+        logger.info("Invio sollecito");
+
         try {
             Anno        anno;
             List<Staff> staffs      = staffRepository.findAll();
@@ -323,27 +318,28 @@ public class HRController {
 
                     Email email = getEmail(staff, mese, anno);
 
+                    logger.debug("Invio email a: " + staff.getEmail());
+
                     serviceEmail.sendHtmlMessage(email);
                 }
             }
 
-            ra.addFlashAttribute("message", "Sollecito inviato con successo");
-
-            return "redirect:/hr";
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
     @NotNull
     private static Email getEmail(Staff staff, Mese mese, Anno anno) {
+        logger.info("get email");
 
         Email               email = new Email();
         Map<String, Object> mappa = new HashMap<>();
 
-        email.setFrom("sviluppo@challenging.cloud");
+        email.setFrom("sviluppo@inno-tek.it");
         email.setTo(staff.getEmail());
         mappa.put("nome", staff.getNome());
         mappa.put("cognome", staff.getCognome());
@@ -356,49 +352,18 @@ public class HRController {
         return email;
     }
 
-    @RequestMapping("/staff/modifica/{id}")
-    public String showEditForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            Staff staff = staffRepository.findById(id).get();
+    public File fileVoid(MultipartFile file, Integer tipoFile) {
+        logger.info("hr fileVoid");
 
-            model.addAttribute("staff", staff);
-            model.addAttribute("titoloPagina", "Modifica Staff");
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaFacolta", facoltaRepository.findAll());
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipologieContratto", tipologiaContrattoRepository.findAll());
-
-            return "staff_form";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    public void uploadFileVoid(MultipartFile file,Integer idStaff, Integer tipoFile, RedirectAttributes ra) {
         try {
             File        fileOggettoStaff = getFile(file, tipoFile);
-            FileStaff   fileStaff        = new FileStaff();
-            FileStaffId fileStaffId      = new FileStaffId();
 
-            fileRepository.save(fileOggettoStaff);
-
-            fileStaffId.setIdFile(fileOggettoStaff.getId());
-            fileStaffId.setIdStaff(idStaff);
-            fileStaff.setId(fileStaffId);
-
-            fileStaffRepository.save(fileStaff);
+            return fileOggettoStaff;
 
         } catch (Exception e) {
-            ra.addFlashAttribute("message", e.getMessage());
+            e.fillInStackTrace();
         }
+        return null;
     }
 
     @NotNull
@@ -406,6 +371,7 @@ public class HRController {
         MultipartFile file,
         Integer tipoFile
     ) throws IOException {
+        logger.info("hr getFile");
 
         String         descrizione      = file.getOriginalFilename();
         byte[]         arrayByte        = file.getBytes();
@@ -427,79 +393,48 @@ public class HRController {
         return fileOggettoStaff;
     }
 
-    @RequestMapping("/report")
-    public String report(Model model){
-        try {
-            List<Integer> listaAnni = new ArrayList<>();
-
-            for (int i = 2023; i < 2051; i++) {
-                listaAnni.add(i);
-            }
-
-            model.addAttribute("ricercaReport", new RicercaReport());
-            model.addAttribute("listaAnni", listaAnni);
-            model.addAttribute("cercato", 0);
-
-            return "report";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/report/estrai")
-    public String reportEstrai(
-        Model model,
-        RicercaReport ricerca
+    @GetMapping("/report/estrai")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Report> reportEstrai(
+        @RequestParam Map<String,String> ricercaMap
     ){
+        logger.info("Estrai report");
+
         try {
-            List<Integer> listaAnni   = new ArrayList<>();
+            RicercaReport ricerca = trasformaMappaInRicerca(ricercaMap);
+
             Integer       fineMese    = UtilLib.calcolaFineMese(ricerca.getMese(), ricerca.getAnno());
             List<Report>  listaReport = new ArrayList<>();
 
-            for (int i = 2023; i < 2051; i++) {
-                listaAnni.add(i);
-            }
 
             if (( ( null != ricerca.getGiornoInizio() ) && ricerca.getGiornoInizio() > fineMese ) || ( ( null != ricerca.getGiornoFine() ) && ricerca.getGiornoFine() > fineMese )) {
 
-                model.addAttribute("message", "Data non valida");
-                model.addAttribute("listaReport", listaReport);
-                model.addAttribute("ricercaReport", ricerca);
-                model.addAttribute("listaAnni", listaAnni);
-                model.addAttribute("cercato", 0);
-
-                return "report";
+                return listaReport;
             }
 
             listaReport = prendiListaReport(ricerca, fineMese);
 
-            model.addAttribute("listaReport", listaReport);
-            model.addAttribute("ricercaReport", ricerca);
-            model.addAttribute("listaAnni", listaAnni);
-            model.addAttribute("giornoInizio", ( null == ricerca.getGiornoInizio() ) ? 1 : ricerca.getGiornoInizio());
-            model.addAttribute("giornoFine", ( null == ricerca.getGiornoFine() ) ? fineMese : ricerca.getGiornoFine());
-            model.addAttribute("cercato", 1);
-
-            return "report";
+            return listaReport;
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return null;
         }
     }
 
-    @RequestMapping("/report/excel/{anno}/{mese}/{giornoInizio}/{giornoFine}")
+    @GetMapping("/report/excel/{anno}/{mese}/{giornoInizio}/{giornoFine}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public void reportExcel(
-        Model model,
         @PathVariable("anno") Integer anno,
         @PathVariable("mese") Integer mese,
         @PathVariable("giornoInizio") String giornoInizio,
         @PathVariable("giornoFine") String giornoFine,
         HttpServletResponse response
     ) throws IOException {
+
+        logger.info("Download excel file");
+
         try {
             List<Integer> listaAnni = new ArrayList<>();
             Integer       fineMese  = UtilLib.calcolaFineMese(mese, anno);
@@ -532,6 +467,8 @@ public class HRController {
         RicercaReport ricerca,
         Integer fineMese
     ){
+        logger.info("Prendi lista report");
+
         List<Staff>  listStaff   = staffRepository.findByAnnoAndMese(ricerca.getAnno(), ricerca.getMese());
         List<Report> listaReport = new ArrayList<>();
 
@@ -586,6 +523,7 @@ public class HRController {
         Calendario calendario,
         Progetto progetto
     ) {
+        logger.info("Crea calendario");
 
         if (null == calendario) {
 
@@ -601,5 +539,85 @@ public class HRController {
         } else {
             return calendarioRepository.findById(calendario.getId()).get();
         }
+    }
+
+    public boolean controllaMailDuplicata(String email) {
+        logger.info("Controlla mail duplicata");
+
+        List<Staff> staffs = staffRepository.findByEmail(email);
+        return ((null != staffs) && !staffs.isEmpty());
+    }
+
+    public void trasformaMappaInStaff(Staff staff, Map<String,String> staffMap, List<Integer> skillList) {
+        logger.info("Trasforma mappa in staff");
+
+        staff.setAnniEsperienza(staffMap.get("anniEsperienza") != null ? Double.parseDouble(staffMap.get("anniEsperienza")) : null);
+        staff.setCellulare(staffMap.get("cellulare") != null ? staffMap.get("cellulare") : null);
+        staff.setCodFiscale(staffMap.get("codFiscale") != null ? staffMap.get("codFiscale") : null);
+        staff.setCitta(staffMap.get("citta") != null ? staffMap.get("citta") : null);
+        staff.setEmail(staffMap.get("email") != null ? staffMap.get("email") : null);
+        staff.setNote(staffMap.get("note") != null ? staffMap.get("note") : null);;
+        staff.setCognome(staffMap.get("cognome") != null ? staffMap.get("cognome") : null);
+        staff.setDataNascita(staffMap.get("dataNascita") != null ? Date.valueOf(staffMap.get("dataNascita")) : null);
+        staff.setDataScadenza(staffMap.get("dataScadenza") != null ? Date.valueOf(staffMap.get("dataScadenza")) : null);
+        staff.setDataInizio(staffMap.get("dataInizio") != null ? Date.valueOf(staffMap.get("dataInizio")) : null);
+        staff.setLuogoNascita(staffMap.get("luogoNascita") != null ? staffMap.get("luogoNascita") : null);
+
+        if (staffMap.get("facolta") != null) {
+            Facolta facolta = new Facolta();
+            facolta.setId(Integer.parseInt(staffMap.get("facolta")));
+
+            staff.setFacolta(facolta);
+        }
+        if (staffMap.get("livelloScolastico") != null) {
+            LivelloScolastico livello = new LivelloScolastico();
+            livello.setId(Integer.parseInt(staffMap.get("livelloScolastico")));
+
+            staff.setLivelloScolastico(livello);
+        }
+        staff.setIban(staffMap.get("iban") != null ? staffMap.get("iban") : null);
+        staff.setNome(staffMap.get("nome") != null ? staffMap.get("nome") : null);
+
+        staff.setRal(staffMap.get("ral") != null ? staffMap.get("ral") : null);
+        staff.setStipendio(staffMap.get("stipendio") != null ? staffMap.get("stipendio") : null);
+
+        if (staffMap.get("tipologiaContratto") != null) {
+            TipologiaContratto tipo = new TipologiaContratto();
+            tipo.setId(Integer.parseInt(staffMap.get("tipologiaContratto")));
+
+            staff.setTipologiaContratto(tipo);
+        }
+
+        if (staffMap.get("tipologia") != null) {
+            Tipologia tipologia = new Tipologia();
+            tipologia.setId(Integer.parseInt(staffMap.get("tipologia")));
+
+            staff.setTipologia(tipologia);
+        }
+
+        Set<Skill> skillListNew = new HashSet<>();
+
+        for (Integer skillId: skillList) {
+            Skill skill = new Skill();
+            skill.setId(skillId);
+
+            skillListNew.add(skill);
+        }
+
+        staff.setSkills(skillListNew);
+
+    }
+
+    public RicercaReport trasformaMappaInRicerca(Map<String,String> ricercaMap) {
+        logger.info("Trasforma mappa in ricerca");
+
+        RicercaReport ricerca = new RicercaReport();
+
+        ricerca.setAnno(ricercaMap.get("anno") != null ? Integer.parseInt(ricercaMap.get("anno")) : null);
+        ricerca.setMese(ricercaMap.get("mese") != null ? Integer.parseInt(ricercaMap.get("mese")) : null);
+        ricerca.setGiornoInizio(ricercaMap.get("giornoInizio") != null ? Integer.parseInt(ricercaMap.get("giornoInizio")) : null);
+        ricerca.setGiornoFine(ricercaMap.get("giornoFine") != null ? Integer.parseInt(ricercaMap.get("giornoFine")) : null);
+
+        return ricerca;
     }
 }

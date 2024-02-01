@@ -4,14 +4,14 @@
 
 package it.innotek.wehub.entity.timesheet;
 
-import it.innotek.wehub.entity.staff.Staff;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,8 @@ import java.util.Objects;
 @Table( name = "calendario")
 public class Calendario  implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,15 +40,6 @@ public class Calendario  implements Serializable {
     )
     @ToString.Exclude
     private List<Anno> anni = new ArrayList<>();
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "calendario_staff",
-        joinColumns = @JoinColumn(name = "id_calendario", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_staff", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Staff staff;
 
     @Override
     public boolean equals(Object o) {

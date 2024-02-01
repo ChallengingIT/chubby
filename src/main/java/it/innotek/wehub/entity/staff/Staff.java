@@ -7,13 +7,14 @@ package it.innotek.wehub.entity.staff;
 import it.innotek.wehub.entity.*;
 import it.innotek.wehub.entity.timesheet.Calendario;
 import it.innotek.wehub.entity.timesheet.Progetto;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
@@ -26,7 +27,8 @@ import java.util.*;
 @Table( name = "staff")
 public class Staff implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,14 +100,6 @@ public class Staff implements Serializable {
     @ToString.Exclude
     private Set<Skill> skills = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "file_staff",
-            joinColumns = @JoinColumn(name = "id_staff", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id")
-    )
-    private List<File> files = new ArrayList<>();
-
     @Column(length = 2000, name = "note")
     private String note;
 
@@ -141,6 +135,15 @@ public class Staff implements Serializable {
     )
     @ToString.Exclude
     private List<Progetto> progetti = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "file_staff",
+        joinColumns = @JoinColumn(name = "id_staff", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<File> files = new ArrayList<>();
 
     @Column(length = 30, name = "cod_fiscale")
     private String codFiscale;

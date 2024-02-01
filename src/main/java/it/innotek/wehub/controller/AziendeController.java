@@ -1,29 +1,22 @@
-/*
- * Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
- */
-
 package it.innotek.wehub.controller;
 
-import it.innotek.wehub.entity.Attivita;
-import it.innotek.wehub.entity.Cliente;
-import it.innotek.wehub.entity.Owner;
-import it.innotek.wehub.entity.TipologiaAttivita;
+import it.innotek.wehub.entity.*;
+import it.innotek.wehub.entity.timesheet.Progetto;
 import it.innotek.wehub.repository.*;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/aziende")
 public class AziendeController {
 
@@ -32,6 +25,10 @@ public class AziendeController {
     @Autowired
     private ClienteRepository           clienteRepository;
     @Autowired
+    private NeedRepository              needRepository;
+    @Autowired
+    private ProgettoRepository          progettoRepository;
+    @Autowired
     private OwnerRepository             ownerRepository;
     @Autowired
     private TipologiaRepository         tipologiaRepository;
@@ -39,247 +36,231 @@ public class AziendeController {
     private TipologiaAttivitaRepository tipologiaAttivitaRepository;
     @Autowired
     private AttivitaRepository          attivitaRepository;
+    @Autowired
+    private KeyPeopleRepository         keyPeopleRepository;
+    @Autowired
+    private AssociazioniRepository      associazioniRepository;
+    @Autowired
+    private FatturazioneAttivaRepository fatturazioneAttivaRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AziendeController.class);
-    
-    @RequestMapping
-    public String showAziendeList(Model model){
 
-        try {
-            model.addAttribute("titoloPagina", "Aziende");
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("clienteRicerca", new Cliente());
-            model.addAttribute("listOwner", ownerRepository.findAll());
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<Cliente> getAll() {
+        logger.info("Lista aziende");
 
-            return "aziende";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return clienteRepository.findAll();
     }
 
-    @RequestMapping("/ricerca")
-    public String showRicercaAziendeList(
-        Model model,
-        Cliente cliente
+    @GetMapping("/react/{id}")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Cliente getAzienda(
+        @PathVariable("id") Integer id) {
+        logger.info("Azienda tramite id");
+
+        return clienteRepository.findById(id).get();
+    }
+
+    @DeleteMapping("/react/elimina/{id}")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String eliminaCliente(
+        @PathVariable("id") Integer id
     ){
+        logger.info("Elimina azienda tramite id");
+
         try {
-            Integer       status        = cliente.getStatus() != null ? cliente.getStatus() : null;
-            Integer       owner         = cliente.getOwner() != null ? cliente.getOwner().getId() : null;
-            String        tipologia     = ( cliente.getTipologia() != null && !cliente.getTipologia().isEmpty() ) ? cliente.getTipologia() : null;
-            String        denominazione = cliente.getDenominazione() != null ? cliente.getDenominazione() : null;
-            List<Cliente> listaAziende  = clienteRepository.ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(status, owner, tipologia, denominazione);
 
-            model.addAttribute("listaAziende", listaAziende);
-            model.addAttribute("clienteRicerca", cliente);
-            model.addAttribute("listOwner", ownerRepository.findAll());
+            List<Need>               needs     = needRepository.findByCliente_Id(id);
+            List<Progetto>           progetti  = progettoRepository.findByCliente_Id(id);
+            List<Attivita>           attivita  = attivitaRepository.findByCliente_Id(id);
+            List<KeyPeople>          keyPeople = keyPeopleRepository.findByCliente_Id(id);
+            List<FatturazioneAttiva> fatture   = fatturazioneAttivaRepository.findByCliente_Id(id);
 
-            return "aziende";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
+            for(Need need : needs) {
+                List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(id);
 
-            return "error";
-        }
-    }
+                for(AssociazioneCandidatoNeed associazione : associazioni) {
+                    associazioniRepository.deleteById(associazione.getId());
 
-    @RequestMapping("/aggiungi")
-    public String showNewForm(Model model){
-        try {
-            List<Owner> listOwner = ownerRepository.findAll();
+                    logger.debug("Associazione " + associazione.getId() + " eliminata");
+                }
 
-            if (null != model.getAttribute("cliente")) {
-                model.addAttribute("cliente", model.getAttribute("cliente"));
-            } else {
-                model.addAttribute("cliente", new Cliente());
+                needRepository.deleteById(need.getId());
+
+                logger.debug("Need " + need.getId() + " eliminato");
             }
 
-            model.addAttribute("titoloPagina", "Aggiungi un nuovo cliente");
-            model.addAttribute("listaProvince", provinceRepository.findAll());
-            model.addAttribute("listOwner", listOwner);
+            for(Progetto progetto : progetti) {
+                progettoRepository.deleteById(progetto.getId());
 
-            return "aziende_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva")
-    public String saveAzienda(
-        Cliente cliente,
-        RedirectAttributes ra
-    ){
-        try {
-            if (controllaDuplicati(cliente, ra)) {
-                return "redirect:/aziende/aggiungi";
+                logger.debug("Need " + progetto.getId() + " eliminato");
             }
 
-            clienteRepository.save(cliente);
-            ra.addFlashAttribute("message", "Il cliente e' stato salvato con successo");
-            return "redirect:/aziende";
+            for(Attivita a : attivita) {
+                attivitaRepository.deleteById(a.getId());
 
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/attivita/salva/{idAzienda}/{idTipoAttivita}")
-    public String salvaAttivita(
-        @PathVariable("idAzienda") Integer idAzienda,
-        @PathVariable("idTipoAttivita") Integer idTipoAttivita,
-        Attivita attivita,
-        Model model,
-        RedirectAttributes ra
-    ) {
-        try {
-            TipologiaAttivita tipologiaAttivita = new TipologiaAttivita();
-            tipologiaAttivita.setId(idTipoAttivita);
-            attivita.setTipologia(tipologiaAttivita);
-            attivita.setData(OffsetDateTime.now());
-
-            if (( null != attivita.getKeyPeople() ) && ( null == attivita.getKeyPeople().getId() )) {
-                attivita.setKeyPeople(null);
+                logger.debug("Attivita " + a.getId() + " eliminata");
             }
 
-            attivitaRepository.save(attivita);
+            for(KeyPeople key : keyPeople) {
+                keyPeopleRepository.deleteById(key.getId());
 
-            return "redirect:/aziende/dettaglio/" + idAzienda;
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-
-    @RequestMapping("/dettaglio/{id}")
-    public String showForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ) {
-        try {
-            Cliente        clienteToShow      = clienteRepository.findById(id).get();
-            Integer        needAperti         = clienteToShow.getNeeds() != null ? clienteToShow.getNeeds().size() : 0;
-            Integer        needVinti          = clienteToShow.getNeeds() != null ? (int)clienteToShow.getNeeds().stream().filter(s -> s.getStato().getId() == 3).count() : 0;
-            OffsetDateTime dataUltimaAttivita = null;
-
-            if (null != clienteToShow.getAttivita() && !clienteToShow.getAttivita().isEmpty()) {
-                dataUltimaAttivita = clienteToShow.getAttivita().stream().max(Comparator.comparing(Attivita::getData)).get().getData();
+                logger.debug("KeyPeople " + key.getId() + " eliminato");
             }
 
-            Attivita nuovaAttivita = new Attivita();
-            nuovaAttivita.setCliente(clienteToShow);
+            for (FatturazioneAttiva fattura : fatture) {
+                fatturazioneAttivaRepository.deleteById(fattura.getId());
 
-            model.addAttribute("titoloPagina", "Visualizzazione " + clienteToShow.getDenominazione());
-            model.addAttribute("needAperti", needAperti);
-            model.addAttribute("needVinti", needVinti);
-            model.addAttribute("dataUltimaAttivita", dataUltimaAttivita);
-            model.addAttribute("dataUltimaAttivita", dataUltimaAttivita);
-            model.addAttribute("cliente", clienteToShow);
-            model.addAttribute("listaAttivita", clienteToShow.getAttivita());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaTipologie", tipologiaAttivitaRepository.findAll());
-            model.addAttribute("nuovaAttivita", nuovaAttivita);
-            model.addAttribute("ricercaAttivita", new Attivita());
-
-            return "azienda_dettaglio";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/dettaglio/ricerca/{id}")
-    public String showDettaglioRicerca(
-        @PathVariable("id") Integer id,
-        Model model,
-        Attivita ricercaAttivita
-    ) {
-        try {
-            Cliente clienteToShow = clienteRepository.findById(id).get();
-
-            Integer        needAperti         = clienteToShow.getNeeds() != null ? clienteToShow.getNeeds().size() : 0;
-            Integer        needVinti          = clienteToShow.getNeeds() != null ? (int)clienteToShow.getNeeds().stream().filter(s -> s.getStato().getId() == 3).count() : 0;
-            OffsetDateTime dataUltimaAttivita = null;
-
-            if (null != clienteToShow.getAttivita() && !clienteToShow.getAttivita().isEmpty()) {
-                dataUltimaAttivita = clienteToShow.getAttivita().stream().max(Comparator.comparing(Attivita::getData)).get().getData();
+                logger.debug("Fattura Attiva " + fattura.getId() + " eliminata");
             }
 
-            Attivita nuovaAttivita = new Attivita();
-            Integer  idTipologia   = ricercaAttivita.getTipologia() != null ? ricercaAttivita.getTipologia().getId() : null;
-            Integer  idOwner       = ricercaAttivita.getOwner() != null ? ricercaAttivita.getOwner().getId() : null;
-
-            nuovaAttivita.setCliente(clienteToShow);
-
-            model.addAttribute("titoloPagina", "Visualizzazione " + clienteToShow.getDenominazione());
-            model.addAttribute("needAperti", needAperti);
-            model.addAttribute("needVinti", needVinti);
-            model.addAttribute("dataUltimaAttivita", dataUltimaAttivita);
-            model.addAttribute("dataUltimaAttivita", dataUltimaAttivita);
-            model.addAttribute("listaAttivita", attivitaRepository.ricercaByTipologia_IdAndOwner_IdAndCliente_Id(idTipologia, idOwner, id));
-            model.addAttribute("cliente", clienteToShow);
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaTipologie", tipologiaAttivitaRepository.findAll());
-            model.addAttribute("nuovaAttivita", nuovaAttivita);
-            model.addAttribute("ricercaAttivita", ricercaAttivita);
-
-            return "azienda_dettaglio";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/modifica/{id}")
-    public String showEditForm(
-        @PathVariable("id") Integer id,
-        Model model ,
-        RedirectAttributes ra
-    ) {
-        try {
-            model.addAttribute("cliente", clienteRepository.findById(id).get());
-            model.addAttribute("titoloPagina", "Modifica azienda");
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaProvince", provinceRepository.findAll());
-            model.addAttribute("listOwner", ownerRepository.findAll());
-
-            return "aziende_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/elimina/{id}")
-    public String deleteCliente(
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra
-    ){
-        try {
             clienteRepository.deleteById(id);
-            ra.addFlashAttribute("message", "L'azienda è stata cancellata con successo");
 
-            return "redirect:/aziende";
+            logger.debug("Azienda " + id + " eliminata");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERROR";
+        }
+    }
+
+    @GetMapping("/react/tipologia")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Tipologia> getAllTipologie() {
+        logger.info("Job Title / Tipologie");
+
+        return tipologiaRepository.findAll();
+    }
+
+    @GetMapping("/react/owner")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Owner> getAllOwner() {
+        logger.info("Owner");
+
+        return ownerRepository.findAll();
+    }
+
+    @GetMapping("/react/keypeople/{id}")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<KeyPeople> getAllKeyPeopleByIdCLiente(
+        @PathVariable("id") Integer idCliente
+    ) {
+        logger.info("KeyPeople tramite id azienda");
+
+        return keyPeopleRepository.findByCliente_Id(idCliente);
+    }
+
+
+    @GetMapping("/react/owner/{id}")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Owner getOwnerById(
+        @PathVariable("id") Integer id
+    ) {
+        logger.info("Owner tramite id");
+
+        return ownerRepository.findById(id).get();
+    }
+
+    @GetMapping("/react/province")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Province> getAllProvince() {
+        logger.info("Province");
+
+        return provinceRepository.findAll();
+    }
+
+    @PostMapping("/react/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public ResponseEntity<String> saveAzienda(
+        @RequestBody Map<String, String>  clienteMap
+    ){
+        logger.info("Salva azienda");
+
+        try {
+            Cliente clienteEntity = new Cliente();
+
+            if(clienteMap.get("id") != null) {
+                clienteEntity = clienteRepository.findById(Integer.parseInt(clienteMap.get("id"))).get();
+
+                logger.debug("Azienda trovata si procede in modifica");
+
+            }
+
+            trasformaMappaInCLiente(clienteEntity, clienteMap);
+
+            if (controllaDuplicati(clienteEntity)) {
+                logger.debug("Azienda duplicata, denominazione già presente");
+
+                return ResponseEntity.ok("DUPLICATO");
+            }
+
+            clienteRepository.save(clienteEntity);
+
+            logger.debug("Azienda salvata correttamente");
+
+            return ResponseEntity.ok("OK");
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return ResponseEntity.ok("ERRORE");
+        }
+    }
+
+    @RequestMapping("/react/attivita/{idCliente}")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Attivita> getAttivitaAzienda(
+        @PathVariable("idCliente") Integer idCliente
+    ){
+        logger.info("Attivita tramite id azienda");
+
+        try {
+
+            return attivitaRepository.findByCliente_Id(idCliente);
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return null;
+        }
+    }
+
+    @RequestMapping("/react/attivita/salva")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveAzienda(
+        @RequestParam("idAzienda") Integer idAzienda,
+        @RequestParam("idKeyPeople") @Nullable Integer idKeyPeople,
+        @RequestParam("idOwner") Integer idOwner,
+        @RequestParam("idTipoAttivita") Integer idTipoAttivita,
+        @RequestBody Map<String, String> attivitaMap
+    ){
+        logger.info("Salva attivita azienda");
+
+        try {
+            Attivita attivitaEntity = trasformaMappaInAttivita(attivitaMap, idAzienda, idKeyPeople, idOwner,  idTipoAttivita);
+
+            attivitaRepository.save(attivitaEntity);
+
+            logger.debug("Salvataggio effettuato");
+
+            return "OK";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
         }
     }
 
     private boolean controllaDuplicati(
-        Cliente cliente,
-        RedirectAttributes ra
+        Cliente cliente
     ){
+        logger.info("Azienda - controlla duplicati");
+
         boolean           toReturn       = false;
         Optional<Cliente> clienteToCheck = cliente.getId() != null ? clienteRepository.findById(cliente.getId()) : Optional.empty();
 
@@ -287,15 +268,97 @@ public class AziendeController {
         List<Cliente> clientiByEmail = clienteRepository.findByEmail(cliente.getEmail());
 
         if ((null != clientiByDenominazione && !clientiByDenominazione.isEmpty()) && clienteToCheck.isEmpty()) {
-          ra.addFlashAttribute("message", "Denominazione gia' associata ad un altro cliente" );
           toReturn = true;
         }
 
-        if ((null != clientiByEmail && !clientiByEmail.isEmpty()) && clienteToCheck.isEmpty()) {
-          ra.addFlashAttribute("message", "Email gia' associata ad un altro cliente" );
+        if (((null != cliente.getEmail()) && !cliente.getEmail().isEmpty()) &&
+            ((null != clientiByEmail) && !clientiByEmail.isEmpty()) &&
+            clienteToCheck.isEmpty()
+        ) {
           toReturn = true;
         }
 
         return toReturn;
+    }
+
+    public Attivita trasformaMappaInAttivita(
+        Map<String,String> attivitaMap,
+        Integer idAzienda,
+        Integer idKeyPeople,
+        Integer idOwner,
+        Integer idTipoAttivita
+    ){
+        logger.info("Trasforma mappa in attivita");
+
+        Attivita attivita = new Attivita();
+
+        attivita.setId(attivitaMap.get("id") != null ? Integer.parseInt(attivitaMap.get("id")) : null);
+
+        TipologiaAttivita tipologiaAttivita = new TipologiaAttivita();
+        tipologiaAttivita.setId(idTipoAttivita);
+        attivita.setTipologia(tipologiaAttivita);
+        attivita.setData(OffsetDateTime.now());
+        attivita.setNote(attivitaMap.get("note") != null ? attivitaMap.get("note") : null);
+
+        if(null!=idAzienda) {
+            Cliente cliente = new Cliente();
+            cliente.setId(idAzienda);
+
+            attivita.setCliente(cliente);
+        }
+
+        if(null!=idOwner) {
+            Owner owner = new Owner();
+            owner.setId(idOwner);
+
+            attivita.setOwner(owner);
+        }
+
+        if(null!=idKeyPeople) {
+            KeyPeople keyPeople = new KeyPeople();
+            keyPeople.setId(idKeyPeople);
+
+            attivita.setKeyPeople(keyPeople);
+        }
+
+        return attivita;
+    }
+
+    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap) {
+
+        logger.info("Trasforma mappa in azienda");
+
+        cliente.setAzioniCommerciali(clienteMap.get("azioniCommerciali") != null ? clienteMap.get("azioniCommerciali") : null);
+        cliente.setCap(clienteMap.get("cap") != null ? clienteMap.get("cap") : null);
+        cliente.setCf(clienteMap.get("cf") != null ? clienteMap.get("cf") : null);
+        cliente.setCitta(clienteMap.get("citta") != null ? clienteMap.get("citta") : null);
+        cliente.setCodiceDestinatario(clienteMap.get("codiceDestinatario") != null ? clienteMap.get("codiceDestinatario") : null);
+        cliente.setCodicePa(clienteMap.get("codicePa") != null ? clienteMap.get("codicePa") : null);
+        cliente.setComunicazioniNeed(clienteMap.get("comunicazioniNeed") != null ? clienteMap.get("comunicazioniNeed") : null);
+        cliente.setDenominazione(clienteMap.get("denominazione") != null ? clienteMap.get("denominazione") : null);
+        cliente.setEmail(clienteMap.get("email") != null ? clienteMap.get("email") : null);
+        cliente.setGuadagno(clienteMap.get("guadagno") != null ? clienteMap.get("guadagno") : null);
+        cliente.setIndirizzo(clienteMap.get("indirizzo") != null ? clienteMap.get("indirizzo") : null);
+        cliente.setNote(clienteMap.get("note") != null ? clienteMap.get("note") : null);
+        cliente.setNoteTrattative(clienteMap.get("noteTrattative") != null ? clienteMap.get("noteTrattative") : null);
+
+        if (clienteMap.get("idOwner") != null) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(clienteMap.get("idOwner")));
+
+            cliente.setOwner(owner);
+        }
+
+        cliente.setPaese(clienteMap.get("paese") != null ? clienteMap.get("paese") : null);
+        cliente.setPec(clienteMap.get("pec") != null ? clienteMap.get("pec") : null);
+        cliente.setPi(clienteMap.get("pi") != null ? clienteMap.get("pi") : null);
+        cliente.setProvincia(clienteMap.get("provincia") != null ? clienteMap.get("provincia") : null);
+        cliente.setSedeLegale(clienteMap.get("sedeLegale") != null ? clienteMap.get("sedeLegale") : null);
+        cliente.setSedeOperativa(clienteMap.get("sedeOperativa") != null ? clienteMap.get("sedeOperativa") : null);
+        cliente.setSettoreMercato(clienteMap.get("settoreMercato") != null ? clienteMap.get("settoreMercato") : null);
+        cliente.setSito(clienteMap.get("sito") != null ? clienteMap.get("sito") : null);
+        cliente.setStatus(clienteMap.get("status") != null ? Integer.parseInt(clienteMap.get("status")) : null);
+        cliente.setTipologia(clienteMap.get("tipologia") != null ? clienteMap.get("tipologia") : null);
+
     }
 }

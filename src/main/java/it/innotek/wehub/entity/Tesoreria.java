@@ -4,10 +4,14 @@
 
 package it.innotek.wehub.entity;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class Tesoreria implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,15 +58,6 @@ public class Tesoreria implements Serializable {
 
     @Column(length = 10)
     private Integer anno;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "tesoreria_cliente",
-        joinColumns = @JoinColumn(name = "id_tesoreria", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<Cliente> clienti  = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

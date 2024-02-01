@@ -4,6 +4,7 @@
 
 package it.innotek.wehub.controller;
 
+import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.TipologiaProgetto;
 import it.innotek.wehub.entity.staff.Staff;
 import it.innotek.wehub.entity.timesheet.Progetto;
@@ -14,17 +15,16 @@ import it.innotek.wehub.util.UtilLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Objects;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/progetti")
 public class ProgettoController {
 
@@ -35,17 +35,26 @@ public class ProgettoController {
     @Autowired
     private StaffRepository   staffRepository;
 
+
     private static final Logger logger = LoggerFactory.getLogger(ProgettoController.class);
 
-    @RequestMapping
-    public String getProgetti(Model model){
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Progetto> getAll()
+    {
         try {
-            List<Progetto> listProgetti = progettoRepository.findAll();
+            List<Progetto> listProgetti = new ArrayList<>();
+            listProgetti = progettoRepository.findAll().stream().filter(p -> p.getTipologia().getId() != 1).toList();
 
             for (Progetto progetto : listProgetti) {
                 if (( null != progetto.getTipologia() ) && progetto.getTipologia().getId() != 1) {
-                    if (null != progetto.getStaff()) {
-                        progetto.setDurataEffettiva(progettoRepository.getOreEffettive(progetto.getId(), progetto.getStaff().getId()));
+                    if (null != progetto.getIdStaff()) {
+                        progetto.setDurataEffettiva(progettoRepository.getOreEffettive(progetto.getId(), progetto.getIdStaff()));
+
+                        if (null == progetto.getDurataEffettiva()) {
+                            progetto.setDurataEffettiva(0);
+                        }
+
                     } else {
                         progetto.setDurataEffettiva(0);
                     }
@@ -66,69 +75,38 @@ public class ProgettoController {
                 }
             }
 
-            model.addAttribute("listProgetti", listProgetti);
-            model.addAttribute("progettoRicerca", new Progetto());
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaDipendenti", staffRepository.findAll());
+            return listProgetti;
+        } catch (Exception e) {
+            logger.error(e.toString());
 
-            return "progetti";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
+            return null;
         }
     }
 
-    @RequestMapping("/ricerca")
-    public String showRicercaProgettiList(
-        Model model,
-        Progetto progetto
-    ){
-        try {
-            String         denominazione = ( ( null != progetto.getDescription() ) && !progetto.getDescription().isEmpty() ) ? progetto.getDescription() : null;
-            Integer        idCliente     = ( ( null != progetto.getCliente() ) && ( null != progetto.getCliente().getId() ) ) ? progetto.getCliente().getId() : null;
-            List<Progetto> listProgetti  = progettoRepository.ricercaByDenominazioneAndIdCliente(denominazione, idCliente);
-
-            model.addAttribute("listProgetti", listProgetti);
-            model.addAttribute("progettoRicerca", progetto);
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaDipendenti", staffRepository.findAll());
-
-            return "progetti";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Progetto getById(@PathVariable("id") Integer id)
+    {
+        return progettoRepository.findById(id).get();
     }
 
-    @RequestMapping("/aggiungi")
-    public String showNewForm(Model model){
+    @RequestMapping("/react/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveProgetto(
+        @RequestBody Map<String,String> progettoMap
+    ) {
+        logger.debug("progetti salva");
+
         try {
-            if (null != model.getAttribute("progetto")) {
-                model.addAttribute("progetto", model.getAttribute("progetto"));
-            } else {
-                model.addAttribute("progetto", new Progetto());
+
+            Progetto progetto = new Progetto();
+
+            if(progettoMap.get("id") != null) {
+                progetto = progettoRepository.findById(Integer.parseInt(progettoMap.get("id"))).get();
             }
 
-            model.addAttribute("titoloPagina", "Aggiungi un nuovo progetto");
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaDipendenti", staffRepository.findAll());
+            trasformaMappaInProgetto(progetto, progettoMap);
 
-            return "progetto_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva")
-    public String saveProgetto(
-        Progetto progetto,
-        RedirectAttributes ra
-    ) {
-        try {
             if (null != progetto.getMargine()) {
                 if (null != progetto.getRate()) {
                     progetto.setMarginePerc(progetto.getMargine() / progetto.getRate());
@@ -151,8 +129,9 @@ public class ProgettoController {
             } else {
                 progetto.setValoreTotale(0);
             }
-
+            Integer idStaff = Integer.parseInt(progettoMap.get("idStaff"));
             if (null != progetto.getId()) {
+
 
                 Progetto progettoVecchio = progettoRepository.findById(progetto.getId()).get();
                 Staff    staff           = staffRepository.findByProgetto_Id(progetto.getId());
@@ -161,13 +140,14 @@ public class ProgettoController {
                     TipologiaProgetto tipologia = new TipologiaProgetto();
                     tipologia.setId(2);
                     progetto.setTipologia(tipologia);
-                    progettoRepository.save(progetto);
+                    //progettoRepository.save(progetto);
 
-                    staff = staffRepository.findById(progetto.getStaff().getId()).get();
+                    staff = staffRepository.findById(idStaff).get();
 
                     staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
+                    staff.getProgetti().add(progetto);
                     staffRepository.save(staff);
-                } else if (staff.getId().equals(progetto.getStaff().getId())) {
+                } else if (staff.getId().equals(progetto.getIdStaff())) {
 
                     LocalDate dataInizioVecchia = progettoVecchio.getInizio();
                     LocalDate dataFineVecchia   = progettoVecchio.getScadenza();
@@ -215,159 +195,109 @@ public class ProgettoController {
                     TipologiaProgetto tipologia = new TipologiaProgetto();
                     tipologia.setId(2);
                     progetto.setTipologia(tipologia);
-                    progettoRepository.save(progetto);
+                    //progettoRepository.save(progetto);
+
+                    staff.getProgetti().add(progetto);
 
                     staffRepository.save(staff);
                 } else {
-                    ra.addFlashAttribute("message", "Il progetto e' associato ad un dipendente diverso, cancellare il progetto per riassegnarne uno nuovo");
-                    return "redirect:/progetti/modifica/" + progetto.getId();
+                    return "PROGETTO GIA' ASSOCIATO";
                 }
             } else {
 
                 TipologiaProgetto tipologia = new TipologiaProgetto();
                 tipologia.setId(2);
                 progetto.setTipologia(tipologia);
-                progettoRepository.save(progetto);
+                //progettoRepository.save(progetto);
 
-                Staff staff = staffRepository.findById(progetto.getStaff().getId()).get();
+                Staff staff = staffRepository.findById(idStaff).get();
 
                 staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
+                staff.getProgetti().add(progetto);
                 staffRepository.save(staff);
 
             }
-            ra.addFlashAttribute("message", "Il progetto e' stato salvato con successo");
-            return "redirect:/progetti";
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/modifica/{id}")
-    public String showEditForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
+
+    @DeleteMapping("/react/elimina/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String deleteProgetto(
+        @PathVariable("id") Integer id
     ){
+        logger.debug("progetti elimina");
+
         try {
+
             Progetto progetto = progettoRepository.findById(id).get();
 
-            model.addAttribute("progetto", progetto);
-            model.addAttribute("titoloPagina", "Modifica progetto");
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaDipendenti", staffRepository.findAll());
+            Staff staff = staffRepository.findById(progetto.getIdStaff()).get();
 
-            return "progetto_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
+            UtilLib.rimuoviProgettoCalendario(staff.getTimesheet(), id);
 
-            return "error";
-        }
-    }
-
-    @RequestMapping("/elimina/{id}")
-    public String deleteProgetto(
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra
-    ){
-        try {
-            progettoRepository.deleteById(id);
-
-            ra.addFlashAttribute("message", "Il progetto e' stato cancellato con successo");
-            return "redirect:/progetti";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/match/{idProgetto}")
-    public String showMatchForm(
-        @PathVariable("idProgetto") Integer idProgetto,
-        Model model
-    ) {
-        try {
-            model.addAttribute("progetto", progettoRepository.findById(idProgetto).get());
-            model.addAttribute("titoloPagina", "Associazione staff progetto");
-            model.addAttribute("listStaffNonAssociati", staffRepository.findStaffNonAssociati(idProgetto));
-            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
-            model.addAttribute("staffRicerca", new Staff());
-
-            return "liste_match_progetto";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/ricerca/match/{idProgetto}")
-    public String showRicercaMatchForm(
-        @PathVariable("idProgetto") Integer idProgetto,
-        Model model,
-        Staff staff
-    ) {
-        try {
-            String nome    = ( ( null != staff.getNome() ) && !staff.getNome().isEmpty() ) ? staff.getNome() : null;
-            String cognome = ( ( null != staff.getCognome() ) && !staff.getCognome().isEmpty() ) ? staff.getCognome() : null;
-            String email   = ( ( null != staff.getEmail() ) && !staff.getEmail().isEmpty() ) ? staff.getEmail() : null;
-
-            model.addAttribute("listStaffNonAssociati", staffRepository.ricercaStaffNonAssociati(idProgetto, nome, cognome, email));
-
-            model.addAttribute("progetto", progettoRepository.findById(idProgetto).get());
-            model.addAttribute("titoloPagina", "Match del need");
-            model.addAttribute("staffRicerca", staff);
-            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
-
-            return "liste_match_progetto";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/associa/{idProgetto}/{idStaff}")
-    public String showAssociaStaffForm(
-        @PathVariable("idProgetto") Integer idProgetto,
-        @PathVariable("idStaff") Integer idStaff,
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            Progetto progetto = progettoRepository.findById(idProgetto).get();
-            Staff    staff    = staffRepository.findById(idStaff).get();
-
-            staff.setTimesheet(UtilLib.aggiornaProgettoCalendario(staff.getTimesheet(), progetto));
-            staff.getProgetti().add(progetto);
+            staff.getProgetti().removeIf(p -> Objects.equals(p.getId(), id));
 
             staffRepository.save(staff);
 
-            model.addAttribute("progetto", progetto);
-            model.addAttribute("titoloPagina", "Match del progetto");
-            model.addAttribute("listStaffNonAssociati", staffRepository.findStaffNonAssociati(idProgetto));
-            model.addAttribute("listStaffAssociati", staffRepository.findStaffAssociati(idProgetto));
-            model.addAttribute("staffRicerca", new Staff());
+            progettoRepository.deleteById(id);
 
-            return "liste_match_progetto";
+            return "OK";
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/rimuovi/{idProgetto}/{idStaff}")
+    public void trasformaMappaInProgetto(Progetto need, Map<String,String> needMap) {
+
+        need.setRate(needMap.get("rate") != null ? Integer.parseInt(needMap.get("rate")) : null);
+        need.setCosto(needMap.get("costo") != null ? Integer.parseInt(needMap.get("costo")) : null);
+        need.setNote(needMap.get("note") != null ? needMap.get("note") : null);;
+        need.setMargine(needMap.get("margine") != null ? Integer.parseInt(needMap.get("margine")) : null);
+        need.setMarginePerc(needMap.get("marginePerc") != null ? Integer.parseInt(needMap.get("marginePerc")) : null);
+        need.setIdStaff(needMap.get("idStaff") != null ? Integer.parseInt(needMap.get("idStaff")) : null);
+        need.setDescription(needMap.get("description") != null ? needMap.get("description") : null);
+
+        if (needMap.get("idAzienda") != null) {
+            Cliente cliente = new Cliente();
+            cliente.setId(Integer.parseInt(needMap.get("idAzienda")));
+
+            need.setCliente(cliente);
+        }
+
+        need.setMolTotale(needMap.get("molTotale") != null ? Integer.parseInt(needMap.get("molTotale")) : null);
+        need.setValoreTotale(needMap.get("valoreTotale") != null ? Integer.parseInt(needMap.get("valoreTotale")) : null);
+        need.setInizio(needMap.get("inizio") != null ? LocalDate.parse(needMap.get("inizio")) : null);
+        need.setScadenza(needMap.get("scadenza") != null ? LocalDate.parse(needMap.get("scadenza")) : null);
+        need.setDurata(needMap.get("durata") != null ? Integer.parseInt(needMap.get("durata")) : null);
+        need.setDurataEffettiva(needMap.get("durataEffettiva") != null ? Integer.parseInt(needMap.get("durataEffettiva")) : null);
+        need.setDurataStimata(needMap.get("durataStimata") != null ? Integer.parseInt(needMap.get("durataStimata")) : null);
+
+        if (needMap.get("tipologia") != null) {
+            TipologiaProgetto tipologia = new TipologiaProgetto();
+            tipologia.setId(Integer.parseInt(needMap.get("tipologia")));
+
+            need.setTipologia(tipologia);
+        }
+    }
+
+    /*@RequestMapping("/rimuovi/{idProgetto}/{idStaff}")
     public String showRimuoviStaffForm(
         @PathVariable("idProgetto") Integer idProgetto,
         @PathVariable("idStaff") Integer idStaff,
         Model model,
         RedirectAttributes ra
     ){
+        logger.debug("progetti rimuovi");
+
         try {
             Progetto progetto = progettoRepository.findById(idProgetto).get();
             Staff    staff    = staffRepository.findById(idStaff).get();
@@ -390,5 +320,5 @@ public class ProgettoController {
 
             return "error";
         }
-    }
+    }*/
 }

@@ -1,160 +1,120 @@
+
 /*
  * Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
  */
 
 package it.innotek.wehub.controller;
 
+import it.innotek.wehub.entity.FatturazionePassiva;
 import it.innotek.wehub.entity.Fornitore;
 import it.innotek.wehub.repository.CandidatoRepository;
+import it.innotek.wehub.repository.FatturazionePassivaRepository;
 import it.innotek.wehub.repository.FornitoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/fornitori")
 public class FornitoreController {
 
     @Autowired
-    private FornitoreRepository fornitoreRepository;
+    private FornitoreRepository           fornitoreRepository;
     @Autowired
-    private CandidatoRepository candidatoRepository;
+    private CandidatoRepository           candidatoRepository;
+    @Autowired
+    private FatturazionePassivaRepository fatturazionePassivaRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(FornitoreController.class);
+    private static final Logger                       logger = LoggerFactory.getLogger(FornitoreController.class);
 
-    @RequestMapping
-    public String showFornitoriList(Model model){
-        try {
-            List<Fornitore> listFornitori = fornitoreRepository.findAll();
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Fornitore> getAll() {
+        logger.info("Fornitori");
 
-            model.addAttribute("listFornitori", listFornitori);
-            model.addAttribute("fornitoreRicerca", new Fornitore());
-
-            return "fornitori";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return fornitoreRepository.findAll();
     }
 
-    @RequestMapping("/ricerca")
-    public String showRicercaFornitoriList(
-        Model model,
-        Fornitore fornitore
-    ){
-        try {
-            String          denominazione = ( ( null != fornitore.getDenominazione() ) && !fornitore.getDenominazione().isEmpty() ) ? fornitore.getDenominazione() : null;
-            String          referente     = ( ( null != fornitore.getReferente() ) && !fornitore.getReferente().isEmpty() ) ? fornitore.getReferente() : null;
-            String          email         = ( ( null != fornitore.getEmail() ) && !fornitore.getEmail().isEmpty() ) ? fornitore.getEmail() : null;
-            List<Fornitore> listFornitori = fornitoreRepository.ricercaByDenominazioneAndReferenteAndEmail(denominazione, referente, email);
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Fornitore getById(@PathVariable("id") Integer id) {
+        logger.info("Fornitore tramite id");
 
-            model.addAttribute("listFornitori", listFornitori);
-            model.addAttribute("fornitoreRicerca", fornitore);
-
-            return "fornitori";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return fornitoreRepository.findById(id).get();
     }
 
-    @RequestMapping("/aggiungi")
-    public String showNewForm(Model model){
+    @DeleteMapping("/react/elimina/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String deleteFornitore(@PathVariable Integer id) {
+        logger.info("Elimina fornitore tramite id");
+
+        List<FatturazionePassiva> fatture = fatturazionePassivaRepository.findByFornitore_Id(id);
+
         try {
-            if (model.getAttribute("fornitore") != null) {
-                model.addAttribute("fornitore", model.getAttribute("fornitore"));
-            } else {
-                model.addAttribute("fornitore", new Fornitore());
+
+            for (FatturazionePassiva fattura : fatture) {
+                fatturazionePassivaRepository.deleteById(fattura.getId());
+
+                logger.debug("Fattura Attiva " + fattura.getId() + " eliminata");
             }
 
-            model.addAttribute("titoloPagina", "Aggiungi un nuovo fornitore");
-
-            return "fornitore_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva")
-    public String saveFornitore(
-        Fornitore fornitore,
-        RedirectAttributes ra
-    ){
-        try {
-            if (controllaDenominazioneDuplicata(fornitore.getDenominazione())) {
-
-                ra.addFlashAttribute("message", "Denominazione già associata ad un altro fornitore");
-
-                if (null == fornitore.getId()) {
-                    ra.addFlashAttribute("fornitore", fornitore);
-
-                    return "redirect:/fornitori/aggiungi";
-                }
-            }
-            fornitoreRepository.save(fornitore);
-            ra.addFlashAttribute("message", "Il fornitore è stato salvato con successo");
-
-            return "redirect:/fornitori";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/modifica/{id}")
-    public String showEditForm(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            model.addAttribute("fornitore", fornitoreRepository.findById(id).get());
-            model.addAttribute("titoloPagina", "Modifica fornitore");
-
-            return "fornitore_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/elimina/{id}")
-    public String deleteFornitore(
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra
-    ){
-        try {
-            if (candidatoRepository.findFornitoriAssociati(id) == 1) {
-                ra.addFlashAttribute("message", "Il fornitore è associato ad alcuni candidati e non può essere cancellato");
-                return "redirect:/fornitori";
-            }
             fornitoreRepository.deleteById(id);
-            ra.addFlashAttribute("message", "Il fornitore è stato cancellato con successo");
 
-            return "redirect:/fornitori";
+            logger.info("Fornitore eliminato correttamente");
+
+            return "OK";
+        } catch (Exception e) {
+            return "ERRORE";
+        }
+    }
+
+    @PostMapping("/react/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public ResponseEntity<String> saveFornitore(
+        @RequestBody Map<String, String> fornitoreMap
+    ){
+        logger.info("Salva fornitore");
+
+        try {
+            Fornitore fornitoreEntity = new Fornitore();
+
+            if(fornitoreMap.get("id") != null) {
+                fornitoreEntity = fornitoreRepository.findById(Integer.parseInt(fornitoreMap.get("id"))).get();
+
+                logger.debug("Fornitore trovato si procede in modifica");
+            }
+
+            trasformaMappaInFornitore(fornitoreEntity, fornitoreMap);
+
+            fornitoreRepository.save(fornitoreEntity);
+
+            logger.debug("Fornitore salvato correttamente");
+
+            return ResponseEntity.ok("OK");
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return ResponseEntity.ok("ERRORE");
         }
     }
 
-    public boolean controllaDenominazioneDuplicata(String denominazione){
-        List<Fornitore> fornitori = fornitoreRepository.findByDenominazione(denominazione);
-        return ((null != fornitori) && !fornitori.isEmpty());
+    public void trasformaMappaInFornitore(Fornitore fornitore, Map<String,String> clienteMap) {
+
+        logger.debug("Trasforma mappa in fornitore");
+
+        fornitore.setEmail(clienteMap.get("email") != null ? clienteMap.get("email") : null);
+        fornitore.setReferente(clienteMap.get("referente") != null ? clienteMap.get("referente") : null);
+        fornitore.setDenominazione(clienteMap.get("denominazione") != null ? clienteMap.get("denominazione") : null);
+        fornitore.setCellulare(clienteMap.get("cellulare") != null ? clienteMap.get("cellulare") : null);
+        fornitore.setCitta(clienteMap.get("citta") != null ? clienteMap.get("citta") : null);
+        fornitore.setCodice(clienteMap.get("codice") != null ? clienteMap.get("codice") : null);
+        fornitore.setPi(clienteMap.get("pi") != null ? clienteMap.get("pi") : null);
     }
 }

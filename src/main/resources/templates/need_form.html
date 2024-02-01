@@ -19,7 +19,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap-select.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -57,7 +57,7 @@
                         <input type="week" th:field="*{week}" class="form-control" required/>
                     </div>
                     <div class="col">
-                        <label class="col-form-label">Ambito</label>
+                        <label class="col-form-label">Tipologia</label>
                         <select th:field="*{tipologia.id}" class="form-control select-medium">
                             <option th:each="i : ${listaTipologieN}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
@@ -66,9 +66,9 @@
                         <label class="col-form-label">Tipologia Azienda</label>
                         <select th:field="*{tipo}" class="form-control select-medium" required>
                             <option th:value="null" th:text="---"></option>
-                            <option value="1" text="Verde">Cliente</option>
-                            <option value="2" text="Verde chiaro">Consulenza</option>
-                            <option value="3" text="Giallo">Prospect</option>
+                            <option value="1">Cliente</option>
+                            <option value="2">Consulenza</option>
+                            <option value="3">Prospect</option>
                         </select>
                     </div>
                 </div><br>
@@ -86,18 +86,18 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label class="col-form-label">Head Counter</label>
+                        <label class="col-form-label">Headcount</label>
                         <input type="number" th:field="*{numeroRisorse}" min="1" class="form-control" maxlength="2"/>
                     </div>
                 </div><br>
                 <div class="form-group row">
 
                     <div class="col">
-                        <label class="col-form-label">Seniority</label>
-                        <input type="number" th:field="*{anniEsperienza}" min="0" class="form-control" maxlength="2"/>
+                        <label class="col-form-label">Location</label>
+                        <input type="text" th:field="*{location}" class="form-control" maxlength="45"/>
                     </div>
                     <div class="col">
-                        <label class="col-form-label">Skills</label>
+                        <label class="col-form-label">Skills 1</label>
                         <select class="form-control selectpicker" th:field="*{skills}" id="skill" multiple>
 
                             <option th:each="skill : ${listaSkillOrdinata}"
@@ -105,6 +105,34 @@
                                     th:text="${skill.descrizione}">skill
                             </option>
                         </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">Skills 2</label>
+                        <select class="form-control selectpicker" th:field="*{skills2}" id="skill2" multiple>
+
+                            <option th:each="skill : ${listaSkillOrdinata}"
+                                    th:value="${skill.id}"
+                                    th:text="${skill.descrizione}">skill
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+
+                    <div class="col">
+                        <label class="col-form-label">Seniority</label>
+                        <input type="number" th:field="*{anniEsperienza}" min="0" class="form-control" maxlength="2"/>
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="col-form-label">Note</label>
+                        <textarea th:field="*{note}" class="form-control-textarea" maxlength="4000"
+                                  autocomplete="off"></textarea>
                     </div>
                 </div>
                 <div class="row form-btn-wrapper mt-5">

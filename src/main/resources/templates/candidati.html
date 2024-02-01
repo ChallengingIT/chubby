@@ -19,7 +19,7 @@
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
 
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
     <div class="wrapper d-flex align-items-stretch" style="overflow: hidden;">
 
@@ -28,83 +28,87 @@
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5 pt-5">
             <h1 class="mb-4"><b>Gestione Staffing</b></h1>
-            <div>
-                <a th:href="@{/staffing/aggiungi}" class="btn btn-info btn-lg"
-                    style=" background-color: black; border-radius: 10px;">
-                    <span class="glyphicon glyphicon-plus"></span> Aggiungi Candidato
-                </a>
-            </div>
             <br>
-            <div>
-                <form th:action="@{/staffing/ricerca}" method="get" th:object="${candidatoRicerca}">
+            <div style="margin-left:1%;">
+                <form th:action="@{/staffing/ricerca}" method="get" id="formRicerca" th:object="${candidatoRicerca}">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <div class="form-group row">
+                    <div class="row rowFind">
 
-                        <div class="col">
-                            <label class="col-sm-16 col-form-label">Nome </label>
-                            <input type="text" th:field="*{nome}" class="form-control"
-                                maxlength="45" autocomplete="off" />
+                        <div class="col-3">
+                            <input type="text" placeholder="Nome" th:field="*{nome}" id="ricercaNome"
+                                   class="form-control backSimilWhite borderRadius18" maxlength="45" autocomplete="off" />
+                            <input type="text" placeholder="Cognome" th:field="*{cognome}" id="ricercaCognome"
+                                   class="form-control backSimilWhite borderRadius18" maxlength="45" autocomplete="off" />
                         </div>
-                        <div class="col" style="margin-left:15px">
-                            <label class="col-sm-16 col-form-label">Cognome </label>
-                            <input type="text" th:field="*{cognome}" class="form-control"
-                                maxlength="45" autocomplete="off" />
-                        </div>
-                        <div class="col" style="margin-left:15px">
-                            <label class="col-sm-16 col-form-label">Email </label>
-                            <input type="email" th:field="*{email}" class="form-control"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="45" autocomplete="off" />
-                        </div>
-                        <div class="col" style="margin-left:15px">
-                            <label class="col-sm-16 col-form-label">Job Title </label>
-                            <select th:field="*{tipologia.id}" class="form-control">
-                                <option th:value="null" th:text="---"></option>
+                        <div class="col-3">
+                            <input type="email" placeholder="Email" th:field="*{email}"
+                                   class="form-control backSimilWhite borderRadius18" id="ricercaEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                   maxlength="45" autocomplete="off" />
+                            <select th:field="*{tipologia.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaTipologia" >
+                                <option th:value="null">Tipologia</option>
                                 <option th:each="i : ${listaTipologie}" th:value="${i.getId()}"
-                                    th:text="${i.getDescrizione()}"></option>
+                                        th:text="${i.getDescrizione()}"></option>
                             </select>
                         </div>
-                        <div class="col" style="margin-left:15px">
-                            <label class="col-sm-16 col-form-label">Tipologia </label>
-                            <select th:field="*{tipo.id}" class="form-control">
-                                <option th:value="null" th:text="---"></option>
+                        <div class="col-3">
+                            <select th:field="*{tipo.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaTipo">
+                                <option th:value="null">Tipo</option>
                                 <option th:each="i : ${listaTipi}" th:value="${i.getId()}"
                                     th:text="${i.getDescrizione()}"></option>
                             </select>
-                        </div>
-                        <div class="col" style="margin-left:15px">
-                            <label class="col-sm-16 col-form-label">Stato</label>
-                            <select th:field="*{stato.id}" class="form-control">
-                                <option th:value="null" th:text="---"></option>
+                            <select th:field="*{stato.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="ricercaStato">
+                                <option th:value="null">Stato</option>
                                 <option th:each="i : ${listaStatiC}" th:value="${i.getId()}"
-                                    th:text="${i.getDescrizione()}"></option>
+                                        th:text="${i.getDescrizione()}"></option>
                             </select>
                         </div>
-                        <div class="col" style="margin-left:15px;"><br>
-                            <input type="submit" class="btn btn-primary m-2"
-                                style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                        <div class="col-3 pt-4" style="text-align:center;">
+                            <a href="#" id="btnReset">Ripristina</a>
+                            <input type="submit" class="btn btn-primary m-2" id="btnFind3" value="Cerca">
                         </div>
                     </div>
                 </form>
             </div>
+            <br><br>
             <div>
-                <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
-                    <label class="col-sm-16 col-form-label">Numero di righe</label>
-                    <select class="form-control maxRows" name="state">
-                        <option value="5000">Show ALL Rows</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="70">70</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <table class="sortable table table-striped table-bordered table-sm table-responsive-lg"
-                        style="background-color:white;">
-                    <thead class="thead" id="tabella-blu">
-                        <tr class="tr1">
-                            <th class="align-middle">Nome</th>
-                            <th class="align-middle">E-mail</th>
+                <div class="table-responsive-sm">
+                <table class="sortable table table-sm" style="background-color:#f9f9f9;border-radius:25px;">
+                    <thead id="tabella-new">
+                        <tr class="tr1 noborder">
+                            <td colspan="2" style="padding-top: 2%;">
+                                <div class="row">
+                                    <h1 style="color:grey;" class="pl-5"><b>Candidati</b></h1>
+                                    <div style="margin-left:10%;">
+                                        <a th:href="@{/staffing/aggiungi}" class="btn btn-lg"
+                                        style=" background-color: #ffe4a0; border-radius: 10px; color:#ffb700;">  <span class="glyphicon glyphicon-plus"></span> <b>Aggiungi Candidato</b></a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td colspan="9" style="padding-top: 2%;">
+                                <div class="row"> 	<!--		Show Numbers Of Rows 		-->
+                                    <div class="col-sm-4">
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label style="padding-left: 26%;padding-top: 6%;">Numero di righe:</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select class="form-control maxRows" style="border-radius:20px;" name="state">
+                                            <option value="5000">Show ALL Rows</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="70">70</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="tr1 noborder boxShadow">
+                            <th class="align-middle pl-5">Nome<br>E-mail</th>
                             <th class="align-middle">Job Title</th>
                             <th class="align-middle">Rating</th>
                             <th class="align-middle">N. Rating</th>
@@ -117,11 +121,16 @@
                             <th class="align-middle">Azioni</th>
                         </tr>
                     </thead>
-                    <tbody class="table1" id="valori-tabella">
+                    <tbody class="table1 boxShadow">
                         <th:block th:each="candidato : ${listCandidati}">
-                            <tr class="tr1">
-                                <td class="fifty esteso">[[${candidato.nome}]] [[${candidato.cognome}]]</td>
-                                <td>[[${candidato.email}]]</td>
+                            <tr class="tr1 noborder">
+                                <td class="pl-5">
+                                    <a th:href="@{'/staffing/modifica/' + ${candidato.id}}">
+                                        [[${candidato.nome}]] [[${candidato.cognome}]]
+                                    </a>
+                                    <br>
+                                    [[${candidato.email}]]
+                                </td>
                                 <td>[[${candidato.tipologia.descrizione}]]</td>
                                 <span th:if="${candidato.rating <= 1.9}">
                                     <td th:title="${candidato.rating}"><i class="fa fa-circle" style="color:#FF0000"></i></td>
@@ -193,12 +202,8 @@
                                                 </span>
                                             </span>
                                         </span>
-                                        <a th:href="@{'/staffing/modifica/' + ${candidato.id}}"
-                                            class="col mr-2 btn-info btn-lg btn-icon" style="margin: 0;"><i class="fas fa-pen"></i></a>
                                         <a href="#" data-toggle="modal" data-target="#modalDelete" th:attr="data-target='#modalDelete'+${candidato.id}"
-                                           class="col sbtn btn-info btn-lg btn-icon" style="margin: 0;"><i class="fas fa-trash"></i></a>
-                                        <!--<a th:href="@{'/staffing/elimina/' + ${candidato.id}}"
-                                            class="col sbtn btn-info btn-lg btn-icon" style="margin: 0;"><i class="fas fa-trash"></i></a>-->
+                                           class="col btn-lg btn-icon btn-danger" style="margin: 0;"><i class="fas fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -264,20 +269,34 @@
                             </div>
                         </th:block>
                     </tbody>
-                </table>
-                <div class='pagination-container' >
-                    <nav>
-                        <ul class="pagination">
+                    <tfoot>
+                        <tr>
+                            <td colspan="11" style="padding:0px;">
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-3" style="padding-left: 3%">
+                                        <div class='pagination-container' >
+                                            <nav>
+                                                <ul class="pagination">
 
-                            <li data-page="prev" >
-                                <span> < <span class="sr-only">(current)</span></span>
-                            </li>
-                            <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev">
-                                <span> > <span class="sr-only">(current)</span></span>
-                            </li>
-                        </ul>
-                    </nav>
+                                                    <li data-page="prev" >
+                                                        <span> < <span class="sr-only">(current)</span></span>
+                                                    </li>
+                                                    <!--	Here the JS Function Will Add the Rows -->
+                                                    <li data-page="next" class="prev">
+                                                        <span> > <span class="sr-only">(current)</span></span>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
                 </div>
             </div>
         </div>

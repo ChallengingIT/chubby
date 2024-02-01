@@ -5,38 +5,42 @@
 package it.innotek.wehub.controller;
 
 import it.innotek.wehub.entity.File;
+import it.innotek.wehub.entity.FileCandidatoId;
 import it.innotek.wehub.entity.staff.FileStaffId;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
+import it.innotek.wehub.repository.FileCandidatoRepository;
 import it.innotek.wehub.repository.FileRepository;
 import it.innotek.wehub.repository.FileStaffRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/files")
 public class FileController {
 
     @Autowired
-    private FileRepository      fileRepository;
+    private FileRepository          fileRepository;
     @Autowired
-    private FileStaffRepository fileStaffRepository;
+    private FileStaffRepository     fileStaffRepository;
+    @Autowired
+    private FileCandidatoRepository fileCandidatoRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    @RequestMapping("/download/file/{id}")
+    @GetMapping("/react/download/file/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public void downloadFile(
         @PathVariable Integer id,
         HttpServletResponse resp
-    ) throws IOException, ElementoNonTrovatoException {
+    ) {
+        logger.info("Download file");
+
         try {
             File   dbFile    = fileRepository.findById(id).get();
             byte[] byteArray = dbFile.getData();
@@ -54,11 +58,14 @@ public class FileController {
         }
     }
 
-    @RequestMapping("/elimina/file/{idf}/{ids}")
+    @DeleteMapping("/react/elimina/file/{idf}/{ids}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String eliminaFile(
         @PathVariable Integer idf,
         @PathVariable Integer ids
     ) {
+        logger.info("Elimina file");
+
         try {
             FileStaffId fileStaffId = new FileStaffId();
             fileStaffId.setIdFile(idf);
@@ -66,13 +73,46 @@ public class FileController {
 
             fileStaffRepository.deleteById(fileStaffId);
 
+            logger.debug("Eliminato riferimento del file allo staff");
+
             fileRepository.deleteById(idf);
 
-            return "redirect:/hr/staff/modifica/" + ids;
+            logger.debug("File eliminato correttamente");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
+        }
+    }
+
+    @DeleteMapping("/react/elimina/file/candidato/{idf}/{idc}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String eliminaFileCandidato(
+        @PathVariable Integer idf,
+        @PathVariable Integer idc
+    ) {
+        logger.info("Elimina file candidato");
+
+        try {
+            FileCandidatoId fileCandidatoId = new FileCandidatoId();
+            fileCandidatoId.setIdFile(idf);
+            fileCandidatoId.setIdCandidato(idc);
+
+            fileCandidatoRepository.deleteById(fileCandidatoId);
+
+            logger.debug("Eliminato riferimento del file al candidato");
+
+            fileRepository.deleteById(idf);
+
+            logger.debug("File eliminato correttamente");
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
         }
     }
 }

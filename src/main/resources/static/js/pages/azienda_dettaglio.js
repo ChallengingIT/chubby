@@ -4,15 +4,15 @@ $(".prospection").click(
     }
 );
 
-$(".information").click(
-    function(){
-        $("#information").toggle();
-    }
-);
+//$(".information").click(
+//    function(){
+//        $("#information").toggle();
+//    }
+//);
 
-$(function() {
-    $('.information').click();
-});
+//$(function() {
+//    $('.information').click();
+//});
 
 $(".qm").click(function(){
 $("#qm").toggle();
@@ -23,3 +23,17 @@ $(".confermaBox").click(function() {
       $("#myModal").modal("show");
   });
 });
+
+function Reset() {
+    document.getElementById("ricercaOwner").value = "";
+    document.getElementById("ricercaTipologia").value = "";
+}
+
+// Please do not use inline event handlers, use this instead:
+document.getElementById("btnReset").onclick = function () {
+    Reset();
+}
+
+$('.list-unstyled li').removeClass('active');
+$('.businessdev').click();
+$('.aziende').addClass('active');

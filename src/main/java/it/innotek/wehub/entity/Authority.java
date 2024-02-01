@@ -21,12 +21,9 @@ import java.util.Objects;
 public class Authority implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 6529685398267757690L;
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @Column(nullable = false, length = 50)
     private String username;
 
@@ -36,8 +33,8 @@ public class Authority implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(
         name = "authorities_user",
-        joinColumns = @JoinColumn(name = "id_authority", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id")
+        joinColumns = @JoinColumn(name = "id_authority", referencedColumnName = "username"),
+        inverseJoinColumns = @JoinColumn(name = "id_user", referencedColumnName = "username")
     )
     @ToString.Exclude
     private User user;
@@ -52,13 +49,13 @@ public class Authority implements Serializable {
             return false;
         }
         Authority authority = (Authority)o;
-        return id != null && Objects.equals(id, authority.id);
+        return username != null && Objects.equals(username, authority.username);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id);
+        return Objects.hash(username);
     }
 
 }

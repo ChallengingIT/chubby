@@ -8,6 +8,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import jakarta.persistence.*;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,12 +21,10 @@ import java.util.Objects;
 @Table( name = "users")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @Column(nullable = false, length = 50)
     private String username;
 
@@ -34,14 +34,21 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Byte enabled;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
         name = "authorities_user",
-        joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_authority", referencedColumnName = "id")
+        joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "username"),
+        inverseJoinColumns = @JoinColumn(name = "id_authority", referencedColumnName = "username")
     )
     @ToString.Exclude
-    private Authority authority;
+    private Authority authority = new Authority();
+
+    public User(String username, String password, Byte enabled) {
+
+        this.username = username;
+        this.password = password;
+        this.enabled  = enabled;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -61,5 +68,4 @@ public class User implements Serializable {
 
         return getClass().hashCode();
     }
-
 }

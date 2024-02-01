@@ -7,13 +7,15 @@ package it.innotek.wehub.entity;
 import it.innotek.wehub.entity.timesheet.Giorno;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Data
 public class Report implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     private String nome;
     private List<Giorno> giorni;

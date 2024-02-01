@@ -17,7 +17,7 @@
     <link th:href="@{/css/mystyle.css}" rel="stylesheet" />
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch" style="overflow: hidden;">
 
@@ -25,49 +25,70 @@
 
   <!-- Page Content  -->
   <div id="content" class="p-4 p-md-5 pt-5">
-    <h1 class="mb-4"><b>Timesheet di [[${meseCorrente}]] [[${annoCorrente}]]</b></h1>
-    <br>
     <div th:if="${message}" class="alert alert-danger text-center" id="success-alert">
       [[${message}]]
     </div>
-    <div>
-      <div class="form-group row">
-        <div class="col">
-          <form th:action="@{'/timesheet/staff/precedente/' + ${idStaff} + '/' + ${annoCorrente} + '/' + ${numeroMese}}" method="get" >
-              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-              <div class="col" ><br>
-              <input type="submit" class="btn btn-primary m-2"
-                     style="height: 40px;width: 173px;font-size: 12px;" value="Mese Precedente">
-            </div>
-          </form>
-        </div>
-        <div class="col">
-          <form th:action="@{'/timesheet/staff/successivo/' + ${idStaff} + '/' + ${annoCorrente} + '/' + ${numeroMese}}" method="get" >
-              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-              <div class="col" style="text-align:right;"><br>
-              <input type="submit" class="btn btn-primary m-2"
-                     style="height: 40px;width: 173px;font-size: 12px;" value="Mese Successivo">
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div>
-        <table class="table table-striped table-bordered table-sm sortable table-responsive-lg"
+      <br><br>
+    <div class="p-5" style="background-color:white;border-radius:15px;">
+        <table class="table table-bordered table-sm sortable table-responsive-lg"
              style="background-color:white; overflow-x:scroll; width: 100%; table-layout: fixed;">
-          <thead class="thead" id="tabella-blu">
+          <thead class="thead" id="tabella-blu" style="background: #eeeeee;color: gray;text-align: center;border-radius: 15px !important;">
+          <div class="row" style="height:5rem; margin-left: 0%; width:100%;">
+              <div class="col-sm-4">
+                  <div class="col-sm-2" style="margin-right: -2%;margin-top: -0.5%;">
+                      <form th:action="@{'/timesheet/staff/precedente/' + ${idStaff} + '/' + ${annoCorrente} + '/' + ${numeroMese}}" method="get" >
+                          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                          <div class="col-sm-16" >
+                              <button type="submit" class="btn btn-primary"
+                                      style="font-size: 25px;color:#ffb700;background-color:white;border: 3px solid;border-radius:10px;">
+                                  <i class="fas fa-chevron-left"></i>
+                              </button>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="col-sm-8 p-2" style="text-align:center;border: 3px solid #ffb700;border-radius: 15px;">
+                      <h3 style="color: gray;">[[${meseCorrente}]] [[${annoCorrente}]] <i class="fas fa-calendar pl-5" style="color:#ffb700;"></i></h3>
+                  </div>
+                  <div class="col-sm-2" style="margin-left: -4%;margin-top: -0.5%;">
+                      <form th:action="@{'/timesheet/staff/successivo/' + ${idStaff} + '/' + ${annoCorrente} + '/' + ${numeroMese}}" method="get" >
+                          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                          <div class="col-sm-16" style="text-align:right;">
+                              <button type="submit" class="btn btn-primary"
+                                      style="font-size: 25px;color:#ffb700;background-color:white;border: 3px solid;border-radius:10px;">
+                                  <i class="fas fa-chevron-right"></i>
+                              </button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+              </div>
+              <div class="col-sm-4" style="text-align:right;">
+                  <span th:if="${meseInviato}">
+                     <button type="button" class="col-3  mr-auto btn btn-lg btn-primary" disabled>Invia</button>
+                  </span>
+                  <span th:unless="${meseInviato}">
+                     <a th:href="@{'/timesheet/staff/salva/'+${idStaff} + '/' + ${annoCorrente} + '/' + ${numeroMese}}">
+                         <button type="button" class="col-3  mr-auto btn btn-lg btn-primary">Invia</button>
+                    </a>
+                  </span>
+              </div>
+          </div>
+          <br>
+          <div>
             <tr>
-              <td style="width: 50% !important; padding-top:1.5%;table-layout: fixed;"> Progetto </td>
+              <td style="width: 50% !important; padding-top:1.5%;table-layout: fixed;text-align:left;"> PROGETTO </td>
               <th:block th:each="i : ${#numbers.sequence(0, #arrays.length(mese.days)/numeroProgetti - 1)}">
                 <td style="width: 5% !important;">[[${mese.days[i*numeroProgetti].giorno}]] <br> [[${mese.days[i*numeroProgetti].iniziale}]]</td>
               </th:block>
             </tr>
+          </div>
           </thead>
-          <tbody id="valori-tabella">
+          <tbody class="valori-tabella">
             <th:block th:each="x : ${listaProgetti}">
               <tr>
                 <td>
-                    <div style="height:20px; overflow:hidden;">
+                    <div style="text-align:left;height:20px; overflow:hidden;">
                         [[${x.description}]]
                     </div>
                 </td>
@@ -203,22 +224,13 @@
                 </th:block>
               </tr>
             </th:block>
+            <tr><td style="text-align:left;border: none;">Totale: [[${totaleOre}]]</td></tr>
+
           </tbody>
         </table>
-        Totale: [[${totaleOre}]]
         <div class="row form-btn-wrapper mt-5" style="text-align:center;">
             <div class="col">
-              <span th:if="${meseInviato}">
-                 <button type="button" class="col-5  mr-auto btn btn-lg btn-primary" disabled>Invia</button>
-              </span>
-              <span th:unless="${meseInviato}">
-                 <a th:href="@{'/timesheet/staff/salva/'+${idStaff} + '/' + ${annoCorrente} + '/' + ${numeroMese}}">
-                     <button type="button" class="col-5  mr-auto btn btn-lg btn-primary">Invia</button>
-                </a>
-              </span>
-            </div>
-            <div class="col">
-                <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+                <a th:href="@{/hr}" class="col-5 btn btn-lg btn-secondary">Indietro</a>
             </div>
         </div>
     </div>

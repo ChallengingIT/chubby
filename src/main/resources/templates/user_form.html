@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 <div class="wrapper d-flex align-items-stretch">
 
     <div th:replace="~{sidebar}">  </div>
@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="col">
                         <label class="col-form-label" for="authorities">Ruolo</label>
-                        <select th:field="*{authority.id.authority}" class="form-control select-medium" id="authorities">
+                        <select th:field="*{authority.authority}" class="form-control select-medium" id="authorities">
                             <option th:value="ROLE_ADMIN" th:text="ADMIN"></option>
                             <option th:value="ROLE_BM" th:text="BM"></option>
                             <option th:value="ROLE_RECRUITER" th:text="RECRUITER"></option>

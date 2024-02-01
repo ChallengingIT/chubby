@@ -6,12 +6,15 @@ package it.innotek.wehub.entity.timesheet;
 
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Map;
 
 @Data
-public class Email {
+public class Email implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     private String from;
     private String to;

@@ -4,12 +4,17 @@
 
 package it.innotek.wehub.entity.staff;
 
-import lombok.*;
-import org.hibernate.Hibernate;
-
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -18,9 +23,10 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Table( name = "skill_staff")
-public class SkillStaff {
+public class SkillStaff  implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @EmbeddedId
     private SkillStaffId id;

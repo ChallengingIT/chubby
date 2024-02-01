@@ -6,20 +6,20 @@ package it.innotek.wehub.controller;
 
 import it.innotek.wehub.entity.*;
 import it.innotek.wehub.repository.*;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Set;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/need")
 public class NeedController {
 
@@ -50,467 +50,230 @@ public class NeedController {
 
     private static final Logger logger = LoggerFactory.getLogger(NeedController.class);
 
-    @RequestMapping
-    public String showNeedList(Model model){
-        try {
-            List<Need> listNeed = needRepository.findAll();
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Need> getAll() {
+        logger.info("Need");
 
-            for (Need need : listNeed) {
-                if (need.getCliente() != null) {
-                    Optional<Cliente> cliente = clienteRepository.findById(need.getCliente().getId());
-                    cliente.ifPresent(need::setCliente);
-                }
+        return needRepository.findAll();
+    }
+
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Need getById(@PathVariable("id") Integer id) {
+        logger.info("Need tramite id");
+
+        return needRepository.findById(id).get();
+    }
+
+    @GetMapping("/react/cliente/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Need> getByIdCliente(@PathVariable("id") Integer id) {
+        logger.info("Need tramite id cliente");
+
+        return needRepository.findByCliente_Id(id);
+    }
+
+    @GetMapping("/react/stato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<StatoN> getAllStato() {
+        logger.info("Stati need");
+
+        return statoNRepository.findAll();
+    }
+
+    @GetMapping("/react/tipologia")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<TipologiaN> getAllTipologia() {
+        logger.info("Tipologie need");
+
+        return tipologiaNRepository.findAll();
+    }
+
+    @PostMapping("/react/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveNeed(
+        @RequestBody Map<String,String> needMap,
+        @RequestParam ("skill1") @Nullable List<Integer> skill1List,
+        @RequestParam ("skill2") @Nullable List<Integer> skill2List
+    ) {
+        logger.info("Salva need");
+
+        try {
+
+            Need need = new Need();
+
+            if(needMap.get("id") != null) {
+                need = needRepository.findById(Integer.parseInt(needMap.get("id"))).get();
             }
 
-            model.addAttribute("listNeed", listNeed);
-            model.addAttribute("needRicerca", new Need());
-            model.addAttribute("needStato", new Need());
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
-
-            return "lista_need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/ricerca")
-    public String showRicercaList(
-        Model model,
-        Need need
-    ) {
-        try {
-            Integer    idCliente   = ( null != need.getCliente() ) ? need.getCliente().getId() : null;
-            Integer    idStato     = ( null != need.getStato() ) ? need.getStato().getId() : null;
-            Integer    idTipologia = ( null != need.getTipologia() ) ? need.getTipologia().getId() : null;
-            Integer    idOwner     = ( null != need.getOwner() ) ? need.getOwner().getId() : null;
-            String     settimana   = ( ( null != need.getWeek() ) && !need.getWeek().isEmpty() ) ? need.getWeek() : null;
-            List<Need> listNeed    = needRepository.ricerca(idCliente, idStato, need.getPriorita(), idTipologia, settimana, idOwner);
-
-            for (Need needFor : listNeed) {
-                Cliente cliente = clienteRepository.findById(needFor.getCliente().getId()).get();
-                needFor.setCliente(cliente);
-            }
-
-            model.addAttribute("listNeed", listNeed);
-            model.addAttribute("needRicerca", need);
-            model.addAttribute("needStato", new Need());
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
-
-            return "lista_need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/{idCliente}")
-    public String showNeedIdList(
-        @PathVariable("idCliente") Integer idCliente,
-        Model model
-    ) {
-        try {
-            Cliente    cliente  = clienteRepository.findById(idCliente).get();
-            List<Need> listNeed = needRepository.findByCliente_Id(idCliente);
-
-            model.addAttribute("listNeed", listNeed);
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("needRicerca", new Need());
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
-
-            return "lista_need_cliente";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/ricerca/{idCliente}")
-    public String showRicercaList(
-        @PathVariable("idCliente") Integer idCliente,
-        Model model,
-        Need need
-    ) {
-        try {
-            Cliente    cliente     = clienteRepository.findById(idCliente).get();
-            Integer    idStato     = ( null != need.getStato() ) ? need.getStato().getId() : null;
-            Integer    idTipologia = ( null != need.getTipologia() ) ? need.getTipologia().getId() : null;
-            String     settimana   = ( ( null != need.getWeek() ) && !need.getWeek().isEmpty() ) ? need.getWeek() : null;
-            Integer    idOwner     = ( null != need.getOwner() ) ? need.getOwner().getId() : null;
-            List<Need> listNeed    = needRepository.ricerca(idCliente, idStato, need.getPriorita(), idTipologia, settimana, idOwner);
-
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("listNeed", listNeed);
-            model.addAttribute("needRicerca", need);
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
-
-            return "lista_need_cliente";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/aggiungi/{idCliente}")
-    public String showNewForm(
-        @PathVariable("idCliente") Integer idCliente,
-        Model model
-    ){
-        try {
-            model.addAttribute("need", new Need());
-            model.addAttribute("idCliente", idCliente);
-            model.addAttribute("titoloPagina", "Aggiungi nuovo need");
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
-
-            return "need_cliente_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/aggiungi")
-    public String showNewForm(Model model){
-        try {
-            model.addAttribute("need", new Need());
-            model.addAttribute("titoloPagina", "Aggiungi nuovo need");
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-
-            return "need_form";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva")
-    public String saveNeed(
-        Need need,
-        RedirectAttributes ra
-    ) {
-        try {
-            Cliente                         cliente      = new Cliente();
-            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(need.getId());
-            List<Candidato>                 candidati    = candidatoRepository.findByNeed_Id(need.getId());
-
-            cliente.setId(need.getCliente().getId());
-
-            need.setCliente(cliente);
-            need.setAssociazioni(associazioni);
-            need.setCandidati(candidati);
+            trasformaMappaInNeed(need, needMap, skill1List, skill2List);
 
             needRepository.save(need);
-            ra.addFlashAttribute("message", "Il need è stato salvato con successo");
-            return "redirect:/need";
+
+            logger.info("Need salvato correttamente");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/salva/stato/{idNeed}")
-    public String saveStatoNeed(
-        @PathVariable("idNeed") Integer idNeed,
-        Need needStato,
-        Model model,
-        RedirectAttributes ra
-    ) {
-        try {
-            Need                            need         = needRepository.findById(idNeed).get();
-            Cliente                         cliente      = new Cliente();
-            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(need.getId());
-            List<Candidato>                 candidati    = candidatoRepository.findByNeed_Id(need.getId());
-
-            need.setStato(needStato.getStato());
-
-            cliente.setId(need.getCliente().getId());
-
-            need.setCliente(cliente);
-            need.setAssociazioni(associazioni);
-            need.setCandidati(candidati);
-
-            needRepository.save(need);
-            ra.addFlashAttribute("message", "Il need è stato salvato con successo");
-            return "redirect:/need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/salva/{idCliente}")
-    public String saveNeed(
-        @PathVariable("idCliente") Integer idCliente,
-        Need need,
-        RedirectAttributes ra
-    ) {
-        try {
-            Cliente                         cliente      = new Cliente();
-            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(need.getId());
-            List<Candidato>                 candidati    = candidatoRepository.findByNeed_Id(need.getId());
-
-            cliente.setId(idCliente);
-            need.setCliente(cliente);
-            need.setAssociazioni(associazioni);
-            need.setCandidati(candidati);
-
-            needRepository.save(need);
-            ra.addFlashAttribute("message", "Il need è stato salvato con successo");
-            return "redirect:/need/" + idCliente;
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/modifica/{idCliente}/{id}")
-    public String showEditForm(
-        @PathVariable("idCliente") Integer idCliente,
+    @PostMapping("/react/salva/stato/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveNeedStato(
         @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ){
+        @RequestParam ("stato") Integer idStato
+    ) {
+        logger.info("Salva cambio stato need");
+
         try {
+
             Need need = needRepository.findById(id).get();
 
-            model.addAttribute("need", need);
-            model.addAttribute("idCliente", idCliente);
-            model.addAttribute("titoloPagina", "Modifica need");
-            model.addAttribute("listaLivelliScolastici", livelloRepository.findAll());
-            model.addAttribute("listaSkillOrdinata", skillRepository.findAll());
-            model.addAttribute("listaTipologieN", tipologiaNRepository.findAll());
-            model.addAttribute("listaOwner", ownerRepository.findAll());
-            model.addAttribute("listaStatiN", statoNRepository.findAll());
+            StatoN stato = new StatoN();
+            stato.setId(idStato);
 
-            return "need_cliente_form";
+            need.setStato(stato);
+
+            needRepository.save(need);
+
+            logger.info("Cambio stato salvato correttamente");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/elimina/{idCliente}/{id}")
+    @DeleteMapping("/react/elimina/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String deleteNeed(
-        @PathVariable("idCliente") Integer idCliente,
-        @PathVariable("id") Integer id,
-        RedirectAttributes ra
+        @PathVariable("id") Integer id
     ){
-        try {
-            Need need = needRepository.findById(id).get();
+        logger.info("Elimina need");
 
-            for (AssociazioneCandidatoNeed associazione : need.getAssociazioni()) {
+        try {
+
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_Id(id);
+
+            for(AssociazioneCandidatoNeed associazione : associazioni) {
                 associazioniRepository.deleteById(associazione.getId());
+
+                logger.debug("Associazione " + associazione.getId() + " eliminata");
             }
 
             needRepository.deleteById(id);
-            ra.addFlashAttribute("message", "Il need è stato cancellato con successo");
 
-            return "redirect:/need/" + idCliente;
+            logger.debug("Need eliminato correttamente");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/match/{idNeed}")
-    public String showMatchForm(
-        @PathVariable("idNeed") Integer idNeed,
-        Model model
-    ) {
-        try {
-            model.addAttribute("need", needRepository.findById(idNeed).get());
-            model.addAttribute("titoloPagina", "Match del need");
-            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.findCandidatiNonAssociati(idNeed));
-            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
-            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("candidatoRicerca", new Candidato());
-
-            return "liste_match_need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/ricerca/match/{idNeed}")
-    public String showRicercaMatchForm(
-        @PathVariable("idNeed") Integer idNeed,
-        Model model,
-        Candidato candidato
-    ) {
-        try {
-            Integer idTipologia         = ( null != candidato.getTipologia() ) ? candidato.getTipologia().getId() : null;
-            Integer idTipo              = ( null != candidato.getTipo() ) ? candidato.getTipo().getId() : null;
-            String  nome                = ( ( null != candidato.getNome() ) && !candidato.getNome().isEmpty() ) ? candidato.getNome() : null;
-            String  cognome             = ( ( null != candidato.getCognome() ) && !candidato.getCognome().isEmpty() ) ? candidato.getCognome() : null;
-            Double  anniEsperienzaRuolo = ( null != candidato.getAnniEsperienzaRuolo() ) ? candidato.getAnniEsperienzaRuolo() : null;
-            Integer anniMinimi          = null;
-            Integer anniMassimi         = null;
-
-            if (null != anniEsperienzaRuolo) {
-                if (anniEsperienzaRuolo == 0) {
-                    anniMassimi = 1;
-                } else if (anniEsperienzaRuolo == 1) {
-                    anniMinimi  = 1;
-                    anniMassimi = 2;
-                } else if (anniEsperienzaRuolo == 2) {
-                    anniMinimi  = 2;
-                    anniMassimi = 5;
-                } else {
-                    anniMinimi = 5;
-                }
-            }
-
-            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.ricercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi));
-
-            model.addAttribute("need", needRepository.findById(idNeed).get());
-            model.addAttribute("titoloPagina", "Match del need");
-            model.addAttribute("candidatoRicerca", candidato);
-            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
-            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            return "liste_match_need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/associa/staffing/{idNeed}/{idCandidato}")
-    public String showAssociaCandidatiForm(
-        @PathVariable("idNeed") Integer idNeed,
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model,
-        RedirectAttributes ra
+    @GetMapping("/react/storico/{idNeed}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<AssociazioneCandidatoNeed> findByIdNeed(
+        @PathVariable("idNeed") Integer idNeed
     ){
-        try {
-            AssociazioneCandidatoNeed associazione = new AssociazioneCandidatoNeed();
-            Candidato                 candidato    = candidatoRepository.findById(idCandidato).get();
-            long                      millis       = System.currentTimeMillis();
-            Need                      need         = needRepository.findById(idNeed).get();
-            StatoA                    statoa       = new StatoA();
+        logger.info("Storico associazioni need");
 
-            statoa.setId(1);
-            statoa.setDescrizione("Pool");
-            associazione.setCandidato(candidato);
-            associazione.setNeed(need);
-            associazione.setStato(statoa);
-            associazione.setDataModifica(new Date(millis));
-            associazione.setOwner(need.getOwner());
-
-            associazioniRepository.save(associazione);
-
-            candidato.getNeeds().add(need);
-            candidatoRepository.save(candidato);
-
-            model.addAttribute("need", need);
-            model.addAttribute("titoloPagina", "Match del need");
-            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.findCandidatiNonAssociati(idNeed));
-            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
-            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("candidatoRicerca", new Candidato());
-
-            return "redirect:/need/match/" + idNeed;
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return associazioniRepository.findByNeed_Id(idNeed);
     }
 
-    @RequestMapping("/rimuovi/staffing/{idNeed}/{idCandidato}")
-    public String showRimuoviCandidatiForm(
-        @PathVariable("idNeed") Integer idNeed,
-        @PathVariable("idCandidato") Integer idCandidato,
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            Need      need      = needRepository.findById(idNeed).get();
-            Candidato candidato = candidatoRepository.findById(idCandidato).get();
-
-            candidato.getNeeds().remove(need);
-            need.getCandidati().remove(candidato);
-
-            candidatoRepository.save(candidato);
-            needRepository.save(need);
-
-            model.addAttribute("need", need);
-            model.addAttribute("titoloPagina", "Match del need");
-            model.addAttribute("listCandidatiNonAssociati", candidatoRepository.findCandidatiNonAssociati(idNeed));
-            model.addAttribute("listCandidatiAssociati", candidatoRepository.findCandidatiAssociati(idNeed));
-            model.addAttribute("listAssociazioniNeed", associazioniRepository.findByNeed_Id(idNeed));
-            model.addAttribute("listaTipologie", tipologiaRepository.findAll());
-            model.addAttribute("listaTipi", tipoRepository.findAll());
-            model.addAttribute("listaStatiC", statoCRepository.findAllByOrderByIdAsc());
-            model.addAttribute("candidatoRicerca", new Candidato());
-
-            return "liste_match_need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
-    }
-
-    @RequestMapping("/associazioni/{idNeed}")
-    public String showNeedAssociazioniList(
-        @PathVariable("idNeed") Integer idNeed,
-        Model model
+    @GetMapping("/react/match/associabili/{idNeed}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Candidato> showMatchForm(
+        @PathVariable("idNeed") Integer idNeed
     ) {
-        try {
-            Need                            need             = needRepository.findById(idNeed).get();
-            List<AssociazioneCandidatoNeed> listAssociazioni = associazioniRepository.findByNeed_Id(idNeed);
+        logger.info("Candidati non associati al need");
 
-            model.addAttribute("listAssociazioni", listAssociazioni);
-            model.addAttribute("need", need);
+        return candidatoRepository.findCandidatiNonAssociati(idNeed);
 
-            return "lista_associazioni_need";
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
     }
+
+    @GetMapping("/react/match/associati/{idNeed}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Candidato> showMatchAssociatiForm(
+        @PathVariable("idNeed") Integer idNeed
+    ) {
+        logger.info("Candidati associati al need");
+
+        return candidatoRepository.findCandidatiAssociati(idNeed);
+
+    }
+
+    public void trasformaMappaInNeed(Need need, Map<String,String> needMap, List<Integer> skill1List, List<Integer> skill2List) {
+        logger.debug("Trasforma mappa in need");
+
+        need.setAnniEsperienza(needMap.get("anniEsperienza") != null ? Integer.parseInt(needMap.get("anniEsperienza")) : null);
+        need.setNumeroRisorse(needMap.get("numeroRisorse") != null ? Integer.parseInt(needMap.get("numeroRisorse")) : null);
+        need.setNote(needMap.get("note") != null ? needMap.get("note") : null);;
+        need.setDescrizione(needMap.get("descrizione") != null ? needMap.get("descrizione") : null);
+        need.setLocation(needMap.get("location") != null ? needMap.get("location") : null);
+        need.setTipo(needMap.get("tipo") != null ? Integer.parseInt(needMap.get("tipo")) : null);
+
+        if (needMap.get("idAzienda") != null) {
+            Cliente cliente = new Cliente();
+            cliente.setId(Integer.parseInt(needMap.get("idAzienda")));
+
+            need.setCliente(cliente);
+        }
+
+        need.setWeek(needMap.get("week") != null ? needMap.get("week") : null);
+        need.setDataRichiesta(needMap.get("dataRichiesta") != null ? Date.valueOf(needMap.get("dataRichiesta")) : null);
+        need.setPriorita(needMap.get("priorita") != null ? Integer.parseInt(needMap.get("priorita")) : null);
+
+        if (needMap.get("idOwner") != null) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(needMap.get("idOwner")));
+
+            need.setOwner(owner);
+        }
+
+        if (needMap.get("stato") != null) {
+            StatoN stato = new StatoN();
+            stato.setId(Integer.parseInt(needMap.get("stato")));
+
+            need.setStato(stato);
+        }
+
+        if (needMap.get("tipologia") != null) {
+            TipologiaN tipologia = new TipologiaN();
+            tipologia.setId(Integer.parseInt(needMap.get("tipologia")));
+
+            need.setTipologia(tipologia);
+        }
+
+        Set<Skill> skill1ListNew = new HashSet<>();
+
+        for (Integer skillId: skill1List) {
+            Skill skill = new Skill();
+            skill.setId(skillId);
+
+            skill1ListNew.add(skill);
+        }
+
+        need.setSkills(skill1ListNew);
+
+        Set<Skill> skill2ListNew = new HashSet<>();
+
+        for (Integer skillId: skill2List) {
+            Skill skill = new Skill();
+            skill.setId(skillId);
+
+            skill2ListNew.add(skill);
+        }
+
+        need.setSkills2(skill2ListNew);
+    }
+
 }

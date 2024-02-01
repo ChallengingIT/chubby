@@ -4,5 +4,15 @@ $(document).ready(function() {
     }, 5000);
 });
 
-$('li').removeClass('active');
-$('#hr').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('#progetti').addClass('active');
+
+function Reset() {
+    document.getElementById("staff").value = "";
+    document.getElementById("cliente").value = "";
+}
+
+// Please do not use inline event handlers, use this instead:
+document.getElementById("btnReset").onclick = function () {
+    Reset();
+}

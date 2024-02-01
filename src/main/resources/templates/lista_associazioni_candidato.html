@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -27,68 +27,85 @@
     <div id="content" class="p-4 p-md-5 pt-5">
         <h1 class="mb-4"><b>Lista Match per [[${candidato.nome}]] [[${candidato.cognome}]]</b></h1>
         <br>
-        <div>
+        <div style="margin-left:1%;">
             <form th:action="@{/associazioni/ricerca/} + ${candidato.id}" method="get" th:object="${associazioneRicerca}">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <div class="form-group row">
-                    <div class="col" >
-                        <label class="col-sm-16 col-form-label">Cliente</label>
-                        <select th:field="*{need.cliente.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
+                <div class="row rowFind">
+                    <div class="col-3">
+                        <select th:field="*{need.cliente.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="cliente">
+                            <option th:value="null">Azienda</option>
                             <option th:each="i : ${listaAziende}" th:value="${i.getId()}" th:text="${i.getDenominazione()}"></option>
                         </select>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Stato</label>
-                        <select th:field="*{stato.id}" class="form-control">
-                            <option th:value="null" th:text="---"></option>
+                    <div class="col-3">
+                        <select th:field="*{stato.id}" class="form-control backSimilWhiteColorGray borderRadius18" id="stato">
+                            <option th:value="null">Stato</option>
                             <option th:each="i : ${listaStatiA}" th:value="${i.getId()}" th:text="${i.getDescrizione()}"></option>
                         </select>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Data Modifica al </label>
-                        <input type="date" th:field="*{dataModifica}" class="form-control" id="theDate"/>
+                    <div class="col-3">
+                        <input type="date" th:field="*{dataModifica}" class="form-control backSimilWhiteColorGray borderRadius18"
+                               placeholder="Data Modifica" id="theDate"/>
                     </div>
-                    <div class="col" style="margin-left:15px;"><br>
-                        <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
+                    <div class="col-3" style="text-align:center;">
+                        <a href="#" id="btnReset">Ripristina</a>
+                        <input type="submit" class="btn btn-primary m-2" id="btnFind3" value="Cerca">
                     </div>
                 </div>
             </form>
         </div>
+        <br><br>
         <div>
-            <h2 class="mb-4"><b>Lista di need associabili a [[${candidato.nome}]] [[${candidato.cognome}]]</b></h2>
-                <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
-                    <label class="col-sm-16 col-form-label">Numero di righe</label>
-                    <select class="form-control maxRows" name="state">
-                        <option value="5000">Show ALL Rows</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="70">70</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"   style="background-color:white;">
-                <thead class="thead" id="tabella-blu">
-                <tr class="tr1">
-                    <th>Need</th>
-                    <th>Cliente</th>
-                    <th>Priorità</th>
-                    <th>Stato</th>
-                    <th>Descrizione</th>
-                    <th>Week</th>
-                    <th>Azioni</th>
-                </tr>
+            <div class="table-responsive-sm">
+                <table class="table table-sm sortable" style="background-color:#f9f9f9;border-radius:25px;">
+                <thead id="tabella-new">
+                    <tr class="tr1 noborder">
+                        <td colspan="1" style="padding-top: 2%;">
+                            <div class="row">
+                                <h1 style="color:grey;" class="pl-5"><b>Need Associabili</b></h1>
+                            </div>
+                        </td>
+                        <td colspan="5" style="padding-top: 2%;">
+                            <div class="row"> 	<!--		Show Numbers Of Rows 		-->
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label style="padding-left: 35%;padding-top: 6%;">Numero di righe:</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <select class="form-control maxRows" style="border-radius:20px;" name="state">
+                                        <option value="5000">Show ALL Rows</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="70">70</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tr1 noborder boxShadow2">
+                        <th class="pl-5">Cliente</th>
+                        <th>Descrizione</th>
+                        <th>Priorità</th>
+                        <th>Stato</th>
+                        <th>Week</th>
+                        <th>Azioni</th>
+                    </tr>
                 </thead>
-                <tbody  class="table1" id="valori-tabella">
+                <tbody  class="table1 boxShadow">
                 <th:block th:each="need : ${listNeed}">
-                    <tr class="tr1">
-                        <td>[[${need.descrizione}]]</a></td>
-                        <td>[[${need.cliente.denominazione}]]</td>
+                    <tr class="tr1 noborder">
+                        <td class="pl-5">
+                            [[${need.cliente.denominazione}]]
+                        </td>
+                        <td>[[${need.descrizione}]]</td>
                         <td>[[${need.priorita}]]</td>
                         <td>[[${need.stato.descrizione}]]</td>
-                        <td>[[${need.descrizione}]]</td>
                         <td>[[${need.week}]]</td>
                         <td>
                             <a th:href="@{'/associazioni/associa/' + ${need.id} +'/'+  ${candidato.id}}"
@@ -97,79 +114,125 @@
                     </tr>
                 </th:block>
                 </tbody>
-            </table>
-                <div class='pagination-container' >
-                    <nav>
-                        <ul class="pagination">
+                    <tfoot>
+                    <tr>
+                        <td colspan="6" style="padding:0px;">
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3" style="padding-left: 3%">
+                                    <div class='pagination-container' >
+                                        <nav>
+                                            <ul class="pagination">
 
-                            <li data-page="prev" >
-                                <span> < <span class="sr-only">(current)</span></span>
-                            </li>
-                            <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev">
-                                <span> > <span class="sr-only">(current)</span></span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                                                <li data-page="prev" >
+                                                    <span> < <span class="sr-only">(current)</span></span>
+                                                </li>
+                                                <!--	Here the JS Function Will Add the Rows -->
+                                                <li data-page="next" class="prev">
+                                                    <span> > <span class="sr-only">(current)</span></span>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+            </table>
+            </div>
         </div>
-        <br>
+        <br><br>
         <div>
-            <h2 class="mb-4"><b>Lista Associazioni del Candidato</b></h2>
-            <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
-                    <label class="col-sm-16 col-form-label">Numero di righe</label>
-                    <select class="form-control maxRows2" name="state">
-                        <option value="5000">Show ALL Rows</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="70">70</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"  style="background-color:white;">
-                <thead class="thead" id="tabella-blu-due">
-                <tr class="tr2">
-                    <th>Need</th>
-                    <th>Cliente</th>
-                    <th>Priorità</th>
-                    <th>Stato</th>
-                    <th>Week</th>
-                </tr>
+            <div class="table-responsive-sm">
+                <table class="table table-sm sortable"  style="background-color:#f9f9f9;border-radius:25px;">
+                <thead id="tabella-new-due">
+                    <tr class="tr2 noborder">
+                        <td colspan="2" style="padding-top: 2%;">
+                            <div class="row">
+                                <h1 style="color:grey;" class="pl-5"><b>Need Associati</b></h1>
+                            </div>
+                        </td>
+                        <td colspan="3" style="padding-top: 2%;">
+                            <div class="row"> 	<!--		Show Numbers Of Rows 		-->
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label style="padding-left: 26%;padding-top: 6%;">Numero di righe:</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <select class="form-control maxRows2" style="border-radius:20px;" name="state">
+                                        <option value="5000">Show ALL Rows</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="70">70</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tr2 noborder boxShadow2">
+                        <th class="pl-5">Cliente</th>
+                        <th>Need</th>
+                        <th>Priorità</th>
+                        <th>Stato</th>
+                        <th>Week</th>
+                    </tr>
                 </thead>
                 <!--Lista dei need già associati al candidato-->
-                <tbody class="table2" id="valori-tabella-due">
+                <tbody class="table2 boxShadow">
                 <th:block th:each="associazione : ${listAssociazioni}">
-                    <tr class="tr2">
-                        <td>[[${associazione.need.descrizione}]]</a></td>
-                        <td>[[${associazione.need.cliente.denominazione}]]</td>
+                    <tr class="tr2 noborder">
+                        <td class="pl-5">
+                            [[${associazione.need.cliente.denominazione}]]
+                        </td>
+                        <td>[[${associazione.need.descrizione}]]</td>
                         <td>[[${associazione.need.priorita}]]</td>
                         <td>[[${associazione.stato.descrizione}]]</td> <!-- DA VEDERE -->
                         <td>[[${associazione.need.week}]]</td>
                     </tr>
                 </th:block>
                 </tbody>
-            </table>
-                <div class='pagination-container' >
-                    <nav>
-                        <ul class="pagination2">
+                    <tfoot>
+                    <tr>
+                        <td colspan="5" style="padding:0px;">
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3" style="padding-left: 3%">
+                                    <div class='pagination-container' >
+                                        <nav>
+                                            <ul class="pagination2">
 
-                            <li data-page="prev" >
-                                <span> < <span class="sr-only">(current)</span></span>
-                            </li>
-                            <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev2">
-                                <span> > <span class="sr-only">(current)</span></span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                                                <li data-page="prev" >
+                                                    <span> < <span class="sr-only">(current)</span></span>
+                                                </li>
+                                                <!--	Here the JS Function Will Add the Rows -->
+                                                <li data-page="next" class="prev2">
+                                                    <span> > <span class="sr-only">(current)</span></span>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+            </table>
+            </div>
         </div>
         <div class="row form-btn-wrapper mt-5" style="text-align:center;">
             <div class="col">
-                <button type="button" class="col-5  ml-auto btn btn-lg btn-secondary"
-                        id="bottoneIndietro">Indietro</button>
+                <a th:href="@{/staffing/ricerca} + '?email=' + ${candidato.email}" class="col-5  ml-auto btn btn-lg btn-secondary">Indietro</a>
             </div>
         </div>
     </div>

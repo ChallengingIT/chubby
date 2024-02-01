@@ -4,5 +4,16 @@ $(document).ready(function() {
     }, 5000);
 });
 
-$('li').removeClass('active');
-$('#tesoreria').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.amministrazione').click();
+$('.tesoreria').addClass('active');
+
+function Reset() {
+    document.getElementById("anno").value = "";
+    document.getElementById("mese").value = "";
+}
+
+// Please do not use inline event handlers, use this instead:
+document.getElementById("btnReset").onclick = function () {
+    Reset();
+}

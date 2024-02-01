@@ -1,5 +1,5 @@
-$('li').removeClass('active');
-$('.fornitori').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.dipendenti').addClass('active');
 
 $(document).ready(function() {
     setTimeout(function() {

@@ -7,6 +7,7 @@ package it.innotek.wehub.entity;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
@@ -16,7 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OccorrenzeOwner implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     private String descrizione;
 

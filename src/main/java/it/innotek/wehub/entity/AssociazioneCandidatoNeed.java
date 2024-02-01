@@ -4,13 +4,14 @@
 
 package it.innotek.wehub.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
@@ -23,38 +24,12 @@ import java.util.Objects;
 @Table( name = "associazione_candidato_need")
 public class AssociazioneCandidatoNeed implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "candidato_associazione",
-            joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Candidato candidato;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "need_associazione",
-            joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Need need;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "owner_associazione",
-        joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Owner owner;
 
     @Column(nullable = false, name = "data_modifica")
     private Date dataModifica;
@@ -67,6 +42,33 @@ public class AssociazioneCandidatoNeed implements Serializable {
     )
     @ToString.Exclude
     private StatoA stato;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "candidato_associazione",
+        joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Candidato candidato;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "need_associazione",
+        joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Need need;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "owner_associazione",
+        joinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Owner owner;
 
     @Override
     public boolean equals(Object o) {

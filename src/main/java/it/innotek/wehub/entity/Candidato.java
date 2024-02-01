@@ -4,13 +4,14 @@
 
 package it.innotek.wehub.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
@@ -23,7 +24,8 @@ import java.util.*;
 @Table( name = "candidato")
 public class Candidato implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,6 +79,15 @@ public class Candidato implements Serializable {
     @ToString.Exclude
     private Tipologia tipologia;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "file_candidato",
+        joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<File> files = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "skill_candidato",
@@ -85,15 +96,6 @@ public class Candidato implements Serializable {
     )
     @ToString.Exclude
     private Set<Skill> skills = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "file_candidato",
-            joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<File> files = new ArrayList<>();
 
     @Column(length = 4000, name = "note")
     private String note;
@@ -119,15 +121,6 @@ public class Candidato implements Serializable {
     @Column(length = 100, name = "ral_tariffa")
     private String ral;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "candidato_intervista",
-            joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_intervista", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Set<Intervista> intervista = new HashSet<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tipo_candidato",
@@ -145,24 +138,6 @@ public class Candidato implements Serializable {
     )
     @ToString.Exclude
     private Facolta facolta;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "need_candidato",
-        joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<Need> needs = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "candidato_associazione",
-            joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<AssociazioneCandidatoNeed> associazioni = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(

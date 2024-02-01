@@ -1,4 +1,4 @@
-$('li').removeClass('active');
+$('.list-unstyled li').removeClass('active');
 $('.need').addClass('active');
 
 var expanded = false;

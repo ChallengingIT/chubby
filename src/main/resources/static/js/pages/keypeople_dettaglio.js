@@ -1,7 +1,3 @@
-$(".prospection").click(function(){
-  $("#prospection").toggle();
-});
-
-$(".qm").click(function(){
-  $("#qm").toggle();
-});
+$('.list-unstyled li').removeClass('active');
+$('.businessdev').click();
+$('.keypeople').addClass('active');

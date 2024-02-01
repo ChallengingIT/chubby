@@ -1,5 +1,5 @@
 function myFunction(){
-  history.back();
+  history.go(-1);
 }
 const btn = document.getElementById("bottoneIndietro");
 

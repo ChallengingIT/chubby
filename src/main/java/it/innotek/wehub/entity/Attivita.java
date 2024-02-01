@@ -4,13 +4,14 @@
 
 package it.innotek.wehub.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -23,7 +24,8 @@ import java.util.Objects;
 @Table( name = "attivita")
 public class Attivita implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,24 +33,6 @@ public class Attivita implements Serializable {
 
     @Column(length = 4000)
     private String note;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "attivita_cliente",
-        joinColumns = @JoinColumn(name = "id_attivita", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Cliente cliente;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "attivita_key_people",
-        joinColumns = @JoinColumn(name = "id_attivita", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private KeyPeople keyPeople;
 
     @Column
     private OffsetDateTime data;
@@ -61,6 +45,25 @@ public class Attivita implements Serializable {
     )
     @ToString.Exclude
     private TipologiaAttivita tipologia;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "attivita_cliente",
+        joinColumns = @JoinColumn(name = "id_attivita", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+
+    )
+    @ToString.Exclude
+    private Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "attivita_key_people",
+        joinColumns = @JoinColumn(name = "id_attivita", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private KeyPeople      keyPeople;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(

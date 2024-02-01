@@ -14,6 +14,9 @@ import java.util.List;
 @Repository
 public interface AttivitaRepository extends JpaRepository<Attivita,Integer> {
 
+    List<Attivita> findByCliente_Id(Integer idCliente);
+    List<Attivita> findByKeyPeople_Id(Integer idKeyPeople);
+
     @Query(value= """
          SELECT a.*, ta.id_tipologia, oa.id_owner, ac.id_cliente,
            (ifnull ((select id_key_people from attivita_key_people where id_attivita = a.id),null)) id_key_people

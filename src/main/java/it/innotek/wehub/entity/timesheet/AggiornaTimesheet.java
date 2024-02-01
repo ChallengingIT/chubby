@@ -7,12 +7,15 @@ package it.innotek.wehub.entity.timesheet;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-public class AggiornaTimesheet {
+public class AggiornaTimesheet  implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     private Integer ore;
 

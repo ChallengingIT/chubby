@@ -24,4 +24,8 @@ public interface FornitoreRepository extends JpaRepository<Fornitore, Integer> {
     List<Fornitore> ricercaByDenominazioneAndReferenteAndEmail(String denominazione, String referente, String email);
 
     List<Fornitore> findByDenominazione(String denominazione);
+
+    List<Fornitore> findAllByDenominazioneContainingIgnoreCase(String term);
+
+
 }

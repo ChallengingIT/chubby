@@ -4,12 +4,18 @@
 
 package it.innotek.wehub.entity.timesheet;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,7 +25,8 @@ import java.util.*;
 @Table( name = "mese")
 public class Mese implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,15 +48,6 @@ public class Mese implements Serializable {
     )
     @ToString.Exclude
     private List<Giorno> days = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinTable(
-        name = "anno_mese",
-        joinColumns = @JoinColumn(name = "id_mese", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_anno", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Anno anno;
 
     @Override
     public boolean equals(Object o) {

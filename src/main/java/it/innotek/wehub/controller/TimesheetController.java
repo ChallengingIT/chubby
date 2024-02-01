@@ -4,33 +4,27 @@
 
 package it.innotek.wehub.controller;
 
+import it.innotek.wehub.entity.Timesheet;
 import it.innotek.wehub.entity.staff.Staff;
 import it.innotek.wehub.entity.timesheet.*;
-import it.innotek.wehub.exception.ElementoNonTrovatoException;
 import it.innotek.wehub.repository.MeseRepository;
 import it.innotek.wehub.repository.ProgettoRepository;
 import it.innotek.wehub.repository.StaffRepository;
 import it.innotek.wehub.util.UtilLib;
-import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/timesheet")
 public class TimesheetController {
 
@@ -43,19 +37,23 @@ public class TimesheetController {
 
     private static final Logger logger = LoggerFactory.getLogger(TimesheetController.class);
 
-    @PreAuthorize("hasRole(@roles.USER)")
-    @RequestMapping("/user")
-    public String timesheet(Model model) {
+    @GetMapping("/user/{anno}/{mese}")
+    //@PreAuthorize("hasRole('USER')")
+    public Timesheet timesheetUser(
+        @PathVariable("anno") Integer annoI,
+        @PathVariable("mese") Integer meseI,
+        @RequestParam("username") String username
+    ) throws Exception {
+        logger.debug("timesheet user");
+
         try {
-            Authentication auth     = SecurityContextHolder.getContext().getAuthentication();
-            String         username = ( (User)auth.getPrincipal() ).getUsername();
+
             Staff          staff    = staffRepository.findByUsername(username);
-            LocalDate      local    = LocalDate.now();
-            Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), local.getYear());
+            Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
             Mese           mese;
 
             if (null != anno) {
-                mese = UtilLib.prendiMese(anno.getMesi(), local.getMonthValue());
+                mese = UtilLib.prendiMese(anno.getMesi(), meseI);
 
                 if (null == mese) {
                     mese = UtilLib.ordinaMesi(anno.getMesi()).stream().findFirst().get();
@@ -68,7 +66,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(staff.getId());
 
             mese.setDays(giorni);
 
@@ -83,40 +81,38 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(anno.getAnno(), mese.getValue(), UtilLib.calcolaFineMese(mese.getValue(), anno.getAnno()));
 
-            model.addAttribute("mese", mese);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(mese.getDescription()));
-            model.addAttribute("meseInviato", mese.isInviato());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("numeroMese", mese.getValue());
-            model.addAttribute("annoCorrente", anno.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", staff.getId());
-            model.addAttribute("totaleOre", UtilLib.contaOre(mese.getDays()));
+            Timesheet timesheet = new Timesheet();
 
-            if (null != model.getAttribute("message")) {
-                model.addAttribute("message", model.getAttribute("message"));
-            }
-            return "timesheet_user";
+            timesheet.setAnnoCorrente(anno.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(mese);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(mese.getDescription()));
+            timesheet.setMeseInviato(mese.isInviato());
+            timesheet.setNumeroMese(mese.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(mese.getDays()));
+
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @PreAuthorize("hasRole(@roles.USER)")
-    @RequestMapping("/user/{anno}/{mese}")
-    public String timesheet(
+    //@PreAuthorize("hasRole('USER')")
+    @GetMapping("/react/user/{anno}/{mese}")
+    public Timesheet timesheet(
         @PathVariable("anno") Integer annoI,
         @PathVariable("mese") Integer meseI,
-        Model model
-    ) {
+        @RequestParam("username") String username
+    )
+        throws Exception {
+        logger.debug("timesheet user anno mese");
+
         try {
-            Authentication auth     = SecurityContextHolder.getContext().getAuthentication();
-            String         username = ( (User)auth.getPrincipal() ).getUsername();
             Staff          staff    = staffRepository.findByUsername(username);
             Anno           anno     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
             Mese           mese;
@@ -134,7 +130,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(staff.getId());
 
             mese.setDays(giorni);
 
@@ -149,48 +145,92 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(anno.getAnno(), mese.getValue(), UtilLib.calcolaFineMese(mese.getValue(), anno.getAnno()));
 
-            model.addAttribute("mese", mese);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(mese.getDescription()));
-            model.addAttribute("meseInviato", mese.isInviato());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("numeroMese", mese.getValue());
-            model.addAttribute("annoCorrente", anno.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", staff.getId());
-            model.addAttribute("totaleOre", UtilLib.contaOre(mese.getDays()));
 
-            if (null != model.getAttribute("message")) {
-                model.addAttribute("message", model.getAttribute("message"));
-            }
+            Timesheet timesheet = new Timesheet();
 
-            return "timesheet_user";
+            timesheet.setAnnoCorrente(anno.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(mese);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(mese.getDescription()));
+            timesheet.setMeseInviato(mese.isInviato());
+            timesheet.setNumeroMese(mese.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(mese.getDays()));
+
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @RequestMapping("/user/aggiorna/{id}/{anno}/{mese}")
-    public String aggiornaTimesheet(
-        @PathVariable("id") Integer id,
+    @GetMapping("/react/user/primo")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String primoTimesheetUser(
+        @RequestParam("username") String username
+    ) {
+        Staff staff = staffRepository.findByUsername(username);
+
+        Anno anno = UtilLib.prendiPrimoAnno(staff.getTimesheet().getAnni());
+        Mese mese = null;
+
+        if(null != anno) {
+            mese = UtilLib.prendiPrimoMese(anno.getMesi());
+        }
+
+        String primo = "";
+
+        if (null != anno && null != mese) {
+            primo = mese.getValue() + "-" + anno.getAnno();
+        }
+
+        return primo;
+    }
+
+    @GetMapping("/react/staff/primo/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String primoTimesheet(
+        @PathVariable("id") Integer id
+    ) {
+        Staff staff = staffRepository.findById(id).get();
+
+        Anno anno = UtilLib.prendiPrimoAnno(staff.getTimesheet().getAnni());
+        Mese mese = null;
+
+        if(null != anno) {
+            mese = UtilLib.prendiPrimoMese(anno.getMesi());
+        }
+
+        String primo = "";
+
+        if (null != anno && null != mese) {
+            primo = mese.getValue() + "-" + anno.getAnno();
+        }
+
+        return primo;
+    }
+
+    @PostMapping("/react/user/cancella/{anno}/{mese}")
+    //@PreAuthorize("hasRole('USER')")
+    public String cancellaTimesheet(
         @PathVariable("anno") Integer annoI,
         @PathVariable("mese") Integer meseI,
-        AggiornaTimesheet aggiorna,
-        Model model,
-        RedirectAttributes ra
+        @RequestParam("username") String username,
+        @RequestBody Map<String,String> aggiornaMap
     ) {
+        logger.debug("timesheet user cancella");
+
         try {
-            Staff  staff     = staffRepository.findById(id).get();
-            String controllo = controllaAggiornamento(aggiorna);
+            Staff             staff     = staffRepository.findByUsername(username);
+            AggiornaTimesheet aggiorna  = trasformaMappaInAggiorna(aggiornaMap);
+            /*String            controllo = controllaAggiornamento(aggiorna);
 
             if (!controllo.equals("")) {
-                ra.addFlashAttribute("message", controllo);
-                return "redirect:/timesheet/user/" + annoI + "/" + meseI;
-            }
+                return controllo;
+            }*/
             if (null == aggiorna.getDataFinePeriodo()) {
 
                 Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
@@ -204,10 +244,7 @@ public class TimesheetController {
 
                 if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 || ( Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 && Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1 )) {
 
-                    ra.addFlashAttribute("message", "Il range di date supera un mese");
-
-                    return "redirect:/timesheet/user/" + annoI + "/" + meseI;
-
+                    return "Il range di date supera un mese";
                 }
 
                 Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
@@ -231,18 +268,88 @@ public class TimesheetController {
 
             staffRepository.save(staff);
 
-            return "redirect:/timesheet/user/" + annoI + "/" + meseI;
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/user/successivo/{id}/{anno}/{mese}")
-    public String getTimesheetSuccessivo(@PathVariable("id") Integer id, @PathVariable("anno") Integer anno, @PathVariable("mese") Integer mese, Model model, RedirectAttributes ra) {
+    @PostMapping("/react/user/aggiorna/{anno}/{mese}")
+    //@PreAuthorize("hasRole('USER')")
+    public String aggiornaTimesheet(
+        @PathVariable("anno") Integer annoI,
+        @PathVariable("mese") Integer meseI,
+        @RequestParam("username") String username,
+        @RequestBody Map<String,String> aggiornaMap
+    ) {
+        logger.debug("timesheet user aggiorna");
+
         try {
-            Staff staff = staffRepository.findById(id).get();
+            Staff             staff     = staffRepository.findByUsername(username);
+            AggiornaTimesheet aggiorna  = trasformaMappaInAggiorna(aggiornaMap);
+            String            controllo = controllaAggiornamento(aggiorna);
+
+            if (!controllo.equals("")) {
+                return controllo;
+            }
+            if (null == aggiorna.getDataFinePeriodo()) {
+
+                Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   mese   = UtilLib.prendiMese(anno.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giorno = UtilLib.prendiGiorno(mese.getDays(), aggiorna.getData().getDayOfMonth());
+
+                if (null != giorno) {
+                    staff.setTimesheet(UtilLib.aggiornaOreCalendario(staff.getTimesheet(), anno, mese, giorno, aggiorna));
+                }
+            } else {
+
+                if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 || ( Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 && Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1 )) {
+
+                    return "Il range di date supera un mese";
+                }
+
+                Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   meseInizio   = UtilLib.prendiMese(annoInizio.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giornoInizio = UtilLib.prendiGiorno(meseInizio.getDays(), aggiorna.getData().getDayOfMonth());
+                Anno   annoFine     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getDataFinePeriodo().getYear());
+
+                if (null != giornoInizio) {
+
+                    if (aggiorna.getData().getMonthValue() != aggiorna.getDataFinePeriodo().getMonthValue()) {
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioCompletaMese(staff.getTimesheet(), annoInizio, giornoInizio, aggiorna));
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioInizioMese(staff.getTimesheet(), annoFine, aggiorna));
+
+                    } else {
+                        staff.setTimesheet(UtilLib.aggiornaCalendario(staff.getTimesheet(), annoInizio, meseInizio, giornoInizio, aggiorna));
+                    }
+                }
+            }
+
+            staffRepository.save(staff);
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
+    @GetMapping("/react/user/successivo/{anno}/{mese}")
+    //@PreAuthorize("hasRole('USER')")
+    public Timesheet getTimesheetSuccessivo(
+        @PathVariable("anno") Integer anno,
+        @PathVariable("mese") Integer mese,
+        @RequestParam("username") String username
+    ) throws Exception {
+        logger.debug("timesheet user successivo");
+
+        try {
+            Staff staff = staffRepository.findByUsername(username);
             Anno  annoObj;
             Mese  meseObj;
 
@@ -266,7 +373,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(staff.getId());
 
             meseObj.setDays(giorni);
 
@@ -280,37 +387,38 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
 
-            model.addAttribute("mese", meseObj);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
-            model.addAttribute("meseInviato", meseObj.isInviato());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("numeroMese", meseObj.getValue());
-            model.addAttribute("annoCorrente", annoObj.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", id);
-            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+            Timesheet timesheet = new Timesheet();
 
-            return "timesheet_user";
+            timesheet.setAnnoCorrente(annoObj.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(meseObj);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(meseObj.getDescription()));
+            timesheet.setMeseInviato(meseObj.isInviato());
+            timesheet.setNumeroMese(meseObj.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(meseObj.getDays()));
+
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @RequestMapping("/user/precedente/{id}/{anno}/{mese}")
-    public String getTimesheetPrecedente(
-        @PathVariable("id") Integer id,
+    @GetMapping("/react/user/precedente/{anno}/{mese}")
+    //@PreAuthorize("hasRole('USER')")
+    public Timesheet getTimesheetPrecedente(
         @PathVariable("anno") Integer anno,
         @PathVariable("mese") Integer mese,
-        Model model,
-        RedirectAttributes ra
-    ) {
+        @RequestParam("username") String username
+    ) throws Exception {
+        logger.debug("timesheet user precedente");
+
         try {
-            Staff staff = staffRepository.findById(id).get();
+            Staff staff = staffRepository.findByUsername(username);
             Anno  annoObj;
             Mese  meseObj;
 
@@ -333,7 +441,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(staff.getId());
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(staff.getId());
 
             meseObj.setDays(giorni);
 
@@ -347,37 +455,38 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
 
-            model.addAttribute("mese", meseObj);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
-            model.addAttribute("numeroMese", meseObj.getValue());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("meseInviato", meseObj.isInviato());
-            model.addAttribute("annoCorrente", annoObj.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", id);
-            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+            Timesheet timesheet = new Timesheet();
 
-            return "timesheet_user";
+            timesheet.setAnnoCorrente(annoObj.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(meseObj);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(meseObj.getDescription()));
+            timesheet.setMeseInviato(meseObj.isInviato());
+            timesheet.setNumeroMese(meseObj.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(meseObj.getDays()));
+
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @RequestMapping("/user/salva/{id}/{anno}/{mese}")
+    @PostMapping("/react/user/salva/{anno}/{mese}")
+    //@PreAuthorize("hasRole('USER')")
     public String salvaTimesheet(
-        @PathVariable("id") Integer id,
         @PathVariable("anno") Integer anno,
         @PathVariable("mese") Integer mese,
-        Model model,
-        RedirectAttributes ra
+        @RequestParam("username") String username
     ) {
+        logger.debug("timesheet user salva");
+
         try {
-            Staff        staff   = staffRepository.findById(id).get();
+            Staff        staff   = staffRepository.findByUsername(username);
             Anno         annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
             Mese         meseObj = UtilLib.prendiMese(annoObj.getMesi(), mese);
             List<Giorno> giorni  = UtilLib.ordinaGiorni(meseObj.getDays());
@@ -408,8 +517,7 @@ public class TimesheetController {
 
                 if (ferie || malattia) {
                     if (oreTotali > 0) {
-                        ra.addFlashAttribute("message", "Errore nel calcolo delle ore nei giorni di ferie");
-                        return "redirect:/timesheet/user/" + anno + "/" + mese;
+                        return "Errore nel calcolo delle ore nei giorni di ferie";
                     }
                 }
 
@@ -420,8 +528,7 @@ public class TimesheetController {
                         Progetto progetto = progettoRepository.findById(progettoGiorno.getId()).get();
 
                         if (controlloTemporaleProgetto(giorno.getData(), progetto)) {
-                            ra.addFlashAttribute("message", "Errore caricamento ore in giorni non consentiti dal progetto " + progetto.getDescription());
-                            return "redirect:/timesheet/user/" + id + "/" + anno + "/" + mese;
+                            return "Errore caricamento ore in giorni non consentiti dal progetto";
                         }
                     }
                 }
@@ -431,15 +538,16 @@ public class TimesheetController {
 
             meseRepository.save(meseObj);
 
-            return "redirect:/timesheet/user/" + anno + "/" + mese;
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
     public String controllaAggiornamento(AggiornaTimesheet aggiorna){
+        logger.debug("timesheet user controllaAggiornamento");
 
         String  errore                   = "";
         Integer orePermesso              = (null != aggiorna.getOrePermesso()) ? aggiorna.getOrePermesso() : 0;
@@ -491,14 +599,16 @@ public class TimesheetController {
         return errore;
     }
 
-    @RequestMapping("/staff/{id}/{anno}/{mese}")
-    public String getTimesheet(
+    @GetMapping("/react/staff/{id}/{anno}/{mese}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Timesheet getTimesheet(
         @PathVariable("id") Integer id,
         @PathVariable("anno") Integer annoI,
-        @PathVariable("mese") Integer meseI,
-        Model model,
-        RedirectAttributes ra
-    ) {
+        @PathVariable("mese") Integer meseI
+    )
+        throws Exception {
+        logger.debug("timesheet staff");
+
         try {
             Staff staff = staffRepository.findById(id).get();
             Anno  anno  = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), annoI);
@@ -517,7 +627,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(mese.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(id);
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(id);
 
             mese.setDays(giorni);
 
@@ -531,47 +641,44 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(anno.getAnno(), mese.getValue(), UtilLib.calcolaFineMese(mese.getValue(), anno.getAnno()));
 
-            model.addAttribute("mese", mese);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(mese.getDescription()));
-            model.addAttribute("meseInviato", mese.isInviato());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("numeroMese", mese.getValue());
-            model.addAttribute("annoCorrente", anno.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", id);
-            model.addAttribute("totaleOre", UtilLib.contaOre(mese.getDays()));
+            Timesheet timesheet = new Timesheet();
 
-            if (null != model.getAttribute("message")) {
-                model.addAttribute("message", model.getAttribute("message"));
-            }
+            timesheet.setAnnoCorrente(anno.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(mese);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(mese.getDescription()));
+            timesheet.setMeseInviato(mese.isInviato());
+            timesheet.setNumeroMese(mese.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(mese.getDays()));
 
-            return "timesheet";
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @RequestMapping("/staff/aggiorna/{id}/{anno}/{mese}")
+    @PostMapping("/react/staff/aggiorna/{id}/{anno}/{mese}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String aggiornaStaffTimesheet(
         @PathVariable("id") Integer id,
         @PathVariable("anno") Integer annoI,
         @PathVariable("mese") Integer meseI,
-        AggiornaTimesheet aggiorna,
-        Model model,
-        RedirectAttributes ra
+        @RequestBody Map<String,String> aggiornaMap
     ) {
+        logger.debug("timesheet staff aggiorna");
+
         try {
-            Staff  staff     = staffRepository.findById(id).get();
-            String controllo = controllaAggiornamento(aggiorna);
+            Staff             staff     = staffRepository.findById(id).get();
+            AggiornaTimesheet aggiorna  = trasformaMappaInAggiorna(aggiornaMap);
+            String            controllo = controllaAggiornamento(aggiorna);
 
             if (!controllo.equals("")) {
-                ra.addFlashAttribute("message", controllo);
-                return "redirect:/timesheet/staff/" + id + "/" + annoI + "/" + meseI;
+                return controllo;
             }
 
             if (null == aggiorna.getDataFinePeriodo()) {
@@ -586,10 +693,7 @@ public class TimesheetController {
             } else {
                 if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 || ( Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 && Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1 )) {
 
-                    ra.addFlashAttribute("message", "Il range di date supera un mese");
-
-                    return "redirect:/timesheet/staff/" + id + "/" + annoI + "/" + meseI;
-
+                    return "Il range di date supera un mese";
                 }
 
                 Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
@@ -613,22 +717,87 @@ public class TimesheetController {
 
             staffRepository.save(staff);
 
-            return "redirect:/timesheet/staff/" + id + "/" + annoI + "/" + meseI;
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/staff/successivo/{id}/{anno}/{mese}")
-    public String getStaffTimesheetSuccessivo(
+    @PostMapping("/react/staff/cancella/{id}/{anno}/{mese}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String cancellaStaffTimesheet(
+        @PathVariable("id") Integer id,
+        @PathVariable("anno") Integer annoI,
+        @PathVariable("mese") Integer meseI,
+        @RequestBody Map<String,String> aggiornaMap
+    ) {
+        logger.debug("timesheet staff aggiorna");
+
+        try {
+            Staff             staff     = staffRepository.findById(id).get();
+            AggiornaTimesheet aggiorna  = trasformaMappaInAggiorna(aggiornaMap);
+            /*String            controllo = controllaAggiornamento(aggiorna);
+
+            if (!controllo.equals("")) {
+                return controllo;
+            }*/
+
+            if (null == aggiorna.getDataFinePeriodo()) {
+
+                Anno   anno   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   mese   = UtilLib.prendiMese(anno.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giorno = UtilLib.prendiGiorno(mese.getDays(), aggiorna.getData().getDayOfMonth());
+
+                if (null != giorno) {
+                    staff.setTimesheet(UtilLib.aggiornaOreCalendario(staff.getTimesheet(), anno, mese, giorno, aggiorna));
+                }
+            } else {
+                if (Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() > 1 || ( Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getMonths() == 1 && Period.between(aggiorna.getData(), aggiorna.getDataFinePeriodo()).getDays() >= 1 )) {
+
+                    return "Il range di date supera un mese";
+                }
+
+                Anno   annoInizio   = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getData().getYear());
+                Mese   meseInizio   = UtilLib.prendiMese(annoInizio.getMesi(), aggiorna.getData().getMonthValue());
+                Giorno giornoInizio = UtilLib.prendiGiorno(meseInizio.getDays(), aggiorna.getData().getDayOfMonth());
+                Anno   annoFine     = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), aggiorna.getDataFinePeriodo().getYear());
+
+                if (null != giornoInizio) {
+
+                    if (aggiorna.getData().getMonthValue() != aggiorna.getDataFinePeriodo().getMonthValue()) {
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioCompletaMese(staff.getTimesheet(), annoInizio, giornoInizio, aggiorna));
+
+                        staff.setTimesheet(UtilLib.aggiornaCalendarioInizioMese(staff.getTimesheet(), annoFine, aggiorna));
+
+                    } else {
+                        staff.setTimesheet(UtilLib.aggiornaCalendario(staff.getTimesheet(), annoInizio, meseInizio, giornoInizio, aggiorna));
+                    }
+                }
+            }
+
+            staffRepository.save(staff);
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
+    @GetMapping("/react/staff/successivo/{id}/{anno}/{mese}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Timesheet getStaffTimesheetSuccessivo(
         @PathVariable("id") Integer id,
         @PathVariable("anno") Integer anno,
-        @PathVariable("mese") Integer mese,
-        Model model,
-        RedirectAttributes ra
-    ) {
+        @PathVariable("mese") Integer mese
+    )
+        throws Exception {
+        logger.debug("timesheet staff successivo");
+
         try {
             Staff staff = staffRepository.findById(id).get();
             Anno  annoObj;
@@ -653,7 +822,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(id);
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(id);
 
             meseObj.setDays(giorni);
 
@@ -668,35 +837,37 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
 
-            model.addAttribute("mese", meseObj);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
-            model.addAttribute("meseInviato", meseObj.isInviato());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("numeroMese", meseObj.getValue());
-            model.addAttribute("annoCorrente", annoObj.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", id);
-            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+            Timesheet timesheet = new Timesheet();
 
-            return "timesheet";
+            timesheet.setAnnoCorrente(annoObj.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(meseObj);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(meseObj.getDescription()));
+            timesheet.setMeseInviato(meseObj.isInviato());
+            timesheet.setNumeroMese(meseObj.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(meseObj.getDays()));
+
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @RequestMapping("/staff/precedente/{id}/{anno}/{mese}")
-    public String getStaffTimesheetPrecedente(
+    @GetMapping("/react/staff/precedente/{id}/{anno}/{mese}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public Timesheet getStaffTimesheetPrecedente(
         @PathVariable("id") Integer id,
         @PathVariable("anno") Integer anno,
-        @PathVariable("mese") Integer mese,
-        Model model,
-        RedirectAttributes ra
-    ) {
+        @PathVariable("mese") Integer mese
+    )
+        throws Exception {
+        logger.debug("timesheet staff precedente");
+
         try {
             Staff staff   = staffRepository.findById(id).get();
             Anno  annoObj = null;
@@ -721,7 +892,7 @@ public class TimesheetController {
 
             List<Giorno>   giorni        = UtilLib.ordinaGiorni(meseObj.getDays());
             List<Progetto> progetti      = new ArrayList<>();
-            List<Progetto> progettiStaff = progettoRepository.findByStaff_Id(id);
+            List<Progetto> progettiStaff = progettoRepository.findByIdStaff(id);
 
             meseObj.setDays(giorni);
 
@@ -736,35 +907,36 @@ public class TimesheetController {
 
             LocalDate dataFine = LocalDate.of(annoObj.getAnno(), meseObj.getValue(), UtilLib.calcolaFineMese(meseObj.getValue(), annoObj.getAnno()));
 
-            model.addAttribute("mese", meseObj);
-            model.addAttribute("meseCorrente", UtilLib.meseItaliano(meseObj.getDescription()));
-            model.addAttribute("numeroMese", meseObj.getValue());
-            model.addAttribute("dataInizio", dataInizio);
-            model.addAttribute("dataFine", dataFine);
-            model.addAttribute("meseInviato", meseObj.isInviato());
-            model.addAttribute("annoCorrente", annoObj.getAnno());
-            model.addAttribute("aggiornaTimesheet", new AggiornaTimesheet());
-            model.addAttribute("listaProgetti", progetti);
-            model.addAttribute("numeroProgetti", progetti.size());
-            model.addAttribute("idStaff", id);
-            model.addAttribute("totaleOre", UtilLib.contaOre(meseObj.getDays()));
+            Timesheet timesheet = new Timesheet();
 
-            return "timesheet";
+            timesheet.setAnnoCorrente(annoObj.getAnno());
+            timesheet.setDataFine(dataFine);
+            timesheet.setDataInizio(dataInizio);
+            timesheet.setMese(meseObj);
+            timesheet.setMeseCorrenteItaliano( UtilLib.meseItaliano(meseObj.getDescription()));
+            timesheet.setMeseInviato(meseObj.isInviato());
+            timesheet.setNumeroMese(meseObj.getValue());
+            timesheet.setProgetti(progetti);
+            timesheet.setNumeroProgetti(progetti.size());
+            timesheet.setTotaleOre(UtilLib.contaOre(meseObj.getDays()));
+
+            return timesheet;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            throw new Exception(exception);
         }
     }
 
-    @RequestMapping("/staff/salva/{id}/{anno}/{mese}")
+    @PostMapping("/react/staff/salva/{id}/{anno}/{mese}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String salvaStaffTimesheet(
         @PathVariable("id") Integer id,
         @PathVariable("anno") Integer anno,
-        @PathVariable("mese") Integer mese,
-        Model model,
-        RedirectAttributes ra
-    ) throws ElementoNonTrovatoException, MessagingException {
+        @PathVariable("mese") Integer mese
+    ) {
+        logger.debug("timesheet staff salva");
+
         try {
             Staff        staff   = staffRepository.findById(id).get();
             Anno         annoObj = UtilLib.prendiAnno(staff.getTimesheet().getAnni(), anno);
@@ -796,8 +968,7 @@ public class TimesheetController {
 
                 if (ferie || malattia) {
                     if (oreTotali > 0) {
-                        ra.addFlashAttribute("message", "Errore nel calcolo delle ore nei giorni di ferie");
-                        return "redirect:/timesheet/staff/" + id + "/" + anno + "/" + mese;
+                        return "Errore nel calcolo delle ore nei giorni di ferie";
                     }
                 }
 
@@ -807,8 +978,7 @@ public class TimesheetController {
                         Progetto progetto = progettoRepository.findById(progettoGiorno.getId()).get();
 
                         if (controlloTemporaleProgetto(giorno.getData(), progetto)) {
-                            ra.addFlashAttribute("message", "Errore caricamento ore in giorni non consentiti dal progetto " + progetto.getDescription());
-                            return "redirect:/timesheet/staff/" + id + "/" + anno + "/" + mese;
+                            return "Errore caricamento ore in giorni non consentiti dal progetto";
                         }
                     }
                 }
@@ -818,11 +988,11 @@ public class TimesheetController {
 
             meseRepository.save(meseObj);
 
-            return "redirect:/timesheet/staff/" + id + "/" + anno + "/" + mese;
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
@@ -830,6 +1000,35 @@ public class TimesheetController {
         LocalDate data,
         Progetto progetto
     ){
+        logger.debug("timesheet staff controlloTemporaleProgetto");
+
         return data.isBefore(progetto.getInizio()) || data.isAfter(progetto.getScadenza());
+    }
+
+    public AggiornaTimesheet trasformaMappaInAggiorna(Map<String,String> staffMap) {
+
+        AggiornaTimesheet aggiornaTimesheet = new AggiornaTimesheet();
+
+        aggiornaTimesheet.setFerie(staffMap.get("ferie") != null ? Boolean.valueOf(staffMap.get("ferie")) : null);
+        aggiornaTimesheet.setMalattia(staffMap.get("malattia") != null ? Boolean.valueOf(staffMap.get("malattia")) : null);
+        aggiornaTimesheet.setOre(staffMap.get("ore") != null ? Integer.parseInt(staffMap.get("ore")) : null);
+        aggiornaTimesheet.setOrePermesso(staffMap.get("orePermesso") != null ? Integer.parseInt(staffMap.get("orePermesso")) : null);
+        aggiornaTimesheet.setOreStraordinarie(staffMap.get("oreStraordinarie") != null ? Integer.parseInt(staffMap.get("oreStraordinarie")) : null);
+        aggiornaTimesheet.setPermesso(staffMap.get("permesso") != null ? Boolean.valueOf(staffMap.get("permesso")) : null);;
+        aggiornaTimesheet.setOreStraordinarieNotturne(staffMap.get("oreStraordinarieNotturne") != null ? Integer.parseInt(staffMap.get("oreStraordinarieNotturne")) : null);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        aggiornaTimesheet.setData(staffMap.get("data") != null ? LocalDate.parse(staffMap.get("data"),formatter) : null);
+        aggiornaTimesheet.setDataFinePeriodo(staffMap.get("dataFinePeriodo") != null ? LocalDate.parse(staffMap.get("dataFinePeriodo"),formatter) : null);
+
+        if (staffMap.get("progetto") != null) {
+
+            Progetto progetto = progettoRepository.findById(Integer.parseInt(staffMap.get("progetto"))).get();
+
+            aggiornaTimesheet.setProgetto(progetto);
+        }
+
+        return aggiornaTimesheet;
     }
 }

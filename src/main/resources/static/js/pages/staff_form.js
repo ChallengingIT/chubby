@@ -1,7 +1,7 @@
 document.getElementById('theDate').value = '1970-01-01';
 
-$('li').removeClass('active');
-$('#hr').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.dipendenti').addClass('active');
 
 $(document).ready(function () {
     setTimeout(function () {

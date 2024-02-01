@@ -4,7 +4,6 @@
 
 package it.innotek.wehub.controller;
 
-import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.FatturazionePassiva;
 import it.innotek.wehub.entity.Tesoreria;
 import it.innotek.wehub.repository.ClienteRepository;
@@ -14,15 +13,15 @@ import it.innotek.wehub.util.UtilLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
-@Controller
+@RestController
 @RequestMapping("/tesoreria")
 public class TesoreriaController {
 
@@ -37,6 +36,8 @@ public class TesoreriaController {
 
     @RequestMapping
     public String showTesoreriaList(Model model){
+        logger.debug("tesoreria");
+
         try {
             String    meseCorrente   = UtilLib.meseItaliano(LocalDate.now().getMonth().name());
             int       annoCorrente   = LocalDate.now().getYear();
@@ -53,7 +54,7 @@ public class TesoreriaController {
                 tesoreria = tesoreriaRepository.findByMeseAndAnno(meseCorrente, annoCorrente);
             }
 
-            tesoreria.setClienti(clienteRepository.findAll());
+            //tesoreria.setClienti(clienteRepository.findAll());
 
             LocalDate localDate = LocalDate.of(annoCorrente, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
 
@@ -75,6 +76,8 @@ public class TesoreriaController {
         Model model,
         Tesoreria tesoreriaRicerca
     ) {
+        logger.debug("tesoreria ricerca");
+
         try {
             String    meseRicerca = tesoreriaRicerca.getMese();
             int       annoRicerca = ( null == tesoreriaRicerca.getAnno() ) ? LocalDate.now().getYear() : tesoreriaRicerca.getAnno();
@@ -91,7 +94,7 @@ public class TesoreriaController {
                 tesoreria = tesoreriaRepository.findByMeseAndAnno(meseRicerca, annoRicerca);
             }
 
-            tesoreria.setClienti(clienteRepository.findAll());
+            //tesoreria.setClienti(clienteRepository.findAll());
 
             LocalDate localDate = LocalDate.of(annoRicerca, numeroMese(meseRicerca), 28);
 
@@ -114,11 +117,13 @@ public class TesoreriaController {
         Tesoreria tesoreria,
         Model model
     ) {
+        logger.debug("tesoreria salva");
+
         try {
             Double totaleSpese   = 0D;
             Double totaleIncassi = 0D;
 
-            for (Cliente cliente : tesoreria.getClienti()) {
+            /*for (Cliente cliente : tesoreria.getClienti()) {
 
                 if (( null != cliente.getGuadagno() ) && !cliente.getGuadagno().isEmpty()) {
 
@@ -129,7 +134,7 @@ public class TesoreriaController {
 
                     clienteRepository.save(clienteUpdate);
                 }
-            }
+            }*/
 
             for (FatturazionePassiva fattura : tesoreria.getFatture()) {
                 FatturazionePassiva fatturaUpdate = fatturazionePassivaRepository.findById(fattura.getId()).get();
@@ -162,6 +167,8 @@ public class TesoreriaController {
     }
 
     public int numeroMese(String mese){
+        logger.debug("tesoreria numeroMese");
+
         return switch (mese.toLowerCase()) {
             case "febbraio" -> 2;
             case "marzo" -> 3;

@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface FatturazioneAttivaRepository extends JpaRepository<FatturazioneAttiva, Integer> {
 
+    List<FatturazioneAttiva> findByCliente_Id(Integer id);
+
     @Query(value= """
           SELECT fa.*, fc.id_cliente, sfa.id_stato
           FROM fatturazione_attiva fa, fattura_cliente fc, stato_fatturazione_attiva sfa

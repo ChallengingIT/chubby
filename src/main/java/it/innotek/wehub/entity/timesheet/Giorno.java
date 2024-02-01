@@ -4,10 +4,14 @@
 
 package it.innotek.wehub.entity.timesheet;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -20,7 +24,8 @@ import java.util.Objects;
 @Table( name = "giorno")
 public class Giorno  implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,15 +66,6 @@ public class Giorno  implements Serializable {
 
     @Column(length = 2, name="ore_permesso")
     private Integer orePermesso;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "mese_giorno",
-            joinColumns = @JoinColumn(name = "id_giorno", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_mese", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Mese mese;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(

@@ -17,7 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 
 <div class="wrapper d-flex align-items-stretch">
 
@@ -30,12 +30,12 @@
         <div>
             <form th:action="@{/tesoreria/ricerca}" method="get" th:object="${tesoreriaRicerca}">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <div class="form-group row">
+                <div class="row rowFind">
 
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Mese </label>
-                        <select  th:field=*{mese} id="mese" class="form-control" required>
-                            <option th:value="null" th:text="---"></option>
+                    <div class="col-4">
+                        <br>
+                        <select  th:field=*{mese} id="mese" class="form-control borderRadius18" required>
+                            <option th:value="null">Seleziona un Mese</option>
                             <option th:value="Gennaio" text="Gennaio">Gennaio</option>
                             <option th:value="Febbraio" text="Febbraio">Febbraio</option>
                             <option th:value="Marzo" text="Marzo">Marzo</option>
@@ -49,15 +49,18 @@
                             <option th:value="Novembre" text="Novembre">Novembre</option>
                             <option th:value="Dicembre" text="Dicembre">Dicembre</option>
                         </select>
+                        <br>
                     </div>
-                    <div class="col" style="margin-left:15px">
-                        <label class="col-sm-16 col-form-label">Anno </label>
-                        <input type="number" th:field="*{anno}" class="form-control" maxlength="10" autocomplete="off"/>
+                    <div class="col-4">
+                        <br>
+                        <input type="number" th:field="*{anno}" class="form-control borderRadius18"
+                               placeholder="Anno di Riferimento"  id="anno" maxlength="10" autocomplete="off"/>
+                        <br>
                     </div>
-                    <div class="col" style="margin-left:15px;"><br>
-                        <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
-                    </div>
-                    <div class="col" style="margin-left:15px;"><br>
+                    <div class="col-4" style="text-align:center;">
+                        <br>
+                        <input type="submit" class="btn btn-primary m-2" id="btnFind3" value="Cerca">
+                        <a href="#" id="btnReset">Ripristina</a>
                     </div>
                 </div>
             </form>
@@ -85,7 +88,7 @@
                             <th>Conto BPM</th>
                         </tr>
                     </thead>
-                    <tbody id="valori-tabella">
+                    <tbody class="valori-tabella">
                         <tr>
                             <td></td>
                             <td></td>
@@ -155,7 +158,7 @@
                         <th>Numero</th>
                     </tr>
                     </thead>
-                    <tbody id="valori-tabella-due">
+                    <tbody class="valori-tabella">
                     <span th:each="cliente, rowStatus  : *{clienti}">
                         <tr>
                             <td>[[${cliente.denominazione}]]</td>

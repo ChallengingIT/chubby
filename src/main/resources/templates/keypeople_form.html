@@ -20,7 +20,7 @@
   <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
   <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
 <div class="wrapper d-flex align-items-stretch">
 
   <div th:replace="~{sidebar}">  </div>
@@ -98,7 +98,12 @@
         <div class="row form-btn-wrapper mt-5">
           <button type="submit" class="col-5 btn btn-lg btn-primary">Salva</button>
           <span class="col-2"></span>
-          <button type="button" class="col-5 btn btn-lg btn-secondary" id="bottoneIndietro">Indietro</button>
+          <span th:if="${keyPeople.azienda == null || keyPeople.azienda.id == null}" class="col-5 btn btn-lg btn-secondary">
+              <a th:href="@{/keypeople/ricerca}" class="btn-secondary">Indietro</a>
+          </span>
+          <span th:unless="${keyPeople.azienda == null || keyPeople.azienda.id == null}" class="col-5 btn btn-lg btn-secondary">
+              <a th:href="@{/keypeople/ricerca} + '?azienda.id=' + ${keyPeople.azienda.id}" class="btn-secondary">Indietro</a>
+          </span>
         </div>
       </div>
     </form>

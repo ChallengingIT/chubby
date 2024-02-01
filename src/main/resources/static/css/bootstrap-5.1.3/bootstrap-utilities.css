@@ -39,14 +39,14 @@
 }
 
 .link-warning {
-  color: #14d928;
+  color: #ffc107;
 }
 .link-warning:hover, .link-warning:focus {
   color: #ffcd39;
 }
 
 .link-danger {
-  color: #dc3545;
+  color: #ff0000;
 }
 .link-danger:hover, .link-danger:focus {
   color: #b02a37;
@@ -480,11 +480,11 @@
 }
 
 .border-warning {
-  border-color: #14d928 !important;
+  border-color: #ffc107 !important;
 }
 
 .border-danger {
-  border-color: #dc3545 !important;
+  border-color: #ff0000 !important;
 }
 
 .border-light {

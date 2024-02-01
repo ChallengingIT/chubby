@@ -6,14 +6,14 @@ package it.innotek.wehub.entity.timesheet;
 
 import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.TipologiaProgetto;
-import it.innotek.wehub.entity.staff.Staff;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -26,7 +26,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class Progetto  implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,23 +42,6 @@ public class Progetto  implements Serializable {
     @Column(name="scadenza")
     private LocalDate scadenza;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "progetto_staff",
-            joinColumns = @JoinColumn(name = "id_progetto", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_staff", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Staff staff;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "progetto_cliente",
-            joinColumns = @JoinColumn(name = "id_progetto", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
@@ -67,6 +51,9 @@ public class Progetto  implements Serializable {
     )
     @ToString.Exclude
     private TipologiaProgetto tipologia;
+
+    @Column(name="id_staff")
+    private Integer   idStaff;
 
     @Column(name="rate")
     private Integer   rate;
@@ -97,6 +84,15 @@ public class Progetto  implements Serializable {
 
     @Column(length = 4000, name = "note")
     private String note;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "progetto_cliente",
+        joinColumns = @JoinColumn(name = "id_progetto", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Cliente cliente;
 
     @Override
     public boolean equals(Object o) {

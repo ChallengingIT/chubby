@@ -4,13 +4,14 @@
 
 package it.innotek.wehub.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
@@ -23,7 +24,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Need implements Serializable {
 
-    private static final long serialVersionUID = 6529685398267757690L;
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +43,12 @@ public class Need implements Serializable {
     @Column(name = "data_richiesta")
     private Date dataRichiesta;
 
+    @Column(length = 45)
+    private String location;
+
+    @Column(length = 4000, name = "note")
+    private String note;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "skill_need",
@@ -50,14 +58,14 @@ public class Need implements Serializable {
     @ToString.Exclude
     private Set<Skill> skills = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "need_cliente",
-            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+        name = "skill_need",
+        joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_skill", referencedColumnName = "id")
     )
     @ToString.Exclude
-    private Cliente cliente;
+    private Set<Skill> skills2 = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
@@ -68,17 +76,26 @@ public class Need implements Serializable {
     @ToString.Exclude
     private TipologiaN tipologia;
 
-    @Column(length = 1, name="tipo")
-    private Integer tipo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "need_cliente",
+        joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Cliente cliente = new Cliente();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "need_owner",
-            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
+        name = "need_owner",
+        joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_owner", referencedColumnName = "id")
     )
     @ToString.Exclude
     private Owner owner;
+
+    @Column(length = 1, name="tipo")
+    private Integer tipo;
 
     @Column(length = 2, nullable = false, name="priorita")
     private Integer priorita;
@@ -97,21 +114,12 @@ public class Need implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "need_candidato",
-            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
+        name = "need_candidato",
+        joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id")
     )
     @ToString.Exclude
-    private List<Candidato> candidati = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "need_associazione",
-            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_associazione", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<AssociazioneCandidatoNeed> associazioni = new ArrayList<>();
+    private List<Candidato> candidati;
 
     @Override
     public boolean equals(Object o) {

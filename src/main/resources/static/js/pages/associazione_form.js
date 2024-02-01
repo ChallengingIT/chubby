@@ -4,5 +4,5 @@ $(document).ready(function() {
     }, 5000);
 });
 
-$('li').removeClass('active');
+$('.list-unstyled li').removeClass('active');
 $('.need').addClass('active');

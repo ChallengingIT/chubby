@@ -6,21 +6,21 @@ package it.innotek.wehub.controller;
 
 import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.FatturazioneAttiva;
+import it.innotek.wehub.entity.StatoFA;
 import it.innotek.wehub.repository.ClienteRepository;
 import it.innotek.wehub.repository.FatturazioneAttivaRepository;
 import it.innotek.wehub.repository.StatoFARepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping("/fatturazione/attiva")
 public class FatturazioneAttivaController {
 
@@ -33,116 +33,93 @@ public class FatturazioneAttivaController {
 
     private static final Logger logger = LoggerFactory.getLogger(FatturazioneAttivaController.class);
 
-    @RequestMapping
-    public String showFatturazioneAttivaList(Model model){
-        try {
-            List<FatturazioneAttiva> fattureAttive = fatturazioneAttivaRepository.findAll();
+    @GetMapping("/react")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<FatturazioneAttiva> getAll()
+    {
+        logger.info("Fatturazioni attive");
 
-            for (FatturazioneAttiva fattura : fattureAttive) {
-              Cliente cliente = clienteRepository.findById(fattura.getCliente().getId()).get();
-              fattura.getCliente().setDenominazione(cliente.getDenominazione());
-            }
-
-            model.addAttribute("fatturazioneAttivaRicerca", new FatturazioneAttiva());
-            model.addAttribute("listaFatAttive", fattureAttive);
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStati", statoFARepository.findAll());
-
-            return "fatturazione_attiva";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return fatturazioneAttivaRepository.findAll();
     }
 
-    @RequestMapping("/ricerca")
-    public String showRicercaFattAttivaList(
-        Model model,
-        FatturazioneAttiva fatturazione
-    ){
-        try {
-            Integer                  idCliente   = fatturazione.getCliente() != null ? fatturazione.getCliente().getId() : null;
-            Integer                  idStato     = fatturazione.getStato() != null ? fatturazione.getStato().getId() : null;
-            List<FatturazioneAttiva> listFatture = fatturazioneAttivaRepository.ricercaByIdClienteAndIdStato(idCliente, idStato);
+    @GetMapping("/react/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public FatturazioneAttiva getById(@PathVariable("id") Integer id)
+    {
+        logger.info("Fatturazione attiva tramite id");
 
-            for (FatturazioneAttiva fattura : listFatture) {
-              Cliente cliente = clienteRepository.findById(fattura.getCliente().getId()).get();
-              fattura.getCliente().setDenominazione(cliente.getDenominazione());
-            }
-
-            model.addAttribute("listaFatAttive", listFatture);
-            model.addAttribute("fatturazioneAttivaRicerca", fatturazione);
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStati", statoFARepository.findAll());
-
-            return "fatturazione_attiva";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return fatturazioneAttivaRepository.findById(id).get();
     }
 
-    @RequestMapping("/aggiungi")
-    public String showNewFormFattAttiva(Model model){
-        try {
-            if (null != model.getAttribute("fatturazione")) {
-              model.addAttribute("fatturazione", model.getAttribute("fatturazione"));
-            } else {
-              model.addAttribute("fatturazione", new FatturazioneAttiva());
-            }
+    @GetMapping("/react/stato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<StatoFA> getAllStato()
+    {
+        logger.info("Stati fatturazioni attive");
 
-            model.addAttribute("titoloPagina", "Aggiungi una nuova fatturazione attiva");
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStati", statoFARepository.findAll());
-
-            return "fatturazione_attiva_form";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
-        }
+        return statoFARepository.findAll();
     }
 
-    @RequestMapping("/salva")
+    @PostMapping("/react/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveFattAttiva(
-        FatturazioneAttiva fatturazione,
-        RedirectAttributes ra
+        @RequestBody Map<String,String> fatturazione
     ){
-        try {
-            fatturazioneAttivaRepository.save(fatturazione);
-            ra.addFlashAttribute("message", "La fattura è stata salvata con successo");
-            return "redirect:/fatturazione/attiva";
+        logger.info("Salva fatturazione attiva");
 
+        try {
+
+            FatturazioneAttiva fatturazioneEntity = new FatturazioneAttiva();
+
+            if(fatturazione.get("id") != null) {
+                fatturazioneEntity = fatturazioneAttivaRepository.findById(Integer.parseInt(fatturazione.get("id"))).get();
+
+                logger.debug("Fatturazione attiva trovata si procede in modifica");
+            }
+
+            trasformaMappaInFatturazione(fatturazioneEntity, fatturazione);
+
+            fatturazioneAttivaRepository.save(fatturazioneEntity);
+
+            logger.debug("Fatturazione attiva salvata correttamente");
+
+            return "OK";
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
-            return "error";
+            return "ERRORE";
         }
     }
 
-    @RequestMapping("/modifica/{id}")
-    public String showEditFormFattAttiva(
-        @PathVariable("id") Integer id,
-        Model model,
-        RedirectAttributes ra
-    ){
-        try {
-            model.addAttribute("fatturazione", fatturazioneAttivaRepository.findById(id).get());
-            model.addAttribute("titoloPagina", "Modifica fatturazione attiva");
-            model.addAttribute("listaAziende", clienteRepository.findAll());
-            model.addAttribute("listaStati", statoFARepository.findAll());
+    public void trasformaMappaInFatturazione(FatturazioneAttiva fatturazione, Map<String,String> fatturazioneMap) {
+        logger.debug("Trasforma mappa in fatturazione attiva");
 
-            return "fatturazione_attiva_form";
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return "error";
+        if (fatturazioneMap.get("stato") != null) {
+            StatoFA stato = new StatoFA();
+            stato.setId(Integer.parseInt(fatturazioneMap.get("stato")));
+            fatturazione.setStato(stato);
         }
+
+        fatturazione.setConsulente(fatturazioneMap.get("consulente") != null ? fatturazioneMap.get("consulente") : null);
+
+        if (fatturazioneMap.get("idCliente") != null) {
+            Cliente cliente = new Cliente();
+            cliente.setId(Integer.parseInt(fatturazioneMap.get("idCliente")));
+
+            fatturazione.setCliente(cliente);
+        }
+
+        fatturazione.setDataEmissione(fatturazioneMap.get("dataEmissione") != null ? Date.valueOf(fatturazioneMap.get("dataEmissione")) : null);
+        fatturazione.setDataScadenza(fatturazioneMap.get("dataScadenza") != null ? Date.valueOf(fatturazioneMap.get("dataScadenza")) : null);
+        fatturazione.setDescrizione(fatturazioneMap.get("descrizione") != null ? fatturazioneMap.get("descrizione") : null);
+        fatturazione.setGiorniLavorati(fatturazioneMap.get("giorniLavorati") != null ? fatturazioneMap.get("giorniLavorati") : null);
+        fatturazione.setImponibile(fatturazioneMap.get("imponibile") != null ? fatturazioneMap.get("imponibile") : null);
+        fatturazione.setNFattura(fatturazioneMap.get("nFattura") != null ? fatturazioneMap.get("nFattura") : null);
+        fatturazione.setOda(fatturazioneMap.get("oda") != null ? fatturazioneMap.get("oda") : null);
+        fatturazione.setNote(fatturazioneMap.get("note") != null ? fatturazioneMap.get("note") : null);
+        fatturazione.setOggetto(fatturazioneMap.get("oggetto") != null ? fatturazioneMap.get("oggetto") : null);
+        fatturazione.setTariffa(fatturazioneMap.get("tariffa") != null ? fatturazioneMap.get("tariffa") : null);
+        fatturazione.setTermine(fatturazioneMap.get("termine") != null ? fatturazioneMap.get("termine") : null);
+        fatturazione.setTotaleConIva(fatturazioneMap.get("totaleConIva") != null ? fatturazioneMap.get("totaleConIva") : null);
     }
 }

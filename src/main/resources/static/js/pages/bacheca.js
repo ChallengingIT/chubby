@@ -1,2 +1,2 @@
-$('li').removeClass('active');
-$('#bacheca').addClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.bacheca').addClass('active');

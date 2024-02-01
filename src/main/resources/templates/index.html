@@ -3,7 +3,7 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>Welcome to WEHUB</title>
     <meta charset="UTF-8">
@@ -17,6 +17,7 @@
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
+<span sec:authorize="hasAnyRole('ADMIN','ADMINISTRATION','RECRUITER','BM','USER')" >
 <body th:style="'background-image:url(' + @{/images/logo.png} + ');
                  background-repeat: no-repeat, repeat;
                  background-size: cover;'">
@@ -26,4 +27,16 @@
 
 </div>
 </body>
+</span>
+<span sec:authorize="hasRole('RIBA')" >
+<body th:style="'background-image:url(' + @{/images/Rmt.png} + ');
+                 background-repeat: no-repeat, repeat;
+                 background-size: cover;'">
+<div class="wrapper d-flex align-items-stretch">
+
+    <div th:replace="~{sidebar}">  </div>
+
+</div>
+</body>
+</span>
 </html>

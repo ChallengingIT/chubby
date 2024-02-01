@@ -1,4 +1,5 @@
-$('li').removeClass('active');
+$('.list-unstyled li').removeClass('active');
+$('.amministrazione').click();
 $('.fornitori').addClass('active');
 
 $(document).ready(function() {

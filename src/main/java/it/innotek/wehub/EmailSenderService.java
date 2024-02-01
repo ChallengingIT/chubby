@@ -16,11 +16,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @Service
 public class EmailSenderService {
@@ -59,53 +54,5 @@ public class EmailSenderService {
         helper.setText(html, true);
 
         emailSender.send(message);
-    }
-
-    public void sendHtmlMessagePost(
-        Email email,
-        LocalDateTime data,
-        Long idEmail
-    ){
-        if (null != data) {
-            Date javaDate = Date.from(data.minusDays(1).atZone(ZoneId.systemDefault()).toInstant());
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        MimeMessage message = emailSender.createMimeMessage();
-
-                        message.setSentDate(javaDate);
-
-                        Context           context = new Context();
-                        MimeMessageHelper helper  =
-                            new MimeMessageHelper(
-                                message,
-                                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                                StandardCharsets.UTF_8.name()
-                            );
-
-
-                        context.setVariables(email.getProperties());
-                        helper.setFrom(email.getFrom());
-                        helper.setTo(email.getTo());
-                        helper.setSentDate(javaDate);
-                        helper.setSubject(email.getSubject());
-
-                        String html = templateEngine.process(email.getTemplate(), context);
-
-                        helper.setText(html, true);
-
-                        timedEmailRepository.updateInviataByEmailCandidato(1, idEmail);
-
-                        emailSender.send(message);
-
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-            }, javaDate);
-        }
     }
 }

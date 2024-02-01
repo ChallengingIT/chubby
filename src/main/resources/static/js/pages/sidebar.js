@@ -6,7 +6,7 @@
         $(this).find("[class^='ul_submenu']").slideToggle();
     });
 
-    $('#amministrazione').click(function(e) {
+    $('.amministrazione').click(function(e) {
         $(this).find("[class^='ul_submenu']").slideToggle();
     });
 

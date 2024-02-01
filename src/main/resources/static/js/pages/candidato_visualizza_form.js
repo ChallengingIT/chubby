@@ -6,7 +6,7 @@ $(function() {
 
 document.getElementById('theDate').value = '1970-01-01';
 
-$('li').removeClass('active');
+$('.list-unstyled li').removeClass('active');
 $('.staffing').addClass('active');
 
 $(document).ready(function () {

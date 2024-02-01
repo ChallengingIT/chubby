@@ -17,59 +17,69 @@
   <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
   <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body style="background-color: #14d928">
+<body style="background-color: #ffb700">
   <div class="wrapper d-flex align-items-stretch">
     <div th:replace="~{sidebar}">  </div>
     <div id="content" class="p-4 p-md-5 pt-5">
       <h1 class="mb-4"><b>Gestione Contatti</b></h1>
-      <div>
-        <a class="btn btn-info btn-lg" th:href="@{/keypeople/aggiungi}" style=" background-color: black; border-radius: 10px;">
-          <span class="glyphicon glyphicon-plus"></span> Aggiungi un nuovo contatto
-        </a>
-      </div>
       <br>
-      <div>
+      <div style="margin-left:1%;">
         <form th:action="@{/keypeople/ricerca}" method="get" th:object="${keyPeopleRicerca}">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-          <div class="form-group row">
-            <div class="col">
-              <label class="col-sm-16 col-form-label">Ownership </label>
-              <select id="listaOwner" th:field="*{owner.id}" class="form-control select-medium">
-                <option th:value="null" th:text="---"></option>
+          <div class="row rowFind">
+            <div class="col-3">
+              <select id="listaOwner" th:field="*{owner.id}" class="form-control backSimilWhiteColorGray select-medium borderRadius18">
+                <option th:value="null">Owner</option>
                 <option th:each="i : ${listOwner}" th:value="${i.id}" th:text="${i.descrizione}"></option>
               </select>
             </div>
-            <div class="col">
-              <label class="col-sm-16 col-form-label">Azienda </label>
-              <select id="listaAziende" th:field="*{azienda.id}" class="form-control select-medium">
-                <option th:value="null" th:text="---"></option>
+            <div class="col-3">
+              <select id="listaAziende" th:field="*{azienda.id}" class="form-control backSimilWhiteColorGray select-medium borderRadius18">
+                <option th:value="null">Azienda</option>
                 <option th:each="i : ${listaAziende}" th:value="${i.id}" th:text="${i.denominazione}"></option>
               </select>
             </div>
-            <div class="col">
-              <label class="col-sm-16 col-form-label">Status</label>
-              <select id="status" th:field="*{status}" class="form-control">
-                <option th:value="null" th:text="---"></option>
+            <div class="col-3">
+              <select id="status" th:field="*{status}" class="form-control backSimilWhiteColorGray borderRadius18">
+                <option th:value="null">Stato</option>
                 <option value="1" text="Verde">Verde</option>
                 <option value="2" text="Giallo">Giallo</option>
                 <option value="3" text="rosso">Rosso</option>
               </select>
             </div>
-
-            <div class="col" style="margin-left:15px;"><br>
-              <input type="submit" class="btn btn-primary m-2" style="height: 40px;width: 60px;font-size: 12px;" value="Cerca">
-            </div>
-            <div class="col" style="margin-left:15px;"><br>
-            </div>
-            <div class="col" style="margin-left:15px;"><br>
+            <div class="col-3" style="text-align:center;">
+              <a href="#" id="btnReset">Ripristina</a>
+              <input type="submit" class="btn btn-primary m-2" id="btnFind3" value="Cerca">
             </div>
           </div>
         </form>
       </div>
+      <br><br>
       <div>
-        <div class="form-group" style="width:130px;"> 	<!--		Show Numbers Of Rows 		-->
-                    <label class="col-sm-16 col-form-label">Numero di righe</label>
-                    <select class="form-control maxRows" name="state">
+        <div class="table-responsive-sm">
+          <table class="table table-sm sortable" style="background-color:#f9f9f9;border-radius:25px;">
+          <thead id="tabella-new">
+              <tr class="tr1 noborder">
+                <td colspan="3" style="padding-top: 2%;">
+                  <div class="row">
+                    <h1 style="color:grey;" class="pl-5"><b>Key People</b></h1>
+                    <div style="margin-left:10%;">
+                      <a th:href="@{/keypeople/aggiungi}" class="btn btn-lg"
+                         style=" background-color: #ffe4a0; border-radius: 10px; color:#ffb700;">  <span class="glyphicon glyphicon-plus"></span> <b>Aggiungi Contatto</b></a>
+                    </div>
+                  </div>
+                </td>
+                <td colspan="4" style="padding-top: 2%;">
+                  <div class="row"> 	<!--		Show Numbers Of Rows 		-->
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                      <label style="padding-left: 14%;padding-top: 6%;">Numero di righe:</label>
+                    </div>
+                    <div class="col-sm-2">
+                      <select class="form-control maxRows" style="border-radius:20px;" name="state">
                         <option value="5000">Show ALL Rows</option>
                         <option value="10">10</option>
                         <option value="15">15</option>
@@ -77,28 +87,27 @@
                         <option value="50">50</option>
                         <option value="70">70</option>
                         <option value="100">100</option>
-                    </select>
-                </div>
-                <table class="table table-striped table-bordered table-sm sortable table-responsive-md"   style="background-color:white;">
-          <thead class="thead" id="tabella-blu">
-          <tr class="tr1">
-            <th>Status</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefono</th>
-            <th>Proprietario</th>
-            <th>Azienda</th>
-            <th>Ruolo</th>
-            <th>Azioni</th>
-          </tr>
+                      </select>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="tr1 noborder boxShadow">
+                <th class="pl-5">Status</th>
+                <th>Nome<br>Email</th>
+                <th>Telefono</th>
+                <th>Proprietario</th>
+                <th>Azienda</th>
+                <th>Ruolo</th>
+                <th>Azioni</th>
+              </tr>
           </thead>
-          <tbody class="table1" id="valori-tabella">
+          <tbody class="table1 boxShadow">
           <th:block th:each="keypeople : ${listKeyPeople}">
-            <tr class="tr1">
-              <td class="circleStatus">[[${keypeople.status}]]</td>
+            <tr class="tr1 noborder">
+              <td class="circleStatus pl-5">[[${keypeople.status}]]</td>
               <!--<td><a th:href="@{'/keypeople/dettaglio/' + ${keypeople.id}}">[[${keypeople.nome}]]</a></td>-->
-              <td>[[${keypeople.nome}]]</td>
-              <td>[[${keypeople.email}]]</td>
+              <td><a th:href="@{'/keypeople/dettaglio/' + ${keypeople.id}}">[[${keypeople.nome}]]</a><br>[[${keypeople.email}]]</td>
               <td>[[${keypeople.cellulare}]]</td>
               <td>[[${keypeople.owner?.descrizione}]]</td>
               <td>[[${keypeople.azienda?.denominazione}]]</td>
@@ -107,29 +116,62 @@
                 <div class="btn-group" role="group" aria-label="Actions: edit and delete">
                   <a class="btn-info mr-3 btn-lg btn-icon"
                      th:href="@{'/keypeople/modifica/' + ${keypeople.id}}"><i class="fas fa-pen"></i></a>
-                  <a class="btn-info btn-lg btn-icon"
-                     th:href="@{'/keypeople/elimina/' + ${keypeople.id}}"><i class="fas fa-trash"></i></a>
+                  <a href="#" data-toggle="modal" data-target="#modalDelete" th:attr="data-target='#modalDelete'+${keypeople.id}"
+                     class="col btn-danger btn-lg btn-icon" style="margin: 0;"><i class="fas fa-trash"></i></a>
                 </div>
               </td>
             </tr>
+            <div class="modal fade in" th:id="modalDelete+${keypeople.id}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Cancellazione Contatto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p class="col-form-label">Stai per cancellare il contatto selezionato, continuare? </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Indietro</button>
+                    <a type="submit" class="btn btn-primary" th:href="@{/keypeople/elimina/{id}(id=${keypeople.id})}">
+                      <i class="fa fa-check"></i>Conferma</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </th:block>
           </tbody>
-        </table>
-                <div class='pagination-container' >
-                    <nav>
+            <tfoot>
+            <tr>
+              <td colspan="7" style="padding:0px;">
+                <div class="row">
+                  <div class="col-sm-3"></div>
+                  <div class="col-sm-3"></div>
+                  <div class="col-sm-3"></div>
+                  <div class="col-sm-3" style="padding-left: 3%">
+                    <div class='pagination-container' >
+                      <nav>
                         <ul class="pagination">
 
-                            <li data-page="prev" >
-                                <span> < <span class="sr-only">(current)</span></span>
-                            </li>
-                            <!--	Here the JS Function Will Add the Rows -->
-                            <li data-page="next" class="prev">
-                                <span> > <span class="sr-only">(current)</span></span>
-                            </li>
+                          <li data-page="prev" >
+                            <span> < <span class="sr-only">(current)</span></span>
+                          </li>
+                          <!--	Here the JS Function Will Add the Rows -->
+                          <li data-page="next" class="prev">
+                            <span> > <span class="sr-only">(current)</span></span>
+                          </li>
                         </ul>
-                    </nav>
+                      </nav>
+                    </div>
+                  </div>
                 </div>
-
+              </td>
+            </tr>
+            </tfoot>
+        </table>
+        </div>
       </div>
     </div>
   </div>
