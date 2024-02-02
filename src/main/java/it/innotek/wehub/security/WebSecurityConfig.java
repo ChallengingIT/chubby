@@ -60,46 +60,39 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        /*http.headers()
+        http.headers()
             .xssProtection()
             .and()
-            .contentSecurityPolicy("script-src 'self'");*/
+            .contentSecurityPolicy("script-src 'self'");
 
         http
             .csrf().disable()
-                //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             //.and()
-            //    .requiresChannel(channel ->                 //remove to return in http mode
-            //            channel.anyRequest().requiresSecure())
+            .requiresChannel(channel ->                 //remove to return in http mode
+                channel.anyRequest().requiresSecure())
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/associazioni/**").permitAll()
-                    .requestMatchers("/aziende/**").permitAll()
-                    .requestMatchers("/staffing/**").permitAll()
-                    .requestMatchers("/fatturazione/attiva/**").permitAll()
-                    .requestMatchers("/fatturazione/passiva/**").permitAll()
-                    .requestMatchers("/files/**").permitAll()
-                    .requestMatchers("/fornitori/**").permitAll()
-                    .requestMatchers("/hr/**").permitAll()
-                    .requestMatchers("/intervista/**").permitAll()
-                    .requestMatchers("/keypeople/**").permitAll()
-                    .requestMatchers("/need/**").permitAll()
-                    .requestMatchers("/progetti/**").permitAll()
-                    .requestMatchers("/timesheet/**").permitAll()
-                    .anyRequest().authenticated()
-                    //.anyRequest().permitAll()
+                    auth.requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/associazioni/**").permitAll()
+                        .requestMatchers("/aziende/**").permitAll()
+                        .requestMatchers("/staffing/**").permitAll()
+                        .requestMatchers("/files/**").permitAll()
+                        .requestMatchers("/intervista/**").permitAll()
+                        .requestMatchers("/keypeople/**").permitAll()
+                        .requestMatchers("/need/**").permitAll()
+                        .anyRequest().authenticated()
+                //.anyRequest().permitAll()
             )
             .logout()
-                .deleteCookies("JSESSIONID")
-                .permitAll()
+            .deleteCookies("JSESSIONID")
+            .permitAll()
             .and()
             .sessionManagement()
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(false)
-                .expiredUrl("/login?expired");
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(false)
+            .expiredUrl("/login?expired");
 
         http.exceptionHandling().accessDeniedPage("/error");
 
