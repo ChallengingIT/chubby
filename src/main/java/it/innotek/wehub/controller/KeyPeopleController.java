@@ -5,10 +5,7 @@
 package it.innotek.wehub.controller;
 
 import it.innotek.wehub.EmailSenderService;
-import it.innotek.wehub.entity.Attivita;
-import it.innotek.wehub.entity.Cliente;
-import it.innotek.wehub.entity.KeyPeople;
-import it.innotek.wehub.entity.Owner;
+import it.innotek.wehub.entity.*;
 import it.innotek.wehub.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +49,42 @@ public class KeyPeopleController {
 
         return keyPeopleRepository.findAll();
     }
+
+    @GetMapping("/react/mod")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<KeyPeopleModificato> getAllMod() {
+        logger.info("Key people Mod");
+        List<KeyPeople> keyPeoples = keyPeopleRepository.findAll();
+        List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+
+        for (KeyPeople keyPeople : keyPeoples) {
+            KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+
+            keyPeopleMod.setId(keyPeople.getId());
+            keyPeopleMod.setCellulare(keyPeople.getCellulare());
+            keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+            keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+            keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+            keyPeopleMod.setEmail(keyPeople.getEmail());
+            keyPeopleMod.setNome(keyPeople.getNome());
+            keyPeopleMod.setRuolo(keyPeople.getRuolo());
+            keyPeopleMod.setStatus(keyPeople.getStatus());
+
+            Cliente cliente = new Cliente();
+
+            cliente.setId(keyPeople.getCliente().getId());
+            cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+
+            keyPeopleMod.setCliente(cliente);
+            keyPeopleMod.setNote(keyPeople.getNote());
+            keyPeopleMod.setOwner(keyPeople.getOwner());
+
+            keyPeoplesMod.add(keyPeopleMod);
+        }
+
+        return keyPeoplesMod;
+    }
+
 
     @GetMapping("/react/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")

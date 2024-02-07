@@ -21,6 +21,8 @@ public interface AssociazioniRepository extends JpaRepository<AssociazioneCandid
 
     List<AssociazioneCandidatoNeed> findByCandidato_Id(Integer id);
 
+    List<AssociazioneCandidatoNeed> findByNeed_IdOrderByDataModificaDesc(Integer idNeed);
+
     List<AssociazioneCandidatoNeed> findByNeed_Id(Integer idNeed);
 
     @Query(value= """

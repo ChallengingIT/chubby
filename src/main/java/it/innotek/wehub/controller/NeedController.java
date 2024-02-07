@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -58,6 +55,66 @@ public class NeedController {
         return needRepository.findAll();
     }
 
+    @GetMapping("/react/modificato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedModificato> getMod() {
+        logger.info("Need modificati");
+
+        List<Need> needs = needRepository.findAll();
+        List<NeedModificato> needsModificati = new ArrayList<>();
+
+        for (Need need : needs) {
+            NeedModificato needSolo = new NeedModificato();
+
+            needSolo.setId(need.getId());
+            needSolo.setDescrizione(need.getDescrizione());
+            needSolo.setPriorita(need.getPriorita());
+            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+
+            Cliente cliente = new Cliente();
+
+            cliente.setId(need.getCliente().getId());
+            cliente.setDenominazione(need.getCliente().getDenominazione());
+
+            needSolo.setCliente(cliente);
+            needSolo.setLocation(need.getLocation());
+            needSolo.setNote(need.getNote());
+            needSolo.setNumeroRisorse(need.getNumeroRisorse());
+            needSolo.setOwner(need.getOwner());
+            needSolo.setSkills(need.getSkills());
+            needSolo.setSkills2(need.getSkills2());
+            needSolo.setStato(need.getStato());
+            needSolo.setTipo(need.getTipo());
+            needSolo.setTipologia(need.getTipologia());
+            needSolo.setWeek(need.getWeek());
+
+            needsModificati.add(needSolo);
+        }
+
+        return needsModificati;
+    }
+
+    @GetMapping("/react/cliente/priorita/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedSoloPriorita> getAllSoloPriorita(@PathVariable("id") Integer id) {
+        logger.info("Need solo priorita");
+
+        List<Need> needs = needRepository.findByCliente_Id(id);
+        List<NeedSoloPriorita> needsPriorita = new ArrayList<>();
+
+        for (Need need : needs) {
+            NeedSoloPriorita needSolo = new NeedSoloPriorita();
+
+            needSolo.setId(need.getId());
+            needSolo.setDescrizione(need.getDescrizione());
+            needSolo.setPriorita(need.getPriorita());
+
+            needsPriorita.add(needSolo);
+        }
+
+        return needsPriorita;
+    }
+
     @GetMapping("/react/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public Need getById(@PathVariable("id") Integer id) {
@@ -72,6 +129,45 @@ public class NeedController {
         logger.info("Need tramite id cliente");
 
         return needRepository.findByCliente_Id(id);
+    }
+
+    @GetMapping("/react/cliente/modificato/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedModificato> getByIdClienteMod(@PathVariable("id") Integer id) {
+        logger.info("Need tramite id cliente modificati");
+
+        List<Need> needs = needRepository.findByCliente_Id(id);
+        List<NeedModificato> needsModificati = new ArrayList<>();
+
+        for (Need need : needs) {
+            NeedModificato needSolo = new NeedModificato();
+
+            needSolo.setId(need.getId());
+            needSolo.setDescrizione(need.getDescrizione());
+            needSolo.setPriorita(need.getPriorita());
+            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+
+            Cliente cliente = new Cliente();
+
+            cliente.setId(need.getCliente().getId());
+            cliente.setDenominazione(need.getCliente().getDenominazione());
+
+            needSolo.setCliente(cliente);
+            needSolo.setLocation(need.getLocation());
+            needSolo.setNote(need.getNote());
+            needSolo.setNumeroRisorse(need.getNumeroRisorse());
+            needSolo.setOwner(need.getOwner());
+            needSolo.setSkills(need.getSkills());
+            needSolo.setSkills2(need.getSkills2());
+            needSolo.setStato(need.getStato());
+            needSolo.setTipo(need.getTipo());
+            needSolo.setTipologia(need.getTipologia());
+            needSolo.setWeek(need.getWeek());
+
+            needsModificati.add(needSolo);
+        }
+
+        return needsModificati;
     }
 
     @GetMapping("/react/stato")
@@ -200,6 +296,37 @@ public class NeedController {
 
     }
 
+    @GetMapping("/react/match/associabili/mod/{idNeed}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<CandidatoModificato> showMatchFormMod(
+        @PathVariable("idNeed") Integer idNeed
+    ) {
+        logger.info("Candidati non associati al need modificati");
+        List<Candidato> candidati = candidatoRepository.findCandidatiNonAssociati(idNeed);
+        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+
+        for (Candidato candidato : candidati) {
+            CandidatoModificato candidatoMod = new CandidatoModificato();
+
+            candidatoMod.setId(candidato.getId());
+            candidatoMod.setNote(candidato.getNote());
+            candidatoMod.setOwner(candidato.getOwner());
+            candidatoMod.setStato(candidato.getStato());
+            candidatoMod.setTipologia(candidato.getTipologia());
+            candidatoMod.setCognome(candidato.getCognome());
+            candidatoMod.setNome(candidato.getNome());
+            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+            candidatoMod.setEmail(candidato.getEmail());
+            candidatoMod.setRal(candidato.getRal());
+            candidatoMod.setRating(candidato.getRating());
+
+            candidatiModificati.add(candidatoMod);
+        }
+
+        return candidatiModificati;
+
+    }
+
     @GetMapping("/react/match/associati/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<Candidato> showMatchAssociatiForm(
@@ -208,6 +335,37 @@ public class NeedController {
         logger.info("Candidati associati al need");
 
         return candidatoRepository.findCandidatiAssociati(idNeed);
+
+    }
+
+    @GetMapping("/react/match/associati/mod/{idNeed}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<CandidatoModificato> showMatchAssociatiMod(
+        @PathVariable("idNeed") Integer idNeed
+    ) {
+        logger.info("Candidati non associati al need modificati");
+        List<Candidato> candidati = candidatoRepository.findCandidatiAssociati(idNeed);
+        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+
+        for (Candidato candidato : candidati) {
+            CandidatoModificato candidatoMod = new CandidatoModificato();
+
+            candidatoMod.setId(candidato.getId());
+            candidatoMod.setNote(candidato.getNote());
+            candidatoMod.setOwner(candidato.getOwner());
+            candidatoMod.setStato(candidato.getStato());
+            candidatoMod.setTipologia(candidato.getTipologia());
+            candidatoMod.setCognome(candidato.getCognome());
+            candidatoMod.setNome(candidato.getNome());
+            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+            candidatoMod.setEmail(candidato.getEmail());
+            candidatoMod.setRal(candidato.getRal());
+            candidatoMod.setRating(candidato.getRating());
+
+            candidatiModificati.add(candidatoMod);
+        }
+
+        return candidatiModificati;
 
     }
 

@@ -7,7 +7,9 @@ package it.innotek.wehub.controller;
 import it.innotek.wehub.entity.Cliente;
 import it.innotek.wehub.entity.TipologiaProgetto;
 import it.innotek.wehub.entity.staff.Staff;
+import it.innotek.wehub.entity.staff.StaffModificato;
 import it.innotek.wehub.entity.timesheet.Progetto;
+import it.innotek.wehub.entity.timesheet.ProgettoModificato;
 import it.innotek.wehub.repository.ClienteRepository;
 import it.innotek.wehub.repository.ProgettoRepository;
 import it.innotek.wehub.repository.StaffRepository;
@@ -59,13 +61,13 @@ public class ProgettoController {
                         progetto.setDurataEffettiva(0);
                     }
 
-                    if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() )) {
+                    if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() ) && ( null != progetto.getDurataEffettiva() )) {
                         progetto.setMolTotale(( progetto.getMargine() * progetto.getDurataStimata() ) + progetto.getDurataEffettiva());
                     } else {
                         progetto.setMolTotale(0);
                     }
 
-                    if (null != progetto.getRate()) {
+                    if (null != progetto.getRate() && ( null != progetto.getDurataEffettiva() )) {
                         progetto.setValoreTotale(progetto.getRate() * ( progetto.getDurataStimata() - progetto.getDurataEffettiva() ));
                     } else {
                         progetto.setValoreTotale(0);
@@ -82,6 +84,93 @@ public class ProgettoController {
             return null;
         }
     }
+
+    @GetMapping("/react/mod")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<ProgettoModificato> getAllMod()
+    {
+        try {
+            List<Progetto> listProgetti = new ArrayList<>();
+            listProgetti = progettoRepository.findAll().stream().filter(p -> p.getTipologia().getId() != 1).toList();
+
+            for (Progetto progetto : listProgetti) {
+                if (( null != progetto.getTipologia() ) && progetto.getTipologia().getId() != 1) {
+                    if (null != progetto.getIdStaff()) {
+                        progetto.setDurataEffettiva(progettoRepository.getOreEffettive(progetto.getId(), progetto.getIdStaff()));
+
+                        if (null == progetto.getDurataEffettiva()) {
+                            progetto.setDurataEffettiva(0);
+                        }
+
+                    } else {
+                        progetto.setDurataEffettiva(0);
+                    }
+
+                    if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() ) && ( null != progetto.getDurataEffettiva() )) {
+                        progetto.setMolTotale(( progetto.getMargine() * progetto.getDurataStimata() ) + progetto.getDurataEffettiva());
+                    } else {
+                        progetto.setMolTotale(0);
+                    }
+
+                    if (null != progetto.getRate() && ( null != progetto.getDurataEffettiva() )) {
+                        progetto.setValoreTotale(progetto.getRate() * ( progetto.getDurataStimata() - progetto.getDurataEffettiva() ));
+                    } else {
+                        progetto.setValoreTotale(0);
+                    }
+
+                    progettoRepository.save(progetto);
+                }
+            }
+
+            List<ProgettoModificato> progettiModificati = new ArrayList<>();
+
+            for (Progetto progetto : listProgetti) {
+                ProgettoModificato progettoMod = new ProgettoModificato();
+
+                progettoMod.setId(progetto.getId());
+                progettoMod.setNote(progetto.getNote());
+                progettoMod.setTipologia(progetto.getTipologia());
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(progetto.getCliente().getId());
+                cliente.setDenominazione(progetto.getCliente().getDenominazione());
+
+                progettoMod.setCliente(cliente);
+                progettoMod.setCosto(progetto.getCosto());
+                progettoMod.setDescription(progetto.getDescription());
+                progettoMod.setDurata(progetto.getDurata());
+                progettoMod.setDurataEffettiva(progetto.getDurataEffettiva());
+                progettoMod.setDurataStimata(progetto.getDurataStimata());
+                progettoMod.setInizio(progetto.getInizio());
+                progettoMod.setMargine(progetto.getMargine());
+                progettoMod.setMarginePerc(progetto.getMarginePerc());
+                progettoMod.setMolTotale(progetto.getMolTotale());
+                progettoMod.setRate(progetto.getRate());
+                progettoMod.setScadenza(progetto.getScadenza());
+
+                StaffModificato staffModificato = new StaffModificato();
+                Staff staff = staffRepository.findById(progetto.getIdStaff()).get();
+
+                staffModificato.setId(staff.getId());
+                staffModificato.setNome(staff.getNome());
+                staffModificato.setCognome(staff.getCognome());
+
+                progettoMod.setStaff(staffModificato);
+                progettoMod.setTipologia(progetto.getTipologia());
+                progettoMod.setValoreTotale(progetto.getValoreTotale());
+
+                progettiModificati.add(progettoMod);
+            }
+
+            return progettiModificati;
+        } catch (Exception e) {
+            logger.error(e.toString());
+
+            return null;
+        }
+    }
+
 
     @GetMapping("/react/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
@@ -118,13 +207,13 @@ public class ProgettoController {
             }
             progetto.setDurataEffettiva(0);
 
-            if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() )) {
+            if (( null != progetto.getDurataStimata() ) && ( null != progetto.getMargine() ) && ( null != progetto.getDurataEffettiva() )) {
                 progetto.setMolTotale(( progetto.getMargine() * progetto.getDurataStimata() ) + progetto.getDurataEffettiva());
             } else {
                 progetto.setMolTotale(0);
             }
 
-            if (null != progetto.getRate()) {
+            if (null != progetto.getRate() && ( null != progetto.getDurataEffettiva() )) {
                 progetto.setValoreTotale(progetto.getRate() * ( progetto.getDurataStimata() - progetto.getDurataEffettiva() ));
             } else {
                 progetto.setValoreTotale(0);

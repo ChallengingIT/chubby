@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,11 +48,63 @@ public class AziendeController {
 
     @GetMapping("/react")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    //@PreAuthorize("hasRole(@roles.ADMIN)")
     public List<Cliente> getAll() {
         logger.info("Lista aziende");
-
         return clienteRepository.findAll();
+    }
+
+    @GetMapping("/react/select")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<ClienteSelect> getAllSelect() {
+        logger.info("Lista aziende");
+
+        List<Cliente> aziende = clienteRepository.findAll();
+        List<ClienteSelect> aziendeModificate = new ArrayList<>();
+
+        for (Cliente azienda : aziende) {
+            ClienteSelect aziendaModificata = new ClienteSelect();
+
+            aziendaModificata.setDenominazione(azienda.getDenominazione());
+            aziendaModificata.setId(azienda.getId());
+
+            aziendeModificate.add(aziendaModificata);
+        }
+
+        return aziendeModificate;
+    }
+
+    @GetMapping("/react/mod")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<ClienteModificato> getAllMod() {
+        logger.info("Lista aziende");
+
+        List<Cliente> aziende = clienteRepository.findAll();
+        List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+        for (Cliente azienda : aziende) {
+            ClienteModificato aziendaModificata = new ClienteModificato();
+
+            aziendaModificata.setDenominazione(azienda.getDenominazione());
+            aziendaModificata.setEmail(azienda.getEmail());
+            aziendaModificata.setId(azienda.getId());
+            aziendaModificata.setPi(azienda.getPi());
+            aziendaModificata.setNote(azienda.getNote());
+            aziendaModificata.setCf(azienda.getCf());
+            aziendaModificata.setCap(azienda.getCap());
+            aziendaModificata.setCitta(azienda.getCitta());
+            aziendaModificata.setProvincia(azienda.getProvincia());
+            aziendaModificata.setPec(azienda.getPec());
+            aziendaModificata.setSito(azienda.getSito());
+            aziendaModificata.setStatus(azienda.getStatus());
+            aziendaModificata.setOwner(azienda.getOwner());
+            aziendaModificata.setTipologia(azienda.getTipologia());
+
+            aziendeModificate.add(aziendaModificata);
+        }
+
+        return aziendeModificate;
     }
 
     @GetMapping("/react/{id}")
