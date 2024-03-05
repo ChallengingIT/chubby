@@ -107,6 +107,42 @@ public class AziendeController {
         return aziendeModificate;
     }
 
+    @GetMapping("/react/ricerca/mod")
+    public List<ClienteModificato> getAllModSearch(
+        @RequestParam("stato") @Nullable Integer stato,
+        @RequestParam("ragione") @Nullable String ragSociale,
+        @RequestParam("owner") @Nullable Integer owner,
+        @RequestParam("tipologia") @Nullable String tipologia
+    ) {
+        logger.info("Lista aziende");
+
+        List<Cliente> aziende = clienteRepository.ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(stato, owner, tipologia, ragSociale);
+        List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+        for (Cliente azienda : aziende) {
+            ClienteModificato aziendaModificata = new ClienteModificato();
+
+            aziendaModificata.setDenominazione(azienda.getDenominazione());
+            aziendaModificata.setEmail(azienda.getEmail());
+            aziendaModificata.setId(azienda.getId());
+            aziendaModificata.setPi(azienda.getPi());
+            aziendaModificata.setNote(azienda.getNote());
+            aziendaModificata.setCf(azienda.getCf());
+            aziendaModificata.setCap(azienda.getCap());
+            aziendaModificata.setCitta(azienda.getCitta());
+            aziendaModificata.setProvincia(azienda.getProvincia());
+            aziendaModificata.setPec(azienda.getPec());
+            aziendaModificata.setSito(azienda.getSito());
+            aziendaModificata.setStatus(azienda.getStatus());
+            aziendaModificata.setOwner(azienda.getOwner());
+            aziendaModificata.setTipologia(azienda.getTipologia());
+
+            aziendeModificate.add(aziendaModificata);
+        }
+
+        return aziendeModificate;
+    }
+
     @GetMapping("/react/{id}")
     ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public Cliente getAzienda(

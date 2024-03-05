@@ -10,6 +10,7 @@ import it.innotek.wehub.entity.timesheet.Calendario;
 import it.innotek.wehub.entity.timesheet.Progetto;
 import it.innotek.wehub.repository.*;
 import it.innotek.wehub.util.UtilLib;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,26 @@ public class AssociazioneController {
         logger.info("Associazione by id");
 
         return associazioniRepository.findById(id).get();
+    }
+
+    @GetMapping("/react/match/ricerca/{idCandidato}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<AssociazioneCandidatoNeed> showMatchForm(
+        @PathVariable("idCandidato") Integer idCandidato,
+        @RequestParam("data") @Nullable String dataColloquio,
+        @RequestParam("stato") @Nullable Integer stato,
+        @RequestParam("azienda") @Nullable Integer azienda
+    ) {
+        logger.info("Need associabili al candidato: " + idCandidato);
+
+        Date dataColloquioDate = null;
+
+        if(null != dataColloquio) {
+            dataColloquioDate = Date.valueOf(dataColloquio);
+        }
+
+        return associazioniRepository.ricercaByCandidato_IdAndCliente_IdAndStato_IdAndDataModifica(idCandidato,azienda, stato, dataColloquioDate );
+
     }
 
     @GetMapping("/react/stati")

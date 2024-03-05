@@ -97,7 +97,43 @@ public class CandidatoController {
         return candidatiModificati;
     }
 
+    @GetMapping("/react/mod/ricerca")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<CandidatoModificato> getAllModRicerca(
+        @RequestParam("nome") @Nullable String nome,
+        @RequestParam("cognome") @Nullable String cognome,
+        @RequestParam("email") @Nullable String email,
+        @RequestParam("stato") @Nullable Integer stato,
+        @RequestParam("tipo") @Nullable Integer tipo,
+        @RequestParam("tipologia") @Nullable Integer tipologia
+    ) {
+        logger.info("Candidati");
+        List<Candidato> candidati = candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(
+            nome, cognome,email,tipologia,stato, tipo
+        );
+        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
+        for (Candidato candidato : candidati) {
+            CandidatoModificato candidatoMod = new CandidatoModificato();
+
+            candidatoMod.setId(candidato.getId());
+            candidatoMod.setNote(candidato.getNote());
+            candidatoMod.setOwner(candidato.getOwner());
+            candidatoMod.setStato(candidato.getStato());
+            candidatoMod.setTipologia(candidato.getTipologia());
+            candidatoMod.setCognome(candidato.getCognome());
+            candidatoMod.setNome(candidato.getNome());
+            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+            candidatoMod.setEmail(candidato.getEmail());
+
+            candidatoMod.setRal(candidato.getRal());
+            candidatoMod.setRating(candidato.getRating());
+
+            candidatiModificati.add(candidatoMod);
+        }
+
+        return candidatiModificati;
+    }
 
     @GetMapping("/react/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")

@@ -170,6 +170,52 @@ public class NeedController {
         return needsModificati;
     }
 
+    @GetMapping("/react/ricerca/modificato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedModificato> getModRicerca(
+        @RequestParam("azienda") @Nullable Integer azienda,
+        @RequestParam("stato") @Nullable Integer stato,
+        @RequestParam("priorita") @Nullable Integer priorita,
+        @RequestParam("owner") @Nullable Integer owner,
+        @RequestParam("week") @Nullable String week,
+        @RequestParam("tipologia") @Nullable Integer tipologia
+    ) {
+        logger.info("Need modificati");
+
+        List<Need> needs = needRepository.ricerca(azienda, stato, priorita, tipologia, week, owner);
+        List<NeedModificato> needsModificati = new ArrayList<>();
+
+        for (Need need : needs) {
+            NeedModificato needSolo = new NeedModificato();
+
+            needSolo.setId(need.getId());
+            needSolo.setDescrizione(need.getDescrizione());
+            needSolo.setPriorita(need.getPriorita());
+            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+
+            Cliente cliente = new Cliente();
+
+            cliente.setId(need.getCliente().getId());
+            cliente.setDenominazione(need.getCliente().getDenominazione());
+
+            needSolo.setCliente(cliente);
+            needSolo.setLocation(need.getLocation());
+            needSolo.setNote(need.getNote());
+            needSolo.setNumeroRisorse(need.getNumeroRisorse());
+            needSolo.setOwner(need.getOwner());
+            needSolo.setSkills(need.getSkills());
+            needSolo.setSkills2(need.getSkills2());
+            needSolo.setStato(need.getStato());
+            needSolo.setTipo(need.getTipo());
+            needSolo.setTipologia(need.getTipologia());
+            needSolo.setWeek(need.getWeek());
+
+            needsModificati.add(needSolo);
+        }
+
+        return needsModificati;
+    }
+
     @GetMapping("/react/stato")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<StatoN> getAllStato() {
