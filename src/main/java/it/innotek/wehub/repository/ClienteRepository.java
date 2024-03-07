@@ -5,6 +5,8 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Cliente;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
+
+    Page<Cliente> findAllByOrderByDenominazioneAsc(Pageable p);
 
     @Query(value= """
          SELECT c.*
@@ -28,13 +32,16 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Query(value= """
          SELECT c.*, co.id_owner,
-            (ifnull ((select id_prospection from cliente_prospection where id_cliente = c.id),null)) id_prospection,            (ifnull ((select id_qm from cliente_qm where id_cliente = c.id),null)) id_qm              FROM cliente c, cliente_owner co\s
+          (ifnull ((select id_prospection from cliente_prospection where id_cliente = c.id),null)) id_prospection,
+          (ifnull ((select id_qm from cliente_qm where id_cliente = c.id),null)) id_qm
+         FROM cliente c, cliente_owner co\s
          where c.id = co.id_cliente
          and if(?1 is not null, c.status = ?1, 1=1)
          and if(?2 is not null, co.id_owner = ?2, 1=1)
          and if(?3 is not null, c.tipologia like ?3%, 1=1)
          and if(?4 is not null, c.denominazione like %?4%, 1=1)
+         order by c.denominazione asc
         """,nativeQuery=true)
-    List<Cliente> ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(
-        Integer status, Integer owner, String tipologia, String denominazione);
+    Page<Cliente> ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(
+        Integer status, Integer owner, String tipologia, String denominazione, Pageable p);
 }

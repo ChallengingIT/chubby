@@ -5,6 +5,8 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Candidato;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Repository
 public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
+
+    Page<Candidato> findAllByOrderByCognomeAsc(Pageable p);
 
     @Query(value= """
          SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
@@ -29,10 +33,10 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          and if(?4 is not null, tc.id_tipologia = ?4, 1=1)
          and if(?5 is not null, sc.id_stato=?5, 1=1)
          and if(?6 is not null, ttc.id_tipo=?6, 1=1)
-         limit 80
+         order by c.cognome asc
         """, nativeQuery=true)
-    List<Candidato> ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id
-        (String nome, String cognome, String email,Integer idTipologia, Integer idStato, Integer idTipo);
+    Page<Candidato> ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id
+        (String nome, String cognome, String email,Integer idTipologia, Integer idStato, Integer idTipo, Pageable p);
 
     @Query(value= """
          SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
@@ -82,9 +86,9 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          and c.id = ttc.id_candidato
          and n.id = ?1
          and c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         limit 80
+         order by c.cognome asc
         """, nativeQuery=true)
-    List<Candidato> findCandidatiNonAssociati(Integer idNeed);
+    Page<Candidato> findCandidatiNonAssociati(Integer idNeed, Pageable p);
 
     @Query(value= """
          select distinct c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo,
@@ -106,9 +110,9 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          and if(?7 is not null, c.anni_esperienza_ruolo < ?7, 1=1)
          limit 80
         """, nativeQuery=true)
-    List<Candidato> ricercaCandidatiNonAssociati(Integer idNeed, String nome, String cognome,
+    Page<Candidato> ricercaCandidatiNonAssociati(Integer idNeed, String nome, String cognome,
                                                  Integer idTipologia, Integer idTipo, Integer anniMinimi,
-                                                 Integer anniMassimi);
+                                                 Integer anniMassimi, Pageable p);
 
     @Query(value= """
          select distinct c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo,
@@ -122,7 +126,7 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          and c.id = ttc.id_candidato
          and n.id = ?1
          and c.id in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         limit 80
+         order by c.cogmome asc
         """, nativeQuery=true)
-    List<Candidato> findCandidatiAssociati(Integer idNeed);
+    Page<Candidato> findCandidatiAssociati(Integer idNeed, Pageable p);
 }

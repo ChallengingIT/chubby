@@ -10,6 +10,9 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -57,10 +60,15 @@ public class NeedController {
 
     @GetMapping("/react/modificato")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<NeedModificato> getMod() {
+    public List<NeedModificato> getMod(
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
         logger.info("Need modificati");
 
-        List<Need> needs = needRepository.findAll();
+        Pageable             p               = PageRequest.of(pagina, quantita);
+        Page<Need>           pageableNeed    = needRepository.findAllByOrderByDescrizioneAsc(p);
+        List<Need>           needs           = pageableNeed.getContent();
         List<NeedModificato> needsModificati = new ArrayList<>();
 
         for (Need need : needs) {
@@ -133,10 +141,18 @@ public class NeedController {
 
     @GetMapping("/react/cliente/modificato/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<NeedModificato> getByIdClienteMod(@PathVariable("id") Integer id) {
+    public List<NeedModificato> getByIdClienteMod(
+        @PathVariable("id") Integer id,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
         logger.info("Need tramite id cliente modificati");
 
-        List<Need> needs = needRepository.findByCliente_Id(id);
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        Page<Need> pageableNeeds = needRepository.findByCliente_IdOrderByDescrizioneAsc(id, p);
+
+        List<Need> needs = pageableNeeds.getContent();
         List<NeedModificato> needsModificati = new ArrayList<>();
 
         for (Need need : needs) {
@@ -178,11 +194,17 @@ public class NeedController {
         @RequestParam("priorita") @Nullable Integer priorita,
         @RequestParam("owner") @Nullable Integer owner,
         @RequestParam("week") @Nullable String week,
-        @RequestParam("tipologia") @Nullable Integer tipologia
+        @RequestParam("tipologia") @Nullable Integer tipologia,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Need modificati");
 
-        List<Need> needs = needRepository.ricerca(azienda, stato, priorita, tipologia, week, owner);
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, priorita, tipologia, week, owner, p);
+        List<Need> needs = pageableNeeds.getContent();
+
         List<NeedModificato> needsModificati = new ArrayList<>();
 
         for (Need need : needs) {
@@ -324,31 +346,44 @@ public class NeedController {
     @GetMapping("/react/storico/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<AssociazioneCandidatoNeed> findByIdNeed(
-        @PathVariable("idNeed") Integer idNeed
+        @PathVariable("idNeed") Integer idNeed,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ){
         logger.info("Storico associazioni need");
 
-        return associazioniRepository.findByNeed_Id(idNeed);
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        return associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent();
     }
 
     @GetMapping("/react/match/associabili/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<Candidato> showMatchForm(
-        @PathVariable("idNeed") Integer idNeed
+        @PathVariable("idNeed") Integer idNeed,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati non associati al need");
 
-        return candidatoRepository.findCandidatiNonAssociati(idNeed);
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        return candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
 
     }
 
     @GetMapping("/react/match/associabili/mod/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<CandidatoModificato> showMatchFormMod(
-        @PathVariable("idNeed") Integer idNeed
+        @PathVariable("idNeed") Integer idNeed,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati non associati al need modificati");
-        List<Candidato> candidati = candidatoRepository.findCandidatiNonAssociati(idNeed);
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        List<Candidato> candidati = candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
         for (Candidato candidato : candidati) {
@@ -373,24 +408,76 @@ public class NeedController {
 
     }
 
+    @GetMapping("/react/match/associabili/ricerca/mod/{idNeed}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<CandidatoModificato> showRicercaMatchFormMod(
+        @PathVariable("idNeed") Integer idNeed,
+        @RequestParam("nome") @Nullable String nome,
+        @RequestParam("cognome") @Nullable String cognome,
+        @RequestParam("tipologia") @Nullable Integer idTipologia,
+        @RequestParam("tipo") @Nullable Integer idTipo,
+        @RequestParam("minimo") @Nullable Integer anniMinimi,
+        @RequestParam("massimo") @Nullable Integer anniMassimi,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Candidati non associati al need modificati");
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        List<Candidato> candidati = candidatoRepository.ricercaCandidatiNonAssociati(idNeed,
+            nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi, p).getContent();
+
+        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+
+        for (Candidato candidato : candidati) {
+            CandidatoModificato candidatoMod = new CandidatoModificato();
+
+            candidatoMod.setId(candidato.getId());
+            candidatoMod.setNote(candidato.getNote());
+            candidatoMod.setOwner(candidato.getOwner());
+            candidatoMod.setStato(candidato.getStato());
+            candidatoMod.setTipologia(candidato.getTipologia());
+            candidatoMod.setCognome(candidato.getCognome());
+            candidatoMod.setNome(candidato.getNome());
+            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+            candidatoMod.setEmail(candidato.getEmail());
+            candidatoMod.setRal(candidato.getRal());
+            candidatoMod.setRating(candidato.getRating());
+
+            candidatiModificati.add(candidatoMod);
+        }
+
+        return candidatiModificati;
+    }
+
     @GetMapping("/react/match/associati/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<Candidato> showMatchAssociatiForm(
-        @PathVariable("idNeed") Integer idNeed
+        @PathVariable("idNeed") Integer idNeed,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati associati al need");
 
-        return candidatoRepository.findCandidatiAssociati(idNeed);
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        return candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
 
     }
 
     @GetMapping("/react/match/associati/mod/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<CandidatoModificato> showMatchAssociatiMod(
-        @PathVariable("idNeed") Integer idNeed
+        @PathVariable("idNeed") Integer idNeed,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati non associati al need modificati");
-        List<Candidato> candidati = candidatoRepository.findCandidatiAssociati(idNeed);
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        List<Candidato> candidati = candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
         for (Candidato candidato : candidati) {

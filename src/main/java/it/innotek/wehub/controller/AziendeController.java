@@ -7,6 +7,8 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,10 +79,14 @@ public class AziendeController {
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     //@PreAuthorize("hasRole(@roles.ADMIN)")
-    public List<ClienteModificato> getAllMod() {
+    public List<ClienteModificato> getAllMod(
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
         logger.info("Lista aziende");
 
-        List<Cliente> aziende = clienteRepository.findAll();
+        Pageable                p                 = PageRequest.of(pagina, quantita);
+        List<Cliente>           aziende           = clienteRepository.findAllByOrderByDenominazioneAsc(p).getContent();
         List<ClienteModificato> aziendeModificate = new ArrayList<>();
 
         for (Cliente azienda : aziende) {
@@ -112,11 +118,14 @@ public class AziendeController {
         @RequestParam("stato") @Nullable Integer stato,
         @RequestParam("ragione") @Nullable String ragSociale,
         @RequestParam("owner") @Nullable Integer owner,
-        @RequestParam("tipologia") @Nullable String tipologia
+        @RequestParam("tipologia") @Nullable String tipologia,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Lista aziende");
 
-        List<Cliente> aziende = clienteRepository.ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(stato, owner, tipologia, ragSociale);
+        Pageable                p                 = PageRequest.of(pagina, quantita);
+        List<Cliente>           aziende           = clienteRepository.ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(stato, owner, tipologia, ragSociale, p).getContent();
         List<ClienteModificato> aziendeModificate = new ArrayList<>();
 
         for (Cliente azienda : aziende) {

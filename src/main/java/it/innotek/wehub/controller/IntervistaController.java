@@ -11,6 +11,8 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -56,20 +58,30 @@ public class IntervistaController {
     @GetMapping("/react/{idCandidato}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<Intervista> showIntervistaIdList(
-        @PathVariable("idCandidato") Integer idCandidato
+        @PathVariable("idCandidato") Integer idCandidato,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Interviste candidato tramite id");
-        return intervistaRepository.findByCandidato_Id(idCandidato);
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        return intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
 
     }
 
     @GetMapping("/react/mod/{idCandidato}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<IntervistaModificato> showIntervistaModIdList(
-        @PathVariable("idCandidato") Integer idCandidato
+        @PathVariable("idCandidato") Integer idCandidato,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Interviste candidato tramite id mod");
-        List<Intervista> interviste = intervistaRepository.findByCandidato_Id(idCandidato);
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        List<Intervista> interviste = intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
         List<IntervistaModificato> intervisteMod = new ArrayList<>();
 
         for (Intervista intervista : interviste) {
@@ -132,17 +144,20 @@ public class IntervistaController {
         @PathVariable("idCandidato") Integer idCandidato,
         @RequestParam("data") @Nullable String dataColloquio,
         @RequestParam("stato") @Nullable Integer stato,
-        @RequestParam("owner") @Nullable Integer owner
+        @RequestParam("owner") @Nullable Integer owner,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Interviste candidato tramite id mod");
 
-        Date dataColloquioDate = null;
+        Pageable p                 = PageRequest.of(pagina, quantita);
+        Date     dataColloquioDate = null;
 
         if(null != dataColloquio) {
             dataColloquioDate = Date.valueOf(dataColloquio);
         }
 
-        List<Intervista> interviste = intervistaRepository.ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato);
+        List<Intervista> interviste = intervistaRepository.ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato, p).getContent();
         List<IntervistaModificato> intervisteMod = new ArrayList<>();
 
         for (Intervista intervista : interviste) {

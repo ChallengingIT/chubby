@@ -5,6 +5,8 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Intervista;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,8 @@ import java.util.List;
 public interface IntervistaRepository extends JpaRepository<Intervista, Integer> {
 
     List<Intervista> findByCandidato_Id(Integer idCandidato);
+
+    Page<Intervista> findByCandidato_IdOrderByDataColloquioDesc(Integer idCandidato, Pageable p);
 
     //List<Intervista> findByCandidato_IdOrderByIdDesc(Integer idCandidato);
 
@@ -30,8 +34,9 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 and if(?1 is not null, si.id_stato = ?1, 1=1)
                 and if(?2 is not null, io.id_owner = ?2, 1=1)
                 and if(?3 is not null, i.data_colloquio <= ?3, 1=1)
+                order by i.data_colloquio desc
         """, nativeQuery=true)
-    List<Intervista> ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(Integer idStato, Integer idOwner, Date dataColloquio, Integer idCandidato);
+    Page<Intervista> ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(Integer idStato, Integer idOwner, Date dataColloquio, Integer idCandidato, Pageable p);
 
     @Query(value= """
          SELECT i.*, ci.id_candidato, io.id_owner, si.id_stato, ti.id_tipologia

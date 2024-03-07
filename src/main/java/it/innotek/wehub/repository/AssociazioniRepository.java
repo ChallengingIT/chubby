@@ -5,6 +5,8 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.AssociazioneCandidatoNeed;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,7 +23,7 @@ public interface AssociazioniRepository extends JpaRepository<AssociazioneCandid
 
     List<AssociazioneCandidatoNeed> findByCandidato_Id(Integer id);
 
-    List<AssociazioneCandidatoNeed> findByNeed_IdOrderByDataModificaDesc(Integer idNeed);
+    Page<AssociazioneCandidatoNeed> findByNeed_IdOrderByDataModificaDesc(Integer idNeed, Pageable p);
 
     List<AssociazioneCandidatoNeed> findByNeed_Id(Integer idNeed);
 
