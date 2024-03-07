@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface NeedRepository extends JpaRepository<Need, Integer> {
 
-    public Page<Need> findAllByOrderByDescrizioneAsc(Pageable p);
+    Page<Need> findAllByOrderByDescrizioneAsc(Pageable p);
 
     @Query(value=" SELECT count(distinct id_need) FROM wehub.need_associazione ", nativeQuery=true)
     Integer findNeedAssociati();
@@ -53,6 +53,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          and if(?6 is not null, non.id_owner = ?6, 1=1)
          and if(?5 is not null, n.week = ?5, 1=1)
          and if(?7 is not null, n.descrizione like %?7%, 1=1)
+         order by n.descrizione asc
         """, nativeQuery=true)
     Page<Need> ricerca(Integer idCliente, Integer idStato, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
 
@@ -65,6 +66,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
            and n.id = stn.id_need
            and c.id = ?1
            and n.id not in (select id_need from need_candidato where id_need = n.id and id_candidato = ?1)
+           order by n.descrizione asc
           """, nativeQuery=true)
     List<Need> findNeedAssociabiliCandidato(Integer idCandidato);
 

@@ -108,7 +108,7 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          and if(?5 is not null, ttc.id_tipo = ?5, 1=1)
          and if(?6 is not null, c.anni_esperienza_ruolo >= ?6, 1=1)
          and if(?7 is not null, c.anni_esperienza_ruolo < ?7, 1=1)
-         limit 80
+         order by c.cognome asc
         """, nativeQuery=true)
     Page<Candidato> ricercaCandidatiNonAssociati(Integer idNeed, String nome, String cognome,
                                                  Integer idTipologia, Integer idTipo, Integer anniMinimi,
