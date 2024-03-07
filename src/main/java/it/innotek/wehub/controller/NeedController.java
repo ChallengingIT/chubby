@@ -90,7 +90,6 @@ public class NeedController {
             needSolo.setNumeroRisorse(need.getNumeroRisorse());
             needSolo.setOwner(need.getOwner());
             needSolo.setSkills(need.getSkills());
-            needSolo.setSkills2(need.getSkills2());
             needSolo.setStato(need.getStato());
             needSolo.setTipo(need.getTipo());
             needSolo.setTipologia(need.getTipologia());
@@ -174,7 +173,6 @@ public class NeedController {
             needSolo.setNumeroRisorse(need.getNumeroRisorse());
             needSolo.setOwner(need.getOwner());
             needSolo.setSkills(need.getSkills());
-            needSolo.setSkills2(need.getSkills2());
             needSolo.setStato(need.getStato());
             needSolo.setTipo(need.getTipo());
             needSolo.setTipologia(need.getTipologia());
@@ -227,7 +225,6 @@ public class NeedController {
             needSolo.setNumeroRisorse(need.getNumeroRisorse());
             needSolo.setOwner(need.getOwner());
             needSolo.setSkills(need.getSkills());
-            needSolo.setSkills2(need.getSkills2());
             needSolo.setStato(need.getStato());
             needSolo.setTipo(need.getTipo());
             needSolo.setTipologia(need.getTipologia());
@@ -259,8 +256,7 @@ public class NeedController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveNeed(
         @RequestBody Map<String,String> needMap,
-        @RequestParam ("skill1") @Nullable List<Integer> skill1List,
-        @RequestParam ("skill2") @Nullable List<Integer> skill2List
+        @RequestParam ("skill1") @Nullable List<Integer> skill1List
     ) {
         logger.info("Salva need");
 
@@ -272,7 +268,7 @@ public class NeedController {
                 need = needRepository.findById(Integer.parseInt(needMap.get("id"))).get();
             }
 
-            trasformaMappaInNeed(need, needMap, skill1List, skill2List);
+            trasformaMappaInNeed(need, needMap, skill1List);
 
             needRepository.save(need);
 
@@ -503,7 +499,7 @@ public class NeedController {
 
     }
 
-    public void trasformaMappaInNeed(Need need, Map<String,String> needMap, List<Integer> skill1List, List<Integer> skill2List) {
+    public void trasformaMappaInNeed(Need need, Map<String,String> needMap, List<Integer> skill1List) {
         logger.debug("Trasforma mappa in need");
 
         need.setAnniEsperienza(needMap.get("anniEsperienza") != null ? Integer.parseInt(needMap.get("anniEsperienza")) : null);
@@ -556,16 +552,6 @@ public class NeedController {
 
         need.setSkills(skill1ListNew);
 
-        Set<Skill> skill2ListNew = new HashSet<>();
-
-        for (Integer skillId: skill2List) {
-            Skill skill = new Skill();
-            skill.setId(skillId);
-
-            skill2ListNew.add(skill);
-        }
-
-        need.setSkills2(skill2ListNew);
     }
 
 }
