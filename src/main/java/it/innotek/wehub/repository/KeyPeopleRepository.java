@@ -31,8 +31,9 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
        and if(?1 is not null, k.status = ?1, 1=1)
        and if(?2 is not null, kc.id_cliente = ?2, 1=1)
        and if(?3 is not null, ko.id_owner = ?3, 1=1)
+       and if(?4 is not null, k.nome like %?4%, 1=1)
        order by k.nome asc
       """,nativeQuery=true)
-  Page<KeyPeople> ricercaByStatusAndIdOwnerAndIdAzienda(String status, Integer azienda, Integer owner, Pageable p);
+  Page<KeyPeople> ricercaByStatusAndIdOwnerAndIdAzienda(String status, Integer azienda, Integer owner, String nome, Pageable p);
 
 }

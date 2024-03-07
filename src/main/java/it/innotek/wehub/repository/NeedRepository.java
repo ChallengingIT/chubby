@@ -52,8 +52,9 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          and if(?4 is not null, tn.id_tipologia = ?4, 1=1)
          and if(?6 is not null, non.id_owner = ?6, 1=1)
          and if(?5 is not null, n.week = ?5, 1=1)
+         and if(?7 is not null, n.descrizione like %?7%, 1=1)
         """, nativeQuery=true)
-    Page<Need> ricerca(Integer idCliente, Integer idStato, Integer priorita, Integer idTipologia, String week, Integer idOwner, Pageable p);
+    Page<Need> ricerca(Integer idCliente, Integer idStato, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
 
     @Query(value= """
            select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, stn.id_stato

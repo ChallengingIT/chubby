@@ -195,6 +195,7 @@ public class NeedController {
         @RequestParam("owner") @Nullable Integer owner,
         @RequestParam("week") @Nullable String week,
         @RequestParam("tipologia") @Nullable Integer tipologia,
+        @RequestParam("descrizione") @Nullable String descrizione,
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
     ) {
@@ -202,7 +203,7 @@ public class NeedController {
 
         Pageable p = PageRequest.of(pagina, quantita);
 
-        Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, priorita, tipologia, week, owner, p);
+        Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, priorita, tipologia, week, owner, descrizione, p);
         List<Need> needs = pageableNeeds.getContent();
 
         List<NeedModificato> needsModificati = new ArrayList<>();
