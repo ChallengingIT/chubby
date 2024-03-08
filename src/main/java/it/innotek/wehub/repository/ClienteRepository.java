@@ -31,10 +31,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     List<Cliente> findByEmail(String email);
 
     @Query(value= """
-         SELECT c.*, co.id_owner,
-          (ifnull ((select id_prospection from cliente_prospection where id_cliente = c.id),null)) id_prospection,
-          (ifnull ((select id_qm from cliente_qm where id_cliente = c.id),null)) id_qm
-         FROM cliente c, cliente_owner co\s
+         SELECT c.*, co.id_owner
+         FROM cliente c, cliente_owner co
          where c.id = co.id_cliente
          and if(?1 is not null, c.status = ?1, 1=1)
          and if(?2 is not null, co.id_owner = ?2, 1=1)
