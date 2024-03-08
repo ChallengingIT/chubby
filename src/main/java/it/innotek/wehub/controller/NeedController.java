@@ -342,7 +342,7 @@ public class NeedController {
 
     @GetMapping("/react/storico/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<AssociazioneCandidatoNeed> findByIdNeed(
+    public AssociazioneGroup findByIdNeed(
         @PathVariable("idNeed") Integer idNeed,
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
@@ -350,8 +350,12 @@ public class NeedController {
         logger.info("Storico associazioni need");
 
         Pageable p = PageRequest.of(pagina, quantita);
+        AssociazioneGroup associazioneGroup = new AssociazioneGroup();
 
-        return associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent();
+        associazioneGroup.setAssociazioni(associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent());
+        associazioneGroup.setRecord(associazioniRepository.countByNeed_Id(idNeed));
+
+        return associazioneGroup;
     }
 
     @GetMapping("/react/match/associabili/{idNeed}")
@@ -371,16 +375,16 @@ public class NeedController {
 
     @GetMapping("/react/match/associabili/mod/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> showMatchFormMod(
+    public CandidatoGroup showMatchFormMod(
         @PathVariable("idNeed") Integer idNeed,
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati non associati al need modificati");
 
-        Pageable p = PageRequest.of(pagina, quantita);
-
-        List<Candidato> candidati = candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
+        Pageable                  p                   = PageRequest.of(pagina, quantita);
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+        List<Candidato>           candidati           = candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
         for (Candidato candidato : candidati) {
@@ -401,13 +405,16 @@ public class NeedController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.countCandidatiNonAssociati(idNeed));
+
+        return candidatoGroup;
 
     }
 
     @GetMapping("/react/match/associabili/ricerca/mod/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> showRicercaMatchFormMod(
+    public CandidatoGroup showRicercaMatchFormMod(
         @PathVariable("idNeed") Integer idNeed,
         @RequestParam("nome") @Nullable String nome,
         @RequestParam("cognome") @Nullable String cognome,
@@ -420,11 +427,9 @@ public class NeedController {
     ) {
         logger.info("Candidati non associati al need modificati");
 
-        Pageable p = PageRequest.of(pagina, quantita);
-
-        List<Candidato> candidati = candidatoRepository.ricercaCandidatiNonAssociati(idNeed,
-            nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi, p).getContent();
-
+        Pageable                  p                   = PageRequest.of(pagina, quantita);
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+        List<Candidato>           candidati           = candidatoRepository.ricercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi, p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
         for (Candidato candidato : candidati) {
@@ -445,7 +450,10 @@ public class NeedController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.countRicercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi));
+
+        return candidatoGroup;
     }
 
     @GetMapping("/react/match/associati/{idNeed}")
@@ -465,16 +473,16 @@ public class NeedController {
 
     @GetMapping("/react/match/associati/mod/{idNeed}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> showMatchAssociatiMod(
+    public CandidatoGroup showMatchAssociatiMod(
         @PathVariable("idNeed") Integer idNeed,
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati non associati al need modificati");
 
-        Pageable p = PageRequest.of(pagina, quantita);
-
-        List<Candidato> candidati = candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
+        Pageable                  p                   = PageRequest.of(pagina, quantita);
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+        List<Candidato>           candidati           = candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
         for (Candidato candidato : candidati) {
@@ -495,7 +503,10 @@ public class NeedController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.countCandidatiAssociati(idNeed));
+
+        return candidatoGroup;
 
     }
 

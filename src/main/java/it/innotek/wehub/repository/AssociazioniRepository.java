@@ -17,6 +17,9 @@ import java.util.List;
 @Repository
 public interface AssociazioniRepository extends JpaRepository<AssociazioneCandidatoNeed, Integer> {
 
+    @Query("select count(a) from AssociazioneCandidatoNeed a where a.need.id = ?1")
+    long countByNeed_Id(Integer id);
+
     void deleteByCandidato_Id(Integer IdCandidato);
 
     List<AssociazioneCandidatoNeed> findByNeed_IdAndCandidato_IdAndStato_IdAndDataModifica(Integer id, Integer id1, Integer id2, Date dataModifica);

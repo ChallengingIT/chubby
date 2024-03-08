@@ -60,12 +60,13 @@ public class CandidatoController {
 
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> getAllMod(
+    public CandidatoGroup getAllMod(
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati");
 
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
         Pageable                  p                   = PageRequest.of(pagina, quantita);
         List<Candidato>           candidati           = candidatoRepository.findAllByOrderByCognomeAsc(p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
@@ -101,12 +102,15 @@ public class CandidatoController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.count());
+
+        return candidatoGroup;
     }
 
     @GetMapping("/react/mod/ricerca")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> getAllModRicerca(
+    public CandidatoGroup getAllModRicerca(
         @RequestParam("nome") @Nullable String nome,
         @RequestParam("cognome") @Nullable String cognome,
         @RequestParam("email") @Nullable String email,
@@ -118,6 +122,7 @@ public class CandidatoController {
     ) {
         logger.info("Candidati");
 
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
         Pageable                  p                   = PageRequest.of(pagina, quantita);
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
         List<Candidato>           candidati           =
@@ -145,7 +150,10 @@ public class CandidatoController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.count());
+
+        return candidatoGroup;
     }
 
     @GetMapping("/react/{id}")

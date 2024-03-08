@@ -72,7 +72,7 @@ public class IntervistaController {
 
     @GetMapping("/react/mod/{idCandidato}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<IntervistaModificato> showIntervistaModIdList(
+    public IntervistaGroup showIntervistaModIdList(
         @PathVariable("idCandidato") Integer idCandidato,
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
@@ -80,7 +80,7 @@ public class IntervistaController {
         logger.info("Interviste candidato tramite id mod");
 
         Pageable p = PageRequest.of(pagina, quantita);
-
+        IntervistaGroup intervistaGroup = new IntervistaGroup();
         List<Intervista> interviste = intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
         List<IntervistaModificato> intervisteMod = new ArrayList<>();
 
@@ -134,13 +134,16 @@ public class IntervistaController {
             intervisteMod.add(intervistaMod);
         }
 
-        return intervisteMod;
+        intervistaGroup.setInterviste(intervisteMod);
+        intervistaGroup.setRecord(intervistaRepository.countByCandidato_Id(idCandidato));
+
+        return intervistaGroup;
 
     }
 
     @GetMapping("/react/mod/ricerca/{idCandidato}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<IntervistaModificato> showIntervistaModIdListRicerca(
+    public IntervistaGroup showIntervistaModIdListRicerca(
         @PathVariable("idCandidato") Integer idCandidato,
         @RequestParam("data") @Nullable String dataColloquio,
         @RequestParam("stato") @Nullable Integer stato,
@@ -150,8 +153,9 @@ public class IntervistaController {
     ) {
         logger.info("Interviste candidato tramite id mod");
 
-        Pageable p                 = PageRequest.of(pagina, quantita);
-        Date     dataColloquioDate = null;
+        Pageable        p                 = PageRequest.of(pagina, quantita);
+        Date            dataColloquioDate = null;
+        IntervistaGroup intervistaGroup   = new IntervistaGroup();
 
         if(null != dataColloquio) {
             dataColloquioDate = Date.valueOf(dataColloquio);
@@ -210,7 +214,10 @@ public class IntervistaController {
             intervisteMod.add(intervistaMod);
         }
 
-        return intervisteMod;
+        intervistaGroup.setInterviste(intervisteMod);
+        intervistaGroup.setRecord(intervistaRepository.countRicercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato));
+
+        return intervistaGroup;
 
     }
 

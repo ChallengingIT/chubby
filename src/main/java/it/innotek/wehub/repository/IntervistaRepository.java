@@ -17,6 +17,9 @@ import java.util.List;
 @Repository
 public interface IntervistaRepository extends JpaRepository<Intervista, Integer> {
 
+    @Query("select count(i) from Intervista i where i.candidato.id = ?1")
+    long countByCandidato_Id(Integer id);
+
     List<Intervista> findByCandidato_Id(Integer idCandidato);
 
     Page<Intervista> findByCandidato_IdOrderByDataColloquioDesc(Integer idCandidato, Pageable p);
@@ -37,6 +40,22 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 order by i.data_colloquio desc
         """, nativeQuery=true)
     Page<Intervista> ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(Integer idStato, Integer idOwner, Date dataColloquio, Integer idCandidato, Pageable p);
+
+    @Query(value= """
+                SELECT count(*)
+                FROM intervista i, candidato_intervista ci, intervista_owner io, stato_intervista si, tipologia_intervista ti
+                where i.id = ci.id_intervista
+                and i.id = io.id_intervista
+                and i.id = si.id_intervista
+                and i.id = ti.id_intervista
+                and ci.id_candidato = ?4
+                and if(?1 is not null, si.id_stato = ?1, 1=1)
+                and if(?2 is not null, io.id_owner = ?2, 1=1)
+                and if(?3 is not null, i.data_colloquio <= ?3, 1=1)
+                order by i.data_colloquio desc
+        """, nativeQuery=true)
+    Long countRicercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(Integer idStato, Integer idOwner, Date dataColloquio, Integer idCandidato);
+
 
     @Query(value= """
          SELECT i.*, ci.id_candidato, io.id_owner, si.id_stato, ti.id_tipologia
