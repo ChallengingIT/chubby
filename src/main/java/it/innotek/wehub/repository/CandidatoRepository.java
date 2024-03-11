@@ -78,46 +78,46 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
     Integer findUltimoIdIntervistaCandidato(Integer idCandidato);
 
     @Query(value= """
-         select distinct c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo,
-           (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,
-           (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,
-           (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
-         from candidato c, need n,stato_candidato scc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
-         where 1= 1   and c.id = scc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and n.id = ?1
-         and c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         order by c.cognome asc
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+            from candidato c
+            left join fornitore_candidato fc on (c.id = fc.id_candidato )
+            left join facolta_candidato fac on (c.id = fac.id_candidato )
+            left join candidato_owner co on (c.id = co.id_candidato )
+            join stato_candidato scc on (c.id = scc.id_candidato)
+            join tipologia_candidato tc on (c.id = tc.id_candidato)
+            join tipo_candidato ttc on (c.id = ttc.id_candidato)
+            join livello_candidato lc on (c.id = lc.id_candidato)
+            where c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+            order by c.cognome asc
         """, nativeQuery=true)
     Page<Candidato> findCandidatiNonAssociati(Integer idNeed, Pageable p);
 
     @Query(value= """
          select count(*)
-         from candidato c, need n,stato_candidato scc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
-         where 1= 1   and c.id = scc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and n.id = ?1
-         and c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         order by c.cognome asc
+            from candidato c
+            left join fornitore_candidato fc on (c.id = fc.id_candidato )
+            left join facolta_candidato fac on (c.id = fac.id_candidato )
+            left join candidato_owner co on (c.id = co.id_candidato )
+            join stato_candidato scc on (c.id = scc.id_candidato)
+            join tipologia_candidato tc on (c.id = tc.id_candidato)
+            join tipo_candidato ttc on (c.id = ttc.id_candidato)
+            join livello_candidato lc on (c.id = lc.id_candidato)
+            where c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+            order by c.cognome asc
         """, nativeQuery=true)
     Long countCandidatiNonAssociati(Integer idNeed);
 
     @Query(value= """
-         select distinct c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo,
-           (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,
-           (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,
-           (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
-         from candidato c, need n,stato_candidato scc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
-         where 1=1   and c.id = scc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and n.id = ?1
-         and c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         from candidato c
+         left join fornitore_candidato fc on (c.id = fc.id_candidato )
+         left join facolta_candidato fac on (c.id = fac.id_candidato )
+         left join candidato_owner co on (c.id = co.id_candidato )
+         join stato_candidato scc on (c.id = scc.id_candidato)
+         join tipologia_candidato tc on (c.id = tc.id_candidato)
+         join tipo_candidato ttc on (c.id = ttc.id_candidato)
+         join livello_candidato lc on (c.id = lc.id_candidato)
+         where c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
          and if(?2 is not null, c.nome LIKE ?2%, 1=1)
          and if(?3 is not null, c.cognome LIKE ?3%, 1=1)
          and if(?4 is not null, tc.id_tipologia = ?4, 1=1)
@@ -132,13 +132,15 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
 
     @Query(value= """
          select count(*)
-         from candidato c, need n,stato_candidato scc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
-         where 1=1   and c.id = scc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and n.id = ?1
-         and c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+         from candidato c
+         left join fornitore_candidato fc on (c.id = fc.id_candidato )
+         left join facolta_candidato fac on (c.id = fac.id_candidato )
+         left join candidato_owner co on (c.id = co.id_candidato )
+         join stato_candidato scc on (c.id = scc.id_candidato)
+         join tipologia_candidato tc on (c.id = tc.id_candidato)
+         join tipo_candidato ttc on (c.id = ttc.id_candidato)
+         join livello_candidato lc on (c.id = lc.id_candidato)
+         where c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
          and if(?2 is not null, c.nome LIKE ?2%, 1=1)
          and if(?3 is not null, c.cognome LIKE ?3%, 1=1)
          and if(?4 is not null, tc.id_tipologia = ?4, 1=1)
@@ -152,31 +154,32 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
                                                  Integer anniMassimi);
 
     @Query(value= """
-         select distinct c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo,
-           (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,
-           (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,
-           (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
-         from candidato c, need n,stato_candidato scc, tipologia_candidato tc, tipo_candidato ttc,livello_candidato lc
-         where c.id = scc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and n.id = ?1
-         and c.id in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         order by c.cogmome asc
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         from candidato c
+         left join fornitore_candidato fc on (c.id = fc.id_candidato )
+         left join facolta_candidato fac on (c.id = fac.id_candidato )
+         left join candidato_owner co on (c.id = co.id_candidato )
+         join stato_candidato scc on (c.id = scc.id_candidato)
+         join tipologia_candidato tc on (c.id = tc.id_candidato)
+         join tipo_candidato ttc on (c.id = ttc.id_candidato)
+         join livello_candidato lc on (c.id = lc.id_candidato)
+         where c.id  in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+         order by c.cognome asc
         """, nativeQuery=true)
     Page<Candidato> findCandidatiAssociati(Integer idNeed, Pageable p);
 
     @Query(value= """
          select count(*)
-         from candidato c, need n,stato_candidato scc, tipologia_candidato tc, tipo_candidato ttc,livello_candidato lc
-         where c.id = scc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and n.id = ?1
-         and c.id in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         order by c.cogmome asc
+         from candidato c
+         left join fornitore_candidato fc on (c.id = fc.id_candidato )
+         left join facolta_candidato fac on (c.id = fac.id_candidato )
+         left join candidato_owner co on (c.id = co.id_candidato )
+         join stato_candidato scc on (c.id = scc.id_candidato)
+         join tipologia_candidato tc on (c.id = tc.id_candidato)
+         join tipo_candidato ttc on (c.id = ttc.id_candidato)
+         join livello_candidato lc on (c.id = lc.id_candidato)
+         where c.id  in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+         order by c.cognome asc
         """, nativeQuery=true)
     Long countCandidatiAssociati(Integer idNeed);
 }

@@ -379,37 +379,42 @@ public class NeedController {
         @PathVariable("idNeed") Integer idNeed,
         @RequestParam("pagina") Integer pagina,
         @RequestParam("quantita") Integer quantita
-    ) {
+    )
+        throws Exception {
         logger.info("Candidati non associati al need modificati");
 
-        Pageable                  p                   = PageRequest.of(pagina, quantita);
-        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
-        List<Candidato>           candidati           = candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
-        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+        try {
+            Pageable                  p                   = PageRequest.of(pagina, quantita);
+            CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+            Page<Candidato>           candidatoPage       = candidatoRepository.findCandidatiNonAssociati(idNeed, p);
+            List<Candidato>           candidati           = candidatoPage.getContent();
+            List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
-        for (Candidato candidato : candidati) {
-            CandidatoModificato candidatoMod = new CandidatoModificato();
+            for (Candidato candidato : candidati) {
+                CandidatoModificato candidatoMod = new CandidatoModificato();
 
-            candidatoMod.setId(candidato.getId());
-            candidatoMod.setNote(candidato.getNote());
-            candidatoMod.setOwner(candidato.getOwner());
-            candidatoMod.setStato(candidato.getStato());
-            candidatoMod.setTipologia(candidato.getTipologia());
-            candidatoMod.setCognome(candidato.getCognome());
-            candidatoMod.setNome(candidato.getNome());
-            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-            candidatoMod.setEmail(candidato.getEmail());
-            candidatoMod.setRal(candidato.getRal());
-            candidatoMod.setRating(candidato.getRating());
+                candidatoMod.setId(candidato.getId());
+                candidatoMod.setNote(candidato.getNote());
+                candidatoMod.setOwner(candidato.getOwner());
+                candidatoMod.setStato(candidato.getStato());
+                candidatoMod.setTipologia(candidato.getTipologia());
+                candidatoMod.setCognome(candidato.getCognome());
+                candidatoMod.setNome(candidato.getNome());
+                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+                candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setRal(candidato.getRal());
+                candidatoMod.setRating(candidato.getRating());
 
-            candidatiModificati.add(candidatoMod);
+                candidatiModificati.add(candidatoMod);
+            }
+
+            candidatoGroup.setCandidati(candidatiModificati);
+            candidatoGroup.setRecord(candidatoRepository.countCandidatiNonAssociati(idNeed));
+
+            return candidatoGroup;
+        } catch( Exception e) {
+            throw new Exception(e);
         }
-
-        candidatoGroup.setCandidati(candidatiModificati);
-        candidatoGroup.setRecord(candidatoRepository.countCandidatiNonAssociati(idNeed));
-
-        return candidatoGroup;
-
     }
 
     @GetMapping("/react/match/associabili/ricerca/mod/{idNeed}")
