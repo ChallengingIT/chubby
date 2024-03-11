@@ -58,15 +58,6 @@ public class Need implements Serializable {
     @ToString.Exclude
     private Set<Skill> skills = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "skill_need",
-        joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_skill", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Set<Skill> skills2 = new HashSet<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tipologia_need",

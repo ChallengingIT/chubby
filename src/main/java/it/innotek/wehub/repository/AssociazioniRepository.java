@@ -5,6 +5,8 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.AssociazioneCandidatoNeed;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,13 +17,16 @@ import java.util.List;
 @Repository
 public interface AssociazioniRepository extends JpaRepository<AssociazioneCandidatoNeed, Integer> {
 
+    @Query("select count(a) from AssociazioneCandidatoNeed a where a.need.id = ?1")
+    long countByNeed_Id(Integer id);
+
     void deleteByCandidato_Id(Integer IdCandidato);
 
     List<AssociazioneCandidatoNeed> findByNeed_IdAndCandidato_IdAndStato_IdAndDataModifica(Integer id, Integer id1, Integer id2, Date dataModifica);
 
     List<AssociazioneCandidatoNeed> findByCandidato_Id(Integer id);
 
-    List<AssociazioneCandidatoNeed> findByNeed_IdOrderByDataModificaDesc(Integer idNeed);
+    Page<AssociazioneCandidatoNeed> findByNeed_IdOrderByDataModificaDesc(Integer idNeed, Pageable p);
 
     List<AssociazioneCandidatoNeed> findByNeed_Id(Integer idNeed);
 

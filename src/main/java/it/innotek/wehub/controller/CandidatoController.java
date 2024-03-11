@@ -10,6 +10,8 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,9 +60,15 @@ public class CandidatoController {
 
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> getAllMod() {
+    public CandidatoGroup getAllMod(
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
         logger.info("Candidati");
-        List<Candidato> candidati = candidatoRepository.findAll();
+
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+        Pageable                  p                   = PageRequest.of(pagina, quantita);
+        List<Candidato>           candidati           = candidatoRepository.findAllByOrderByCognomeAsc(p).getContent();
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
         for (Candidato candidato : candidati) {
@@ -94,24 +102,34 @@ public class CandidatoController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.count());
+
+        return candidatoGroup;
     }
 
     @GetMapping("/react/mod/ricerca")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<CandidatoModificato> getAllModRicerca(
+    public CandidatoGroup getAllModRicerca(
         @RequestParam("nome") @Nullable String nome,
         @RequestParam("cognome") @Nullable String cognome,
         @RequestParam("email") @Nullable String email,
         @RequestParam("stato") @Nullable Integer stato,
         @RequestParam("tipo") @Nullable Integer tipo,
-        @RequestParam("tipologia") @Nullable Integer tipologia
+        @RequestParam("tipologia") @Nullable Integer tipologia,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Candidati");
-        List<Candidato> candidati = candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(
-            nome, cognome,email,tipologia,stato, tipo
-        );
+
+        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+        Pageable                  p                   = PageRequest.of(pagina, quantita);
         List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+        List<Candidato>           candidati           =
+            candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(
+                nome, cognome, email, tipologia, stato, tipo, p
+            ).getContent();
+
 
         for (Candidato candidato : candidati) {
             CandidatoModificato candidatoMod = new CandidatoModificato();
@@ -132,7 +150,10 @@ public class CandidatoController {
             candidatiModificati.add(candidatoMod);
         }
 
-        return candidatiModificati;
+        candidatoGroup.setCandidati(candidatiModificati);
+        candidatoGroup.setRecord(candidatoRepository.count());
+
+        return candidatoGroup;
     }
 
     @GetMapping("/react/{id}")
@@ -221,20 +242,6 @@ public class CandidatoController {
                 }
             }
 
-            /*if (( null != file.getOriginalFilename() ) && !file.getOriginalFilename().isEmpty()) {
-                candidatoEntity.getFiles().removeIf(f -> f.getTipologia().getId() == 1);
-                candidatoEntity.getFiles().add(fileVoid(file, 1));
-
-                logger.debug("CV del candidato aggiornato");
-            }
-
-            if (( null != cf.getOriginalFilename() ) && !cf.getOriginalFilename().isEmpty()) {
-                candidatoEntity.getFiles().removeIf(f -> f.getTipologia().getId() == 2);
-                candidatoEntity.getFiles().add(fileVoid(cf, 2));
-
-                logger.debug("CF del candidato aggiornato");
-            }*/
-
             candidatoRepository.save(candidatoEntity);
             logger.debug("Candidato salvato correttamente");
 
@@ -289,17 +296,6 @@ public class CandidatoController {
             return "ERRORE";
         }
     }
-    /*@CrossOrigin(origins = "*")
-    @PostMapping("/salva/file/{id}")
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public String saveCandidatoFile(
-        @PathVariable("id") Integer idCandidato,
-        @RequestParam("cv") MultipartFile file
-    ) {
-        logger.info("salva candidato");
-
-       return "SCIAO BELO";
-    }*/
     
     @DeleteMapping("/elimina/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")

@@ -11,6 +11,8 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -53,9 +55,15 @@ public class KeyPeopleController {
 
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<KeyPeopleModificato> getAllMod() {
+    public List<KeyPeopleModificato> getAllMod(
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
         logger.info("Key people Mod");
-        List<KeyPeople> keyPeoples = keyPeopleRepository.findAll();
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        List<KeyPeople> keyPeoples = keyPeopleRepository.findAllByOrderByNomeAsc(p).getContent();
         List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
         for (KeyPeople keyPeople : keyPeoples) {
@@ -91,10 +99,16 @@ public class KeyPeopleController {
     public List<KeyPeopleModificato> getAllModRicerca(
         @RequestParam("azienda") @Nullable Integer azienda,
         @RequestParam("stato") @Nullable String stato,
-        @RequestParam("owner") @Nullable Integer owner
+        @RequestParam("owner") @Nullable Integer owner,
+        @RequestParam("nome") @Nullable String nome,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Key people Mod");
-        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, owner, azienda);
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, owner, azienda, nome, p).getContent();
         List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
         for (KeyPeople keyPeople : keyPeoples) {

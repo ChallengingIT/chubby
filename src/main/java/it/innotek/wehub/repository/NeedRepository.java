@@ -5,6 +5,8 @@
 package it.innotek.wehub.repository;
 
 import it.innotek.wehub.entity.Need;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Repository
 public interface NeedRepository extends JpaRepository<Need, Integer> {
+
+    Page<Need> findAllByOrderByDescrizioneAsc(Pageable p);
 
     @Query(value=" SELECT count(distinct id_need) FROM wehub.need_associazione ", nativeQuery=true)
     Integer findNeedAssociati();
@@ -33,6 +37,8 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
 
     List<Need> findByCliente_Id(@Param("idCliente") Integer idCliente);
 
+    Page<Need> findByCliente_IdOrderByDescrizioneAsc(Integer idCliente, Pageable p);
+
     @Query(value= """
          SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato
          FROM need n, need_cliente nc, tipologia_need tn, need_owner non, stato_need sn
@@ -46,8 +52,10 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          and if(?4 is not null, tn.id_tipologia = ?4, 1=1)
          and if(?6 is not null, non.id_owner = ?6, 1=1)
          and if(?5 is not null, n.week = ?5, 1=1)
+         and if(?7 is not null, n.descrizione like %?7%, 1=1)
+         order by n.descrizione asc
         """, nativeQuery=true)
-    List<Need> ricerca(Integer idCliente, Integer idStato, Integer priorita, Integer idTipologia, String week, Integer idOwner);
+    Page<Need> ricerca(Integer idCliente, Integer idStato, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
 
     @Query(value= """
            select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, stn.id_stato
@@ -58,6 +66,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
            and n.id = stn.id_need
            and c.id = ?1
            and n.id not in (select id_need from need_candidato where id_need = n.id and id_candidato = ?1)
+           order by n.descrizione asc
           """, nativeQuery=true)
     List<Need> findNeedAssociabiliCandidato(Integer idCandidato);
 
