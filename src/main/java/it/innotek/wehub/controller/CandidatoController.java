@@ -151,7 +151,7 @@ public class CandidatoController {
         }
 
         candidatoGroup.setCandidati(candidatiModificati);
-        candidatoGroup.setRecord(candidatoRepository.count());
+        candidatoGroup.setRecord(candidatoRepository.countRicercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, tipologia, stato, tipo));
 
         return candidatoGroup;
     }

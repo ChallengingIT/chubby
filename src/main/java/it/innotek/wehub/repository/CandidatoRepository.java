@@ -22,15 +22,16 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
     Page<Candidato> findAllByOrderByCognomeAsc(Pageable p);
 
     @Query(value= """
-         SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
-              (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,            (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta, \s
-              (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
-         FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc
-         where c.id = sc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and if(?1 is not null, c.nome LIKE ?1%, 1=1)
+         SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         FROM candidato c
+         left join fornitore_candidato fc on (c.id = fc.id_candidato )
+         left join facolta_candidato fac on (c.id = fac.id_candidato )
+         left join candidato_owner co on (c.id = co.id_candidato )
+         join stato_candidato sc on (c.id = sc.id_candidato)
+         join tipologia_candidato tc on (c.id = tc.id_candidato)
+         join tipo_candidato ttc on (c.id = ttc.id_candidato)
+         join livello_candidato lc on (c.id = lc.id_candidato)
+         where if(?1 is not null, c.nome LIKE ?1%, 1=1)
          and if(?2 is not null, c.cognome LIKE ?2%, 1=1)
          and if(?3 is not null, c.email LIKE ?3%, 1=1)
          and if(?4 is not null, tc.id_tipologia = ?4, 1=1)
@@ -40,6 +41,26 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
         """, nativeQuery=true)
     Page<Candidato> ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id
         (String nome, String cognome, String email,Integer idTipologia, Integer idStato, Integer idTipo, Pageable p);
+
+    @Query(value= """
+         SELECT count(*)
+         FROM candidato c
+         left join fornitore_candidato fc on (c.id = fc.id_candidato )
+         left join facolta_candidato fac on (c.id = fac.id_candidato )
+         left join candidato_owner co on (c.id = co.id_candidato )
+         join stato_candidato sc on (c.id = sc.id_candidato)
+         join tipologia_candidato tc on (c.id = tc.id_candidato)
+         join tipo_candidato ttc on (c.id = ttc.id_candidato)
+         join livello_candidato lc on (c.id = lc.id_candidato)
+         where if(?1 is not null, c.nome LIKE ?1%, 1=1)
+         and if(?2 is not null, c.cognome LIKE ?2%, 1=1)
+         and if(?3 is not null, c.email LIKE ?3%, 1=1)
+         and if(?4 is not null, tc.id_tipologia = ?4, 1=1)
+         and if(?5 is not null, sc.id_stato=?5, 1=1)
+         and if(?6 is not null, ttc.id_tipo=?6, 1=1)
+        """, nativeQuery=true)
+    Long countRicercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id
+        (String nome, String cognome, String email,Integer idTipologia, Integer idStato, Integer idTipo);
 
     @Query(value= """
          SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
