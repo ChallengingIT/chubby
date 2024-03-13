@@ -231,7 +231,7 @@ public class AziendeController {
     public List<Tipologia> getAllTipologie() {
         logger.info("Job Title / Tipologie");
 
-        return tipologiaRepository.findAll();
+        return tipologiaRepository.findAllByOrderByDescrizioneAsc();
     }
 
     @GetMapping("/react/owner")
