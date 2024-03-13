@@ -112,6 +112,12 @@ public class Need implements Serializable {
     @ToString.Exclude
     private List<Candidato> candidati;
 
+    @Column(length = 1, name="pubblicazione")
+    private Integer pubblicazione;
+
+    @Column(length = 1, name="screening")
+    private Integer screening;
+
     @Override
     public boolean equals(Object o) {
 

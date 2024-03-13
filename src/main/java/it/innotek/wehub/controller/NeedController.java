@@ -94,6 +94,8 @@ public class NeedController {
             needSolo.setTipo(need.getTipo());
             needSolo.setTipologia(need.getTipologia());
             needSolo.setWeek(need.getWeek());
+            needSolo.setPubblicazione(need.getPubblicazione());
+            needSolo.setScreening(need.getScreening());
 
             needsModificati.add(needSolo);
         }
@@ -177,6 +179,8 @@ public class NeedController {
             needSolo.setTipo(need.getTipo());
             needSolo.setTipologia(need.getTipologia());
             needSolo.setWeek(need.getWeek());
+            needSolo.setPubblicazione(need.getPubblicazione());
+            needSolo.setScreening(need.getScreening());
 
             needsModificati.add(needSolo);
         }
@@ -229,6 +233,8 @@ public class NeedController {
             needSolo.setTipo(need.getTipo());
             needSolo.setTipologia(need.getTipologia());
             needSolo.setWeek(need.getWeek());
+            needSolo.setPubblicazione(need.getPubblicazione());
+            needSolo.setScreening(need.getScreening());
 
             needsModificati.add(needSolo);
         }
@@ -524,6 +530,8 @@ public class NeedController {
         need.setDescrizione(needMap.get("descrizione") != null ? needMap.get("descrizione") : null);
         need.setLocation(needMap.get("location") != null ? needMap.get("location") : null);
         need.setTipo(needMap.get("tipo") != null ? Integer.parseInt(needMap.get("tipo")) : null);
+        need.setPubblicazione(needMap.get("pubblicazione") != null ? Integer.parseInt(needMap.get("pubblicazione")) : null);
+        need.setScreening(needMap.get("screening") != null ? Integer.parseInt(needMap.get("screening")) : null);
 
         if (needMap.get("idAzienda") != null) {
             Cliente cliente = new Cliente();

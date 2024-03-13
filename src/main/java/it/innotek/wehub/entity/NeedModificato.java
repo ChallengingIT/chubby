@@ -35,8 +35,6 @@ public class NeedModificato implements Serializable {
 
     private Set<Skill> skills = new HashSet<>();
 
-    private Set<Skill> skills2 = new HashSet<>();
-
     private TipologiaN tipologia;
 
     private Cliente cliente = new Cliente();
@@ -50,6 +48,10 @@ public class NeedModificato implements Serializable {
     private String week;
 
     private StatoN stato;
+
+    private Integer pubblicazione;
+
+    private Integer screening;
 
     @Override
     public boolean equals(Object o) {
