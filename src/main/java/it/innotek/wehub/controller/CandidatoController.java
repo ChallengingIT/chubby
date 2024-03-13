@@ -91,6 +91,7 @@ public class CandidatoController {
                     if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
                         file = new File();
                         file.setId(fileC.getId());
+                        file.setDescrizione(fileC.getDescrizione());
                     }
                 }
 
@@ -146,6 +147,20 @@ public class CandidatoController {
 
             candidatoMod.setRal(candidato.getRal());
             candidatoMod.setRating(candidato.getRating());
+
+            if (null != candidato.getFiles()) {
+                File file = null;
+
+                for (File fileC : candidato.getFiles()) {
+                    if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
+                        file = new File();
+                        file.setId(fileC.getId());
+                        file.setDescrizione(fileC.getDescrizione());
+                    }
+                }
+
+                candidatoMod.setFile(file);
+            }
 
             candidatiModificati.add(candidatoMod);
         }
