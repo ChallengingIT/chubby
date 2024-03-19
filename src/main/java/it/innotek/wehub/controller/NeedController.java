@@ -358,7 +358,38 @@ public class NeedController {
         Pageable p = PageRequest.of(pagina, quantita);
         AssociazioneGroup associazioneGroup = new AssociazioneGroup();
 
-        associazioneGroup.setAssociazioni(associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent());
+        List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent();
+
+        List<AssociazioneModificata> associazioniModificate = new ArrayList<>();
+
+        for (AssociazioneCandidatoNeed associazione : associazioni) {
+            AssociazioneModificata associazioneMod = new AssociazioneModificata();
+
+            associazioneMod.setId(associazione.getId());
+            associazioneMod.setDataModifica(associazione.getDataModifica());
+            associazioneMod.setStato(associazione.getStato());
+
+            Candidato candidato = new Candidato();
+
+            candidato.setId(associazione.getCandidato().getId());
+            candidato.setNome(associazione.getCandidato().getNome());
+            candidato.setCognome(associazione.getCandidato().getCognome());
+            candidato.setTipo(associazione.getCandidato().getTipo());
+            candidato.setTipologia(associazione.getCandidato().getTipologia());
+
+            associazioneMod.setCandidato(candidato);
+
+            Owner owner = new Owner();
+
+            owner.setId(associazione.getOwner().getId());
+            owner.setDescrizione(associazione.getOwner().getDescrizione());
+
+            associazioneMod.setOwner(owner);
+
+            associazioniModificate.add(associazioneMod);
+        }
+
+        associazioneGroup.setAssociazioni(associazioniModificate);
         associazioneGroup.setRecord(associazioniRepository.countByNeed_Id(idNeed));
 
         return associazioneGroup;

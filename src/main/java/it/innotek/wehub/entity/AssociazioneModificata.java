@@ -11,18 +11,24 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
-import java.util.List;
+import java.sql.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class AssociazioneGroup implements Serializable {
+public class AssociazioneModificata implements Serializable {
 
-    private Long record;
+    private Integer id;
 
-    private List<AssociazioneModificata> associazioni;
+    private Date dataModifica;
+
+    private StatoA stato;
+
+    private Candidato candidato;
+
+    private Owner owner;
 
     @Override
     public boolean equals(Object o) {
@@ -33,8 +39,8 @@ public class AssociazioneGroup implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        AssociazioneGroup candidato = (AssociazioneGroup)o;
-        return record != null && Objects.equals(record, candidato.record);
+        AssociazioneModificata that = (AssociazioneModificata)o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
