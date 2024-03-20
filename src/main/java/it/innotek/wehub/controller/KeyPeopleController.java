@@ -165,7 +165,7 @@ public class KeyPeopleController {
 
             trasformaMappaInKeyPeople(keyPeopleEntity, keyPeopleMap);
 
-            if (( null == keyPeopleEntity.getId() ) && controllaDenominazioneDuplicata(keyPeopleEntity.getNome())) {
+            if (( null == keyPeopleEntity.getId() ) && controllaEmailDuplicata(keyPeopleEntity.getEmail())) {
                 logger.debug("Key people duplicato");
 
                 return "DUPLICATO";
@@ -231,10 +231,10 @@ public class KeyPeopleController {
         }
     }
 
-    public boolean controllaDenominazioneDuplicata(String nome){
-        logger.debug("Controlla denominazione duplicata");
+    public boolean controllaEmailDuplicata(String email){
+        logger.debug("Controlla email duplicata");
 
-        Optional<KeyPeople> keyPeople =  keyPeopleRepository.findByNome(nome);
+        Optional<KeyPeople> keyPeople =  keyPeopleRepository.findByEmail(email);
         return keyPeople.isPresent();
     }
 
