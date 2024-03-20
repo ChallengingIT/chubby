@@ -49,6 +49,11 @@ public class ClienteModificato implements Serializable {
 
     private Owner owner;
 
+    private String sedeOperativa;
+
+    private String settoreMercato;
+
+
     @Override
     public boolean equals(Object o) {
 
