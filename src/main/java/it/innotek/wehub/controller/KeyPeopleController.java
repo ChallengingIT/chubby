@@ -108,7 +108,7 @@ public class KeyPeopleController {
 
         Pageable p = PageRequest.of(pagina, quantita);
 
-        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, owner, azienda, nome, p).getContent();
+        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
         List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
         for (KeyPeople keyPeople : keyPeoples) {
