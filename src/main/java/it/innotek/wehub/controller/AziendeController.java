@@ -106,6 +106,9 @@ public class AziendeController {
             aziendaModificata.setStatus(azienda.getStatus());
             aziendaModificata.setOwner(azienda.getOwner());
             aziendaModificata.setTipologia(azienda.getTipologia());
+            aziendaModificata.setTipologia(azienda.getTipologia());
+            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
 
             aziendeModificate.add(aziendaModificata);
         }
@@ -145,6 +148,8 @@ public class AziendeController {
             aziendaModificata.setStatus(azienda.getStatus());
             aziendaModificata.setOwner(azienda.getOwner());
             aziendaModificata.setTipologia(azienda.getTipologia());
+            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
 
             aziendeModificate.add(aziendaModificata);
         }

@@ -108,7 +108,7 @@ public class KeyPeopleController {
 
         Pageable p = PageRequest.of(pagina, quantita);
 
-        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, owner, azienda, nome, p).getContent();
+        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
         List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
         for (KeyPeople keyPeople : keyPeoples) {
@@ -165,7 +165,7 @@ public class KeyPeopleController {
 
             trasformaMappaInKeyPeople(keyPeopleEntity, keyPeopleMap);
 
-            if (( null == keyPeopleEntity.getId() ) && controllaDenominazioneDuplicata(keyPeopleEntity.getNome())) {
+            if (( null == keyPeopleEntity.getId() ) && controllaEmailDuplicata(keyPeopleEntity.getEmail())) {
                 logger.debug("Key people duplicato");
 
                 return "DUPLICATO";
@@ -231,10 +231,10 @@ public class KeyPeopleController {
         }
     }
 
-    public boolean controllaDenominazioneDuplicata(String nome){
-        logger.debug("Controlla denominazione duplicata");
+    public boolean controllaEmailDuplicata(String email){
+        logger.debug("Controlla email duplicata");
 
-        Optional<KeyPeople> keyPeople =  keyPeopleRepository.findByNome(nome);
+        Optional<KeyPeople> keyPeople =  keyPeopleRepository.findByEmail(email);
         return keyPeople.isPresent();
     }
 
