@@ -79,6 +79,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/aziende/**").permitAll()
                     .requestMatchers("/staffing/**").permitAll()
                     .requestMatchers("/files/**").permitAll()
+                    .requestMatchers("/calendar/**").permitAll()
                     .requestMatchers("/fornitori/**").permitAll()
                     .requestMatchers("/intervista/**").permitAll()
                     .requestMatchers("/keypeople/**").permitAll()

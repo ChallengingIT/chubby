@@ -17,6 +17,7 @@ import java.util.List;
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     Page<Cliente> findAllByOrderByDenominazioneAsc(Pageable p);
+    List<Cliente> findAllByOrderByDenominazioneAsc();
 
     @Query(value= """
          SELECT c.*

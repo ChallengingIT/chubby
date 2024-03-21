@@ -61,7 +61,7 @@ public class AziendeController {
     public List<ClienteSelect> getAllSelect() {
         logger.info("Lista aziende");
 
-        List<Cliente> aziende = clienteRepository.findAll();
+        List<Cliente> aziende = clienteRepository.findAllByOrderByDenominazioneAsc();
         List<ClienteSelect> aziendeModificate = new ArrayList<>();
 
         for (Cliente azienda : aziende) {
