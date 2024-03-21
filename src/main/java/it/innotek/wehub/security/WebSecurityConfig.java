@@ -80,6 +80,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/staffing/**").permitAll()
                     .requestMatchers("/files/**").permitAll()
                     .requestMatchers("/calendar/**").permitAll()
+                    .requestMatchers("/email/**").permitAll()
                     .requestMatchers("/fornitori/**").permitAll()
                     .requestMatchers("/intervista/**").permitAll()
                     .requestMatchers("/keypeople/**").permitAll()

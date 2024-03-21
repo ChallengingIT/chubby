@@ -14,10 +14,12 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.*;
-import it.innotek.wehub.entity.Cliente;
-import it.innotek.wehub.repository.ClienteRepository;
+import it.innotek.wehub.entity.Appuntamento;
+import it.innotek.wehub.entity.Owner;
+import it.innotek.wehub.repository.AppuntamentoRepository;
 import it.innotek.wehub.request.AppuntamentoRequest;
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/calendar")
 public class GoogleCalendarController {
+
+    @Autowired
+    private AppuntamentoRepository appuntamentoRepository;
 
     /**
      * Application name.
@@ -54,28 +60,17 @@ public class GoogleCalendarController {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES =
-        Collections.singletonList(CalendarScopes.CALENDAR_EVENTS);
+    private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR, CalendarScopes.CALENDAR_EVENTS, CalendarScopes.CALENDAR_READONLY, CalendarScopes.CALENDAR_EVENTS_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
-    @Autowired
-    private ClienteRepository          clienteRepository;
-
     private static final Logger logger = LoggerFactory.getLogger(GoogleCalendarController.class);
-
-    @GetMapping("/react")
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<Cliente> getAll() {
-        logger.info("Lista aziende");
-        return clienteRepository.findAll();
-    }
 
     /**
      * Creates an authorized Credential object.
      *
      * @param HTTP_TRANSPORT The network HTTP Transport.
      * @return An authorized Credential object.
-     * @throws IOException If the credentials.json file cannot be found.
+     * @throws IOException If the credentials_old.json file cannot be found.
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
         throws IOException {
@@ -145,25 +140,35 @@ public class GoogleCalendarController {
 
             Event event = new Event()
                 .setSummary(appuntamentoRequest.getOggetto())
-                .setLocation(appuntamentoRequest.getLocation())
+                .setLocation(appuntamentoRequest.getLuogo())
                 .setDescription(appuntamentoRequest.getNote());
 
-            DateTime startDateTime = appuntamentoRequest.getDataInizio();
+            DateTime startDateTime = DateTime.parseRfc3339(appuntamentoRequest.getInizio());
             EventDateTime start = new EventDateTime().setDateTime(startDateTime).setTimeZone("Italy/Rome");
             event.setStart(start);
 
-            DateTime endDateTime = appuntamentoRequest.getDataFine();
+            DateTime endDateTime = DateTime.parseRfc3339(appuntamentoRequest.getFine());
             EventDateTime end = new EventDateTime().setDateTime(endDateTime).setTimeZone("Italy/Rome");
             event.setEnd(end);
+
+            ConferenceData conferenceData = new ConferenceData();
+
+            conferenceData.setCreateRequest(
+                new CreateConferenceRequest()
+                    .setConferenceSolutionKey(
+                        new ConferenceSolutionKey()
+                            .setType("hangoutsMeet")));
+
+            event.setConferenceData(conferenceData);
 
             String[] recurrence = new String[] { "RRULE:FREQ=DAILY;COUNT=2" };
             event.setRecurrence(Arrays.asList(recurrence));
 
-            String[] emails = appuntamentoRequest.getEmail().split(";");
-            EventAttendee[] attendees = new EventAttendee[emails.length];
+            String[] destinatari = appuntamentoRequest.getDestinatari().split(";");
+            EventAttendee[] attendees = new EventAttendee[destinatari.length];
 
-            for (int i = 0; i< emails.length; i++) {
-                attendees[i] = new EventAttendee().setEmail(emails[i]);
+            for (int i = 0; i< destinatari.length; i++) {
+                attendees[i] = new EventAttendee().setEmail(destinatari[i]);
             }
 
             event.setAttendees(Arrays.asList(attendees));
@@ -180,8 +185,11 @@ public class GoogleCalendarController {
             event.setReminders(reminders);
 
             String calendarId = "primary";
-            event = service.events().insert(calendarId, event).execute();
-            System.out.printf("Event created: %s\n", event.getHtmlLink());
+            service.events().insert(calendarId, event).execute();
+
+            Appuntamento appuntamento = getAppuntamento(appuntamentoRequest);
+
+            appuntamentoRepository.save(appuntamento);
 
         } catch (Exception e){
             logger.error(e.toString());
@@ -190,4 +198,23 @@ public class GoogleCalendarController {
         return "OK";
     }
 
+    @NotNull
+    private static Appuntamento getAppuntamento(AppuntamentoRequest appuntamentoRequest) {
+
+        Appuntamento appuntamento = new Appuntamento();
+        appuntamento.setOggetto(appuntamentoRequest.getOggetto());
+        appuntamento.setData(OffsetDateTime.parse(appuntamentoRequest.getInizio()));
+
+        List<Owner> owners = new ArrayList<>();
+
+        for (String ownerId : appuntamentoRequest.getOwnerIds().split(";")) {
+            Owner owner = new Owner();
+            owner.setId(Integer.parseInt(ownerId));
+
+            owners.add(owner);
+        }
+
+        appuntamento.setOwners(owners);
+        return appuntamento;
+    }
 }

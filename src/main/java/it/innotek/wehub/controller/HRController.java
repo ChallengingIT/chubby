@@ -347,7 +347,7 @@ public class HRController {
         mappa.put("anno", anno.getAnno());
         email.setProperties(mappa);
         email.setSubject("Ritardo invio timesheet di " + UtilLib.meseItaliano(mese.getDescription()) );
-        email.setTemplate("ritardo-email.html");
+        email.setTemplate("email.html");
 
         return email;
     }

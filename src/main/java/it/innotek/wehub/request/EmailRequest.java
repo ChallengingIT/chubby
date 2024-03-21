@@ -10,27 +10,14 @@ import lombok.ToString;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class AppuntamentoRequest {
-
+public class EmailRequest {
     @NotBlank
     private String oggetto;
-
-    @NotBlank
-    private String luogo;
 
     @NotBlank
     private String note;
 
     @NotBlank
     private String destinatari;
-
-    @NotBlank
-    private String inizio;
-
-    @NotBlank
-    private String fine;
-
-    @NotBlank
-    private String ownerIds;
 
 }
