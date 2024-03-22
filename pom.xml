@@ -17,12 +17,12 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<groupId>it.innotek</groupId>
-	<artifactId>wehub</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>it.challenging</groupId>
+	<artifactId>torchy</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>wehub</name>
-	<description>WEHUB PROJECT</description>
+	<name>torchy</name>
+	<description>TORCHY PROJECT</description>
 	<properties>
 		<java.version>17</java.version>
 		<full-artifact-name>target/${project.artifactId}-${project.version}.jar</full-artifact-name>
@@ -74,6 +74,11 @@
 			<version>2.0.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+			<version>1.23.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-jetty</artifactId>
 			<version>1.34.1</version>
@@ -82,6 +87,11 @@
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-calendar</artifactId>
 			<version>v3-rev20220715-2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-meet</artifactId>
+			<version>0.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
