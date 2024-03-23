@@ -53,6 +53,7 @@ public class ClienteModificato implements Serializable {
 
     private String settoreMercato;
 
+    private byte[] logo;
 
     @Override
     public boolean equals(Object o) {

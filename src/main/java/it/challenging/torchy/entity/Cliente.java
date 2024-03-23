@@ -101,8 +101,9 @@ public class Cliente implements Serializable {
     @ToString.Exclude
     private Owner owner;
 
-    @Column(length = 20, name = "guadagno")
-    private String guadagno;
+    @Lob
+    @Column(name="logo")
+    private byte[] logo;
 
     @Override
     public boolean equals(Object o) {

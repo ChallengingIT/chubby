@@ -99,6 +99,7 @@ public class AziendeController {
             aziendaModificata.setTipologia(azienda.getTipologia());
             aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
             aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+            aziendaModificata.setLogo(azienda.getLogo());
 
             aziendeModificate.add(aziendaModificata);
         }
@@ -140,6 +141,7 @@ public class AziendeController {
             aziendaModificata.setTipologia(azienda.getTipologia());
             aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
             aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+            aziendaModificata.setLogo(azienda.getLogo());
 
             aziendeModificate.add(aziendaModificata);
         }
@@ -248,7 +250,8 @@ public class AziendeController {
     @PostMapping("/react/salva")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> saveAzienda(
-        @RequestBody Map<String, String>  clienteMap
+        @RequestBody Map<String, String>  clienteMap,
+        @RequestParam("logo") byte[] logo
     ){
         logger.info("Salva azienda");
 
@@ -262,7 +265,7 @@ public class AziendeController {
 
             }
 
-            trasformaMappaInCLiente(clienteEntity, clienteMap);
+            trasformaMappaInCLiente(clienteEntity, clienteMap, logo);
 
             if (controllaDuplicati(clienteEntity)) {
                 logger.debug("Azienda duplicata, denominazione già presente");
@@ -308,7 +311,7 @@ public class AziendeController {
         return toReturn;
     }
 
-    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap) {
+    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap, byte[] logo) {
 
         logger.info("Trasforma mappa in azienda");
 
@@ -321,7 +324,6 @@ public class AziendeController {
         cliente.setComunicazioniNeed(clienteMap.get("comunicazioniNeed") != null ? clienteMap.get("comunicazioniNeed") : null);
         cliente.setDenominazione(clienteMap.get("denominazione") != null ? clienteMap.get("denominazione") : null);
         cliente.setEmail(clienteMap.get("email") != null ? clienteMap.get("email") : null);
-        cliente.setGuadagno(clienteMap.get("guadagno") != null ? clienteMap.get("guadagno") : null);
         cliente.setIndirizzo(clienteMap.get("indirizzo") != null ? clienteMap.get("indirizzo") : null);
         cliente.setNote(clienteMap.get("note") != null ? clienteMap.get("note") : null);
         cliente.setNoteTrattative(clienteMap.get("noteTrattative") != null ? clienteMap.get("noteTrattative") : null);
@@ -343,6 +345,7 @@ public class AziendeController {
         cliente.setSito(clienteMap.get("sito") != null ? clienteMap.get("sito") : null);
         cliente.setStatus(clienteMap.get("status") != null ? Integer.parseInt(clienteMap.get("status")) : null);
         cliente.setTipologia(clienteMap.get("tipologia") != null ? clienteMap.get("tipologia") : null);
+        cliente.setLogo(logo);
 
     }
 }
