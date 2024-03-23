@@ -196,7 +196,7 @@ public class GoogleCalendarController {
             String calendarId = "primary";
             Event eventCreated = service.events().insert(calendarId, event).setConferenceDataVersion(1).execute();
 
-            invioEmail(destinatari, appuntamentoRequest.getNote(), appuntamentoRequest.getOggetto(), eventCreated.getConferenceData().getConferenceId());
+            //invioEmail(destinatari, appuntamentoRequest.getNote(), appuntamentoRequest.getOggetto(), eventCreated.getConferenceData().getConferenceId());
 
             Appuntamento appuntamento = getAppuntamento(appuntamentoRequest);
 
