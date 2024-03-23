@@ -251,7 +251,7 @@ public class AziendeController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> saveAzienda(
         @RequestBody Map<String, String>  clienteMap,
-        @RequestParam("logo") byte[] logo
+        @RequestParam("logo") @Nullable byte[] logo
     ){
         logger.info("Salva azienda");
 
