@@ -201,7 +201,7 @@ public class GoogleCalendarController {
                 .setSendUpdates("all")
                 .execute();
 
-            invioEmail(destinatari, appuntamentoRequest.getNote(), appuntamentoRequest.getOggetto(), eventCreated.getConferenceData().getConferenceId());
+            //invioEmail(destinatari, appuntamentoRequest.getNote(), appuntamentoRequest.getOggetto(), eventCreated.getConferenceData().getConferenceId());
 
             Appuntamento appuntamento = getAppuntamento(appuntamentoRequest);
 
