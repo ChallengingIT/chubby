@@ -102,8 +102,8 @@ public class Cliente implements Serializable {
     private Owner owner;
 
     @Lob
-    @Column(name="logo")
-    private byte[] logo;
+    @Column(name="logo", length = 2000)
+    private String logo;
 
     @Override
     public boolean equals(Object o) {

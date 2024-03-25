@@ -3,6 +3,8 @@ package it.challenging.torchy.controller;
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -251,7 +255,7 @@ public class AziendeController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> saveAzienda(
         @RequestBody Map<String, String>  clienteMap,
-        @RequestParam("logo") @Nullable byte[] logo
+        @RequestParam("logo") @Nullable File logo
     ){
         logger.info("Salva azienda");
 
@@ -265,7 +269,10 @@ public class AziendeController {
 
             }
 
-            trasformaMappaInCLiente(clienteEntity, clienteMap, logo);
+            byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(logo));
+            String logoBase64 =  new String(encoded, StandardCharsets.UTF_8);
+
+            trasformaMappaInCLiente(clienteEntity, clienteMap, logoBase64);
 
             if (controllaDuplicati(clienteEntity)) {
                 logger.debug("Azienda duplicata, denominazione già presente");
@@ -311,7 +318,7 @@ public class AziendeController {
         return toReturn;
     }
 
-    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap, byte[] logo) {
+    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap, String logo) {
 
         logger.info("Trasforma mappa in azienda");
 
