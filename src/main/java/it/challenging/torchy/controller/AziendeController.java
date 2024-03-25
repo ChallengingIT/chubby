@@ -12,8 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +255,7 @@ public class AziendeController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> saveAzienda(
         @RequestBody Map<String, String>  clienteMap,
-        @RequestParam("logo") @Nullable File logo
+        @RequestParam("logo") @Nullable MultipartFile logo
     ){
         logger.info("Salva azienda");
 
@@ -272,7 +272,7 @@ public class AziendeController {
             String logoBase64 = null;
 
             if (null != logo) {
-                byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(logo));
+                byte[] encoded = Base64.encodeBase64(logo.getBytes());
                 logoBase64 = new String(encoded, StandardCharsets.UTF_8);
             }
             trasformaMappaInCLiente(clienteEntity, clienteMap, logoBase64);
