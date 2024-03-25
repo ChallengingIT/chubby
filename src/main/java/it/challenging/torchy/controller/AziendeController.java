@@ -269,9 +269,12 @@ public class AziendeController {
 
             }
 
-            byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(logo));
-            String logoBase64 =  new String(encoded, StandardCharsets.UTF_8);
+            String logoBase64 = null;
 
+            if (null != logo) {
+                byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(logo));
+                logoBase64 = new String(encoded, StandardCharsets.UTF_8);
+            }
             trasformaMappaInCLiente(clienteEntity, clienteMap, logoBase64);
 
             if (controllaDuplicati(clienteEntity)) {

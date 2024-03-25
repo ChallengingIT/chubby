@@ -5,6 +5,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -14,12 +15,12 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.*;
+import it.challenging.torchy.EmailSenderService;
 import it.challenging.torchy.entity.Appuntamento;
+import it.challenging.torchy.entity.Email;
+import it.challenging.torchy.entity.Owner;
 import it.challenging.torchy.repository.AppuntamentoRepository;
 import it.challenging.torchy.request.AppuntamentoRequest;
-import it.challenging.torchy.EmailSenderService;
-import it.challenging.torchy.entity.Owner;
-import it.challenging.torchy.entity.Email;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
@@ -94,11 +95,25 @@ public class GoogleCalendarController {
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
             HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
             .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-            .setAccessType("offline")
+            .setAccessType("online")
+            .setApprovalPrompt("auto")
             .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("torchyClient");
+
+        GoogleCredential credential_stored = new GoogleCredential.Builder()
+            .setTransport(new NetHttpTransport())
+            .setJsonFactory(new GsonFactory())
+            .setClientSecrets("client_id", "client_secret")
+            .build();
+
+        credential_stored.setAccessToken("access_token");
+        credential_stored.setRefreshToken("refresh_token");
+
+        Credential credential =
+            new AuthorizationCodeInstalledApp(flow, receiver)
+                .authorize("torchyClient");
         //returns an authorized Credential object.
+
         return credential;
     }
 
