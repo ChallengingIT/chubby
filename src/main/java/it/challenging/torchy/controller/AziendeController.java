@@ -4,7 +4,6 @@ import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,8 +253,7 @@ public class AziendeController {
     @PostMapping("/react/salva")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> saveAzienda(
-        @RequestBody Map<String, String>  clienteMap,
-        @RequestParam("logo") @Nullable MultipartFile logo
+        @RequestBody Map<String, String>  clienteMap
     ){
         logger.info("Salva azienda");
 
@@ -269,13 +267,7 @@ public class AziendeController {
 
             }
 
-            String logoBase64 = null;
-
-            if (null != logo) {
-                byte[] encoded = Base64.encodeBase64(logo.getBytes());
-                logoBase64 = new String(encoded, StandardCharsets.UTF_8);
-            }
-            trasformaMappaInCLiente(clienteEntity, clienteMap, logoBase64);
+            trasformaMappaInCLiente(clienteEntity, clienteMap, null);
 
             if (controllaDuplicati(clienteEntity)) {
                 logger.debug("Azienda duplicata, denominazione già presente");
@@ -287,12 +279,46 @@ public class AziendeController {
 
             logger.debug("Azienda salvata correttamente");
 
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok(clienteEntity.getId()+"");
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
 
             return ResponseEntity.ok("ERRORE");
+        }
+    }
+
+    @PostMapping("/react/salva/file/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveCandidato(
+        @PathVariable("id") Integer id,
+        @RequestParam("logo") MultipartFile logo
+    ) {
+        logger.info("Aziende salva logo");
+
+        try {
+
+            Cliente clienteEntity = clienteRepository.findById(id).get();
+            String  logoBase64    = null;
+
+            if (null != logo) {
+                byte[] encoded = Base64.encodeBase64(logo.getBytes());
+                logoBase64 = new String(encoded, StandardCharsets.UTF_8);
+            }
+
+            clienteEntity.setLogo(logoBase64);
+
+            clienteRepository.save(clienteEntity);
+
+
+            logger.debug("Salvataggio effettuato correttamente");
+
+            return "OK";
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
         }
     }
 
