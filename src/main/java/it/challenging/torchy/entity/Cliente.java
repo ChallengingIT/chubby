@@ -101,8 +101,7 @@ public class Cliente implements Serializable {
     @ToString.Exclude
     private Owner owner;
 
-    @Lob
-    @Column(name="logo", length = 2000)
+    @Column(name="logo")
     private String logo;
 
     @Override
