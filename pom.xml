@@ -20,7 +20,7 @@
 	<groupId>it.challenging</groupId>
 	<artifactId>torchy</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>torchy</name>
 	<description>TORCHY PROJECT</description>
 	<properties>
@@ -193,6 +193,13 @@
 				<version>3.4.0</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>it.challenging.torchy.TorchyApplication</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -203,26 +210,63 @@
 					<target>17</target>
 				</configuration>
 			</plugin>
-			<!--<plugin>
-				<groupId>org.wildfly.plugins</groupId>
-				<artifactId>wildfly-maven-plugin</artifactId>
-				<version>4.0.0.Final</version>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.15.0</version>
+				<configuration>
+					<workingDirectory>frontend</workingDirectory>
+					<installDirectory>target</installDirectory>
+				</configuration>
 				<executions>
 					<execution>
-						<phase>install</phase>
+						<id>install node and npm</id>
 						<goals>
-							<goal>deploy</goal>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v20.12.0</nodeVersion>
+							<npmVersion>10.4.0</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm run build</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>run build</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<copy todir="${project.build.directory}/classes/public">
+									<fileset dir="${project.basedir}/frontend/build"/>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<filename>${project.build.finalName}.war</filename>
-					<hostname>${deploy.wildfly.host}</hostname>
-					<port>${deploy.wildfly.port}</port>
-					<username>${deploy.wildfly.username}</username>
-					<password>${deploy.wildfly.password}</password>
-				</configuration>
-			</plugin>-->
+			</plugin>
 		</plugins>
 	</build>
 
