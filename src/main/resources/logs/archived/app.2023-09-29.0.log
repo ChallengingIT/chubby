@@ -2212,24 +2212,24 @@ org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property o
 2023-09-29 10:53:35,103 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
 2023-09-29 10:53:35,104 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
 2023-09-29 10:53:50,849 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 16.379 seconds (process running for 17.356)
-2023-09-29 10:54:31,773 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-1] Cannot invoke "it.innotek.wehub.entity.Need.getId()" because the return value of "it.innotek.wehub.entity.AssociazioneCandidatoNeed.getNeed()" is null
+2023-09-29 10:54:31,773 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-1] Cannot invoke "entity.it.challenging.torchy.Need.getId()" because the return value of "entity.it.challenging.torchy.AssociazioneCandidatoNeed.getNeed()" is null
 2023-09-29 10:55:57,793 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 1680 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
 2023-09-29 10:55:57,794 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
 2023-09-29 10:55:57,795 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
 2023-09-29 10:56:13,741 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 16.459 seconds (process running for 17.467)
-2023-09-29 10:58:47,597 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-10] Cannot invoke "it.innotek.wehub.entity.Need.getId()" because the return value of "it.innotek.wehub.entity.AssociazioneCandidatoNeed.getNeed()" is null
+2023-09-29 10:58:47,597 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-10] Cannot invoke "entity.it.challenging.torchy.Need.getId()" because the return value of "entity.it.challenging.torchy.AssociazioneCandidatoNeed.getNeed()" is null
 2023-09-29 10:58:53,273 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 25180 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
 2023-09-29 10:58:53,274 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
 2023-09-29 10:58:53,275 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
 2023-09-29 10:59:06,130 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 13.405 seconds (process running for 14.126)
-2023-09-29 10:59:56,674 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-8] Cannot invoke "it.innotek.wehub.entity.Need.getId()" because the return value of "it.innotek.wehub.entity.AssociazioneCandidatoNeed.getNeed()" is null
-2023-09-29 11:00:21,945 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-2] Cannot invoke "it.innotek.wehub.entity.Need.getId()" because the return value of "it.innotek.wehub.entity.AssociazioneCandidatoNeed.getNeed()" is null
-2023-09-29 11:01:35,444 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-7] Cannot invoke "it.innotek.wehub.entity.Need.getId()" because the return value of "it.innotek.wehub.entity.AssociazioneCandidatoNeed.getNeed()" is null
+2023-09-29 10:59:56,674 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-8] Cannot invoke "entity.it.challenging.torchy.Need.getId()" because the return value of "entity.it.challenging.torchy.AssociazioneCandidatoNeed.getNeed()" is null
+2023-09-29 11:00:21,945 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-2] Cannot invoke "entity.it.challenging.torchy.Need.getId()" because the return value of "entity.it.challenging.torchy.AssociazioneCandidatoNeed.getNeed()" is null
+2023-09-29 11:01:35,444 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-7] Cannot invoke "entity.it.challenging.torchy.Need.getId()" because the return value of "entity.it.challenging.torchy.AssociazioneCandidatoNeed.getNeed()" is null
 2023-09-29 11:01:42,724 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 11084 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
 2023-09-29 11:01:42,725 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
 2023-09-29 11:01:42,727 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
 2023-09-29 11:01:55,453 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 13.273 seconds (process running for 14.241)
-2023-09-29 11:02:39,961 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-2] Cannot invoke "it.innotek.wehub.entity.Need.getId()" because the return value of "it.innotek.wehub.entity.AssociazioneCandidatoNeed.getNeed()" is null
+2023-09-29 11:02:39,961 ERROR i.i.w.c.AssociazioneController [https-jsse-nio-8080-exec-2] Cannot invoke "entity.it.challenging.torchy.Need.getId()" because the return value of "entity.it.challenging.torchy.AssociazioneCandidatoNeed.getNeed()" is null
 2023-09-29 11:09:32,720 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 760 (C:\Users\dpagn\IdeaProjects\we-hub\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\we-hub)
 2023-09-29 11:09:32,770 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
 2023-09-29 11:09:32,771 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
