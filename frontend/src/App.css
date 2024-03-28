@@ -1,0 +1,29 @@
+/* Importa il font Roboto da Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset minimale per rimuovere i margini e i padding predefiniti */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Stile del corpo per occupare l'intera altezza e larghezza dello schermo */
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Roboto', sans-serif; /* Imposta Roboto come font di default */
+  -webkit-font-smoothing: antialiased; /* Migliora la resa del font su dispositivi Apple */
+  -moz-osx-font-smoothing: grayscale; /* Migliora la resa del font su dispositivi Mozilla */
+  text-rendering: optimizeLegibility; /* Ottimizza la leggibilità del testo */
+  color: #333; /* Colore di default per il testo */
+}
+
+/* Assicura che i contenitori principali occupino l'intera altezza disponibile */
+#root, .App {
+  height: 100%;
+}
+

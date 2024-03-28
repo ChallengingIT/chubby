@@ -1,0 +1,1586 @@
+2024-03-22 00:18:28,107 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:18:40,687 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-5] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:19:17,808 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 54092 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 00:19:17,810 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 00:19:17,810 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 00:19:22,914 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 31816 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 00:19:22,917 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 00:19:22,918 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 00:19:31,675 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 00:19:34,134 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 00:19:40,275 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 23.546 seconds (process running for 26.653)
+2024-03-22 00:19:40,390 ERROR o.s.b.d.LoggingFailureAnalysisReporter [restartedMain] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8443 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8443 or configure this application to listen on another port.
+
+2024-03-22 00:21:12,114 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:23:41,403 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 26484 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 00:23:41,405 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 00:23:41,406 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 00:23:55,532 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 00:24:00,742 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 19.938 seconds (process running for 21.193)
+2024-03-22 00:25:07,473 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-3] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:31:28,869 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:34:49,506 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 41884 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 00:34:49,508 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 00:34:49,508 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 00:35:00,344 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 00:35:05,921 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 17.024 seconds (process running for 18.783)
+2024-03-22 00:35:45,157 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-3] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:37:43,497 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 58180 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 00:37:43,499 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 00:37:43,500 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 00:37:55,696 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 00:38:06,258 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 23.614 seconds (process running for 25.4)
+2024-03-22 00:39:07,734 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-4] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 00:45:07,264 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 56060 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 00:45:07,282 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 00:45:07,308 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 00:45:21,017 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 00:45:32,075 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 26.345 seconds (process running for 28.182)
+2024-03-22 00:47:45,671 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-3] com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 403,
+  "details": [
+    {
+      "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+      "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"
+    }
+  ],
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Insufficient Permission",
+      "reason": "insufficientPermissions"
+    }
+  ],
+  "message": "Request had insufficient authentication scopes.",
+  "status": "PERMISSION_DENIED"
+}
+2024-03-22 08:07:17,990 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 57764 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 08:07:17,991 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 08:07:17,993 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 08:07:34,988 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 08:07:42,922 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 25.93 seconds (process running for 28.119)
+2024-03-22 08:07:54,894 INFO i.i.w.c.AuthController [http-nio-8443-exec-4] Login
+2024-03-22 08:07:56,500 DEBUG i.i.w.c.AuthController [http-nio-8443-exec-4] Autenticazione passata
+2024-03-22 08:07:56,612 DEBUG i.i.w.c.AuthController [http-nio-8443-exec-4] Token generato
+2024-03-22 08:07:56,644 DEBUG i.i.w.c.AuthController [http-nio-8443-exec-4] Login effettuato
+2024-03-22 08:11:02,575 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-5] com.google.api.client.googleapis.json.GoogleJsonResponseException: 400 Bad Request
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 400,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Invalid time zone definition for start time.",
+      "reason": "invalid"
+    },
+    {
+      "domain": "global",
+      "message": "Missing time zone definition for start time.",
+      "reason": "required"
+    }
+  ],
+  "message": "Invalid time zone definition for start time."
+}
+2024-03-22 08:12:35,810 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-9] com.google.api.client.googleapis.json.GoogleJsonResponseException: 400 Bad Request
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 400,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Invalid time zone definition for start time.",
+      "reason": "invalid"
+    },
+    {
+      "domain": "global",
+      "message": "Missing time zone definition for start time.",
+      "reason": "required"
+    }
+  ],
+  "message": "Invalid time zone definition for start time."
+}
+2024-03-22 08:14:21,532 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 59812 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 08:14:21,535 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 08:14:21,536 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 08:14:35,108 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 08:14:45,720 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 24.957 seconds (process running for 26.236)
+2024-03-22 08:15:26,140 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] java.net.UnknownHostException: www.googleapis.com
+2024-03-22 08:17:48,600 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-4] com.google.api.client.googleapis.json.GoogleJsonResponseException: 400 Bad Request
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "code": 400,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Invalid time zone definition for start time.",
+      "reason": "invalid"
+    },
+    {
+      "domain": "global",
+      "message": "Missing time zone definition for start time.",
+      "reason": "required"
+    }
+  ],
+  "message": "Invalid time zone definition for start time."
+}
+2024-03-22 08:18:24,478 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 42444 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 08:18:24,479 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 08:18:24,480 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 08:18:36,875 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 08:18:40,929 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 18.453 seconds (process running for 20.054)
+2024-03-22 08:25:44,074 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 11184 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 08:25:44,075 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 08:25:44,076 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 08:25:53,574 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 08:25:57,434 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 14.002 seconds (process running for 15.297)
+2024-03-22 08:29:23,198 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 45316 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 08:29:23,199 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 08:29:23,200 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 08:29:41,357 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 08:29:52,343 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 29.902 seconds (process running for 31.237)
+2024-03-22 10:10:27,745 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 35500 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 10:10:27,749 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 10:10:27,751 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 10:10:50,417 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 10:11:00,433 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 34.989 seconds (process running for 42.687)
+2024-03-22 10:24:25,747 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 53220 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 10:24:25,749 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 10:24:25,751 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 10:24:37,535 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 10:24:45,104 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 20.696 seconds (process running for 22.67)
+2024-03-22 10:30:49,767 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 8808 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 10:30:49,769 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 10:30:49,770 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 10:31:04,724 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 10:31:14,060 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 24.99 seconds (process running for 26.487)
+2024-03-22 10:35:00,857 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 59944 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 10:35:00,860 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 10:35:00,861 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 10:35:12,291 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 10:35:17,737 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 17.667 seconds (process running for 18.956)
+2024-03-22 10:44:32,306 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 17080 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 10:44:32,307 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 10:44:32,309 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 10:44:43,245 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 10:44:48,421 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 16.903 seconds (process running for 18.358)
+2024-03-22 11:05:23,701 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 60780 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 11:05:23,703 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 11:05:23,704 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 11:05:38,305 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 11:05:46,144 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 23.282 seconds (process running for 24.984)
+2024-03-22 11:57:58,385 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 58748 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 11:57:58,386 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 11:57:58,387 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 11:58:14,232 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 11:58:20,647 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 23.078 seconds (process running for 24.652)
+2024-03-22 11:58:25,022 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] com.google.api.client.googleapis.json.GoogleJsonResponseException: 404 Not Found
+POST https://www.googleapis.com/calendar/v3/calendars/torchy/events
+{
+  "code": 404,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Not Found",
+      "reason": "notFound"
+    }
+  ],
+  "message": "Not Found"
+}
+2024-03-22 11:59:03,029 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-3] com.google.api.client.googleapis.json.GoogleJsonResponseException: 404 Not Found
+POST https://www.googleapis.com/calendar/v3/calendars/torchy/events
+{
+  "code": 404,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Not Found",
+      "reason": "notFound"
+    }
+  ],
+  "message": "Not Found"
+}
+2024-03-22 12:13:43,703 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 56040 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:13:43,705 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:13:43,706 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:13:57,661 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 12:14:05,142 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 22.47 seconds (process running for 24.103)
+2024-03-22 12:15:44,970 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] com.google.api.client.googleapis.json.GoogleJsonResponseException: 404 Not Found
+POST https://www.googleapis.com/calendar/v3/users/me/calendarList
+{
+  "code": 404,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Not Found",
+      "reason": "notFound"
+    }
+  ],
+  "message": "Not Found"
+}
+2024-03-22 12:16:54,413 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 20112 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:16:54,415 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:16:54,416 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:17:06,911 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 12:17:14,394 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 20.789 seconds (process running for 22.264)
+2024-03-22 12:17:40,246 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] com.google.api.client.googleapis.json.GoogleJsonResponseException: 404 Not Found
+POST https://www.googleapis.com/calendar/v3/calendars/torchy/events
+{
+  "code": 404,
+  "errors": [
+    {
+      "domain": "global",
+      "message": "Not Found",
+      "reason": "notFound"
+    }
+  ],
+  "message": "Not Found"
+}
+2024-03-22 12:19:06,963 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 39376 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:19:06,965 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:19:06,965 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:19:16,544 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 12:19:20,628 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 14.369 seconds (process running for 15.869)
+2024-03-22 12:43:59,978 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 39376 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:43:59,979 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:43:59,979 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:44:06,335 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 6.468 seconds (process running for 1501.576)
+2024-03-22 12:44:07,928 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 39376 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:44:07,928 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:44:07,928 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:44:11,298 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 3.447 seconds (process running for 1506.539)
+2024-03-22 12:52:26,505 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 41124 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:52:26,508 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:52:26,510 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:52:43,360 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 12:52:51,185 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 25.759 seconds (process running for 27.722)
+2024-03-22 12:53:57,778 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] [http-nio-8443-exec-1] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: com.google.common.util.concurrent.ExecutionError: java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'] with root cause
+java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'
+	at com.google.api.gax.rpc.EndpointContext.validateUniverseDomain(EndpointContext.java:129)
+	at com.google.api.gax.grpc.GrpcCallContext.validateUniverseDomain(GrpcCallContext.java:631)
+	at com.google.api.gax.grpc.GrpcClientCalls.newCall(GrpcClientCalls.java:100)
+	at com.google.api.gax.grpc.GrpcDirectCallable.futureCall(GrpcDirectCallable.java:62)
+	at com.google.api.gax.grpc.GrpcExceptionCallable.futureCall(GrpcExceptionCallable.java:64)
+	at com.google.api.gax.rpc.AttemptCallable.call(AttemptCallable.java:87)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:78)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:41)
+	at com.google.api.gax.tracing.TracedUnaryCallable.futureCall(TracedUnaryCallable.java:75)
+	at com.google.api.gax.rpc.UnaryCallable$1.futureCall(UnaryCallable.java:126)
+	at com.google.api.gax.rpc.UnaryCallable.futureCall(UnaryCallable.java:87)
+	at com.google.api.gax.rpc.UnaryCallable.call(UnaryCallable.java:112)
+	at com.google.apps.meet.v2.SpacesServiceClient.createSpace(SpacesServiceClient.java:287)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 12:53:57,800 ERROR i.i.w.s.j.AuthEntryPointJwt [http-nio-8443-exec-1] Unauthorized error: Full authentication is required to access this resource
+2024-03-22 12:54:52,510 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] [http-nio-8443-exec-4] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: com.google.common.util.concurrent.ExecutionError: java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'] with root cause
+java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'
+	at com.google.api.gax.rpc.EndpointContext.validateUniverseDomain(EndpointContext.java:129)
+	at com.google.api.gax.grpc.GrpcCallContext.validateUniverseDomain(GrpcCallContext.java:631)
+	at com.google.api.gax.grpc.GrpcClientCalls.newCall(GrpcClientCalls.java:100)
+	at com.google.api.gax.grpc.GrpcDirectCallable.futureCall(GrpcDirectCallable.java:62)
+	at com.google.api.gax.grpc.GrpcExceptionCallable.futureCall(GrpcExceptionCallable.java:64)
+	at com.google.api.gax.rpc.AttemptCallable.call(AttemptCallable.java:87)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:78)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:41)
+	at com.google.api.gax.tracing.TracedUnaryCallable.futureCall(TracedUnaryCallable.java:75)
+	at com.google.api.gax.rpc.UnaryCallable$1.futureCall(UnaryCallable.java:126)
+	at com.google.api.gax.rpc.UnaryCallable.futureCall(UnaryCallable.java:87)
+	at com.google.api.gax.rpc.UnaryCallable.call(UnaryCallable.java:112)
+	at com.google.apps.meet.v2.SpacesServiceClient.createSpace(SpacesServiceClient.java:287)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 12:54:52,516 ERROR i.i.w.s.j.AuthEntryPointJwt [http-nio-8443-exec-4] Unauthorized error: Full authentication is required to access this resource
+2024-03-22 12:55:27,662 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 41460 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 12:55:27,664 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 12:55:27,665 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 12:55:39,702 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 12:55:47,290 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 20.304 seconds (process running for 21.851)
+2024-03-22 12:56:11,488 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] [http-nio-8443-exec-4] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: com.google.common.util.concurrent.ExecutionError: java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'] with root cause
+java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'
+	at com.google.api.gax.rpc.EndpointContext.validateUniverseDomain(EndpointContext.java:129)
+	at com.google.api.gax.grpc.GrpcCallContext.validateUniverseDomain(GrpcCallContext.java:631)
+	at com.google.api.gax.grpc.GrpcClientCalls.newCall(GrpcClientCalls.java:100)
+	at com.google.api.gax.grpc.GrpcDirectCallable.futureCall(GrpcDirectCallable.java:62)
+	at com.google.api.gax.grpc.GrpcExceptionCallable.futureCall(GrpcExceptionCallable.java:64)
+	at com.google.api.gax.rpc.AttemptCallable.call(AttemptCallable.java:87)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:78)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:41)
+	at com.google.api.gax.tracing.TracedUnaryCallable.futureCall(TracedUnaryCallable.java:75)
+	at com.google.api.gax.rpc.UnaryCallable$1.futureCall(UnaryCallable.java:126)
+	at com.google.api.gax.rpc.UnaryCallable.futureCall(UnaryCallable.java:87)
+	at com.google.api.gax.rpc.UnaryCallable.call(UnaryCallable.java:112)
+	at com.google.apps.meet.v2.SpacesServiceClient.createSpace(SpacesServiceClient.java:287)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 12:56:11,502 ERROR i.i.w.s.j.AuthEntryPointJwt [http-nio-8443-exec-4] Unauthorized error: Full authentication is required to access this resource
+2024-03-22 12:57:20,711 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] [http-nio-8443-exec-5] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: com.google.common.util.concurrent.ExecutionError: java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'] with root cause
+java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'
+	at com.google.api.gax.rpc.EndpointContext.validateUniverseDomain(EndpointContext.java:129)
+	at com.google.api.gax.grpc.GrpcCallContext.validateUniverseDomain(GrpcCallContext.java:631)
+	at com.google.api.gax.grpc.GrpcClientCalls.newCall(GrpcClientCalls.java:100)
+	at com.google.api.gax.grpc.GrpcDirectCallable.futureCall(GrpcDirectCallable.java:62)
+	at com.google.api.gax.grpc.GrpcExceptionCallable.futureCall(GrpcExceptionCallable.java:64)
+	at com.google.api.gax.rpc.AttemptCallable.call(AttemptCallable.java:87)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:78)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:41)
+	at com.google.api.gax.tracing.TracedUnaryCallable.futureCall(TracedUnaryCallable.java:75)
+	at com.google.api.gax.rpc.UnaryCallable$1.futureCall(UnaryCallable.java:126)
+	at com.google.api.gax.rpc.UnaryCallable.futureCall(UnaryCallable.java:87)
+	at com.google.api.gax.rpc.UnaryCallable.call(UnaryCallable.java:112)
+	at com.google.apps.meet.v2.SpacesServiceClient.createSpace(SpacesServiceClient.java:287)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 12:57:20,716 ERROR i.i.w.s.j.AuthEntryPointJwt [http-nio-8443-exec-5] Unauthorized error: Full authentication is required to access this resource
+2024-03-22 13:00:12,668 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 51188 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 13:00:12,670 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 13:00:12,670 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 13:00:23,708 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 13:00:28,415 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 16.467 seconds (process running for 17.934)
+2024-03-22 13:01:46,745 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] [http-nio-8443-exec-2] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: com.google.common.util.concurrent.ExecutionError: java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'] with root cause
+java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'
+	at com.google.api.gax.rpc.EndpointContext.validateUniverseDomain(EndpointContext.java:129)
+	at com.google.api.gax.grpc.GrpcCallContext.validateUniverseDomain(GrpcCallContext.java:631)
+	at com.google.api.gax.grpc.GrpcClientCalls.newCall(GrpcClientCalls.java:100)
+	at com.google.api.gax.grpc.GrpcDirectCallable.futureCall(GrpcDirectCallable.java:62)
+	at com.google.api.gax.grpc.GrpcExceptionCallable.futureCall(GrpcExceptionCallable.java:64)
+	at com.google.api.gax.rpc.AttemptCallable.call(AttemptCallable.java:87)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:78)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:41)
+	at com.google.api.gax.tracing.TracedUnaryCallable.futureCall(TracedUnaryCallable.java:75)
+	at com.google.api.gax.rpc.UnaryCallable$1.futureCall(UnaryCallable.java:126)
+	at com.google.api.gax.rpc.UnaryCallable.futureCall(UnaryCallable.java:87)
+	at com.google.api.gax.rpc.UnaryCallable.call(UnaryCallable.java:112)
+	at com.google.apps.meet.v2.SpacesServiceClient.createSpace(SpacesServiceClient.java:287)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 13:01:46,764 ERROR i.i.w.s.j.AuthEntryPointJwt [http-nio-8443-exec-2] Unauthorized error: Full authentication is required to access this resource
+2024-03-22 13:33:32,887 ERROR i.g.i.ManagedChannelOrphanWrapper [http-nio-8443-exec-4] *~*~*~ Previous channel ManagedChannelImpl{logId=1, target=meet.googleapis.com:443} was garbage collected without being shut down! ~*~*~*
+    Make sure to call shutdown()/shutdownNow()
+java.lang.RuntimeException: ManagedChannel allocation site
+	at io.grpc.internal.ManagedChannelOrphanWrapper$ManagedChannelReference.<init>(ManagedChannelOrphanWrapper.java:102)
+	at io.grpc.internal.ManagedChannelOrphanWrapper.<init>(ManagedChannelOrphanWrapper.java:60)
+	at io.grpc.internal.ManagedChannelOrphanWrapper.<init>(ManagedChannelOrphanWrapper.java:51)
+	at io.grpc.internal.ManagedChannelImplBuilder.build(ManagedChannelImplBuilder.java:662)
+	at io.grpc.ForwardingChannelBuilder2.build(ForwardingChannelBuilder2.java:254)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.createSingleChannel(InstantiatingGrpcChannelProvider.java:442)
+	at com.google.api.gax.grpc.ChannelPool.<init>(ChannelPool.java:107)
+	at com.google.api.gax.grpc.ChannelPool.create(ChannelPool.java:85)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.createChannel(InstantiatingGrpcChannelProvider.java:243)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.getTransportChannel(InstantiatingGrpcChannelProvider.java:237)
+	at com.google.api.gax.rpc.ClientContext.create(ClientContext.java:226)
+	at com.google.apps.meet.v2.stub.GrpcSpacesServiceStub.create(GrpcSpacesServiceStub.java:92)
+	at com.google.apps.meet.v2.stub.SpacesServiceStubSettings.createStub(SpacesServiceStubSettings.java:127)
+	at com.google.apps.meet.v2.SpacesServiceClient.<init>(SpacesServiceClient.java:221)
+	at com.google.apps.meet.v2.SpacesServiceClient.create(SpacesServiceClient.java:203)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:261)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 13:34:07,319 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] [http-nio-8443-exec-4] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: com.google.common.util.concurrent.ExecutionError: java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'] with root cause
+java.lang.NoSuchMethodError: 'java.lang.String com.google.auth.Credentials.getUniverseDomain()'
+	at com.google.api.gax.rpc.EndpointContext.validateUniverseDomain(EndpointContext.java:129)
+	at com.google.api.gax.grpc.GrpcCallContext.validateUniverseDomain(GrpcCallContext.java:631)
+	at com.google.api.gax.grpc.GrpcClientCalls.newCall(GrpcClientCalls.java:100)
+	at com.google.api.gax.grpc.GrpcDirectCallable.futureCall(GrpcDirectCallable.java:62)
+	at com.google.api.gax.grpc.GrpcExceptionCallable.futureCall(GrpcExceptionCallable.java:64)
+	at com.google.api.gax.rpc.AttemptCallable.call(AttemptCallable.java:87)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:78)
+	at com.google.api.gax.rpc.RetryingCallable.futureCall(RetryingCallable.java:41)
+	at com.google.api.gax.tracing.TracedUnaryCallable.futureCall(TracedUnaryCallable.java:75)
+	at com.google.api.gax.rpc.UnaryCallable$1.futureCall(UnaryCallable.java:126)
+	at com.google.api.gax.rpc.UnaryCallable.futureCall(UnaryCallable.java:87)
+	at com.google.api.gax.rpc.UnaryCallable.call(UnaryCallable.java:112)
+	at com.google.apps.meet.v2.SpacesServiceClient.createSpace(SpacesServiceClient.java:287)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 13:34:07,330 ERROR i.i.w.s.j.AuthEntryPointJwt [http-nio-8443-exec-4] Unauthorized error: Full authentication is required to access this resource
+2024-03-22 13:36:00,617 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 51188 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 13:36:00,635 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 13:36:00,637 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 13:36:07,601 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 8.092 seconds (process running for 2157.12)
+2024-03-22 13:36:11,593 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 51188 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 13:36:11,593 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 13:36:11,593 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 13:36:17,440 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 13:36:21,692 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 10.148 seconds (process running for 2171.212)
+2024-03-22 13:36:59,405 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 52520 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 13:36:59,407 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 13:36:59,407 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 13:37:09,771 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 13:37:16,586 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 18.61 seconds (process running for 20.161)
+2024-03-22 13:48:08,234 ERROR i.g.i.ManagedChannelOrphanWrapper [http-nio-8443-exec-4] *~*~*~ Previous channel ManagedChannelImpl{logId=1, target=meet.googleapis.com:443} was garbage collected without being shut down! ~*~*~*
+    Make sure to call shutdown()/shutdownNow()
+java.lang.RuntimeException: ManagedChannel allocation site
+	at io.grpc.internal.ManagedChannelOrphanWrapper$ManagedChannelReference.<init>(ManagedChannelOrphanWrapper.java:102)
+	at io.grpc.internal.ManagedChannelOrphanWrapper.<init>(ManagedChannelOrphanWrapper.java:60)
+	at io.grpc.internal.ManagedChannelOrphanWrapper.<init>(ManagedChannelOrphanWrapper.java:51)
+	at io.grpc.internal.ManagedChannelImplBuilder.build(ManagedChannelImplBuilder.java:662)
+	at io.grpc.ForwardingChannelBuilder2.build(ForwardingChannelBuilder2.java:254)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.createSingleChannel(InstantiatingGrpcChannelProvider.java:442)
+	at com.google.api.gax.grpc.ChannelPool.<init>(ChannelPool.java:107)
+	at com.google.api.gax.grpc.ChannelPool.create(ChannelPool.java:85)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.createChannel(InstantiatingGrpcChannelProvider.java:243)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.getTransportChannel(InstantiatingGrpcChannelProvider.java:237)
+	at com.google.api.gax.rpc.ClientContext.create(ClientContext.java:226)
+	at com.google.apps.meet.v2.stub.GrpcSpacesServiceStub.create(GrpcSpacesServiceStub.java:92)
+	at com.google.apps.meet.v2.stub.SpacesServiceStubSettings.createStub(SpacesServiceStubSettings.java:127)
+	at com.google.apps.meet.v2.SpacesServiceClient.<init>(SpacesServiceClient.java:221)
+	at com.google.apps.meet.v2.SpacesServiceClient.create(SpacesServiceClient.java:203)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:261)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 13:48:29,201 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 46988 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 13:48:29,204 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 13:48:29,205 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 13:48:41,862 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 13:48:46,527 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 18.215 seconds (process running for 19.798)
+2024-03-22 13:53:27,440 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] com.google.api.gax.rpc.UnavailableException: io.grpc.StatusRuntimeException: UNAVAILABLE: Credentials failed to obtain metadata
+2024-03-22 14:12:07,412 ERROR i.g.i.ManagedChannelOrphanWrapper [http-nio-8443-exec-6] *~*~*~ Previous channel ManagedChannelImpl{logId=1, target=meet.googleapis.com:443} was garbage collected without being shut down! ~*~*~*
+    Make sure to call shutdown()/shutdownNow()
+java.lang.RuntimeException: ManagedChannel allocation site
+	at io.grpc.internal.ManagedChannelOrphanWrapper$ManagedChannelReference.<init>(ManagedChannelOrphanWrapper.java:102)
+	at io.grpc.internal.ManagedChannelOrphanWrapper.<init>(ManagedChannelOrphanWrapper.java:60)
+	at io.grpc.internal.ManagedChannelOrphanWrapper.<init>(ManagedChannelOrphanWrapper.java:51)
+	at io.grpc.internal.ManagedChannelImplBuilder.build(ManagedChannelImplBuilder.java:662)
+	at io.grpc.ForwardingChannelBuilder2.build(ForwardingChannelBuilder2.java:254)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.createSingleChannel(InstantiatingGrpcChannelProvider.java:442)
+	at com.google.api.gax.grpc.ChannelPool.<init>(ChannelPool.java:107)
+	at com.google.api.gax.grpc.ChannelPool.create(ChannelPool.java:85)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.createChannel(InstantiatingGrpcChannelProvider.java:243)
+	at com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.getTransportChannel(InstantiatingGrpcChannelProvider.java:237)
+	at com.google.api.gax.rpc.ClientContext.create(ClientContext.java:226)
+	at com.google.apps.meet.v2.stub.GrpcSpacesServiceStub.create(GrpcSpacesServiceStub.java:92)
+	at com.google.apps.meet.v2.stub.SpacesServiceStubSettings.createStub(SpacesServiceStubSettings.java:127)
+	at com.google.apps.meet.v2.SpacesServiceClient.<init>(SpacesServiceClient.java:221)
+	at com.google.apps.meet.v2.SpacesServiceClient.create(SpacesServiceClient.java:203)
+	at controller.it.challenging.torchy.GoogleCalendarController.insertCalendar(GoogleCalendarController.java:261)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.servlet.resource.ResourceUrlEncodingFilter.doFilter(ResourceUrlEncodingFilter.java:66)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:151)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:129)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at jwt.security.it.challenging.torchy.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:143)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-03-22 14:12:38,790 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-6] com.google.api.gax.rpc.UnavailableException: io.grpc.StatusRuntimeException: UNAVAILABLE: Credentials failed to obtain metadata
+2024-03-22 14:13:10,478 ERROR i.i.w.c.GoogleCalendarController [http-nio-8443-exec-4] com.google.api.gax.rpc.UnavailableException: io.grpc.StatusRuntimeException: UNAVAILABLE: Credentials failed to obtain metadata
+2024-03-22 14:18:14,357 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 50320 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 14:18:14,360 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 14:18:14,361 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 14:18:27,341 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 14:18:34,050 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 20.581 seconds (process running for 22.462)
+2024-03-22 14:28:15,427 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 60892 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 14:28:15,431 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 14:28:15,434 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 14:28:35,150 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 14:28:42,823 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 29.294 seconds (process running for 33.189)
+2024-03-22 14:31:18,781 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 14:31:20,364 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 14:35:57,801 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 57840 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 14:35:57,808 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 14:35:57,810 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 14:36:22,996 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 14:36:30,160 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 34.106 seconds (process running for 37.401)
+2024-03-22 14:41:15,204 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 14:41:24,120 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 14:42:22,514 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 41928 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 14:42:22,515 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 14:42:22,516 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 14:42:39,661 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 14:42:50,865 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 29.087 seconds (process running for 31.002)
+2024-03-22 14:43:24,574 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] get email
+2024-03-22 14:43:33,391 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-2] get email
+2024-03-22 14:46:40,484 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 62212 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 14:46:40,485 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 14:46:40,487 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 14:46:53,600 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 14:46:59,087 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 19.369 seconds (process running for 20.944)
+2024-03-22 14:48:50,107 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 42848 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 14:48:50,109 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 14:48:50,110 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 14:49:02,282 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 14:49:10,994 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 21.644 seconds (process running for 23.048)
+2024-03-22 14:49:35,818 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 14:49:42,932 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 14:50:44,685 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-3] get email
+2024-03-22 14:50:45,635 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-3] get email
+2024-03-22 15:00:36,963 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 41204 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 15:00:36,967 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 15:00:36,968 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 15:00:50,705 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 15:00:57,037 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 20.896 seconds (process running for 23.238)
+2024-03-22 15:04:31,835 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 55540 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 15:04:31,837 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 15:04:31,838 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 15:04:50,945 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 15:05:00,873 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 30.01 seconds (process running for 32.485)
+2024-03-22 15:18:22,832 INFO i.i.w.WeHubApplication [restartedMain] Starting WeHubApplication using Java 17.0.8 with PID 50632 (C:\Users\dpagn\IdeaProjects\chubby\target\classes started by msciuto in C:\Users\dpagn\IdeaProjects\chubby)
+2024-03-22 15:18:22,834 DEBUG i.i.w.WeHubApplication [restartedMain] Running with Spring Boot v3.0.5, Spring v6.0.7
+2024-03-22 15:18:22,835 INFO i.i.w.WeHubApplication [restartedMain] The following 1 profile is active: "prod"
+2024-03-22 15:18:39,361 DEBUG i.i.w.s.j.AuthTokenFilter [restartedMain] Filter 'authenticationJwtTokenFilter' configured for use
+2024-03-22 15:18:49,884 INFO i.i.w.WeHubApplication [restartedMain] Started WeHubApplication in 27.857 seconds (process running for 29.928)
+2024-03-22 15:19:38,361 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
+2024-03-22 15:19:47,410 INFO i.i.w.c.GoogleCalendarController [http-nio-8443-exec-1] get email
