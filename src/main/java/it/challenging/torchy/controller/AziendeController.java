@@ -267,7 +267,7 @@ public class AziendeController {
 
             }
 
-            trasformaMappaInCLiente(clienteEntity, clienteMap, null);
+            trasformaMappaInCLiente(clienteEntity, clienteMap);
 
             if (controllaDuplicati(clienteEntity)) {
                 logger.debug("Azienda duplicata, denominazione già presente");
@@ -347,7 +347,7 @@ public class AziendeController {
         return toReturn;
     }
 
-    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap, String logo) {
+    public void trasformaMappaInCLiente(Cliente cliente, Map<String,String> clienteMap) {
 
         logger.info("Trasforma mappa in azienda");
 
@@ -381,7 +381,5 @@ public class AziendeController {
         cliente.setSito(clienteMap.get("sito") != null ? clienteMap.get("sito") : null);
         cliente.setStatus(clienteMap.get("status") != null ? Integer.parseInt(clienteMap.get("status")) : null);
         cliente.setTipologia(clienteMap.get("tipologia") != null ? clienteMap.get("tipologia") : null);
-        cliente.setLogo(logo);
-
     }
 }
