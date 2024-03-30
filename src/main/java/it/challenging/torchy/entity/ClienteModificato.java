@@ -47,6 +47,12 @@ public class ClienteModificato implements Serializable {
 
     private Integer status;
 
+    private Integer potenzialita;
+
+    private Integer semplicita;
+
+    private Double ida;
+
     private Owner owner;
 
     private String sedeOperativa;

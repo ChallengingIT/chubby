@@ -80,6 +80,15 @@ public class Cliente implements Serializable {
     @Column(name="status")
     private Integer status;
 
+    @Column(name="potenzialita")
+    private Integer potenzialita;
+
+    @Column(name="semplicita")
+    private Integer semplicita;
+
+    @Column(name="ida")
+    private Double ida;
+
     @Column(name="settoreMercato")
     private String settoreMercato;
 
