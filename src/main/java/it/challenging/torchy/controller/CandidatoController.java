@@ -45,6 +45,8 @@ public class CandidatoController {
     private FornitoreRepository    fornitoreRepository;
     @Autowired
     private AssociazioniRepository associazioniRepository;
+    @Autowired
+    private FunzioniAziendaliRepository funzioniAziendaliRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CandidatoController.class);
 
@@ -54,6 +56,14 @@ public class CandidatoController {
         logger.info("Candidati");
 
         return candidatoRepository.findAll();
+    }
+
+    @GetMapping("/react/funzioni")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<FunzioneAziendale> getAllFunzionk() {
+        logger.info("Funzioni Aziendali");
+
+        return funzioniAziendaliRepository.findAll();
     }
 
     @GetMapping("/react/mod")
