@@ -13,5 +13,8 @@ import java.util.List;
 @Repository
 public interface TipologiaRepository extends JpaRepository<Tipologia, Integer> {
 
+    List<Tipologia> findByFunzione_IdOrderByDescrizioneAsc(Integer id);
+
     List<Tipologia> findAllByOrderByDescrizioneAsc();
+
 }

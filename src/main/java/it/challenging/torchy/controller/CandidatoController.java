@@ -6,8 +6,6 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
-import it.challenging.torchy.entity.*;
-import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +25,6 @@ public class CandidatoController {
 
     @Autowired
     private CandidatoRepository    candidatoRepository;
-    @Autowired
-    private TipologiaRepository    tipologiaRepository;
     @Autowired
     private FacoltaRepository      facoltaRepository;
     @Autowired

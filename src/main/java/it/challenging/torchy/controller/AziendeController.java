@@ -213,6 +213,14 @@ public class AziendeController {
         return tipologiaRepository.findAllByOrderByDescrizioneAsc();
     }
 
+    @GetMapping("/react/tipologia/{id}")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Tipologia> getAllTipologie(@PathVariable("id") Integer idFunzione) {
+        logger.info("Job Title / Tipologie");
+
+        return tipologiaRepository.findByFunzione_IdOrderByDescrizioneAsc(idFunzione);
+    }
+
     @GetMapping("/react/owner")
     ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<Owner> getAllOwner() {

@@ -20,8 +20,8 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table( name = "tipologie")
-public class Tipologia implements Serializable {
+@Table( name = "funzioni_aziendali")
+public class FunzioneAziendale implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -6529685398267757690L;
@@ -33,15 +33,6 @@ public class Tipologia implements Serializable {
     @Column(nullable = false, unique = true, length = 45)
     private String descrizione;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "funzioni_tipologie",
-        joinColumns = @JoinColumn(name = "id_tipologia", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "id_funzione", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private FunzioneAziendale funzione;
-
     @Override
     public boolean equals(Object o) {
 
@@ -51,7 +42,7 @@ public class Tipologia implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Tipologia tipologia = (Tipologia)o;
+        FunzioneAziendale tipologia = (FunzioneAziendale)o;
         return id != null && Objects.equals(id, tipologia.id);
     }
 
