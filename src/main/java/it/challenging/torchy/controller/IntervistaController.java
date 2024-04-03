@@ -4,8 +4,6 @@
 
 package it.challenging.torchy.controller;
 
-import it.challenging.torchy.entity.*;
-import it.challenging.torchy.repository.*;
 import it.challenging.torchy.EmailSenderService;
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
@@ -259,7 +257,7 @@ public class IntervistaController {
             interviste.add(intervista);
 
             candidato.setRating(ricalcoloRating(interviste));
-            candidato.setStato(intervista.getStato());
+            //candidato.setStato(intervista.getStato());
 
             intervista.setCandidato(candidato);
 
