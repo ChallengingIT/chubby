@@ -84,6 +84,7 @@ public class KeyPeopleController {
 
             cliente.setId(keyPeople.getCliente().getId());
             cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+            cliente.setLogo(keyPeople.getCliente().getLogo());
 
             keyPeopleMod.setCliente(cliente);
             keyPeopleMod.setNote(keyPeople.getNote());
@@ -129,6 +130,7 @@ public class KeyPeopleController {
 
             cliente.setId(keyPeople.getCliente().getId());
             cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+            cliente.setLogo(keyPeople.getCliente().getLogo());
 
             keyPeopleMod.setCliente(cliente);
             keyPeopleMod.setNote(keyPeople.getNote());
