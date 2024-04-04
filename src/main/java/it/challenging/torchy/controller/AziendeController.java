@@ -388,9 +388,9 @@ public class AziendeController {
         cliente.setSettoreMercato(clienteMap.get("settoreMercato") != null ? clienteMap.get("settoreMercato") : null);
         cliente.setSito(clienteMap.get("sito") != null ? clienteMap.get("sito") : null);
         cliente.setTipologia(clienteMap.get("tipologia") != null ? clienteMap.get("tipologia") : null);
-        cliente.setPotenzialita(clienteMap.get("potenzialita") != null ? Integer.parseInt(clienteMap.get("potenzialita")) : null);
-        cliente.setSemplicita(clienteMap.get("semplicita") != null ? Integer.parseInt(clienteMap.get("semplicita")) : null);
-        cliente.setStatus(clienteMap.get("status") != null ? Integer.parseInt(clienteMap.get("status")) : null);
+        cliente.setPotenzialita(clienteMap.get("potenzialita") != null ? Integer.parseInt(clienteMap.get("potenzialita")) : 0);
+        cliente.setSemplicita(clienteMap.get("semplicita") != null ? Integer.parseInt(clienteMap.get("semplicita")) : 0);
+        cliente.setStatus(clienteMap.get("status") != null ? Integer.parseInt(clienteMap.get("status")) : 0);
 
         Double ida = (double)((cliente.getPotenzialita() + cliente.getSemplicita() + cliente.getStatus() ) / 3);
 
