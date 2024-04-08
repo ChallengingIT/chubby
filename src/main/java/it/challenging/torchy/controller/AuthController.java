@@ -77,7 +77,6 @@ public class AuthController {
             roles));
     }
 
-    @CrossOrigin(origins = "*")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
