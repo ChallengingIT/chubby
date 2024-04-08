@@ -113,6 +113,6 @@ public class AuthController {
             logger.error(e.toString());
         }
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse("OK"));
     }
 }
