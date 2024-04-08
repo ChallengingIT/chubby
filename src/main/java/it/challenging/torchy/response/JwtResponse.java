@@ -1,44 +1,26 @@
 package it.challenging.torchy.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private String username;
+    private String nome;
+    private String cognome;
     private List<String> roles;
 
-    public JwtResponse(String accessToken, String username, List<String> roles) {
+    public JwtResponse(String accessToken, String username, String nome, String cognome, List<String> roles) {
         this.token = accessToken;
         this.username = username;
+        this.nome = nome;
+        this.cognome = cognome;
         this.roles = roles;
     }
 
-    public String getAccessToken() {
-        return token;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.token = accessToken;
-    }
-
-    public String getTokenType() {
-        return type;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.type = tokenType;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
 }

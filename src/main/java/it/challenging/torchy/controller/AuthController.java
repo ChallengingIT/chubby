@@ -66,12 +66,14 @@ public class AuthController {
 
         List<String> roles = new ArrayList<>();
 
+        User user = userRepository.findByUsername(loginRequest.getUsername()).get();
+
         roles.add(authorityRepository.findByUsername(loginRequest.getUsername()).getAuthority());
 
         logger.debug("Login effettuato");
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-            userDetails.getUsername(),
+            userDetails.getUsername(), user.getNome(), user.getCognome(),
             roles));
     }
 
