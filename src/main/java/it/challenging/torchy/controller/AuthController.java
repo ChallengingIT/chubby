@@ -83,31 +83,34 @@ public class AuthController {
 
         logger.info("Registrazione");
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        try {
 
-            logger.debug("Username selezionato già presente");
+            if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 
-            return ResponseEntity
-                .badRequest()
-                .body(new MessageResponse("Error: Username is already taken!"));
+                logger.debug("Username selezionato già presente");
+
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            }
+
+            // Create new user's account
+            User user = new User(signUpRequest.getUsername(), signUpRequest.getNome(), signUpRequest.getCognome(), encoder.encode(signUpRequest.getPassword()), (byte)1);
+
+            logger.debug("User generato");
+
+            String strRole = signUpRequest.getRole();
+
+            Authority authority = new Authority();
+
+            authority.setAuthority(Objects.requireNonNullElse(strRole, "ROLE_USER"));
+
+            user.setAuthority(authority);
+            userRepository.save(user);
+
+            logger.debug("Utenza creata");
+
+        } catch(Exception e) {
+            logger.error(e.toString());
         }
-
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),signUpRequest.getNome(), signUpRequest.getCognome(),
-            encoder.encode(signUpRequest.getPassword()), (byte)1);
-
-        logger.debug("User generato");
-
-        String strRole = signUpRequest.getRole();
-
-        Authority authority = new Authority();
-
-        authority.setAuthority(Objects.requireNonNullElse(strRole, "ROLE_USER"));
-
-        user.setAuthority(authority);
-        userRepository.save(user);
-
-        logger.debug("Utenza creata");
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
