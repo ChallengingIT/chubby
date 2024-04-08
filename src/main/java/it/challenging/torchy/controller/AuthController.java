@@ -102,6 +102,7 @@ public class AuthController {
             Authority authority = new Authority();
 
             authority.setAuthority(Objects.requireNonNullElse(strRole, "ROLE_USER"));
+            authority.setUsername(user.getUsername());
 
             user.setAuthority(authority);
             userRepository.save(user);

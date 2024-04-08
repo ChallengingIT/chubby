@@ -30,15 +30,6 @@ public class Authority implements Serializable {
     @Column(nullable = false, length = 50)
     private String authority;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "authorities_user",
-        joinColumns = @JoinColumn(name = "id_authority", referencedColumnName = "username"),
-        inverseJoinColumns = @JoinColumn(name = "id_user", referencedColumnName = "username")
-    )
-    @ToString.Exclude
-    private User user;
-
     @Override
     public boolean equals(Object o) {
 
