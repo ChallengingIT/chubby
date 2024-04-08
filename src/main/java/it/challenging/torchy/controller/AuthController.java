@@ -1,15 +1,15 @@
 package it.challenging.torchy.controller;
 
+import it.challenging.torchy.entity.Authority;
+import it.challenging.torchy.entity.User;
 import it.challenging.torchy.repository.AuthorityRepository;
 import it.challenging.torchy.repository.UserRepository;
 import it.challenging.torchy.request.LoginRequest;
 import it.challenging.torchy.request.SignupRequest;
 import it.challenging.torchy.response.JwtResponse;
 import it.challenging.torchy.response.MessageResponse;
-import it.challenging.torchy.security.services.UserDetailsImpl;
-import it.challenging.torchy.entity.Authority;
-import it.challenging.torchy.entity.User;
 import it.challenging.torchy.security.jwt.JwtUtils;
+import it.challenging.torchy.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class AuthController {
     UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    BCryptPasswordEncoder encoder;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -93,7 +93,7 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
+        User user = new User(signUpRequest.getUsername(),signUpRequest.getNome(), signUpRequest.getCognome(),
             encoder.encode(signUpRequest.getPassword()), (byte)1);
 
         logger.debug("User generato");
