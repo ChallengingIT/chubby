@@ -49,7 +49,7 @@ public class User implements Serializable {
     @ToString.Exclude
     private Authority authority = new Authority();
 
-    public User(String username, String password, String nome, String cognome, Byte enabled) {
+    public User(String username, String nome, String cognome, String password, Byte enabled) {
 
         this.username = username;
         this.nome = nome;
