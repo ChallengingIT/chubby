@@ -1,4 +1,4 @@
-package it.innotek.wehub.util;
+package it.challenging.torchy.util;
 
 /**
  * Constants file

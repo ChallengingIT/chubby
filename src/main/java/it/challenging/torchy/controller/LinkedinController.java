@@ -2,7 +2,7 @@
  * Copyright (c) 2023.  Marco Sciuto ITA for Innotek. All rights reserved.
  */
 
-package it.innotek.wehub.controller;
+package it.challenging.torchy.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import static it.innotek.wehub.util.Constants.*;
+import static it.challenging.torchy.util.Constants.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
