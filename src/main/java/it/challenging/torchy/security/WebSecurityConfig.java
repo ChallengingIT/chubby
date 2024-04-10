@@ -16,6 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -65,6 +69,23 @@ public class WebSecurityConfig {
             .and()
             .contentSecurityPolicy("script-src 'self'");*/
 
+        http.cors(cors -> {
+            CorsConfigurationSource cs = resources -> {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+                corsConfiguration.setAllowedHeaders(List.of("Authorization",
+                    "Content-Type",
+                    "X-Requested-With",
+                    "Accept",
+                    "X-XSRF-TOKEN"));
+                corsConfiguration.setAllowCredentials(true);
+                return corsConfiguration;
+            };
+
+            cors.configurationSource(cs);
+        });
+
         http
             .csrf().disable()
                 //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -75,16 +96,16 @@ public class WebSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/associazioni/**").permitAll()
-                    .requestMatchers("/aziende/**").permitAll()
-                    .requestMatchers("/staffing/**").permitAll()
-                    .requestMatchers("/files/**").permitAll()
-                    .requestMatchers("/calendar/**").permitAll()
-                    .requestMatchers("/email/**").permitAll()
-                    .requestMatchers("/fornitori/**").permitAll()
-                    .requestMatchers("/intervista/**").permitAll()
-                    .requestMatchers("/keypeople/**").permitAll()
-                    .requestMatchers("/need/**").permitAll()
+                    .requestMatchers("/associazioni/**").authenticated()
+                    .requestMatchers("/aziende/**").authenticated()
+                    .requestMatchers("/staffing/**").authenticated()
+                    .requestMatchers("/files/**").authenticated()
+                    .requestMatchers("/calendar/**").authenticated()
+                    .requestMatchers("/email/**").authenticated()
+                    .requestMatchers("/fornitori/**").authenticated()
+                    .requestMatchers("/intervista/**").authenticated()
+                    .requestMatchers("/keypeople/**").authenticated()
+                    .requestMatchers("/need/**").authenticated()
                     .anyRequest().authenticated()
                     //.anyRequest().permitAll()
             )
