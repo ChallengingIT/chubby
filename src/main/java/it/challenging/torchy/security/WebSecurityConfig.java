@@ -16,6 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -64,6 +68,23 @@ public class WebSecurityConfig {
             .xssProtection()
             .and()
             .contentSecurityPolicy("script-src 'self'");*/
+
+        http.cors(cors -> {
+            CorsConfigurationSource cs = resources -> {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+                corsConfiguration.setAllowedHeaders(List.of("Authorization",
+                    "Content-Type",
+                    "X-Requested-With",
+                    "Accept",
+                    "X-XSRF-TOKEN"));
+                corsConfiguration.setAllowCredentials(true);
+                return corsConfiguration;
+            };
+
+            cors.configurationSource(cs);
+        });
 
         http
             .csrf().disable()
