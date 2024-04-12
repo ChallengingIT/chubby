@@ -6,8 +6,6 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
-import it.challenging.torchy.entity.*;
-import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Key;
 import java.sql.Date;
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -70,50 +67,57 @@ public class NeedController {
     ) {
         logger.info("Need modificati");
 
-        Pageable             p               = PageRequest.of(pagina, quantita);
-        Page<Need>           pageableNeed    = needRepository.findAllByOrderByDescrizioneAsc(p);
-        List<Need>           needs           = pageableNeed.getContent();
-        List<NeedModificato> needsModificati = new ArrayList<>();
+        try {
+            Pageable             p               = PageRequest.of(pagina, quantita);
+            Page<Need>           pageableNeed    = needRepository.findAllByOrderByDescrizioneAsc(p);
+            List<Need>           needs           = pageableNeed.getContent();
+            List<NeedModificato> needsModificati = new ArrayList<>();
 
-        for (Need need : needs) {
-            NeedModificato needSolo = new NeedModificato();
+            for (Need need : needs) {
+                NeedModificato needSolo = new NeedModificato();
 
-            needSolo.setId(need.getId());
-            needSolo.setProgressivo(need.getProgressivo());
-            needSolo.setDescrizione(need.getDescrizione());
-            needSolo.setPriorita(need.getPriorita());
-            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+                needSolo.setId(need.getId());
+                needSolo.setProgressivo(need.getProgressivo());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
+                needSolo.setAnniEsperienza(need.getAnniEsperienza());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(need.getCliente().getId());
-            cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setId(need.getCliente().getId());
+                cliente.setDenominazione(need.getCliente().getDenominazione());
 
-            needSolo.setCliente(cliente);
+                needSolo.setCliente(cliente);
 
-            KeyPeople keyPeople = new KeyPeople();
+                KeyPeople keyPeople = new KeyPeople();
 
-            keyPeople.setId(need.getKeyPeople().getId());
-            keyPeople.setNome(need.getKeyPeople().getNome());
+                keyPeople.setId(need.getKeyPeople().getId());
+                keyPeople.setNome(need.getKeyPeople().getNome());
 
-            needSolo.setKeyPeople(keyPeople);
+                needSolo.setKeyPeople(keyPeople);
 
-            needSolo.setLocation(need.getLocation());
-            needSolo.setNote(need.getNote());
-            needSolo.setNumeroRisorse(need.getNumeroRisorse());
-            needSolo.setOwner(need.getOwner());
-            needSolo.setSkills(need.getSkills());
-            needSolo.setStato(need.getStato());
-            needSolo.setTipo(need.getTipo());
-            needSolo.setTipologia(need.getTipologia());
-            needSolo.setWeek(need.getWeek());
-            needSolo.setPubblicazione(need.getPubblicazione());
-            needSolo.setScreening(need.getScreening());
+                needSolo.setLocation(need.getLocation());
+                needSolo.setNote(need.getNote());
+                needSolo.setNumeroRisorse(need.getNumeroRisorse());
+                needSolo.setOwner(need.getOwner());
+                needSolo.setSkills(need.getSkills());
+                needSolo.setStato(need.getStato());
+                needSolo.setTipo(need.getTipo());
+                needSolo.setTipologia(need.getTipologia());
+                needSolo.setWeek(need.getWeek());
+                needSolo.setPubblicazione(need.getPubblicazione());
+                needSolo.setScreening(need.getScreening());
 
-            needsModificati.add(needSolo);
+                needsModificati.add(needSolo);
+            }
+
+            return needsModificati;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return needsModificati;
     }
 
     @GetMapping("/react/cliente/priorita/{id}")
@@ -121,20 +125,27 @@ public class NeedController {
     public List<NeedSoloPriorita> getAllSoloPriorita(@PathVariable("id") Integer id) {
         logger.info("Need solo priorita");
 
-        List<Need> needs = needRepository.findByCliente_Id(id);
-        List<NeedSoloPriorita> needsPriorita = new ArrayList<>();
+        try {
+            List<Need> needs = needRepository.findByCliente_Id(id);
+            List<NeedSoloPriorita> needsPriorita = new ArrayList<>();
 
-        for (Need need : needs) {
-            NeedSoloPriorita needSolo = new NeedSoloPriorita();
+            for (Need need : needs) {
+                NeedSoloPriorita needSolo = new NeedSoloPriorita();
 
-            needSolo.setId(need.getId());
-            needSolo.setDescrizione(need.getDescrizione());
-            needSolo.setPriorita(need.getPriorita());
+                needSolo.setId(need.getId());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
 
-            needsPriorita.add(needSolo);
+                needsPriorita.add(needSolo);
+            }
+
+            return needsPriorita;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return needsPriorita;
     }
 
     @GetMapping("/react/{id}")
@@ -162,51 +173,57 @@ public class NeedController {
     ) {
         logger.info("Need tramite id cliente modificati");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        Page<Need> pageableNeeds = needRepository.findByKeyPeople_IdOrderByDescrizioneAsc(id, p);
+            Page<Need> pageableNeeds = needRepository.findByKeyPeople_IdOrderByDescrizioneAsc(id, p);
 
-        List<Need> needs = pageableNeeds.getContent();
-        List<NeedModificato> needsModificati = new ArrayList<>();
+            List<Need> needs = pageableNeeds.getContent();
+            List<NeedModificato> needsModificati = new ArrayList<>();
 
-        for (Need need : needs) {
-            NeedModificato needSolo = new NeedModificato();
+            for (Need need : needs) {
+                NeedModificato needSolo = new NeedModificato();
 
-            needSolo.setId(need.getId());
-            needSolo.setProgressivo(need.getProgressivo());
-            needSolo.setDescrizione(need.getDescrizione());
-            needSolo.setPriorita(need.getPriorita());
-            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+                needSolo.setId(need.getId());
+                needSolo.setProgressivo(need.getProgressivo());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
+                needSolo.setAnniEsperienza(need.getAnniEsperienza());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(need.getCliente().getId());
-            cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setId(need.getCliente().getId());
+                cliente.setDenominazione(need.getCliente().getDenominazione());
 
-            needSolo.setCliente(cliente);
+                needSolo.setCliente(cliente);
 
-            KeyPeople keyPeople = new KeyPeople();
+                KeyPeople keyPeople = new KeyPeople();
 
-            keyPeople.setId(need.getKeyPeople().getId());
-            keyPeople.setNome(need.getKeyPeople().getNome());
+                keyPeople.setId(need.getKeyPeople().getId());
+                keyPeople.setNome(need.getKeyPeople().getNome());
 
-            needSolo.setKeyPeople(keyPeople);
-            needSolo.setLocation(need.getLocation());
-            needSolo.setNote(need.getNote());
-            needSolo.setNumeroRisorse(need.getNumeroRisorse());
-            needSolo.setOwner(need.getOwner());
-            needSolo.setSkills(need.getSkills());
-            needSolo.setStato(need.getStato());
-            needSolo.setTipo(need.getTipo());
-            needSolo.setTipologia(need.getTipologia());
-            needSolo.setWeek(need.getWeek());
-            needSolo.setPubblicazione(need.getPubblicazione());
-            needSolo.setScreening(need.getScreening());
+                needSolo.setKeyPeople(keyPeople);
+                needSolo.setLocation(need.getLocation());
+                needSolo.setNote(need.getNote());
+                needSolo.setNumeroRisorse(need.getNumeroRisorse());
+                needSolo.setOwner(need.getOwner());
+                needSolo.setSkills(need.getSkills());
+                needSolo.setStato(need.getStato());
+                needSolo.setTipo(need.getTipo());
+                needSolo.setTipologia(need.getTipologia());
+                needSolo.setWeek(need.getWeek());
+                needSolo.setPubblicazione(need.getPubblicazione());
+                needSolo.setScreening(need.getScreening());
 
-            needsModificati.add(needSolo);
+                needsModificati.add(needSolo);
+            }
+
+            return needsModificati;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return needsModificati;
     }
 
     @GetMapping("/react/cliente/modificato/{id}")
@@ -218,51 +235,57 @@ public class NeedController {
     ) {
         logger.info("Need tramite id cliente modificati");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        Page<Need> pageableNeeds = needRepository.findByCliente_IdOrderByDescrizioneAsc(id, p);
+            Page<Need> pageableNeeds = needRepository.findByCliente_IdOrderByDescrizioneAsc(id, p);
 
-        List<Need> needs = pageableNeeds.getContent();
-        List<NeedModificato> needsModificati = new ArrayList<>();
+            List<Need> needs = pageableNeeds.getContent();
+            List<NeedModificato> needsModificati = new ArrayList<>();
 
-        for (Need need : needs) {
-            NeedModificato needSolo = new NeedModificato();
+            for (Need need : needs) {
+                NeedModificato needSolo = new NeedModificato();
 
-            needSolo.setId(need.getId());
-            needSolo.setProgressivo(need.getProgressivo());
-            needSolo.setDescrizione(need.getDescrizione());
-            needSolo.setPriorita(need.getPriorita());
-            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+                needSolo.setId(need.getId());
+                needSolo.setProgressivo(need.getProgressivo());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
+                needSolo.setAnniEsperienza(need.getAnniEsperienza());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(need.getCliente().getId());
-            cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setId(need.getCliente().getId());
+                cliente.setDenominazione(need.getCliente().getDenominazione());
 
-            needSolo.setCliente(cliente);
+                needSolo.setCliente(cliente);
 
-            KeyPeople keyPeople = new KeyPeople();
+                KeyPeople keyPeople = new KeyPeople();
 
-            keyPeople.setId(need.getKeyPeople().getId());
-            keyPeople.setNome(need.getKeyPeople().getNome());
+                keyPeople.setId(need.getKeyPeople().getId());
+                keyPeople.setNome(need.getKeyPeople().getNome());
 
-            needSolo.setKeyPeople(keyPeople);
-            needSolo.setLocation(need.getLocation());
-            needSolo.setNote(need.getNote());
-            needSolo.setNumeroRisorse(need.getNumeroRisorse());
-            needSolo.setOwner(need.getOwner());
-            needSolo.setSkills(need.getSkills());
-            needSolo.setStato(need.getStato());
-            needSolo.setTipo(need.getTipo());
-            needSolo.setTipologia(need.getTipologia());
-            needSolo.setWeek(need.getWeek());
-            needSolo.setPubblicazione(need.getPubblicazione());
-            needSolo.setScreening(need.getScreening());
+                needSolo.setKeyPeople(keyPeople);
+                needSolo.setLocation(need.getLocation());
+                needSolo.setNote(need.getNote());
+                needSolo.setNumeroRisorse(need.getNumeroRisorse());
+                needSolo.setOwner(need.getOwner());
+                needSolo.setSkills(need.getSkills());
+                needSolo.setStato(need.getStato());
+                needSolo.setTipo(need.getTipo());
+                needSolo.setTipologia(need.getTipologia());
+                needSolo.setWeek(need.getWeek());
+                needSolo.setPubblicazione(need.getPubblicazione());
+                needSolo.setScreening(need.getScreening());
 
-            needsModificati.add(needSolo);
+                needsModificati.add(needSolo);
+            }
+
+            return needsModificati;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return needsModificati;
     }
 
     @GetMapping("/react/ricerca/modificato")
@@ -281,51 +304,57 @@ public class NeedController {
     ) {
         logger.info("Need modificati");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, p);
-        List<Need> needs = pageableNeeds.getContent();
+            Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, p);
+            List<Need> needs = pageableNeeds.getContent();
 
-        List<NeedModificato> needsModificati = new ArrayList<>();
+            List<NeedModificato> needsModificati = new ArrayList<>();
 
-        for (Need need : needs) {
-            NeedModificato needSolo = new NeedModificato();
+            for (Need need : needs) {
+                NeedModificato needSolo = new NeedModificato();
 
-            needSolo.setId(need.getId());
-            needSolo.setProgressivo(need.getProgressivo());
-            needSolo.setDescrizione(need.getDescrizione());
-            needSolo.setPriorita(need.getPriorita());
-            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+                needSolo.setId(need.getId());
+                needSolo.setProgressivo(need.getProgressivo());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
+                needSolo.setAnniEsperienza(need.getAnniEsperienza());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(need.getCliente().getId());
-            cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setId(need.getCliente().getId());
+                cliente.setDenominazione(need.getCliente().getDenominazione());
 
-            needSolo.setCliente(cliente);
+                needSolo.setCliente(cliente);
 
-            KeyPeople keyPeople = new KeyPeople();
+                KeyPeople keyPeople = new KeyPeople();
 
-            keyPeople.setId(need.getKeyPeople().getId());
-            keyPeople.setNome(need.getKeyPeople().getNome());
+                keyPeople.setId(need.getKeyPeople().getId());
+                keyPeople.setNome(need.getKeyPeople().getNome());
 
-            needSolo.setKeyPeople(keyPeople);
-            needSolo.setLocation(need.getLocation());
-            needSolo.setNote(need.getNote());
-            needSolo.setNumeroRisorse(need.getNumeroRisorse());
-            needSolo.setOwner(need.getOwner());
-            needSolo.setSkills(need.getSkills());
-            needSolo.setStato(need.getStato());
-            needSolo.setTipo(need.getTipo());
-            needSolo.setTipologia(need.getTipologia());
-            needSolo.setWeek(need.getWeek());
-            needSolo.setPubblicazione(need.getPubblicazione());
-            needSolo.setScreening(need.getScreening());
+                needSolo.setKeyPeople(keyPeople);
+                needSolo.setLocation(need.getLocation());
+                needSolo.setNote(need.getNote());
+                needSolo.setNumeroRisorse(need.getNumeroRisorse());
+                needSolo.setOwner(need.getOwner());
+                needSolo.setSkills(need.getSkills());
+                needSolo.setStato(need.getStato());
+                needSolo.setTipo(need.getTipo());
+                needSolo.setTipologia(need.getTipologia());
+                needSolo.setWeek(need.getWeek());
+                needSolo.setPubblicazione(need.getPubblicazione());
+                needSolo.setScreening(need.getScreening());
 
-            needsModificati.add(needSolo);
+                needsModificati.add(needSolo);
+            }
+
+            return needsModificati;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return needsModificati;
     }
 
     @GetMapping("/react/stato")
@@ -463,44 +492,51 @@ public class NeedController {
     ){
         logger.info("Storico associazioni need");
 
-        Pageable p = PageRequest.of(pagina, quantita);
-        AssociazioneGroup associazioneGroup = new AssociazioneGroup();
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
+            AssociazioneGroup associazioneGroup = new AssociazioneGroup();
 
-        List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent();
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByNeed_IdOrderByDataModificaDesc(idNeed, p).getContent();
 
-        List<AssociazioneModificata> associazioniModificate = new ArrayList<>();
+            List<AssociazioneModificata> associazioniModificate = new ArrayList<>();
 
-        for (AssociazioneCandidatoNeed associazione : associazioni) {
-            AssociazioneModificata associazioneMod = new AssociazioneModificata();
+            for (AssociazioneCandidatoNeed associazione : associazioni) {
+                AssociazioneModificata associazioneMod = new AssociazioneModificata();
 
-            associazioneMod.setId(associazione.getId());
-            associazioneMod.setDataModifica(associazione.getDataModifica());
-            associazioneMod.setStato(associazione.getStato());
+                associazioneMod.setId(associazione.getId());
+                associazioneMod.setDataModifica(associazione.getDataModifica());
+                associazioneMod.setStato(associazione.getStato());
 
-            Candidato candidato = new Candidato();
+                Candidato candidato = new Candidato();
 
-            candidato.setId(associazione.getCandidato().getId());
-            candidato.setNome(associazione.getCandidato().getNome());
-            candidato.setCognome(associazione.getCandidato().getCognome());
-            candidato.setTipo(associazione.getCandidato().getTipo());
-            candidato.setTipologia(associazione.getCandidato().getTipologia());
+                candidato.setId(associazione.getCandidato().getId());
+                candidato.setNome(associazione.getCandidato().getNome());
+                candidato.setCognome(associazione.getCandidato().getCognome());
+                candidato.setTipo(associazione.getCandidato().getTipo());
+                candidato.setTipologia(associazione.getCandidato().getTipologia());
 
-            associazioneMod.setCandidato(candidato);
+                associazioneMod.setCandidato(candidato);
 
-            Owner owner = new Owner();
+                Owner owner = new Owner();
 
-            owner.setId(associazione.getOwner().getId());
-            owner.setDescrizione(associazione.getOwner().getDescrizione());
+                owner.setId(associazione.getOwner().getId());
+                owner.setDescrizione(associazione.getOwner().getDescrizione());
 
-            associazioneMod.setOwner(owner);
+                associazioneMod.setOwner(owner);
 
-            associazioniModificate.add(associazioneMod);
+                associazioniModificate.add(associazioneMod);
+            }
+
+            associazioneGroup.setAssociazioni(associazioniModificate);
+            associazioneGroup.setRecord(associazioniRepository.countByNeed_Id(idNeed));
+
+            return associazioneGroup;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        associazioneGroup.setAssociazioni(associazioniModificate);
-        associazioneGroup.setRecord(associazioniRepository.countByNeed_Id(idNeed));
-
-        return associazioneGroup;
     }
 
     @GetMapping("/react/match/associabili/{idNeed}")
@@ -512,9 +548,15 @@ public class NeedController {
     ) {
         logger.info("Candidati non associati al need");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        return candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
+            return candidatoRepository.findCandidatiNonAssociati(idNeed, p).getContent();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
 
     }
 
@@ -577,33 +619,40 @@ public class NeedController {
     ) {
         logger.info("Candidati non associati al need modificati");
 
-        Pageable                  p                   = PageRequest.of(pagina, quantita);
-        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
-        List<Candidato>           candidati           = candidatoRepository.ricercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi, p).getContent();
-        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+        try {
+            Pageable                  p                   = PageRequest.of(pagina, quantita);
+            CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+            List<Candidato>           candidati           = candidatoRepository.ricercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi, p).getContent();
+            List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
-        for (Candidato candidato : candidati) {
-            CandidatoModificato candidatoMod = new CandidatoModificato();
+            for (Candidato candidato : candidati) {
+                CandidatoModificato candidatoMod = new CandidatoModificato();
 
-            candidatoMod.setId(candidato.getId());
-            candidatoMod.setNote(candidato.getNote());
-            candidatoMod.setOwner(candidato.getOwner());
-            candidatoMod.setStato(candidato.getStato());
-            candidatoMod.setTipologia(candidato.getTipologia());
-            candidatoMod.setCognome(candidato.getCognome());
-            candidatoMod.setNome(candidato.getNome());
-            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-            candidatoMod.setEmail(candidato.getEmail());
-            candidatoMod.setRal(candidato.getRal());
-            candidatoMod.setRating(candidato.getRating());
+                candidatoMod.setId(candidato.getId());
+                candidatoMod.setNote(candidato.getNote());
+                candidatoMod.setOwner(candidato.getOwner());
+                candidatoMod.setStato(candidato.getStato());
+                candidatoMod.setTipologia(candidato.getTipologia());
+                candidatoMod.setCognome(candidato.getCognome());
+                candidatoMod.setNome(candidato.getNome());
+                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+                candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setRal(candidato.getRal());
+                candidatoMod.setRating(candidato.getRating());
 
-            candidatiModificati.add(candidatoMod);
+                candidatiModificati.add(candidatoMod);
+            }
+
+            candidatoGroup.setCandidati(candidatiModificati);
+            candidatoGroup.setRecord(candidatoRepository.countRicercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi));
+
+            return candidatoGroup;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        candidatoGroup.setCandidati(candidatiModificati);
-        candidatoGroup.setRecord(candidatoRepository.countRicercaCandidatiNonAssociati(idNeed, nome, cognome, idTipologia, idTipo, anniMinimi, anniMassimi));
-
-        return candidatoGroup;
     }
 
     @GetMapping("/react/match/associati/{idNeed}")
@@ -615,9 +664,16 @@ public class NeedController {
     ) {
         logger.info("Candidati associati al need");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        return candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
+            return candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
 
     }
 
@@ -630,33 +686,39 @@ public class NeedController {
     ) {
         logger.info("Candidati non associati al need modificati");
 
-        Pageable                  p                   = PageRequest.of(pagina, quantita);
-        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
-        List<Candidato>           candidati           = candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
-        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+        try {
+            Pageable                  p                   = PageRequest.of(pagina, quantita);
+            CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+            List<Candidato>           candidati           = candidatoRepository.findCandidatiAssociati(idNeed, p).getContent();
+            List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
-        for (Candidato candidato : candidati) {
-            CandidatoModificato candidatoMod = new CandidatoModificato();
+            for (Candidato candidato : candidati) {
+                CandidatoModificato candidatoMod = new CandidatoModificato();
 
-            candidatoMod.setId(candidato.getId());
-            candidatoMod.setNote(candidato.getNote());
-            candidatoMod.setOwner(candidato.getOwner());
-            candidatoMod.setStato(candidato.getStato());
-            candidatoMod.setTipologia(candidato.getTipologia());
-            candidatoMod.setCognome(candidato.getCognome());
-            candidatoMod.setNome(candidato.getNome());
-            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-            candidatoMod.setEmail(candidato.getEmail());
-            candidatoMod.setRal(candidato.getRal());
-            candidatoMod.setRating(candidato.getRating());
+                candidatoMod.setId(candidato.getId());
+                candidatoMod.setNote(candidato.getNote());
+                candidatoMod.setOwner(candidato.getOwner());
+                candidatoMod.setStato(candidato.getStato());
+                candidatoMod.setTipologia(candidato.getTipologia());
+                candidatoMod.setCognome(candidato.getCognome());
+                candidatoMod.setNome(candidato.getNome());
+                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+                candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setRal(candidato.getRal());
+                candidatoMod.setRating(candidato.getRating());
 
-            candidatiModificati.add(candidatoMod);
+                candidatiModificati.add(candidatoMod);
+            }
+
+            candidatoGroup.setCandidati(candidatiModificati);
+            candidatoGroup.setRecord(candidatoRepository.countCandidatiAssociati(idNeed));
+
+            return candidatoGroup;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        candidatoGroup.setCandidati(candidatiModificati);
-        candidatoGroup.setRecord(candidatoRepository.countCandidatiAssociati(idNeed));
-
-        return candidatoGroup;
 
     }
 

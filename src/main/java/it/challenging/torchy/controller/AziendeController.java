@@ -54,19 +54,25 @@ public class AziendeController {
     public List<ClienteSelect> getAllSelect() {
         logger.info("Lista aziende select");
 
-        List<Cliente> aziende = clienteRepository.findAllByOrderByDenominazioneAsc();
-        List<ClienteSelect> aziendeModificate = new ArrayList<>();
+        try {
+            List<Cliente> aziende = clienteRepository.findAllByOrderByDenominazioneAsc();
+            List<ClienteSelect> aziendeModificate = new ArrayList<>();
 
-        for (Cliente azienda : aziende) {
-            ClienteSelect aziendaModificata = new ClienteSelect();
+            for (Cliente azienda : aziende) {
+                ClienteSelect aziendaModificata = new ClienteSelect();
 
-            aziendaModificata.setDenominazione(azienda.getDenominazione());
-            aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setId(azienda.getId());
 
-            aziendeModificate.add(aziendaModificata);
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return aziendeModificate;
     }
 
     @GetMapping("/react/mod/personal")
@@ -79,36 +85,43 @@ public class AziendeController {
     ) {
         logger.info("Lista aziende mod");
 
-        Pageable                p                 = PageRequest.of(pagina, quantita);
-        List<Cliente>           aziende           = clienteRepository.ricercaByUsername(username, p).getContent();
-        List<ClienteModificato> aziendeModificate = new ArrayList<>();
+        try {
+            Pageable                p                 = PageRequest.of(pagina, quantita);
+            List<Cliente>           aziende           = clienteRepository.ricercaByUsername(username, p).getContent();
+            List<ClienteModificato> aziendeModificate = new ArrayList<>();
 
-        for (Cliente azienda : aziende) {
-            ClienteModificato aziendaModificata = new ClienteModificato();
+            for (Cliente azienda : aziende) {
+                ClienteModificato aziendaModificata = new ClienteModificato();
 
-            aziendaModificata.setDenominazione(azienda.getDenominazione());
-            aziendaModificata.setEmail(azienda.getEmail());
-            aziendaModificata.setId(azienda.getId());
-            aziendaModificata.setPi(azienda.getPi());
-            aziendaModificata.setNote(azienda.getNote());
-            aziendaModificata.setCf(azienda.getCf());
-            aziendaModificata.setCap(azienda.getCap());
-            aziendaModificata.setCitta(azienda.getCitta());
-            aziendaModificata.setProvincia(azienda.getProvincia());
-            aziendaModificata.setPec(azienda.getPec());
-            aziendaModificata.setSito(azienda.getSito());
-            aziendaModificata.setOwner(azienda.getOwner());
-            aziendaModificata.setTipologia(azienda.getTipologia());
-            aziendaModificata.setTipologia(azienda.getTipologia());
-            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
-            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
-            aziendaModificata.setLogo(azienda.getLogo());
-            aziendaModificata.setIda(azienda.getIda());
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setEmail(azienda.getEmail());
+                aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setPi(azienda.getPi());
+                aziendaModificata.setNote(azienda.getNote());
+                aziendaModificata.setCf(azienda.getCf());
+                aziendaModificata.setCap(azienda.getCap());
+                aziendaModificata.setCitta(azienda.getCitta());
+                aziendaModificata.setProvincia(azienda.getProvincia());
+                aziendaModificata.setPec(azienda.getPec());
+                aziendaModificata.setSito(azienda.getSito());
+                aziendaModificata.setOwner(azienda.getOwner());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+                aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+                aziendaModificata.setLogo(azienda.getLogo());
+                aziendaModificata.setIda(azienda.getIda());
 
-            aziendeModificate.add(aziendaModificata);
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return aziendeModificate;
     }
 
     @GetMapping("/react/ricerca/mod/personal")
@@ -124,50 +137,57 @@ public class AziendeController {
     ) {
         logger.info("Lista aziende ricerca mod");
 
-        Pageable p            = PageRequest.of(pagina, quantita);
-        Double   valoreIdaMin = null;
-        Double   valoreIdaMax = null;
+        try {
+            Pageable p            = PageRequest.of(pagina, quantita);
+            Double   valoreIdaMin = null;
+            Double   valoreIdaMax = null;
 
-        if (null != ida) {
-            if (ida.equalsIgnoreCase("basso")) {
-                valoreIdaMax = 1.1D;
-            } else if (ida.equalsIgnoreCase("medio")) {
-                valoreIdaMin = 1.1D;
-                valoreIdaMax = 2.1D;
-            } else if (ida.equalsIgnoreCase("alto")) {
-                valoreIdaMin = 2.1D;
+            if (null != ida) {
+                if (ida.equalsIgnoreCase("basso")) {
+                    valoreIdaMax = 1.1D;
+                } else if (ida.equalsIgnoreCase("medio")) {
+                    valoreIdaMin = 1.1D;
+                    valoreIdaMax = 2.1D;
+                } else if (ida.equalsIgnoreCase("alto")) {
+                    valoreIdaMin = 2.1D;
+                }
             }
+
+            List<Cliente>           aziende           = clienteRepository.ricercaByUsernameAndIdaAndTipologiaAndDenominazione(username, valoreIdaMin, valoreIdaMax, tipologia, ragSociale, p).getContent();
+            List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+            for (Cliente azienda : aziende) {
+                ClienteModificato aziendaModificata = new ClienteModificato();
+
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setEmail(azienda.getEmail());
+                aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setPi(azienda.getPi());
+                aziendaModificata.setNote(azienda.getNote());
+                aziendaModificata.setCf(azienda.getCf());
+                aziendaModificata.setCap(azienda.getCap());
+                aziendaModificata.setCitta(azienda.getCitta());
+                aziendaModificata.setProvincia(azienda.getProvincia());
+                aziendaModificata.setPec(azienda.getPec());
+                aziendaModificata.setSito(azienda.getSito());
+                aziendaModificata.setOwner(azienda.getOwner());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+                aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+                aziendaModificata.setLogo(azienda.getLogo());
+                aziendaModificata.setIda(azienda.getIda());
+
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        List<Cliente>           aziende           = clienteRepository.ricercaByUsernameAndIdaAndTipologiaAndDenominazione(username, valoreIdaMin, valoreIdaMax, tipologia, ragSociale, p).getContent();
-        List<ClienteModificato> aziendeModificate = new ArrayList<>();
-
-        for (Cliente azienda : aziende) {
-            ClienteModificato aziendaModificata = new ClienteModificato();
-
-            aziendaModificata.setDenominazione(azienda.getDenominazione());
-            aziendaModificata.setEmail(azienda.getEmail());
-            aziendaModificata.setId(azienda.getId());
-            aziendaModificata.setPi(azienda.getPi());
-            aziendaModificata.setNote(azienda.getNote());
-            aziendaModificata.setCf(azienda.getCf());
-            aziendaModificata.setCap(azienda.getCap());
-            aziendaModificata.setCitta(azienda.getCitta());
-            aziendaModificata.setProvincia(azienda.getProvincia());
-            aziendaModificata.setPec(azienda.getPec());
-            aziendaModificata.setSito(azienda.getSito());
-            aziendaModificata.setOwner(azienda.getOwner());
-            aziendaModificata.setTipologia(azienda.getTipologia());
-            aziendaModificata.setTipologia(azienda.getTipologia());
-            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
-            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
-            aziendaModificata.setLogo(azienda.getLogo());
-            aziendaModificata.setIda(azienda.getIda());
-
-            aziendeModificate.add(aziendaModificata);
-        }
-
-        return aziendeModificate;
     }
 
     @GetMapping("/react/ricerca/mod")
@@ -181,49 +201,55 @@ public class AziendeController {
     ) {
         logger.info("Lista aziende");
 
-        Pageable p            = PageRequest.of(pagina, quantita);
-        Double   valoreIdaMin = null;
-        Double   valoreIdaMax = null;
+        try {
+            Pageable p            = PageRequest.of(pagina, quantita);
+            Double   valoreIdaMin = null;
+            Double   valoreIdaMax = null;
 
-        if (null != ida) {
-            if (ida.equalsIgnoreCase("basso")) {
-                valoreIdaMax = 1D;
-            } else if (ida.equalsIgnoreCase("medio")) {
-                valoreIdaMin = 1D;
-                valoreIdaMax = 2D;
-            } else if (ida.equalsIgnoreCase("alto")) {
-                valoreIdaMin = 2D;
+            if (null != ida) {
+                if (ida.equalsIgnoreCase("basso")) {
+                    valoreIdaMax = 1D;
+                } else if (ida.equalsIgnoreCase("medio")) {
+                    valoreIdaMin = 1D;
+                    valoreIdaMax = 2D;
+                } else if (ida.equalsIgnoreCase("alto")) {
+                    valoreIdaMin = 2D;
+                }
             }
+
+            List<Cliente>           aziende           = clienteRepository.ricercaByIdaAndOwner_IdAndTipologiaAndDenominazione(valoreIdaMin, valoreIdaMax, owner, tipologia, ragSociale, p).getContent();
+            List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+            for (Cliente azienda : aziende) {
+                ClienteModificato aziendaModificata = new ClienteModificato();
+
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setEmail(azienda.getEmail());
+                aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setPi(azienda.getPi());
+                aziendaModificata.setNote(azienda.getNote());
+                aziendaModificata.setCf(azienda.getCf());
+                aziendaModificata.setCap(azienda.getCap());
+                aziendaModificata.setCitta(azienda.getCitta());
+                aziendaModificata.setProvincia(azienda.getProvincia());
+                aziendaModificata.setPec(azienda.getPec());
+                aziendaModificata.setSito(azienda.getSito());
+                aziendaModificata.setOwner(azienda.getOwner());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+                aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+                aziendaModificata.setLogo(azienda.getLogo());
+                aziendaModificata.setIda(azienda.getIda());
+
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        List<Cliente>           aziende           = clienteRepository.ricercaByIdaAndOwner_IdAndTipologiaAndDenominazione(valoreIdaMin, valoreIdaMax, owner, tipologia, ragSociale, p).getContent();
-        List<ClienteModificato> aziendeModificate = new ArrayList<>();
-
-        for (Cliente azienda : aziende) {
-            ClienteModificato aziendaModificata = new ClienteModificato();
-
-            aziendaModificata.setDenominazione(azienda.getDenominazione());
-            aziendaModificata.setEmail(azienda.getEmail());
-            aziendaModificata.setId(azienda.getId());
-            aziendaModificata.setPi(azienda.getPi());
-            aziendaModificata.setNote(azienda.getNote());
-            aziendaModificata.setCf(azienda.getCf());
-            aziendaModificata.setCap(azienda.getCap());
-            aziendaModificata.setCitta(azienda.getCitta());
-            aziendaModificata.setProvincia(azienda.getProvincia());
-            aziendaModificata.setPec(azienda.getPec());
-            aziendaModificata.setSito(azienda.getSito());
-            aziendaModificata.setOwner(azienda.getOwner());
-            aziendaModificata.setTipologia(azienda.getTipologia());
-            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
-            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
-            aziendaModificata.setLogo(azienda.getLogo());
-            aziendaModificata.setIda(azienda.getIda());
-
-            aziendeModificate.add(aziendaModificata);
-        }
-
-        return aziendeModificate;
     }
 
     @GetMapping("/react/{id}")

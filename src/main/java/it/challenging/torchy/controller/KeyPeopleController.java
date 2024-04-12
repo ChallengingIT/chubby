@@ -69,38 +69,45 @@ public class KeyPeopleController {
     ) {
         logger.info("Key people Mod");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        List<KeyPeople> keyPeoples = keyPeopleRepository.findAllByOrderByNomeAsc(p).getContent();
-        List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+            List<KeyPeople> keyPeoples = keyPeopleRepository.findAllByOrderByNomeAsc(p).getContent();
+            List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
-        for (KeyPeople keyPeople : keyPeoples) {
-            KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+            for (KeyPeople keyPeople : keyPeoples) {
+                KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
 
-            keyPeopleMod.setId(keyPeople.getId());
-            keyPeopleMod.setCellulare(keyPeople.getCellulare());
-            keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
-            keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
-            keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
-            keyPeopleMod.setEmail(keyPeople.getEmail());
-            keyPeopleMod.setNome(keyPeople.getNome());
-            keyPeopleMod.setRuolo(keyPeople.getRuolo());
-            keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setId(keyPeople.getId());
+                keyPeopleMod.setCellulare(keyPeople.getCellulare());
+                keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+                keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+                keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+                keyPeopleMod.setEmail(keyPeople.getEmail());
+                keyPeopleMod.setNome(keyPeople.getNome());
+                keyPeopleMod.setRuolo(keyPeople.getRuolo());
+                keyPeopleMod.setStato(keyPeople.getStato());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(keyPeople.getCliente().getId());
-            cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
-            cliente.setLogo(keyPeople.getCliente().getLogo());
+                cliente.setId(keyPeople.getCliente().getId());
+                cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+                cliente.setLogo(keyPeople.getCliente().getLogo());
 
-            keyPeopleMod.setCliente(cliente);
-            keyPeopleMod.setNote(keyPeople.getNote());
-            keyPeopleMod.setOwner(keyPeople.getOwner());
+                keyPeopleMod.setCliente(cliente);
+                keyPeopleMod.setNote(keyPeople.getNote());
+                keyPeopleMod.setOwner(keyPeople.getOwner());
 
-            keyPeoplesMod.add(keyPeopleMod);
+                keyPeoplesMod.add(keyPeopleMod);
+            }
+
+            return keyPeoplesMod;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return keyPeoplesMod;
     }
 
     @GetMapping("/react/ricerca/mod")
@@ -115,38 +122,45 @@ public class KeyPeopleController {
     ) {
         logger.info("Key people Mod");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
-        List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+            List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
+            List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
-        for (KeyPeople keyPeople : keyPeoples) {
-            KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+            for (KeyPeople keyPeople : keyPeoples) {
+                KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
 
-            keyPeopleMod.setId(keyPeople.getId());
-            keyPeopleMod.setCellulare(keyPeople.getCellulare());
-            keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
-            keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
-            keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
-            keyPeopleMod.setEmail(keyPeople.getEmail());
-            keyPeopleMod.setNome(keyPeople.getNome());
-            keyPeopleMod.setRuolo(keyPeople.getRuolo());
-            keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setId(keyPeople.getId());
+                keyPeopleMod.setCellulare(keyPeople.getCellulare());
+                keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+                keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+                keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+                keyPeopleMod.setEmail(keyPeople.getEmail());
+                keyPeopleMod.setNome(keyPeople.getNome());
+                keyPeopleMod.setRuolo(keyPeople.getRuolo());
+                keyPeopleMod.setStato(keyPeople.getStato());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(keyPeople.getCliente().getId());
-            cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
-            cliente.setLogo(keyPeople.getCliente().getLogo());
+                cliente.setId(keyPeople.getCliente().getId());
+                cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+                cliente.setLogo(keyPeople.getCliente().getLogo());
 
-            keyPeopleMod.setCliente(cliente);
-            keyPeopleMod.setNote(keyPeople.getNote());
-            keyPeopleMod.setOwner(keyPeople.getOwner());
+                keyPeopleMod.setCliente(cliente);
+                keyPeopleMod.setNote(keyPeople.getNote());
+                keyPeopleMod.setOwner(keyPeople.getOwner());
 
-            keyPeoplesMod.add(keyPeopleMod);
+                keyPeoplesMod.add(keyPeopleMod);
+            }
+
+            return keyPeoplesMod;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return keyPeoplesMod;
     }
 
     @GetMapping("/react/{id}")

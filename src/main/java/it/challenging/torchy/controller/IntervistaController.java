@@ -64,10 +64,15 @@ public class IntervistaController {
     ) {
         logger.info("Interviste candidato tramite id");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        return intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
+            return intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
 
+            return null;
+        }
     }
 
     @GetMapping("/react/mod/{idCandidato}")
@@ -79,66 +84,71 @@ public class IntervistaController {
     ) {
         logger.info("Interviste candidato tramite id mod");
 
-        Pageable                   p               = PageRequest.of(pagina, quantita);
-        IntervistaGroup            intervistaGroup = new IntervistaGroup();
-        List<Intervista>           interviste      = intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
-        List<IntervistaModificato> intervisteMod   = new ArrayList<>();
+        try {
+            Pageable                   p               = PageRequest.of(pagina, quantita);
+            IntervistaGroup            intervistaGroup = new IntervistaGroup();
+            List<Intervista>           interviste      = intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato, p).getContent();
+            List<IntervistaModificato> intervisteMod   = new ArrayList<>();
 
-        for (Intervista intervista : interviste) {
-            IntervistaModificato intervistaMod = new IntervistaModificato();
+            for (Intervista intervista : interviste) {
+                IntervistaModificato intervistaMod = new IntervistaModificato();
 
-            intervistaMod.setAderenza(intervista.getAderenza());
-            intervistaMod.setAnniEsperienza(intervista.getAnniEsperienza());
-            intervistaMod.setAttuale(intervista.getAttuale());
+                intervistaMod.setAderenza(intervista.getAderenza());
+                intervistaMod.setAnniEsperienza(intervista.getAnniEsperienza());
+                intervistaMod.setAttuale(intervista.getAttuale());
 
-            if (null != intervista.getCandidato()) {
-                Candidato candidato = new Candidato();
+                if (null != intervista.getCandidato()) {
+                    Candidato candidato = new Candidato();
 
-                candidato.setId(intervista.getCandidato().getId());
-                candidato.setCognome(intervista.getCandidato().getCognome());
-                candidato.setNome(intervista.getCandidato().getNome());
+                    candidato.setId(intervista.getCandidato().getId());
+                    candidato.setCognome(intervista.getCandidato().getCognome());
+                    candidato.setNome(intervista.getCandidato().getNome());
 
-                intervistaMod.setCandidato(candidato);
+                    intervistaMod.setCandidato(candidato);
+                }
+                intervistaMod.setCoerenza(intervista.getCoerenza());
+                intervistaMod.setCognome(intervista.getCognome());
+                intervistaMod.setCompetenze(intervista.getCompetenze());
+                intervistaMod.setComunicazione(intervista.getComunicazione());
+                intervistaMod.setDataAggiornamento(intervista.getDataAggiornamento());
+                intervistaMod.setDataAVideo(intervista.getDataAVideo());
+                intervistaMod.setDataColloquio(intervista.getDataColloquio());
+                intervistaMod.setDataNascita(intervista.getDataNascita());
+                intervistaMod.setDescrizioneCandidato(intervista.getDescrizioneCandidato());
+                intervistaMod.setDescrizioneCandidatoUna(intervista.getDescrizioneCandidatoUna());
+                intervistaMod.setDesiderata(intervista.getDesiderata());
+                intervistaMod.setDisponibilita(intervista.getDisponibilita());
+                intervistaMod.setEnergia(intervista.getEnergia());
+                intervistaMod.setId(intervista.getId());
+                intervistaMod.setInglese(intervista.getInglese());
+                intervistaMod.setMobilita(intervista.getMobilita());
+                intervistaMod.setMotivazione(intervista.getMotivazione());
+                intervistaMod.setNextOwner(intervista.getNextOwner());
+                intervistaMod.setNome(intervista.getNome());
+                intervistaMod.setOraAVideo(intervista.getOraAVideo());
+                intervistaMod.setOwner(intervista.getOwner());
+                intervistaMod.setPreavviso(intervista.getPreavviso());
+                intervistaMod.setProposta(intervista.getProposta());
+                intervistaMod.setRecapiti(intervista.getRecapiti());
+                intervistaMod.setStanding(intervista.getStanding());
+                intervistaMod.setStato(intervista.getStato());
+                intervistaMod.setTeamSiNo(intervista.getTeamSiNo());
+                intervistaMod.setTipo(intervista.getTipo());
+                intervistaMod.setTipologia(intervista.getTipologia());
+                intervistaMod.setValutazione(intervista.getValutazione());
+
+                intervisteMod.add(intervistaMod);
             }
-            intervistaMod.setCoerenza(intervista.getCoerenza());
-            intervistaMod.setCognome(intervista.getCognome());
-            intervistaMod.setCompetenze(intervista.getCompetenze());
-            intervistaMod.setComunicazione(intervista.getComunicazione());
-            intervistaMod.setDataAggiornamento(intervista.getDataAggiornamento());
-            intervistaMod.setDataAVideo(intervista.getDataAVideo());
-            intervistaMod.setDataColloquio(intervista.getDataColloquio());
-            intervistaMod.setDataNascita(intervista.getDataNascita());
-            intervistaMod.setDescrizioneCandidato(intervista.getDescrizioneCandidato());
-            intervistaMod.setDescrizioneCandidatoUna(intervista.getDescrizioneCandidatoUna());
-            intervistaMod.setDesiderata(intervista.getDesiderata());
-            intervistaMod.setDisponibilita(intervista.getDisponibilita());
-            intervistaMod.setEnergia(intervista.getEnergia());
-            intervistaMod.setId(intervista.getId());
-            intervistaMod.setInglese(intervista.getInglese());
-            intervistaMod.setMobilita(intervista.getMobilita());
-            intervistaMod.setMotivazione(intervista.getMotivazione());
-            intervistaMod.setNextOwner(intervista.getNextOwner());
-            intervistaMod.setNome(intervista.getNome());
-            intervistaMod.setOraAVideo(intervista.getOraAVideo());
-            intervistaMod.setOwner(intervista.getOwner());
-            intervistaMod.setPreavviso(intervista.getPreavviso());
-            intervistaMod.setProposta(intervista.getProposta());
-            intervistaMod.setRecapiti(intervista.getRecapiti());
-            intervistaMod.setStanding(intervista.getStanding());
-            intervistaMod.setStato(intervista.getStato());
-            intervistaMod.setTeamSiNo(intervista.getTeamSiNo());
-            intervistaMod.setTipo(intervista.getTipo());
-            intervistaMod.setTipologia(intervista.getTipologia());
-            intervistaMod.setValutazione(intervista.getValutazione());
 
-            intervisteMod.add(intervistaMod);
+            intervistaGroup.setInterviste(intervisteMod);
+            intervistaGroup.setRecord(intervistaRepository.countByCandidato_Id(idCandidato));
+
+            return intervistaGroup;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        intervistaGroup.setInterviste(intervisteMod);
-        intervistaGroup.setRecord(intervistaRepository.countByCandidato_Id(idCandidato));
-
-        return intervistaGroup;
-
     }
 
     @GetMapping("/react/mod/ricerca/{idCandidato}")
@@ -153,72 +163,77 @@ public class IntervistaController {
     ) {
         logger.info("Interviste candidato tramite id mod");
 
-        Pageable        p                 = PageRequest.of(pagina, quantita);
-        Date            dataColloquioDate = null;
-        IntervistaGroup intervistaGroup   = new IntervistaGroup();
+        try {
+            Pageable        p                 = PageRequest.of(pagina, quantita);
+            Date            dataColloquioDate = null;
+            IntervistaGroup intervistaGroup   = new IntervistaGroup();
 
-        if(null != dataColloquio) {
-            dataColloquioDate = Date.valueOf(dataColloquio);
-        }
-
-        List<Intervista> interviste = intervistaRepository.ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato, p).getContent();
-        List<IntervistaModificato> intervisteMod = new ArrayList<>();
-
-        for (Intervista intervista : interviste) {
-            IntervistaModificato intervistaMod = new IntervistaModificato();
-
-            intervistaMod.setAderenza(intervista.getAderenza());
-            intervistaMod.setAnniEsperienza(intervista.getAnniEsperienza());
-            intervistaMod.setAttuale(intervista.getAttuale());
-
-            if (null != intervista.getCandidato()) {
-                Candidato candidato = new Candidato();
-
-                candidato.setId(intervista.getCandidato().getId());
-                candidato.setCognome(intervista.getCandidato().getCognome());
-                candidato.setNome(intervista.getCandidato().getNome());
-
-                intervistaMod.setCandidato(candidato);
+            if(null != dataColloquio) {
+                dataColloquioDate = Date.valueOf(dataColloquio);
             }
-            intervistaMod.setCoerenza(intervista.getCoerenza());
-            intervistaMod.setCognome(intervista.getCognome());
-            intervistaMod.setCompetenze(intervista.getCompetenze());
-            intervistaMod.setComunicazione(intervista.getComunicazione());
-            intervistaMod.setDataAggiornamento(intervista.getDataAggiornamento());
-            intervistaMod.setDataAVideo(intervista.getDataAVideo());
-            intervistaMod.setDataColloquio(intervista.getDataColloquio());
-            intervistaMod.setDataNascita(intervista.getDataNascita());
-            intervistaMod.setDescrizioneCandidato(intervista.getDescrizioneCandidato());
-            intervistaMod.setDescrizioneCandidatoUna(intervista.getDescrizioneCandidatoUna());
-            intervistaMod.setDesiderata(intervista.getDesiderata());
-            intervistaMod.setDisponibilita(intervista.getDisponibilita());
-            intervistaMod.setEnergia(intervista.getEnergia());
-            intervistaMod.setId(intervista.getId());
-            intervistaMod.setInglese(intervista.getInglese());
-            intervistaMod.setMobilita(intervista.getMobilita());
-            intervistaMod.setMotivazione(intervista.getMotivazione());
-            intervistaMod.setNextOwner(intervista.getNextOwner());
-            intervistaMod.setNome(intervista.getNome());
-            intervistaMod.setOraAVideo(intervista.getOraAVideo());
-            intervistaMod.setOwner(intervista.getOwner());
-            intervistaMod.setPreavviso(intervista.getPreavviso());
-            intervistaMod.setProposta(intervista.getProposta());
-            intervistaMod.setRecapiti(intervista.getRecapiti());
-            intervistaMod.setStanding(intervista.getStanding());
-            intervistaMod.setStato(intervista.getStato());
-            intervistaMod.setTeamSiNo(intervista.getTeamSiNo());
-            intervistaMod.setTipo(intervista.getTipo());
-            intervistaMod.setTipologia(intervista.getTipologia());
-            intervistaMod.setValutazione(intervista.getValutazione());
 
-            intervisteMod.add(intervistaMod);
+            List<Intervista> interviste = intervistaRepository.ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato, p).getContent();
+            List<IntervistaModificato> intervisteMod = new ArrayList<>();
+
+            for (Intervista intervista : interviste) {
+                IntervistaModificato intervistaMod = new IntervistaModificato();
+
+                intervistaMod.setAderenza(intervista.getAderenza());
+                intervistaMod.setAnniEsperienza(intervista.getAnniEsperienza());
+                intervistaMod.setAttuale(intervista.getAttuale());
+
+                if (null != intervista.getCandidato()) {
+                    Candidato candidato = new Candidato();
+
+                    candidato.setId(intervista.getCandidato().getId());
+                    candidato.setCognome(intervista.getCandidato().getCognome());
+                    candidato.setNome(intervista.getCandidato().getNome());
+
+                    intervistaMod.setCandidato(candidato);
+                }
+                intervistaMod.setCoerenza(intervista.getCoerenza());
+                intervistaMod.setCognome(intervista.getCognome());
+                intervistaMod.setCompetenze(intervista.getCompetenze());
+                intervistaMod.setComunicazione(intervista.getComunicazione());
+                intervistaMod.setDataAggiornamento(intervista.getDataAggiornamento());
+                intervistaMod.setDataAVideo(intervista.getDataAVideo());
+                intervistaMod.setDataColloquio(intervista.getDataColloquio());
+                intervistaMod.setDataNascita(intervista.getDataNascita());
+                intervistaMod.setDescrizioneCandidato(intervista.getDescrizioneCandidato());
+                intervistaMod.setDescrizioneCandidatoUna(intervista.getDescrizioneCandidatoUna());
+                intervistaMod.setDesiderata(intervista.getDesiderata());
+                intervistaMod.setDisponibilita(intervista.getDisponibilita());
+                intervistaMod.setEnergia(intervista.getEnergia());
+                intervistaMod.setId(intervista.getId());
+                intervistaMod.setInglese(intervista.getInglese());
+                intervistaMod.setMobilita(intervista.getMobilita());
+                intervistaMod.setMotivazione(intervista.getMotivazione());
+                intervistaMod.setNextOwner(intervista.getNextOwner());
+                intervistaMod.setNome(intervista.getNome());
+                intervistaMod.setOraAVideo(intervista.getOraAVideo());
+                intervistaMod.setOwner(intervista.getOwner());
+                intervistaMod.setPreavviso(intervista.getPreavviso());
+                intervistaMod.setProposta(intervista.getProposta());
+                intervistaMod.setRecapiti(intervista.getRecapiti());
+                intervistaMod.setStanding(intervista.getStanding());
+                intervistaMod.setStato(intervista.getStato());
+                intervistaMod.setTeamSiNo(intervista.getTeamSiNo());
+                intervistaMod.setTipo(intervista.getTipo());
+                intervistaMod.setTipologia(intervista.getTipologia());
+                intervistaMod.setValutazione(intervista.getValutazione());
+
+                intervisteMod.add(intervistaMod);
+            }
+
+            intervistaGroup.setInterviste(intervisteMod);
+            intervistaGroup.setRecord(intervistaRepository.countRicercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato));
+
+            return intervistaGroup;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        intervistaGroup.setInterviste(intervisteMod);
-        intervistaGroup.setRecord(intervistaRepository.countRicercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(stato, owner, dataColloquioDate, idCandidato));
-
-        return intervistaGroup;
-
     }
 
     @PostMapping("/react/salva")

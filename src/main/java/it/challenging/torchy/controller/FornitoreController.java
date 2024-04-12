@@ -58,6 +58,8 @@ public class FornitoreController {
 
             return "OK";
         } catch (Exception e) {
+            logger.error(e.getMessage());
+
             return "ERRORE";
         }
     }
