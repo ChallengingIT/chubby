@@ -69,114 +69,126 @@ public class CandidatoController {
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public CandidatoGroup getAllMod(
-        @RequestParam("pagina") Integer pagina,
-        @RequestParam("quantita") Integer quantita
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
     ) {
-        logger.info("Candidati");
+        try{
+            logger.info("Candidati");
 
-        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
-        Pageable                  p                   = PageRequest.of(pagina, quantita);
-        List<Candidato>           candidati           = candidatoRepository.findAllByOrderByCognomeAsc(p).getContent();
-        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+            CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+            Pageable                  p                   = PageRequest.of(pagina, quantita);
+            List<Candidato>           candidati           = candidatoRepository.findAllByOrderByCognomeAsc(p).getContent();
+            List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
-        for (Candidato candidato : candidati) {
-            CandidatoModificato candidatoMod = new CandidatoModificato();
+            for (Candidato candidato : candidati) {
+                CandidatoModificato candidatoMod = new CandidatoModificato();
 
-            candidatoMod.setId(candidato.getId());
-            candidatoMod.setNote(candidato.getNote());
-            candidatoMod.setOwner(candidato.getOwner());
-            candidatoMod.setStato(candidato.getStato());
-            candidatoMod.setTipologia(candidato.getTipologia());
-            candidatoMod.setCognome(candidato.getCognome());
-            candidatoMod.setNome(candidato.getNome());
-            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-            candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setId(candidato.getId());
+                candidatoMod.setNote(candidato.getNote());
+                candidatoMod.setOwner(candidato.getOwner());
+                candidatoMod.setStato(candidato.getStato());
+                candidatoMod.setTipologia(candidato.getTipologia());
+                candidatoMod.setCognome(candidato.getCognome());
+                candidatoMod.setNome(candidato.getNome());
+                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+                candidatoMod.setEmail(candidato.getEmail());
 
-            if (null != candidato.getFiles()) {
-                File file = null;
+                if (null != candidato.getFiles()) {
+                    File file = null;
 
-                for (File fileC : candidato.getFiles()) {
-                    if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
-                        file = new File();
-                        file.setId(fileC.getId());
-                        file.setDescrizione(fileC.getDescrizione());
+                    for (File fileC : candidato.getFiles()) {
+                        if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
+                            file = new File();
+                            file.setId(fileC.getId());
+                            file.setDescrizione(fileC.getDescrizione());
+                        }
                     }
+
+                    candidatoMod.setFile(file);
                 }
+                candidatoMod.setRal(candidato.getRal());
+                candidatoMod.setRating(candidato.getRating());
 
-                candidatoMod.setFile(file);
+                candidatiModificati.add(candidatoMod);
             }
-            candidatoMod.setRal(candidato.getRal());
-            candidatoMod.setRating(candidato.getRating());
 
-            candidatiModificati.add(candidatoMod);
+            candidatoGroup.setCandidati(candidatiModificati);
+            candidatoGroup.setRecord(candidatoRepository.count());
+
+            return candidatoGroup;
+        } catch (Exception e) {
+            logger.error(e.toString());
+
+            return null;
         }
-
-        candidatoGroup.setCandidati(candidatiModificati);
-        candidatoGroup.setRecord(candidatoRepository.count());
-
-        return candidatoGroup;
     }
 
     @GetMapping("/react/mod/ricerca")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public CandidatoGroup getAllModRicerca(
-        @RequestParam("nome") @Nullable String nome,
-        @RequestParam("cognome") @Nullable String cognome,
-        @RequestParam("email") @Nullable String email,
-        @RequestParam("stato") @Nullable Integer stato,
-        @RequestParam("tipo") @Nullable Integer tipo,
-        @RequestParam("tipologia") @Nullable Integer tipologia,
-        @RequestParam("pagina") Integer pagina,
-        @RequestParam("quantita") Integer quantita
+            @RequestParam("nome") @Nullable String nome,
+            @RequestParam("cognome") @Nullable String cognome,
+            @RequestParam("email") @Nullable String email,
+            @RequestParam("stato") @Nullable Integer stato,
+            @RequestParam("tipo") @Nullable Integer tipo,
+            @RequestParam("tipologia") @Nullable Integer tipologia,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
     ) {
-        logger.info("Candidati");
+         try {
+             logger.info("Candidati");
 
-        CandidatoGroup            candidatoGroup      = new CandidatoGroup();
-        Pageable                  p                   = PageRequest.of(pagina, quantita);
-        List<CandidatoModificato> candidatiModificati = new ArrayList<>();
-        List<Candidato>           candidati           =
-            candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(
-                nome, cognome, email, tipologia, stato, tipo, p
-            ).getContent();
+            CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+            Pageable                  p                   = PageRequest.of(pagina, quantita);
+            List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+            List<Candidato>           candidati           =
+                    candidatoRepository.ricercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(
+                            nome, cognome, email, tipologia, stato, tipo, p
+                    ).getContent();
 
 
-        for (Candidato candidato : candidati) {
-            CandidatoModificato candidatoMod = new CandidatoModificato();
+            for (Candidato candidato : candidati) {
+                CandidatoModificato candidatoMod = new CandidatoModificato();
 
-            candidatoMod.setId(candidato.getId());
-            candidatoMod.setNote(candidato.getNote());
-            candidatoMod.setOwner(candidato.getOwner());
-            candidatoMod.setStato(candidato.getStato());
-            candidatoMod.setTipologia(candidato.getTipologia());
-            candidatoMod.setCognome(candidato.getCognome());
-            candidatoMod.setNome(candidato.getNome());
-            candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-            candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setId(candidato.getId());
+                candidatoMod.setNote(candidato.getNote());
+                candidatoMod.setOwner(candidato.getOwner());
+                candidatoMod.setStato(candidato.getStato());
+                candidatoMod.setTipologia(candidato.getTipologia());
+                candidatoMod.setCognome(candidato.getCognome());
+                candidatoMod.setNome(candidato.getNome());
+                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+                candidatoMod.setEmail(candidato.getEmail());
 
-            candidatoMod.setRal(candidato.getRal());
-            candidatoMod.setRating(candidato.getRating());
+                candidatoMod.setRal(candidato.getRal());
+                candidatoMod.setRating(candidato.getRating());
 
-            if (null != candidato.getFiles()) {
-                File file = null;
+                if (null != candidato.getFiles()) {
+                    File file = null;
 
-                for (File fileC : candidato.getFiles()) {
-                    if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
-                        file = new File();
-                        file.setId(fileC.getId());
-                        file.setDescrizione(fileC.getDescrizione());
+                    for (File fileC : candidato.getFiles()) {
+                        if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
+                            file = new File();
+                            file.setId(fileC.getId());
+                            file.setDescrizione(fileC.getDescrizione());
+                        }
                     }
+
+                    candidatoMod.setFile(file);
                 }
 
-                candidatoMod.setFile(file);
+                candidatiModificati.add(candidatoMod);
             }
 
-            candidatiModificati.add(candidatoMod);
+            candidatoGroup.setCandidati(candidatiModificati);
+            candidatoGroup.setRecord(candidatoRepository.countRicercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, tipologia, stato, tipo));
+
+            return candidatoGroup;
+        } catch (Exception e) {
+            logger.error(e.toString());
+
+            return null;
         }
-
-        candidatoGroup.setCandidati(candidatiModificati);
-        candidatoGroup.setRecord(candidatoRepository.countRicercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id(nome, cognome, email, tipologia, stato, tipo));
-
-        return candidatoGroup;
     }
 
     @GetMapping("/react/{id}")
@@ -230,8 +242,8 @@ public class CandidatoController {
     @PostMapping("/salva")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
-        @RequestBody Map<String,String>  candidatoMap,
-        @RequestParam("skill") @Nullable List<Integer> skillList
+            @RequestBody Map<String,String>  candidatoMap,
+            @RequestParam("skill") @Nullable List<Integer> skillList
     ) {
         logger.info("Salva candidato");
 
@@ -244,7 +256,7 @@ public class CandidatoController {
                 logger.debug("Candidato trovato si procede in modifica");
             }
 
-             trasformaMappaInCandidato(candidatoEntity, candidatoMap, skillList);
+            trasformaMappaInCandidato(candidatoEntity, candidatoMap, skillList);
 
             if (controllaMailDuplicata(candidatoEntity.getEmail())) {
 
@@ -280,9 +292,9 @@ public class CandidatoController {
     @PostMapping("/react/staff/salva/file/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
-        @PathVariable("id") Integer id,
-        @RequestParam("tipo") Integer tipo,
-        @RequestParam("file") MultipartFile file
+            @PathVariable("id") Integer id,
+            @RequestParam("tipo") Integer tipo,
+            @RequestParam("file") MultipartFile file
     ) {
         logger.info("Staff salva file");
 
@@ -319,11 +331,11 @@ public class CandidatoController {
             return "ERRORE";
         }
     }
-    
+
     @DeleteMapping("/elimina/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String deleteCandidato(
-        @PathVariable("id") Integer id
+            @PathVariable("id") Integer id
     ){
         logger.info("Elimina candidato");
 
@@ -352,10 +364,10 @@ public class CandidatoController {
     }
 
     public File fileVoid(
-        MultipartFile file,
-        Integer tipoFile
+            MultipartFile file,
+            Integer tipoFile
     )
-        throws Exception {
+            throws Exception {
         logger.debug("Creazione file");
 
         try {
