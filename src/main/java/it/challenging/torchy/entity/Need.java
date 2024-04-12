@@ -31,6 +31,9 @@ public class Need implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 20)
+    private String progressivo;
+
     @Column(nullable = false, length = 200)
     private String descrizione;
 

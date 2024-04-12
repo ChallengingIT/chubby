@@ -23,6 +23,8 @@ public class NeedModificato implements Serializable {
 
     private Integer id;
 
+    private String progressivo;
+
     private String descrizione;
 
     private Integer anniEsperienza;

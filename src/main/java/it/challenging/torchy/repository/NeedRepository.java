@@ -23,6 +23,14 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     Integer findNeedAssociati();
 
     @Query(value= """
+         select progressivo
+         from need n
+         order by id desc
+         limit 1
+        """, nativeQuery=true)
+    String findUltimoProgressivo();
+
+    @Query(value= """
          select n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato
          from need n, need_cliente nc, tipologia_need tn, need_owner non, stato_need sn
          where n.id = sn.id_need

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Key;
 import java.sql.Date;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -78,6 +79,7 @@ public class NeedController {
             NeedModificato needSolo = new NeedModificato();
 
             needSolo.setId(need.getId());
+            needSolo.setProgressivo(need.getProgressivo());
             needSolo.setDescrizione(need.getDescrizione());
             needSolo.setPriorita(need.getPriorita());
             needSolo.setAnniEsperienza(need.getAnniEsperienza());
@@ -171,6 +173,7 @@ public class NeedController {
             NeedModificato needSolo = new NeedModificato();
 
             needSolo.setId(need.getId());
+            needSolo.setProgressivo(need.getProgressivo());
             needSolo.setDescrizione(need.getDescrizione());
             needSolo.setPriorita(need.getPriorita());
             needSolo.setAnniEsperienza(need.getAnniEsperienza());
@@ -226,6 +229,7 @@ public class NeedController {
             NeedModificato needSolo = new NeedModificato();
 
             needSolo.setId(need.getId());
+            needSolo.setProgressivo(need.getProgressivo());
             needSolo.setDescrizione(need.getDescrizione());
             needSolo.setPriorita(need.getPriorita());
             needSolo.setAnniEsperienza(need.getAnniEsperienza());
@@ -288,6 +292,7 @@ public class NeedController {
             NeedModificato needSolo = new NeedModificato();
 
             needSolo.setId(need.getId());
+            needSolo.setProgressivo(need.getProgressivo());
             needSolo.setDescrizione(need.getDescrizione());
             needSolo.setPriorita(need.getPriorita());
             needSolo.setAnniEsperienza(need.getAnniEsperienza());
@@ -356,6 +361,28 @@ public class NeedController {
             }
 
             trasformaMappaInNeed(need, needMap, skill1List);
+
+            String ultimoProgressivo = needRepository.findUltimoProgressivo();
+
+            String contatore = ultimoProgressivo.split("-")[0];
+            String anno      = ultimoProgressivo.split("-")[1];
+
+            OffsetDateTime data = OffsetDateTime.now();
+            String annoCorrente = ""+data.getYear();
+            String finaleAnnoCorrente = annoCorrente.substring(2);
+            if (!anno.equalsIgnoreCase(finaleAnnoCorrente)) {
+                if (finaleAnnoCorrente.equalsIgnoreCase("99")) {
+                    anno = "00";
+                    contatore = "01";
+                } else {
+                    anno = String.valueOf(Integer.parseInt(finaleAnnoCorrente) + 1);
+                    contatore = "01";
+                }
+            } else {
+                contatore = String.valueOf(Integer.parseInt(contatore) + 1);
+            }
+
+            need.setProgressivo(contatore + "-" + anno);
 
             needRepository.save(need);
 
