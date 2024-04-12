@@ -4,56 +4,34 @@
 
 package it.challenging.torchy.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
+@Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class NeedModificato implements Serializable {
+@Table( name = "tipologieaz")
+public class TipologiaAz implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -6529685398267757690L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, unique = true, length = 45)
     private String descrizione;
-
-    private Integer anniEsperienza;
-
-    private Integer numeroRisorse;
-
-    private String location;
-
-    private String note;
-
-    private Set<Skill> skills = new HashSet<>();
-
-    private TipologiaN tipologia;
-
-    private Cliente cliente = new Cliente();
-
-    private KeyPeople keyPeople = new KeyPeople();
-
-    private Owner owner;
-
-    private Integer tipo;
-
-    private Integer priorita;
-
-    private String week;
-
-    private StatoN stato;
-
-    private Integer pubblicazione;
-
-    private Integer screening;
 
     @Override
     public boolean equals(Object o) {
@@ -64,8 +42,8 @@ public class NeedModificato implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        NeedModificato need = (NeedModificato)o;
-        return id != null && Objects.equals(id, need.id);
+        TipologiaAz that = (TipologiaAz)o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

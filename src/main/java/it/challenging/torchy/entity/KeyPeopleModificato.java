@@ -24,7 +24,7 @@ public class KeyPeopleModificato implements Serializable {
 
     private String ruolo;
 
-    private String status;
+    private StatoK stato;
 
     private String nome;
 

@@ -39,23 +39,27 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
 
     Page<Need> findByCliente_IdOrderByDescrizioneAsc(Integer idCliente, Pageable p);
 
+    Page<Need> findByKeyPeople_IdOrderByDescrizioneAsc(Integer idKeyPeople, Pageable p);
+
     @Query(value= """
          SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato
-         FROM need n, need_cliente nc, tipologia_need tn, need_owner non, stato_need sn
+         FROM need n, need_cliente nc, need_keypeople nk, tipologia_need tn, need_owner non, stato_need sn
          WHERE n.id = nc.id_need
          and n.id = tn.id_need
          and n.id = non.id_need
          and n.id = sn.id_need
+         and n.id = nk.id_need
          and if(?1 is not null, nc.id_cliente = ?1, 1=1)
          and if(?2 is not null, sn.id_stato = ?2, 1=1)
-         and if(?3 is not null, n.priorita = ?3, 1=1)
-         and if(?4 is not null, tn.id_tipologia = ?4, 1=1)
-         and if(?6 is not null, non.id_owner = ?6, 1=1)
-         and if(?5 is not null, n.week = ?5, 1=1)
-         and if(?7 is not null, n.descrizione like %?7%, 1=1)
+         and if(?3 is not null, nk.id_keypeople = ?3, 1=1)
+         and if(?4 is not null, n.priorita = ?4, 1=1)
+         and if(?5 is not null, tn.id_tipologia = ?5, 1=1)
+         and if(?7 is not null, non.id_owner = ?7, 1=1)
+         and if(?6 is not null, n.week = ?6, 1=1)
+         and if(?8 is not null, n.descrizione like %?8%, 1=1)
          order by n.descrizione asc
         """, nativeQuery=true)
-    Page<Need> ricerca(Integer idCliente, Integer idStato, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
+    Page<Need> ricerca(Integer idCliente, Integer idStato, Integer idKeyPeople, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
 
     @Query(value= """
            select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, stn.id_stato

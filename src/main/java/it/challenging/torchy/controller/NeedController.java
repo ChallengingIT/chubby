@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Key;
 import java.sql.Date;
 import java.util.*;
 
@@ -87,6 +88,14 @@ public class NeedController {
             cliente.setDenominazione(need.getCliente().getDenominazione());
 
             needSolo.setCliente(cliente);
+
+            KeyPeople keyPeople = new KeyPeople();
+
+            keyPeople.setId(need.getKeyPeople().getId());
+            keyPeople.setNome(need.getKeyPeople().getNome());
+
+            needSolo.setKeyPeople(keyPeople);
+
             needSolo.setLocation(need.getLocation());
             needSolo.setNote(need.getNote());
             needSolo.setNumeroRisorse(need.getNumeroRisorse());
@@ -142,6 +151,61 @@ public class NeedController {
         return needRepository.findByCliente_Id(id);
     }
 
+    @GetMapping("/react/keypeople/modificato/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedModificato> getByIdKeypeopleeMod(
+            @PathVariable("id") Integer id,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Need tramite id cliente modificati");
+
+        Pageable p = PageRequest.of(pagina, quantita);
+
+        Page<Need> pageableNeeds = needRepository.findByKeyPeople_IdOrderByDescrizioneAsc(id, p);
+
+        List<Need> needs = pageableNeeds.getContent();
+        List<NeedModificato> needsModificati = new ArrayList<>();
+
+        for (Need need : needs) {
+            NeedModificato needSolo = new NeedModificato();
+
+            needSolo.setId(need.getId());
+            needSolo.setDescrizione(need.getDescrizione());
+            needSolo.setPriorita(need.getPriorita());
+            needSolo.setAnniEsperienza(need.getAnniEsperienza());
+
+            Cliente cliente = new Cliente();
+
+            cliente.setId(need.getCliente().getId());
+            cliente.setDenominazione(need.getCliente().getDenominazione());
+
+            needSolo.setCliente(cliente);
+
+            KeyPeople keyPeople = new KeyPeople();
+
+            keyPeople.setId(need.getKeyPeople().getId());
+            keyPeople.setNome(need.getKeyPeople().getNome());
+
+            needSolo.setKeyPeople(keyPeople);
+            needSolo.setLocation(need.getLocation());
+            needSolo.setNote(need.getNote());
+            needSolo.setNumeroRisorse(need.getNumeroRisorse());
+            needSolo.setOwner(need.getOwner());
+            needSolo.setSkills(need.getSkills());
+            needSolo.setStato(need.getStato());
+            needSolo.setTipo(need.getTipo());
+            needSolo.setTipologia(need.getTipologia());
+            needSolo.setWeek(need.getWeek());
+            needSolo.setPubblicazione(need.getPubblicazione());
+            needSolo.setScreening(need.getScreening());
+
+            needsModificati.add(needSolo);
+        }
+
+        return needsModificati;
+    }
+
     @GetMapping("/react/cliente/modificato/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<NeedModificato> getByIdClienteMod(
@@ -172,6 +236,13 @@ public class NeedController {
             cliente.setDenominazione(need.getCliente().getDenominazione());
 
             needSolo.setCliente(cliente);
+
+            KeyPeople keyPeople = new KeyPeople();
+
+            keyPeople.setId(need.getKeyPeople().getId());
+            keyPeople.setNome(need.getKeyPeople().getNome());
+
+            needSolo.setKeyPeople(keyPeople);
             needSolo.setLocation(need.getLocation());
             needSolo.setNote(need.getNote());
             needSolo.setNumeroRisorse(need.getNumeroRisorse());
@@ -195,6 +266,7 @@ public class NeedController {
     public List<NeedModificato> getModRicerca(
         @RequestParam("azienda") @Nullable Integer azienda,
         @RequestParam("stato") @Nullable Integer stato,
+        @RequestParam("keypeople") @Nullable Integer idKeyPeople,
         @RequestParam("priorita") @Nullable Integer priorita,
         @RequestParam("owner") @Nullable Integer owner,
         @RequestParam("week") @Nullable String week,
@@ -207,7 +279,7 @@ public class NeedController {
 
         Pageable p = PageRequest.of(pagina, quantita);
 
-        Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, priorita, tipologia, week, owner, descrizione, p);
+        Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, p);
         List<Need> needs = pageableNeeds.getContent();
 
         List<NeedModificato> needsModificati = new ArrayList<>();
@@ -226,6 +298,13 @@ public class NeedController {
             cliente.setDenominazione(need.getCliente().getDenominazione());
 
             needSolo.setCliente(cliente);
+
+            KeyPeople keyPeople = new KeyPeople();
+
+            keyPeople.setId(need.getKeyPeople().getId());
+            keyPeople.setNome(need.getKeyPeople().getNome());
+
+            needSolo.setKeyPeople(keyPeople);
             needSolo.setLocation(need.getLocation());
             needSolo.setNote(need.getNote());
             needSolo.setNumeroRisorse(need.getNumeroRisorse());
@@ -571,6 +650,13 @@ public class NeedController {
             cliente.setId(Integer.parseInt(needMap.get("idAzienda")));
 
             need.setCliente(cliente);
+        }
+
+        if (needMap.get("idKeyPeople") != null) {
+            KeyPeople keyPeople = new KeyPeople();
+            keyPeople.setId(Integer.parseInt(needMap.get("idKeyPeople")));
+
+            need.setKeyPeople(keyPeople);
         }
 
         need.setWeek(needMap.get("week") != null ? needMap.get("week") : null);

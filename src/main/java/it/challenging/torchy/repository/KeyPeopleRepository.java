@@ -25,15 +25,16 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
 
   @Query(value= """
        SELECT k.*, ko.id_owner, kc.id_cliente
-       FROM key_people k, key_people_owner ko, key_people_cliente kc
+       FROM key_people k, key_people_owner ko, key_people_cliente kc, key_people_stato ks
        where k.id = ko.id_key_people
        and k.id = kc.id_key_people
-       and if(?1 is not null, k.status = ?1, 1=1)
+       and k.id = ks.id_key_people
+       and if(?1 is not null, ks.id_stato = ?1, 1=1)
        and if(?2 is not null, kc.id_cliente = ?2, 1=1)
        and if(?3 is not null, ko.id_owner = ?3, 1=1)
        and if(?4 is not null, k.nome like %?4%, 1=1)
        order by k.nome asc
       """,nativeQuery=true)
-  Page<KeyPeople> ricercaByStatusAndIdOwnerAndIdAzienda(String status, Integer azienda, Integer owner, String nome, Pageable p);
+  Page<KeyPeople> ricercaByIdStatoAndIdOwnerAndIdAzienda(Integer stato, Integer azienda, Integer owner, String nome, Pageable p);
 
 }
