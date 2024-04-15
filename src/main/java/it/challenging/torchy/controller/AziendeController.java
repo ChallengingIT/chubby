@@ -75,6 +75,47 @@ public class AziendeController {
         }
     }
 
+    @GetMapping("/react/mod")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<ClienteModificato> getAllMod(
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista aziende");
+
+        Pageable                p                 = PageRequest.of(pagina, quantita);
+        List<Cliente>           aziende           = clienteRepository.findAllByOrderByDenominazioneAsc(p).getContent();
+        List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+        for (Cliente azienda : aziende) {
+            ClienteModificato aziendaModificata = new ClienteModificato();
+
+            aziendaModificata.setDenominazione(azienda.getDenominazione());
+            aziendaModificata.setEmail(azienda.getEmail());
+            aziendaModificata.setId(azienda.getId());
+            aziendaModificata.setPi(azienda.getPi());
+            aziendaModificata.setNote(azienda.getNote());
+            aziendaModificata.setCf(azienda.getCf());
+            aziendaModificata.setCap(azienda.getCap());
+            aziendaModificata.setCitta(azienda.getCitta());
+            aziendaModificata.setProvincia(azienda.getProvincia());
+            aziendaModificata.setPec(azienda.getPec());
+            aziendaModificata.setSito(azienda.getSito());
+            aziendaModificata.setOwner(azienda.getOwner());
+            aziendaModificata.setTipologia(azienda.getTipologia());
+            aziendaModificata.setTipologia(azienda.getTipologia());
+            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+            aziendaModificata.setLogo(azienda.getLogo());
+            aziendaModificata.setIda(azienda.getIda());
+
+            aziendeModificate.add(aziendaModificata);
+        }
+
+        return aziendeModificate;
+    }
+
     @GetMapping("/react/mod/personal")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     //@PreAuthorize("hasRole(@roles.ADMIN)")
