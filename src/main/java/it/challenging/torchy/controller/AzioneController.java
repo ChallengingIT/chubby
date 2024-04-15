@@ -63,6 +63,8 @@ public class AzioneController {
 
             trasformaMappaInAzione(azioneEntity, azioneMap);
 
+            azioneRepository.save(azioneEntity);
+
             KeyPeople keyPeople = keyPeopleRepository.findById(id).get();
 
             keyPeople.getAzioni().add(azioneEntity);
