@@ -42,11 +42,6 @@
       <option name="url" value="http://ci.betting.sisal.it/nexus/repository/maven-releases/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="spring-milestones" />
-      <option name="name" value="Spring Milestones" />
-      <option name="url" value="https://repo.spring.io/milestone" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="adobe" />
       <option name="name" value="Adobe" />
       <option name="url" value="https://nexus.hdia.it/content/repositories/adobe" />
@@ -55,6 +50,11 @@
       <option name="id" value="hdi-releases" />
       <option name="name" value="HDI Releases" />
       <option name="url" value="https://nexus.hdia.it/content/repositories/releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="spring-milestones" />
+      <option name="name" value="Spring Milestones" />
+      <option name="url" value="https://repo.spring.io/milestone" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="spring-snapshots" />
