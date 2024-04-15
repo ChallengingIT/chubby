@@ -22,8 +22,8 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/ai")
-public class AIController {
+@RequestMapping("/ai/open")
+public class AIOpenAiController {
 
     private final EmbeddingClient embeddingClient;
 
@@ -31,7 +31,7 @@ public class AIController {
 
     private final OpenAiImageClient openaiImageClient;
 
-    public AIController(EmbeddingClient embeddingClient, OpenAiChatClient chatClient, OpenAiImageClient openaiImageClient) {
+    public AIOpenAiController(EmbeddingClient embeddingClient, OpenAiChatClient chatClient, OpenAiImageClient openaiImageClient) {
 
         this.embeddingClient   = embeddingClient;
         this.chatClient        = chatClient;
@@ -57,7 +57,7 @@ public class AIController {
 
     @GetMapping("/image")
     public ImageResponse generateImage(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        ImageResponse response = openaiImageClient.call(
+        return openaiImageClient.call(
             new ImagePrompt(message,
                 OpenAiImageOptions.builder()
                                   .withQuality("hd")
@@ -66,6 +66,5 @@ public class AIController {
                                   .withWidth(1024).build())
 
         );
-        return response;
     }
 }
