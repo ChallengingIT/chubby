@@ -29,12 +29,12 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
         left join key_people_owner ko on k.id = ko.id_key_people
         left join key_people_stato ks on k.id = ks.id_key_people
         left join key_people_cliente kc on k.id = kc.id_key_people
-       where  if(?1 is not null, k.status = ?1, 1=1)
+       where  if(?1 is not null, ks.id_stato = ?1, 1=1)
        and if(?2 is not null, kc.id_cliente = ?2, 1=1)
        and if(?3 is not null, ko.id_owner = ?3, 1=1)
        and if(?4 is not null, k.nome like %?4%, 1=1)
        order by k.nome asc
       """,nativeQuery=true)
-  Page<KeyPeople> ricercaByStatusAndIdOwnerAndIdAzienda(String status, Integer azienda, Integer owner, String nome, Pageable p);
+  Page<KeyPeople> ricercaByIdStatoAndIdOwnerAndIdAzienda(Integer status, Integer azienda, Integer owner, String nome, Pageable p);
 
 }
