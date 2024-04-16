@@ -44,6 +44,8 @@ public class KeyPeopleModificato implements Serializable {
 
     private Owner owner;
 
+    private Integer tipo;
+
     @Override
     public boolean equals(Object o) {
 

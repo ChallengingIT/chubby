@@ -87,6 +87,7 @@ public class KeyPeopleController {
                 keyPeopleMod.setNome(keyPeople.getNome());
                 keyPeopleMod.setRuolo(keyPeople.getRuolo());
                 keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setTipo(keyPeople.getTipo());
 
                 Cliente cliente = new Cliente();
 
@@ -140,6 +141,7 @@ public class KeyPeopleController {
                 keyPeopleMod.setNome(keyPeople.getNome());
                 keyPeopleMod.setRuolo(keyPeople.getRuolo());
                 keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setTipo(keyPeople.getTipo());
 
                 Cliente cliente = new Cliente();
 
