@@ -165,6 +165,35 @@ public class KeyPeopleController {
         }
     }
 
+    @PostMapping("/react/salva/stato/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveNeedStato(
+            @PathVariable("id") Integer id,
+            @RequestParam ("stato") Integer idStato
+    ) {
+        logger.info("Salva cambio stato need");
+
+        try {
+
+            KeyPeople keyPeople = keyPeopleRepository.findById(id).get();
+
+            StatoK stato = new StatoK();
+            stato.setId(idStato);
+
+            keyPeople.setStato(stato);
+
+            keyPeopleRepository.save(keyPeople);
+
+            logger.info("Cambio stato salvato correttamente");
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
     @GetMapping("/react/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public KeyPeople getById(@PathVariable("id") Integer id) {
