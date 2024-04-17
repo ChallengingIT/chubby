@@ -31,6 +31,9 @@ public class Need implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 20)
+    private String progressivo;
+
     @Column(nullable = false, length = 200)
     private String descrizione;
 
@@ -84,6 +87,15 @@ public class Need implements Serializable {
     )
     @ToString.Exclude
     private Owner owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "need_keypeople",
+            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_keypeople", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private KeyPeople keyPeople = new KeyPeople();
 
     @Column(length = 1, name="tipo")
     private Integer tipo;

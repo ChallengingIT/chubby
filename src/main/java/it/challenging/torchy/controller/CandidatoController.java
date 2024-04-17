@@ -72,7 +72,7 @@ public class CandidatoController {
             @RequestParam("pagina") Integer pagina,
             @RequestParam("quantita") Integer quantita
     ) {
-        try{
+        try {
             logger.info("Candidati");
 
             CandidatoGroup            candidatoGroup      = new CandidatoGroup();

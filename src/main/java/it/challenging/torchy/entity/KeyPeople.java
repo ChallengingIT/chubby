@@ -14,6 +14,7 @@ import org.hibernate.Hibernate;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -34,8 +35,14 @@ public class KeyPeople implements Serializable {
     @Column
     private String ruolo;
 
-    @Column
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "key_people_stato",
+            joinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_stato", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private StatoK stato;
 
     @Column
     private String nome;
@@ -75,6 +82,18 @@ public class KeyPeople implements Serializable {
     )
     @ToString.Exclude
     private Owner owner;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "key_people_azioni",
+            joinColumns = @JoinColumn(name = "id_key_people", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_azione", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<AzioneKeyPeople> azioni;
+
+    @Column
+    private Integer tipo;
 
     @Override
     public boolean equals(Object o) {

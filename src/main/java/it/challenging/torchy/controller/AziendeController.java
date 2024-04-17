@@ -52,29 +52,35 @@ public class AziendeController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     //@PreAuthorize("hasRole(@roles.ADMIN)")
     public List<ClienteSelect> getAllSelect() {
-        logger.info("Lista aziende");
+        logger.info("Lista aziende select");
 
-        List<Cliente> aziende = clienteRepository.findAllByOrderByDenominazioneAsc();
-        List<ClienteSelect> aziendeModificate = new ArrayList<>();
+        try {
+            List<Cliente> aziende = clienteRepository.findAllByOrderByDenominazioneAsc();
+            List<ClienteSelect> aziendeModificate = new ArrayList<>();
 
-        for (Cliente azienda : aziende) {
-            ClienteSelect aziendaModificata = new ClienteSelect();
+            for (Cliente azienda : aziende) {
+                ClienteSelect aziendaModificata = new ClienteSelect();
 
-            aziendaModificata.setDenominazione(azienda.getDenominazione());
-            aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setId(azienda.getId());
 
-            aziendeModificate.add(aziendaModificata);
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return aziendeModificate;
     }
 
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     //@PreAuthorize("hasRole(@roles.ADMIN)")
     public List<ClienteModificato> getAllMod(
-        @RequestParam("pagina") Integer pagina,
-        @RequestParam("quantita") Integer quantita
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
     ) {
         logger.info("Lista aziende");
 
@@ -110,9 +116,124 @@ public class AziendeController {
         return aziendeModificate;
     }
 
+    @GetMapping("/react/mod/personal")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<ClienteModificato> getAllModPersonal(
+        @RequestParam("username") String username,
+        @RequestParam("pagina") Integer pagina,
+        @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista aziende mod");
+
+        try {
+            Pageable                p                 = PageRequest.of(pagina, quantita);
+            List<Cliente>           aziende           = clienteRepository.ricercaByUsername(username, p).getContent();
+            List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+            for (Cliente azienda : aziende) {
+                ClienteModificato aziendaModificata = new ClienteModificato();
+
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setEmail(azienda.getEmail());
+                aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setPi(azienda.getPi());
+                aziendaModificata.setNote(azienda.getNote());
+                aziendaModificata.setCf(azienda.getCf());
+                aziendaModificata.setCap(azienda.getCap());
+                aziendaModificata.setCitta(azienda.getCitta());
+                aziendaModificata.setProvincia(azienda.getProvincia());
+                aziendaModificata.setPec(azienda.getPec());
+                aziendaModificata.setSito(azienda.getSito());
+                aziendaModificata.setOwner(azienda.getOwner());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+                aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+                aziendaModificata.setLogo(azienda.getLogo());
+                aziendaModificata.setIda(azienda.getIda());
+
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @GetMapping("/react/ricerca/mod/personal")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<ClienteModificato> getAllModPersonalRicerca(
+            @RequestParam("username") String username,
+            @RequestParam("ida") @Nullable String ida,
+            @RequestParam("ragione") @Nullable String ragSociale,
+            @RequestParam("tipologia") @Nullable String tipologia,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista aziende ricerca mod");
+
+        try {
+            Pageable p            = PageRequest.of(pagina, quantita);
+            Double   valoreIdaMin = null;
+            Double   valoreIdaMax = null;
+
+            if (null != ida) {
+                if (ida.equalsIgnoreCase("basso")) {
+                    valoreIdaMax = 1.1D;
+                } else if (ida.equalsIgnoreCase("medio")) {
+                    valoreIdaMin = 1.1D;
+                    valoreIdaMax = 2.1D;
+                } else if (ida.equalsIgnoreCase("alto")) {
+                    valoreIdaMin = 2.1D;
+                }
+            }
+
+            List<Cliente>           aziende           = clienteRepository.ricercaByUsernameAndIdaAndTipologiaAndDenominazione(username, valoreIdaMin, valoreIdaMax, tipologia, ragSociale, p).getContent();
+            List<ClienteModificato> aziendeModificate = new ArrayList<>();
+
+            for (Cliente azienda : aziende) {
+                ClienteModificato aziendaModificata = new ClienteModificato();
+
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setEmail(azienda.getEmail());
+                aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setPi(azienda.getPi());
+                aziendaModificata.setNote(azienda.getNote());
+                aziendaModificata.setCf(azienda.getCf());
+                aziendaModificata.setCap(azienda.getCap());
+                aziendaModificata.setCitta(azienda.getCitta());
+                aziendaModificata.setProvincia(azienda.getProvincia());
+                aziendaModificata.setPec(azienda.getPec());
+                aziendaModificata.setSito(azienda.getSito());
+                aziendaModificata.setOwner(azienda.getOwner());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+                aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+                aziendaModificata.setLogo(azienda.getLogo());
+                aziendaModificata.setIda(azienda.getIda());
+
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
     @GetMapping("/react/ricerca/mod")
     public List<ClienteModificato> getAllModSearch(
-        @RequestParam("stato") @Nullable Integer stato,
+        @RequestParam("ida") @Nullable String ida,
         @RequestParam("ragione") @Nullable String ragSociale,
         @RequestParam("owner") @Nullable Integer owner,
         @RequestParam("tipologia") @Nullable String tipologia,
@@ -121,35 +242,55 @@ public class AziendeController {
     ) {
         logger.info("Lista aziende");
 
-        Pageable                p                 = PageRequest.of(pagina, quantita);
-        List<Cliente>           aziende           = clienteRepository.ricercaByStatusAndOwner_IdAndTipologiaAndDenominazione(stato, owner, tipologia, ragSociale, p).getContent();
-        List<ClienteModificato> aziendeModificate = new ArrayList<>();
+        try {
+            Pageable p            = PageRequest.of(pagina, quantita);
+            Double   valoreIdaMin = null;
+            Double   valoreIdaMax = null;
 
-        for (Cliente azienda : aziende) {
-            ClienteModificato aziendaModificata = new ClienteModificato();
+            if (null != ida) {
+                if (ida.equalsIgnoreCase("basso")) {
+                    valoreIdaMax = 1D;
+                } else if (ida.equalsIgnoreCase("medio")) {
+                    valoreIdaMin = 1D;
+                    valoreIdaMax = 2D;
+                } else if (ida.equalsIgnoreCase("alto")) {
+                    valoreIdaMin = 2D;
+                }
+            }
 
-            aziendaModificata.setDenominazione(azienda.getDenominazione());
-            aziendaModificata.setEmail(azienda.getEmail());
-            aziendaModificata.setId(azienda.getId());
-            aziendaModificata.setPi(azienda.getPi());
-            aziendaModificata.setNote(azienda.getNote());
-            aziendaModificata.setCf(azienda.getCf());
-            aziendaModificata.setCap(azienda.getCap());
-            aziendaModificata.setCitta(azienda.getCitta());
-            aziendaModificata.setProvincia(azienda.getProvincia());
-            aziendaModificata.setPec(azienda.getPec());
-            aziendaModificata.setSito(azienda.getSito());
-            aziendaModificata.setOwner(azienda.getOwner());
-            aziendaModificata.setTipologia(azienda.getTipologia());
-            aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
-            aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
-            aziendaModificata.setLogo(azienda.getLogo());
-            aziendaModificata.setIda(azienda.getIda());
+            List<Cliente>           aziende           = clienteRepository.ricercaByIdaAndOwner_IdAndTipologiaAndDenominazione(valoreIdaMin, valoreIdaMax, owner, tipologia, ragSociale, p).getContent();
+            List<ClienteModificato> aziendeModificate = new ArrayList<>();
 
-            aziendeModificate.add(aziendaModificata);
+            for (Cliente azienda : aziende) {
+                ClienteModificato aziendaModificata = new ClienteModificato();
+
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setEmail(azienda.getEmail());
+                aziendaModificata.setId(azienda.getId());
+                aziendaModificata.setPi(azienda.getPi());
+                aziendaModificata.setNote(azienda.getNote());
+                aziendaModificata.setCf(azienda.getCf());
+                aziendaModificata.setCap(azienda.getCap());
+                aziendaModificata.setCitta(azienda.getCitta());
+                aziendaModificata.setProvincia(azienda.getProvincia());
+                aziendaModificata.setPec(azienda.getPec());
+                aziendaModificata.setSito(azienda.getSito());
+                aziendaModificata.setOwner(azienda.getOwner());
+                aziendaModificata.setTipologia(azienda.getTipologia());
+                aziendaModificata.setSedeOperativa(azienda.getSedeOperativa());
+                aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
+                aziendaModificata.setLogo(azienda.getLogo());
+                aziendaModificata.setIda(azienda.getIda());
+
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return aziendeModificate;
     }
 
     @GetMapping("/react/{id}")

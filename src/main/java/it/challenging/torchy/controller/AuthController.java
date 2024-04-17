@@ -52,7 +52,7 @@ public class AuthController {
 
         logger.info("Login");
 
-        Authentication authentication = authenticationManager.authenticate(
+        try {Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         logger.debug("Autenticazione passata");
@@ -75,6 +75,11 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt,
             userDetails.getUsername(), user.getNome(), user.getCognome(),
             roles));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
     }
 
     @CrossOrigin(origins = "*")

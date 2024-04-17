@@ -5,10 +5,7 @@
 package it.challenging.torchy.controller;
 
 import it.challenging.torchy.EmailSenderService;
-import it.challenging.torchy.entity.Cliente;
-import it.challenging.torchy.entity.KeyPeople;
-import it.challenging.torchy.entity.KeyPeopleModificato;
-import it.challenging.torchy.entity.Owner;
+import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -42,6 +39,8 @@ public class KeyPeopleController {
     @Autowired
     private ProvinceRepository  provinceRepository;
     @Autowired
+    private StatoKRepository  statoKRepository;
+    @Autowired
     private EmailSenderService  serviceEmailSender;
 
     private static final Logger logger = LoggerFactory.getLogger(KeyPeopleController.class);
@@ -54,6 +53,14 @@ public class KeyPeopleController {
         return keyPeopleRepository.findAll();
     }
 
+    @GetMapping("/react/stati")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<StatoK> getAllStati() {
+        logger.info("Key people stati");
+
+        return statoKRepository.findAll();
+    }
+
     @GetMapping("/react/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<KeyPeopleModificato> getAllMod(
@@ -62,45 +69,53 @@ public class KeyPeopleController {
     ) {
         logger.info("Key people Mod");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        List<KeyPeople> keyPeoples = keyPeopleRepository.findAllByOrderByNomeAsc(p).getContent();
-        List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+            List<KeyPeople> keyPeoples = keyPeopleRepository.findAllByOrderByNomeAsc(p).getContent();
+            List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
-        for (KeyPeople keyPeople : keyPeoples) {
-            KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+            for (KeyPeople keyPeople : keyPeoples) {
+                KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
 
-            keyPeopleMod.setId(keyPeople.getId());
-            keyPeopleMod.setCellulare(keyPeople.getCellulare());
-            keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
-            keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
-            keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
-            keyPeopleMod.setEmail(keyPeople.getEmail());
-            keyPeopleMod.setNome(keyPeople.getNome());
-            keyPeopleMod.setRuolo(keyPeople.getRuolo());
-            keyPeopleMod.setStatus(keyPeople.getStatus());
+                keyPeopleMod.setId(keyPeople.getId());
+                keyPeopleMod.setCellulare(keyPeople.getCellulare());
+                keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+                keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+                keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+                keyPeopleMod.setEmail(keyPeople.getEmail());
+                keyPeopleMod.setNome(keyPeople.getNome());
+                keyPeopleMod.setRuolo(keyPeople.getRuolo());
+                keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setTipo(keyPeople.getTipo());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(keyPeople.getCliente().getId());
-            cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
-            cliente.setLogo(keyPeople.getCliente().getLogo());
+                cliente.setId(keyPeople.getCliente().getId());
+                cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+                cliente.setLogo(keyPeople.getCliente().getLogo());
 
-            keyPeopleMod.setCliente(cliente);
-            keyPeopleMod.setNote(keyPeople.getNote());
-            keyPeopleMod.setOwner(keyPeople.getOwner());
+                keyPeopleMod.setCliente(cliente);
+                keyPeopleMod.setNote(keyPeople.getNote());
+                keyPeopleMod.setOwner(keyPeople.getOwner());
 
-            keyPeoplesMod.add(keyPeopleMod);
+                keyPeoplesMod.add(keyPeopleMod);
+            }
+
+            return keyPeoplesMod;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return keyPeoplesMod;
     }
 
     @GetMapping("/react/ricerca/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<KeyPeopleModificato> getAllModRicerca(
         @RequestParam("azienda") @Nullable Integer azienda,
-        @RequestParam("stato") @Nullable String stato,
+        @RequestParam("stato") @Nullable Integer stato,
         @RequestParam("owner") @Nullable Integer owner,
         @RequestParam("nome") @Nullable String nome,
         @RequestParam("pagina") Integer pagina,
@@ -108,38 +123,46 @@ public class KeyPeopleController {
     ) {
         logger.info("Key people Mod");
 
-        Pageable p = PageRequest.of(pagina, quantita);
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
 
-        List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByStatusAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
-        List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+            List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
+            List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
-        for (KeyPeople keyPeople : keyPeoples) {
-            KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+            for (KeyPeople keyPeople : keyPeoples) {
+                KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
 
-            keyPeopleMod.setId(keyPeople.getId());
-            keyPeopleMod.setCellulare(keyPeople.getCellulare());
-            keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
-            keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
-            keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
-            keyPeopleMod.setEmail(keyPeople.getEmail());
-            keyPeopleMod.setNome(keyPeople.getNome());
-            keyPeopleMod.setRuolo(keyPeople.getRuolo());
-            keyPeopleMod.setStatus(keyPeople.getStatus());
+                keyPeopleMod.setId(keyPeople.getId());
+                keyPeopleMod.setCellulare(keyPeople.getCellulare());
+                keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+                keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+                keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+                keyPeopleMod.setEmail(keyPeople.getEmail());
+                keyPeopleMod.setNome(keyPeople.getNome());
+                keyPeopleMod.setRuolo(keyPeople.getRuolo());
+                keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setTipo(keyPeople.getTipo());
 
-            Cliente cliente = new Cliente();
+                Cliente cliente = new Cliente();
 
-            cliente.setId(keyPeople.getCliente().getId());
-            cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
-            cliente.setLogo(keyPeople.getCliente().getLogo());
+                cliente.setId(keyPeople.getCliente().getId());
+                cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+                cliente.setLogo(keyPeople.getCliente().getLogo());
 
-            keyPeopleMod.setCliente(cliente);
-            keyPeopleMod.setNote(keyPeople.getNote());
-            keyPeopleMod.setOwner(keyPeople.getOwner());
+                keyPeopleMod.setCliente(cliente);
+                keyPeopleMod.setNote(keyPeople.getNote());
+                keyPeopleMod.setOwner(keyPeople.getOwner());
 
-            keyPeoplesMod.add(keyPeopleMod);
+                keyPeoplesMod.add(keyPeopleMod);
+            }
+
+            return keyPeoplesMod;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return keyPeoplesMod;
     }
 
     @GetMapping("/react/{id}")
@@ -148,6 +171,14 @@ public class KeyPeopleController {
         logger.info("Key people tramite id");
 
         return keyPeopleRepository.findById(id).get();
+    }
+
+    @GetMapping("/react/azienda/{id}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<KeyPeople> getByIdAzienda(@PathVariable("id") Integer id) {
+        logger.info("Key people tramite id azienda");
+
+        return keyPeopleRepository.findByCliente_Id(id);
     }
 
     @PostMapping("/react/salva")
@@ -223,15 +254,22 @@ public class KeyPeopleController {
         keyPeople.setRuolo(keyPeopleMap.get("ruolo") != null ? keyPeopleMap.get("ruolo") : null);
         keyPeople.setDataCreazione(keyPeopleMap.get("dataCreazione") != null ? Date.valueOf(keyPeopleMap.get("dataCreazione")) : null);
         keyPeople.setDataUltimaAttivita(keyPeopleMap.get("dataUltimaAttivita") != null ? Date.valueOf(keyPeopleMap.get("dataUltimaAttivita")) : null);
-        keyPeople.setStatus(keyPeopleMap.get("status") != null ? keyPeopleMap.get("status") : null);
         keyPeople.setNome(keyPeopleMap.get("nome") != null ? keyPeopleMap.get("nome") : null);
         keyPeople.setComunicazioniRecenti(keyPeopleMap.get("comunicazioniRecenti") != null ? keyPeopleMap.get("comunicazioniRecenti") : null);
+        keyPeople.setTipo(keyPeopleMap.get("tipo") != null ? Integer.parseInt(keyPeopleMap.get("tipo")) : null);
 
         if (keyPeopleMap.get("idAzienda") != null) {
             Cliente cliente = new Cliente();
             cliente.setId(Integer.parseInt(keyPeopleMap.get("idAzienda")));
 
             keyPeople.setCliente(cliente);
+        }
+
+        if (keyPeopleMap.get("idStato") != null) {
+            StatoK stato = new StatoK();
+            stato.setId(Integer.parseInt(keyPeopleMap.get("idStato")));
+
+            keyPeople.setStato(stato);
         }
 
         if (keyPeopleMap.get("idOwner") != null) {

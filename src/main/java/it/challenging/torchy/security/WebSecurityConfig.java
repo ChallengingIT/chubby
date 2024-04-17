@@ -97,6 +97,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/associazioni/**").authenticated()
+                    .requestMatchers("/azioni/**").authenticated()
                     .requestMatchers("/aziende/**").authenticated()
                     .requestMatchers("/staffing/**").authenticated()
                     .requestMatchers("/files/**").authenticated()

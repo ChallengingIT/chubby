@@ -24,7 +24,7 @@ public class KeyPeopleModificato implements Serializable {
 
     private String ruolo;
 
-    private String status;
+    private StatoK stato;
 
     private String nome;
 
@@ -43,6 +43,8 @@ public class KeyPeopleModificato implements Serializable {
     private Cliente cliente;
 
     private Owner owner;
+
+    private Integer tipo;
 
     @Override
     public boolean equals(Object o) {

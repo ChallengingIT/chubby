@@ -23,6 +23,8 @@ public class NeedModificato implements Serializable {
 
     private Integer id;
 
+    private String progressivo;
+
     private String descrizione;
 
     private Integer anniEsperienza;
@@ -38,6 +40,8 @@ public class NeedModificato implements Serializable {
     private TipologiaN tipologia;
 
     private Cliente cliente = new Cliente();
+
+    private KeyPeople keyPeople = new KeyPeople();
 
     private Owner owner;
 

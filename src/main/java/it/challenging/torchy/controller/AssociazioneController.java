@@ -57,14 +57,19 @@ public class AssociazioneController {
     ) {
         logger.info("Need associabili al candidato: " + idCandidato);
 
-        Date dataColloquioDate = null;
+        try {
+            Date dataColloquioDate = null;
 
-        if(null != dataColloquio) {
-            dataColloquioDate = Date.valueOf(dataColloquio);
+            if(null != dataColloquio) {
+                dataColloquioDate = Date.valueOf(dataColloquio);
+            }
+
+            return associazioniRepository.ricercaByCandidato_IdAndCliente_IdAndStato_IdAndDataModifica(idCandidato,azienda, stato, dataColloquioDate );
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        return associazioniRepository.ricercaByCandidato_IdAndCliente_IdAndStato_IdAndDataModifica(idCandidato,azienda, stato, dataColloquioDate );
-
     }
 
     @GetMapping("/react/stati")
