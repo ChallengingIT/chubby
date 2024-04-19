@@ -17,9 +17,9 @@ import java.util.List;
 @Repository
 public interface NeedRepository extends JpaRepository<Need, Integer> {
 
-    Page<Need> findAllByOrderByDescrizioneAsc(Pageable p);
+    Page<Need> findAllByOrderByProgressivoDesc(Pageable p);
 
-    Page<Need> findByKeyPeople_IdOrderByDescrizioneAsc(Integer idKeyPeople, Pageable p);
+    Page<Need> findByKeyPeople_IdOrderByProgressivoDesc(Integer idKeyPeople, Pageable p);
 
     @Query(value= """
          select progressivo
@@ -47,7 +47,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
 
     List<Need> findByCliente_Id(@Param("idCliente") Integer idCliente);
 
-    Page<Need> findByCliente_IdOrderByDescrizioneAsc(Integer idCliente, Pageable p);
+    Page<Need> findByCliente_IdOrderByProgressivoDesc(Integer idCliente, Pageable p);
 
     @Query(value= """
          SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
@@ -65,7 +65,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          and if(?7 is not null, non.id_owner = ?7, 1=1)
          and if(?6 is not null, n.week = ?6, 1=1)
          and if(?8 is not null, n.descrizione like %?8%, 1=1)
-         order by n.descrizione asc
+         order by n.progressivo desc
         """, nativeQuery=true)
     Page<Need> ricerca(Integer idCliente, Integer idStato, Integer idKeyPeople, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
 
@@ -78,7 +78,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
               left join need_owner non on n.id = non.id_need
               left join stato_need sn on n.id = sn.id_need
            where n.id not in (select id_need from need_candidato where id_need = n.id and id_candidato = ?1)
-           order by n.descrizione asc
+           order by n.progressivo desc
           """, nativeQuery=true)
     List<Need> findNeedAssociabiliCandidato(Integer idCandidato);
 

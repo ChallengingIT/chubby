@@ -69,7 +69,7 @@ public class NeedController {
 
         try {
             Pageable             p               = PageRequest.of(pagina, quantita);
-            Page<Need>           pageableNeed    = needRepository.findAllByOrderByDescrizioneAsc(p);
+            Page<Need>           pageableNeed    = needRepository.findAllByOrderByProgressivoDesc(p);
             List<Need>           needs           = pageableNeed.getContent();
             List<NeedModificato> needsModificati = new ArrayList<>();
 
@@ -176,7 +176,7 @@ public class NeedController {
         try {
             Pageable p = PageRequest.of(pagina, quantita);
 
-            Page<Need> pageableNeeds = needRepository.findByKeyPeople_IdOrderByDescrizioneAsc(id, p);
+            Page<Need> pageableNeeds = needRepository.findByKeyPeople_IdOrderByProgressivoDesc(id, p);
 
             List<Need> needs = pageableNeeds.getContent();
             List<NeedModificato> needsModificati = new ArrayList<>();
@@ -238,7 +238,7 @@ public class NeedController {
         try {
             Pageable p = PageRequest.of(pagina, quantita);
 
-            Page<Need> pageableNeeds = needRepository.findByCliente_IdOrderByDescrizioneAsc(id, p);
+            Page<Need> pageableNeeds = needRepository.findByCliente_IdOrderByProgressivoDesc(id, p);
 
             List<Need> needs = pageableNeeds.getContent();
             List<NeedModificato> needsModificati = new ArrayList<>();

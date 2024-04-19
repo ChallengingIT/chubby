@@ -58,7 +58,7 @@ public class KeyPeopleController {
     public List<StatoK> getAllStati() {
         logger.info("Key people stati");
 
-        return statoKRepository.findAll();
+        return statoKRepository.findAllByOrderByIdAsc();
     }
 
     @GetMapping("/react/mod")

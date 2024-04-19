@@ -11,6 +11,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Objects;
 
 @Getter
@@ -28,6 +29,8 @@ public class ClienteModificato implements Serializable {
     private String cf;
 
     private String indirizzo;
+
+    private Date dataScadenzaContratto;
 
     private String cap;
 

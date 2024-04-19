@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,7 @@ public class AziendeController {
             aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
             aziendaModificata.setLogo(azienda.getLogo());
             aziendaModificata.setIda(azienda.getIda());
+            aziendaModificata.setDataScadenzaContratto(azienda.getDataScadenzaContratto());
 
             aziendeModificate.add(aziendaModificata);
         }
@@ -152,6 +154,7 @@ public class AziendeController {
                 aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
                 aziendaModificata.setLogo(azienda.getLogo());
                 aziendaModificata.setIda(azienda.getIda());
+                aziendaModificata.setDataScadenzaContratto(azienda.getDataScadenzaContratto());
 
                 aziendeModificate.add(aziendaModificata);
             }
@@ -218,6 +221,7 @@ public class AziendeController {
                 aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
                 aziendaModificata.setLogo(azienda.getLogo());
                 aziendaModificata.setIda(azienda.getIda());
+                aziendaModificata.setDataScadenzaContratto(azienda.getDataScadenzaContratto());
 
                 aziendeModificate.add(aziendaModificata);
             }
@@ -281,6 +285,7 @@ public class AziendeController {
                 aziendaModificata.setSettoreMercato(azienda.getSettoreMercato());
                 aziendaModificata.setLogo(azienda.getLogo());
                 aziendaModificata.setIda(azienda.getIda());
+                aziendaModificata.setDataScadenzaContratto(azienda.getDataScadenzaContratto());
 
                 aziendeModificate.add(aziendaModificata);
             }
@@ -512,6 +517,7 @@ public class AziendeController {
         cliente.setIndirizzo(clienteMap.get("indirizzo") != null ? clienteMap.get("indirizzo") : null);
         cliente.setNote(clienteMap.get("note") != null ? clienteMap.get("note") : null);
         cliente.setNoteTrattative(clienteMap.get("noteTrattative") != null ? clienteMap.get("noteTrattative") : null);
+        cliente.setDataScadenzaContratto(clienteMap.get("dataScadenzaContratto") != null ? Date.valueOf(clienteMap.get("dataScadenzaContratto")) : null);
 
         if (clienteMap.get("idOwner") != null) {
             Owner owner = new Owner();

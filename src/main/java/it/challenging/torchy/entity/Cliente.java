@@ -12,6 +12,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -88,6 +89,9 @@ public class Cliente implements Serializable {
 
     @Column(name="ida")
     private Double ida;
+
+    @Column(name = "data_scadenza_contratto")
+    private Date dataScadenzaContratto;
 
     @Column(name="settoreMercato")
     private String settoreMercato;
