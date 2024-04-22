@@ -174,7 +174,7 @@ public class AziendeController {
     public List<ClienteModificato> getAllModPersonalRicerca(
             @RequestParam("username") String username,
             @RequestParam("ida") @Nullable String ida,
-            @RequestParam("ragione") @Nullable String ragSociale,
+            @RequestParam("denominazione") @Nullable String ragSociale,
             @RequestParam("tipologia") @Nullable String tipologia,
             @RequestParam("pagina") Integer pagina,
             @RequestParam("quantita") Integer quantita
@@ -238,7 +238,7 @@ public class AziendeController {
     @GetMapping("/react/ricerca/mod")
     public List<ClienteModificato> getAllModSearch(
         @RequestParam("ida") @Nullable String ida,
-        @RequestParam("ragione") @Nullable String ragSociale,
+        @RequestParam("denominazione") @Nullable String ragSociale,
         @RequestParam("owner") @Nullable Integer owner,
         @RequestParam("tipologia") @Nullable String tipologia,
         @RequestParam("pagina") Integer pagina,
