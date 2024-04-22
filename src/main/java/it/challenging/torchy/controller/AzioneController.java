@@ -46,7 +46,7 @@ public class AzioneController {
     public List<TipologiaAz> getTipologie() {
         logger.info("Tipologie azioni");
 
-        return tipologiaAzRepository.findAll();
+        return tipologiaAzRepository.findAllByOrderByIdAsc();
     }
 
 

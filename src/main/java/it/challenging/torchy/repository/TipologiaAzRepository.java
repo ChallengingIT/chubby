@@ -8,6 +8,10 @@ import it.challenging.torchy.entity.TipologiaAz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TipologiaAzRepository extends JpaRepository<TipologiaAz, Integer> {
+
+    List<TipologiaAz> findAllByOrderByIdAsc();
 }
