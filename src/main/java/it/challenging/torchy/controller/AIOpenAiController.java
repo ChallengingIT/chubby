@@ -9,6 +9,7 @@ import it.challenging.torchy.entity.Tipologia;
 import it.challenging.torchy.repository.CandidatoRepository;
 import it.challenging.torchy.repository.TipologiaRepository;
 import org.springframework.ai.chat.ChatResponse;
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.embedding.EmbeddingClient;
@@ -65,6 +66,13 @@ public class AIOpenAiController {
     @GetMapping("/generate")
     public Map generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
         return Map.of("generation", chatClient.call(message));
+    }
+
+    @GetMapping("/generate/assistant")
+    public Flux<ChatResponse>  generateAssistant(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+
+        Prompt prompt = new Prompt(new AssistantMessage(message));
+        return chatClient.stream(prompt);
     }
 
     @GetMapping("/generateStream")
