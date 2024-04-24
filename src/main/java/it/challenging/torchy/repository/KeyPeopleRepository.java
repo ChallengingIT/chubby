@@ -24,6 +24,19 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
   List<KeyPeople> findByCliente_Id(Integer idCliente);
 
   @Query(value= """
+          SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato
+          FROM key_people k
+          left join key_people_owner ko on k.id = ko.id_key_people
+          left join key_people_stato ks on k.id = ks.id_key_people
+          left join key_people_cliente kc on k.id = kc.id_key_people
+          join owner o on ko.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          where u.username = ?1
+          order by k.nome asc
+        """,nativeQuery=true)
+  Page<KeyPeople> ricercaByUsername(String username, Pageable p);
+
+  @Query(value= """
        SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato
        FROM key_people k
         left join key_people_owner ko on k.id = ko.id_key_people
@@ -36,5 +49,22 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
        order by k.nome asc
       """,nativeQuery=true)
   Page<KeyPeople> ricercaByIdStatoAndIdOwnerAndIdAzienda(Integer status, Integer azienda, Integer owner, String nome, Pageable p);
+
+  @Query(value= """
+       SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato
+       FROM key_people k
+        left join key_people_owner ko on k.id = ko.id_key_people
+        left join key_people_stato ks on k.id = ks.id_key_people
+        left join key_people_cliente kc on k.id = kc.id_key_people
+        join owner o on ko.id_owner = o.id
+        left join users u on o.nome = u.nome and o.cognome = u.cognome
+       where  if(?1 is not null, ks.id_stato = ?1, 1=1)
+       and if(?2 is not null, kc.id_cliente = ?2, 1=1)
+       and if(?3 is not null, ko.id_owner = ?3, 1=1)
+       and if(?4 is not null, k.nome like %?4%, 1=1)
+       and u.username = ?5
+       order by k.nome asc
+      """,nativeQuery=true)
+  Page<KeyPeople> ricercaByIdStatoAndIdOwnerAndIdAziendaAndUsername(Integer status, Integer azienda, Integer owner, String nome, String username, Pageable p);
 
 }

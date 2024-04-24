@@ -111,6 +111,57 @@ public class KeyPeopleController {
         }
     }
 
+    @GetMapping("/react/mod/personal")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    //@PreAuthorize("hasRole(@roles.ADMIN)")
+    public List<KeyPeopleModificato> getAllModPersonal(
+            @RequestParam("username") String username,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista keyPaople mod personal");
+
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
+            List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByUsername(username, p).getContent();
+            List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+
+            for (KeyPeople keyPeople : keyPeoples) {
+                KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+
+                keyPeopleMod.setId(keyPeople.getId());
+                keyPeopleMod.setCellulare(keyPeople.getCellulare());
+                keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+                keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+                keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+                keyPeopleMod.setEmail(keyPeople.getEmail());
+                keyPeopleMod.setNome(keyPeople.getNome());
+                keyPeopleMod.setRuolo(keyPeople.getRuolo());
+                keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setTipo(keyPeople.getTipo());
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(keyPeople.getCliente().getId());
+                cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+                cliente.setLogo(keyPeople.getCliente().getLogo());
+
+                keyPeopleMod.setCliente(cliente);
+                keyPeopleMod.setNote(keyPeople.getNote());
+                keyPeopleMod.setOwner(keyPeople.getOwner());
+
+                keyPeoplesMod.add(keyPeopleMod);
+            }
+
+            return keyPeoplesMod;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
     @GetMapping("/react/ricerca/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<KeyPeopleModificato> getAllModRicerca(
@@ -127,6 +178,61 @@ public class KeyPeopleController {
             Pageable p = PageRequest.of(pagina, quantita);
 
             List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
+            List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
+
+            for (KeyPeople keyPeople : keyPeoples) {
+                KeyPeopleModificato keyPeopleMod = new KeyPeopleModificato();
+
+                keyPeopleMod.setId(keyPeople.getId());
+                keyPeopleMod.setCellulare(keyPeople.getCellulare());
+                keyPeopleMod.setComunicazioniRecenti(keyPeople.getComunicazioniRecenti());
+                keyPeopleMod.setDataCreazione(keyPeople.getDataCreazione());
+                keyPeopleMod.setDataUltimaAttivita(keyPeople.getDataUltimaAttivita());
+                keyPeopleMod.setEmail(keyPeople.getEmail());
+                keyPeopleMod.setNome(keyPeople.getNome());
+                keyPeopleMod.setRuolo(keyPeople.getRuolo());
+                keyPeopleMod.setStato(keyPeople.getStato());
+                keyPeopleMod.setTipo(keyPeople.getTipo());
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(keyPeople.getCliente().getId());
+                cliente.setDenominazione(keyPeople.getCliente().getDenominazione());
+                cliente.setLogo(keyPeople.getCliente().getLogo());
+
+                keyPeopleMod.setCliente(cliente);
+                keyPeopleMod.setNote(keyPeople.getNote());
+                keyPeopleMod.setOwner(keyPeople.getOwner());
+
+                keyPeoplesMod.add(keyPeopleMod);
+            }
+
+            return keyPeoplesMod;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @GetMapping("/react/ricerca/modpersonal")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<KeyPeopleModificato> getAllModRicercaPersonal(
+            @RequestParam("username") String username,
+            @RequestParam("azienda") @Nullable Integer azienda,
+            @RequestParam("stato") @Nullable Integer stato,
+            @RequestParam("owner") @Nullable Integer owner,
+            @RequestParam("nome") @Nullable String nome,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Key people Mod");
+
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
+
+            List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAziendaAndUsername(stato, azienda, owner, nome, username, p).getContent();
             List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
             for (KeyPeople keyPeople : keyPeoples) {

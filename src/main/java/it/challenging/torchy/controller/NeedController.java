@@ -120,6 +120,68 @@ public class NeedController {
         }
     }
 
+    @GetMapping("/react/modificato/personal")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedModificato> getModPersonal(
+            @RequestParam("username") String username,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Need modificati personal");
+
+        try {
+            Pageable             p               = PageRequest.of(pagina, quantita);
+            Page<Need>           pageableNeed    = needRepository.ricercaByUsername(username, p);
+            List<Need>           needs           = pageableNeed.getContent();
+            List<NeedModificato> needsModificati = new ArrayList<>();
+
+            for (Need need : needs) {
+                NeedModificato needSolo = new NeedModificato();
+
+                needSolo.setId(need.getId());
+                needSolo.setProgressivo(need.getProgressivo());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
+                needSolo.setAnniEsperienza(need.getAnniEsperienza());
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(need.getCliente().getId());
+                cliente.setDenominazione(need.getCliente().getDenominazione());
+
+                needSolo.setCliente(cliente);
+
+                KeyPeople keyPeople = new KeyPeople();
+
+                keyPeople.setId(need.getKeyPeople().getId());
+                keyPeople.setNome(need.getKeyPeople().getNome());
+
+                needSolo.setKeyPeople(keyPeople);
+
+                needSolo.setLocation(need.getLocation());
+                needSolo.setNote(need.getNote());
+                needSolo.setNumeroRisorse(need.getNumeroRisorse());
+                needSolo.setOwner(need.getOwner());
+                needSolo.setSkills(need.getSkills());
+                needSolo.setStato(need.getStato());
+                needSolo.setTipo(need.getTipo());
+                needSolo.setTipologia(need.getTipologia());
+                needSolo.setWeek(need.getWeek());
+                needSolo.setPubblicazione(need.getPubblicazione());
+                needSolo.setScreening(need.getScreening());
+
+                needsModificati.add(needSolo);
+            }
+
+            return needsModificati;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
     @GetMapping("/react/cliente/priorita/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<NeedSoloPriorita> getAllSoloPriorita(@PathVariable("id") Integer id) {
@@ -308,6 +370,76 @@ public class NeedController {
             Pageable p = PageRequest.of(pagina, quantita);
 
             Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, p);
+            List<Need> needs = pageableNeeds.getContent();
+
+            List<NeedModificato> needsModificati = new ArrayList<>();
+
+            for (Need need : needs) {
+                NeedModificato needSolo = new NeedModificato();
+
+                needSolo.setId(need.getId());
+                needSolo.setProgressivo(need.getProgressivo());
+                needSolo.setDescrizione(need.getDescrizione());
+                needSolo.setPriorita(need.getPriorita());
+                needSolo.setAnniEsperienza(need.getAnniEsperienza());
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(need.getCliente().getId());
+                cliente.setDenominazione(need.getCliente().getDenominazione());
+
+                needSolo.setCliente(cliente);
+
+                KeyPeople keyPeople = new KeyPeople();
+
+                keyPeople.setId(need.getKeyPeople().getId());
+                keyPeople.setNome(need.getKeyPeople().getNome());
+
+                needSolo.setKeyPeople(keyPeople);
+                needSolo.setLocation(need.getLocation());
+                needSolo.setNote(need.getNote());
+                needSolo.setNumeroRisorse(need.getNumeroRisorse());
+                needSolo.setOwner(need.getOwner());
+                needSolo.setSkills(need.getSkills());
+                needSolo.setStato(need.getStato());
+                needSolo.setTipo(need.getTipo());
+                needSolo.setTipologia(need.getTipologia());
+                needSolo.setWeek(need.getWeek());
+                needSolo.setPubblicazione(need.getPubblicazione());
+                needSolo.setScreening(need.getScreening());
+
+                needsModificati.add(needSolo);
+            }
+
+            return needsModificati;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @GetMapping("/react/ricerca/modificato")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<NeedModificato> getModRicerca(
+            @RequestParam("username") @Nullable String username,
+            @RequestParam("azienda") @Nullable Integer azienda,
+            @RequestParam("stato") @Nullable Integer stato,
+            @RequestParam("keypeople") @Nullable Integer idKeyPeople,
+            @RequestParam("priorita") @Nullable Integer priorita,
+            @RequestParam("owner") @Nullable Integer owner,
+            @RequestParam("week") @Nullable String week,
+            @RequestParam("tipologia") @Nullable Integer tipologia,
+            @RequestParam("descrizione") @Nullable String descrizione,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Need modificati");
+
+        try {
+            Pageable p = PageRequest.of(pagina, quantita);
+
+            Page<Need> pageableNeeds = needRepository.ricercaUsername(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, username, p);
             List<Need> needs = pageableNeeds.getContent();
 
             List<NeedModificato> needsModificati = new ArrayList<>();

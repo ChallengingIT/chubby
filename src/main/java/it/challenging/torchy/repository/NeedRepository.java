@@ -22,6 +22,21 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     Page<Need> findByKeyPeople_IdOrderByProgressivoDesc(Integer idKeyPeople, Pageable p);
 
     @Query(value= """
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+          FROM need n
+          left join need_cliente nc on n.id = nc.id_need
+          left join need_keypeople nk on n.id = nk.id_need
+          left join tipologia_need tn on n.id = tn.id_need
+          left join need_owner non on n.id = non.id_need
+          left join stato_need sn on n.id = sn.id_need
+          join owner o on non.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          where u.username = ?1
+          order by n.progressivo desc
+        """,nativeQuery=true)
+    Page<Need> ricercaByUsername(String username, Pageable p);
+
+    @Query(value= """
          select progressivo
          from need n
          order by id desc
@@ -68,6 +83,30 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          order by n.progressivo desc
         """, nativeQuery=true)
     Page<Need> ricerca(Integer idCliente, Integer idStato, Integer idKeyPeople, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, Pageable p);
+
+    @Query(value= """
+         SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+         FROM need n
+          left join need_cliente nc on n.id = nc.id_need
+          left join need_keypeople nk on n.id = nk.id_need
+          left join tipologia_need tn on n.id = tn.id_need
+          left join need_owner non on n.id = non.id_need
+          left join stato_need sn on n.id = sn.id_need
+          join owner o on non.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+         WHERE if(?1 is not null, nc.id_cliente = ?1, 1=1)
+         and if(?2 is not null, sn.id_stato = ?2, 1=1)
+         and if(?3 is not null, nk.id_keypeople = ?3, 1=1)
+         and if(?4 is not null, n.priorita = ?4, 1=1)
+         and if(?5 is not null, tn.id_tipologia = ?5, 1=1)
+         and if(?7 is not null, non.id_owner = ?7, 1=1)
+         and if(?6 is not null, n.week = ?6, 1=1)
+         and if(?8 is not null, n.descrizione like %?8%, 1=1)
+         and u.username = ?9
+         order by n.progressivo desc
+        """, nativeQuery=true)
+    Page<Need> ricercaUsername(Integer idCliente, Integer idStato, Integer idKeyPeople, Integer priorita, Integer idTipologia, String week, Integer idOwner, String descrizione, String username, Pageable p);
+
 
     @Query(value= """
            select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
