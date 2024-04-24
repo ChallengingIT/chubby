@@ -27,7 +27,7 @@ public class NeedModificato implements Serializable {
 
     private String descrizione;
 
-    private Integer anniEsperienza;
+    private Double anniEsperienza;
 
     private Integer numeroRisorse;
 

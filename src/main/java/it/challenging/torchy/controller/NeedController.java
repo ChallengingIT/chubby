@@ -857,7 +857,7 @@ public class NeedController {
     public void trasformaMappaInNeed(Need need, Map<String,String> needMap, List<Integer> skill1List) {
         logger.debug("Trasforma mappa in need");
 
-        need.setAnniEsperienza(needMap.get("anniEsperienza") != null ? Integer.parseInt(needMap.get("anniEsperienza")) : null);
+        need.setAnniEsperienza(needMap.get("anniEsperienza") != null ? Double.parseDouble(needMap.get("anniEsperienza")) : null);
         need.setNumeroRisorse(needMap.get("numeroRisorse") != null ? Integer.parseInt(needMap.get("numeroRisorse")) : null);
         need.setNote(needMap.get("note") != null ? needMap.get("note") : null);;
         need.setDescrizione(needMap.get("descrizione") != null ? needMap.get("descrizione") : null);
