@@ -38,7 +38,7 @@ public class Need implements Serializable {
     private String descrizione;
 
     @Column(length = 2, name="anni_esperienza")
-    private Integer anniEsperienza;
+    private Double anniEsperienza;
 
     @Column(length = 2, name="numero_risorse")
     private Integer numeroRisorse;
