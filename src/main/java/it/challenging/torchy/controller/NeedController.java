@@ -419,9 +419,9 @@ public class NeedController {
         }
     }
 
-    @GetMapping("/react/ricerca/modificato")
+    @GetMapping("/react/ricerca/modificato/personal")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<NeedModificato> getModRicerca(
+    public List<NeedModificato> getModRicercaPersonal(
             @RequestParam("username") @Nullable String username,
             @RequestParam("azienda") @Nullable Integer azienda,
             @RequestParam("stato") @Nullable Integer stato,
