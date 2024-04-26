@@ -525,8 +525,8 @@ public class NeedController {
 
             String ultimoProgressivo = needRepository.findUltimoProgressivo();
 
-            String contatore = ultimoProgressivo.split("-")[0];
-            String anno      = ultimoProgressivo.split("-")[1];
+            String anno      = ultimoProgressivo.split("-")[0];
+            String contatore = ultimoProgressivo.split("-")[1];
 
             OffsetDateTime data = OffsetDateTime.now();
             String annoCorrente = ""+data.getYear();
@@ -543,7 +543,7 @@ public class NeedController {
                 contatore = String.valueOf(Integer.parseInt(contatore) + 1);
             }
 
-            need.setProgressivo(contatore + "-" + anno);
+            need.setProgressivo(anno + "-" + contatore);
 
             needRepository.save(need);
 
