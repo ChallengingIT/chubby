@@ -921,9 +921,8 @@ public class NeedController {
 
                 skill1ListNew.add(skill);
             }
+            need.setSkills(skill1ListNew);
         }
-
-        need.setSkills(skill1ListNew);
 
     }
 
