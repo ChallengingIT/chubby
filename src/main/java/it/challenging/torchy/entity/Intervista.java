@@ -48,8 +48,8 @@ public class Intervista implements Serializable {
     @Column(length = 45)
     private String tipologia;
 
-    @Column(length = 2, name="anni_esperienza")
-    private Integer anniEsperienza;
+    @Column(name="anni_esperienza")
+    private Double anniEsperienza;
 
     @Column( name = "data_colloquio")
     private Date dataColloquio;
