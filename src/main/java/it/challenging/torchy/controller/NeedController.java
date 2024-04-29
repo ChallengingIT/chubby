@@ -86,6 +86,7 @@ public class NeedController {
 
                 cliente.setId(need.getCliente().getId());
                 cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setLogo(need.getCliente().getLogo());
 
                 needSolo.setCliente(cliente);
 
@@ -148,6 +149,7 @@ public class NeedController {
 
                 cliente.setId(need.getCliente().getId());
                 cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setLogo(need.getCliente().getLogo());
 
                 needSolo.setCliente(cliente);
 
@@ -256,6 +258,7 @@ public class NeedController {
 
                 cliente.setId(need.getCliente().getId());
                 cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setLogo(need.getCliente().getLogo());
 
                 needSolo.setCliente(cliente);
 
@@ -318,6 +321,7 @@ public class NeedController {
 
                 cliente.setId(need.getCliente().getId());
                 cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setLogo(need.getCliente().getLogo());
 
                 needSolo.setCliente(cliente);
 
@@ -387,6 +391,7 @@ public class NeedController {
 
                 cliente.setId(need.getCliente().getId());
                 cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setLogo(need.getCliente().getLogo());
 
                 needSolo.setCliente(cliente);
 
@@ -457,6 +462,7 @@ public class NeedController {
 
                 cliente.setId(need.getCliente().getId());
                 cliente.setDenominazione(need.getCliente().getDenominazione());
+                cliente.setLogo(need.getCliente().getLogo());
 
                 needSolo.setCliente(cliente);
 
