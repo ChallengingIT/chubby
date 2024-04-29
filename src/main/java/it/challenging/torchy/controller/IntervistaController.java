@@ -330,7 +330,7 @@ public class IntervistaController {
     public void trasformaMappaInIntervista(Intervista staff, Map<String,String> staffMap) {
         logger.debug("Trasforma mappa in intervista");
 
-        staff.setAnniEsperienza(staffMap.get("anniEsperienza") != null ? Integer.parseInt(staffMap.get("anniEsperienza")) : null);
+        staff.setAnniEsperienza(staffMap.get("anniEsperienza") != null ? Double.parseDouble(staffMap.get("anniEsperienza")) : null);
         staff.setAderenza(staffMap.get("aderenza") != null ? Integer.parseInt(staffMap.get("aderenza")) : null);
         staff.setAttuale(staffMap.get("attuale") != null ? staffMap.get("attuale") : null);
         staff.setCoerenza(staffMap.get("coerenza") != null ? Integer.parseInt(staffMap.get("coerenza")) : null);

@@ -33,7 +33,7 @@ public class IntervistaModificato implements Serializable {
 
     private String tipologia;
 
-    private Integer anniEsperienza;
+    private Double anniEsperienza;
 
     private Date dataColloquio;
 
