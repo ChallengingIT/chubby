@@ -865,7 +865,8 @@ public class NeedController {
 
         need.setAnniEsperienza(needMap.get("anniEsperienza") != null ? Double.parseDouble(needMap.get("anniEsperienza")) : null);
         need.setNumeroRisorse(needMap.get("numeroRisorse") != null ? Integer.parseInt(needMap.get("numeroRisorse")) : null);
-        need.setNote(needMap.get("note") != null ? needMap.get("note") : null);;
+        need.setNote(needMap.get("note") != null ? needMap.get("note") : null);
+        ;
         need.setDescrizione(needMap.get("descrizione") != null ? needMap.get("descrizione") : null);
         need.setLocation(needMap.get("location") != null ? needMap.get("location") : null);
         need.setTipo(needMap.get("tipo") != null ? Integer.parseInt(needMap.get("tipo")) : null);
@@ -913,11 +914,13 @@ public class NeedController {
 
         Set<Skill> skill1ListNew = new HashSet<>();
 
-        for (Integer skillId: skill1List) {
-            Skill skill = new Skill();
-            skill.setId(skillId);
+        if (null != skill1List) {
+            for (Integer skillId : skill1List) {
+                Skill skill = new Skill();
+                skill.setId(skillId);
 
-            skill1ListNew.add(skill);
+                skill1ListNew.add(skill);
+            }
         }
 
         need.setSkills(skill1ListNew);
