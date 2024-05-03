@@ -22,6 +22,12 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
     Page<Candidato> findAllByOrderByCognomeAsc(Pageable p);
 
     @Query(value= """
+         SELECT c.nome
+         FROM candidato c
+        """, nativeQuery=true)
+    List<String> findAllNames();
+
+    @Query(value= """
          SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
          FROM candidato c
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
@@ -79,6 +85,10 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
     List<Candidato> findByNeed_Id(Integer idNeed);
 
     List<Candidato> findByEmail(String email);
+
+    List<Candidato> findByNome(String nome);
+
+    List<Candidato> findByCognome(String cognome);
 
     @Query(value=""" 
             SELECT count(*)>0

@@ -7,6 +7,7 @@ package it.challenging.torchy.controller;
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,10 @@ public class CandidatoController {
     private OwnerRepository        ownerRepository;
     @Autowired
     private TipoRepository         tipoRepository;
+    @Autowired
+    private TipoRicercaRepository  tipoRicercaRepository;
+    @Autowired
+    private TipoCandidaturaRepository tipoCandidaturaRepository;
     @Autowired
     private FornitoreRepository    fornitoreRepository;
     @Autowired
@@ -81,33 +86,7 @@ public class CandidatoController {
             List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
             for (Candidato candidato : candidati) {
-                CandidatoModificato candidatoMod = new CandidatoModificato();
-
-                candidatoMod.setId(candidato.getId());
-                candidatoMod.setNote(candidato.getNote());
-                candidatoMod.setOwner(candidato.getOwner());
-                candidatoMod.setStato(candidato.getStato());
-                candidatoMod.setTipologia(candidato.getTipologia());
-                candidatoMod.setCognome(candidato.getCognome());
-                candidatoMod.setNome(candidato.getNome());
-                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-                candidatoMod.setEmail(candidato.getEmail());
-
-                if (null != candidato.getFiles()) {
-                    File file = null;
-
-                    for (File fileC : candidato.getFiles()) {
-                        if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
-                            file = new File();
-                            file.setId(fileC.getId());
-                            file.setDescrizione(fileC.getDescrizione());
-                        }
-                    }
-
-                    candidatoMod.setFile(file);
-                }
-                candidatoMod.setRal(candidato.getRal());
-                candidatoMod.setRating(candidato.getRating());
+                CandidatoModificato candidatoMod = getCandidatoModificato(candidato);
 
                 candidatiModificati.add(candidatoMod);
             }
@@ -148,34 +127,7 @@ public class CandidatoController {
 
 
             for (Candidato candidato : candidati) {
-                CandidatoModificato candidatoMod = new CandidatoModificato();
-
-                candidatoMod.setId(candidato.getId());
-                candidatoMod.setNote(candidato.getNote());
-                candidatoMod.setOwner(candidato.getOwner());
-                candidatoMod.setStato(candidato.getStato());
-                candidatoMod.setTipologia(candidato.getTipologia());
-                candidatoMod.setCognome(candidato.getCognome());
-                candidatoMod.setNome(candidato.getNome());
-                candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-                candidatoMod.setEmail(candidato.getEmail());
-
-                candidatoMod.setRal(candidato.getRal());
-                candidatoMod.setRating(candidato.getRating());
-
-                if (null != candidato.getFiles()) {
-                    File file = null;
-
-                    for (File fileC : candidato.getFiles()) {
-                        if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
-                            file = new File();
-                            file.setId(fileC.getId());
-                            file.setDescrizione(fileC.getDescrizione());
-                        }
-                    }
-
-                    candidatoMod.setFile(file);
-                }
+                CandidatoModificato candidatoMod = getCandidatoModificato(candidato);
 
                 candidatiModificati.add(candidatoMod);
             }
@@ -189,6 +141,38 @@ public class CandidatoController {
 
             return null;
         }
+    }
+
+    private static @NotNull CandidatoModificato getCandidatoModificato(Candidato candidato) {
+        CandidatoModificato candidatoMod = new CandidatoModificato();
+
+        candidatoMod.setId(candidato.getId());
+        candidatoMod.setNote(candidato.getNote());
+        candidatoMod.setOwner(candidato.getOwner());
+        candidatoMod.setStato(candidato.getStato());
+        candidatoMod.setTipologia(candidato.getTipologia());
+        candidatoMod.setCognome(candidato.getCognome());
+        candidatoMod.setNome(candidato.getNome());
+        candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
+        candidatoMod.setEmail(candidato.getEmail());
+
+        candidatoMod.setRal(candidato.getRal());
+        candidatoMod.setRating(candidato.getRating());
+
+        if (null != candidato.getFiles()) {
+            File file = null;
+
+            for (File fileC : candidato.getFiles()) {
+                if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
+                    file = new File();
+                    file.setId(fileC.getId());
+                    file.setDescrizione(fileC.getDescrizione());
+                }
+            }
+
+            candidatoMod.setFile(file);
+        }
+        return candidatoMod;
     }
 
     @GetMapping("/react/{id}")
@@ -205,6 +189,22 @@ public class CandidatoController {
         logger.info("Tipi Candidato");
 
         return tipoRepository.findAll();
+    }
+
+    @GetMapping("/react/tipo/ricerca")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<TipoRicerca> getAllTipoRicerca() {
+        logger.info("Tipi Ricerca Candidato");
+
+        return tipoRicercaRepository.findAll();
+    }
+
+    @GetMapping("/react/tipo/candidatura")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<TipoCandidatura> getAllTipoCandidatura() {
+        logger.info("Tipi Candidatura Candidato");
+
+        return tipoCandidaturaRepository.findAll();
     }
 
     @GetMapping("/react/skill")
@@ -450,7 +450,21 @@ public class CandidatoController {
             candidato.setOwner(owner);
         }
         candidato.setRal(candidatoMap.get("ral") != null ? candidatoMap.get("ral") : null);
-        candidato.setRicerca(candidatoMap.get("ricerca") != null ? candidatoMap.get("ricerca") : null);
+
+        if (candidatoMap.get("ricerca") != null) {
+            TipoRicerca ricerca = new TipoRicerca();
+            ricerca.setId(Integer.parseInt(candidatoMap.get("ricerca")));
+
+            candidato.setRicerca(ricerca);
+        }
+
+        if (candidatoMap.get("candidatura") != null) {
+            TipoCandidatura candidatura = new TipoCandidatura();
+            candidatura.setId(Integer.parseInt(candidatoMap.get("candidatura")));
+
+            candidato.setCandidatura(candidatura);
+        }
+
 
         if (candidatoMap.get("tipo") != null) {
             Tipo tipo = new Tipo();

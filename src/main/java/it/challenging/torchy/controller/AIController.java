@@ -35,7 +35,6 @@ public class AIController {
     private NeedRepository         needRepository;
 
     private static final Logger                         logger       = LoggerFactory.getLogger(AIController.class);
-    private static final ArrayList<String>              keyFind      = new ArrayList<>();
     private static final ArrayList<String>              keyOrder     = new ArrayList<>();
     private static final ArrayList<String>              keyLimit     = new ArrayList<>();
     private static       ArrayList<String>              keyCandidati = new ArrayList<>();
@@ -54,9 +53,9 @@ public class AIController {
         boolean keyPeople = false;
 
         UtilLib.caricaDictionary(dictionary);
-        UtilLib.caricaKeyFind(keyFind);
         UtilLib.caricaKeyOrder(keyOrder);
         UtilLib.caricaKeyLimit(keyLimit);
+        keyCandidati = UtilLib.getElementByIndex(dictionary, 1); //candidati
 
         for  (ArrayList<String> s : dictionary.keySet()) {
             if (UtilLib.findInArray(message, s)) {
@@ -79,9 +78,6 @@ public class AIController {
             }
         }
 
-        if (UtilLib.findInArray(message, keyFind)){
-            ricerca = true;
-        }
         if (UtilLib.findInArray(message, keyOrder)){
             ordina = true;
         }
@@ -99,24 +95,34 @@ public class AIController {
             UtilLib.getElementByIndex(dictionary, 2); //keyPeople
             UtilLib.getElementByIndex(dictionary, 3); //need
 
-
         } else if (candidati) {
-            keyCandidati = UtilLib.getElementByIndex(dictionary, 1); //candidati
 
             for (String s : keyCandidati) {
                 if (message.toLowerCase().contains(s)) {
 
                     switch(s) {
                         case Constants.CANDIDATI_NOME:
+                            String nome = UtilLib.cercaNome(message, candidatoRepository.findAllNames());
+
+                            if (null == nome) {
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_NOME);
+                            } else {
+                                return ResponseEntity.ok(candidatoRepository.findByNome(nome));
+                            }
+
                         case Constants.CANDIDATI_CHIAMANO:
-                            String nome = message.split(Constants.CANDIDATI_NOME)[1];
+                            String nome_chiamano = message.split(Constants.CANDIDATI_CHIAMANO)[1];
+
+                            return ResponseEntity.ok(candidatoRepository.findByNome(nome_chiamano.trim()));
+
+                        case Constants.CANDIDATI_COGNOME:
+                            String cognome = message.split(Constants.CANDIDATI_COGNOME)[1];
+
+                            return ResponseEntity.ok(candidatoRepository.findByCognome(cognome.trim()));
+
                     }
 
-                    if (ricerca && ordina) {
-
-                    } else if (ricerca) {
-
-                    } else if (ordina) {
+                    if (ordina) {
 
                     }
                 }

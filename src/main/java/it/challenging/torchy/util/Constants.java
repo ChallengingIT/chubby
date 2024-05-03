@@ -7,7 +7,8 @@ package it.challenging.torchy.util;
 public class Constants {
 
     //DEFAULT
-    public static final String AI_MESSAGE_DEFAULT = "Non riesco a soddisfare la tua richiesta, prova a riformulare la domanda.";
+    public static final String AI_MESSAGE_DEFAULT                = "Non riesco a soddisfare la tua richiesta, prova a riformulare la domanda.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_NOME = "Non riesco a trovare il nome che stai cercando, prova un nome diverso o cerca per altri parametri.";
 
     //KEY FIND
     public static final String FIND_CERCA     = "cerca";

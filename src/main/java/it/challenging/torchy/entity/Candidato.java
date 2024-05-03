@@ -58,8 +58,23 @@ public class Candidato implements Serializable {
     @Column(length = 1, name="modalita")
     private Integer modalita;
 
-    @Column(length = 3, name="ricerca")
-    private String ricerca;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tipo_ricerca_candidato",
+            joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_tipo_ricerca", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private TipoRicerca ricerca;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tipo_candidatura_candidato",
+            joinColumns = @JoinColumn(name = "id_candidato", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_tipo_candidatura", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private TipoCandidatura candidatura;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(

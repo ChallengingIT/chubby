@@ -7,6 +7,7 @@ package it.challenging.torchy.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class UtilLib {
 
@@ -27,6 +28,15 @@ public class UtilLib {
             }
         }
         return false;
+    }
+
+    public static String cercaNome(String message, List<String> nomi) {
+        for (String s : nomi) {
+            if (message.toLowerCase().contains(s.toLowerCase())) {
+                return s;
+            }
+        }
+        return null;
     }
 
     public static void caricaKeyFind(ArrayList<String> findArray) {
@@ -125,6 +135,7 @@ public class UtilLib {
         array.add(Constants.CANDIDATI_COGNOME);
         array.add(Constants.CANDIDATI_ANNI_DI_ESPERIENZA);
         array.add(Constants.CANDIDATI_CONOSCE);
+        array.add(Constants.CANDIDATI_CHIAMANO);
     }
 
     public static void caricaCandidatiText(ArrayList<String> array) {
