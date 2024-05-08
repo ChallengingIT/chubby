@@ -16,25 +16,60 @@ import java.util.List;
 @Repository
 public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
 
-    @Query("select count(c) from Candidato c where c.id = ?1")
-    long countById(Integer id);
-
     Page<Candidato> findAllByOrderByCognomeAsc(Pageable p);
 
-    @Query(value= """
-         SELECT c.nome
-         FROM candidato c
-        """, nativeQuery=true)
+    @Query(value= " SELECT c.nome FROM candidato c ", nativeQuery=true)
     List<String> findAllNames();
 
+    @Query(value= " SELECT c.cognome FROM candidato c ", nativeQuery=true)
+    List<String> findAllSurnames();
+
+    @Query(value= " SELECT c.residenza FROM candidato c ", nativeQuery=true)
+    List<String> findAllCity();
+
+    @Query(value= " SELECT c.disponibilita FROM candidato c ", nativeQuery=true)
+    List<String> findAllDisponibilita();
+
+    @Query(value= " SELECT c.modalita FROM candidato c ", nativeQuery=true)
+    List<String> findAllModalita();
+
+    @Query(value= " SELECT c.ral FROM candidato c ", nativeQuery=true)
+    List<String> findAllRal();
+
+    @Query(value= " SELECT c.email FROM candidato c ", nativeQuery=true)
+    List<String> findAllEmail();
+
     @Query(value= """
-         SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
+          fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca
+            from candidato c
+            left join fornitore_candidato fc on (c.id = fc.id_candidato )
+            left join facolta_candidato fac on (c.id = fac.id_candidato )
+            left join candidato_owner co on (c.id = co.id_candidato )
+            left join candidato_owner co on (c.id = co.id_candidato )
+            left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+            left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
+            left join skill_candidato sc on (c.id = sc.id_candidato )
+            join stato_candidato scc on (c.id = scc.id_candidato)
+            join tipologia_candidato tc on (c.id = tc.id_candidato)
+            left join tipo_candidato ttc on (c.id = ttc.id_candidato)
+            join livello_candidato lc on (c.id = lc.id_candidato)
+            where 1 = 1
+            (?1)
+        """, nativeQuery=true)
+    List<Candidato> findByWhere(String where);
+
+    @Query(value= """
+         SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
+          fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca
          FROM candidato c
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
          left join facolta_candidato fac on (c.id = fac.id_candidato )
          left join candidato_owner co on (c.id = co.id_candidato )
          join stato_candidato sc on (c.id = sc.id_candidato)
          join tipologia_candidato tc on (c.id = tc.id_candidato)
+         left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+         left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          join tipo_candidato ttc on (c.id = ttc.id_candidato)
          join livello_candidato lc on (c.id = lc.id_candidato)
          where if(?1 is not null, c.nome LIKE ?1%, 1=1)
@@ -56,6 +91,8 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          left join candidato_owner co on (c.id = co.id_candidato )
          join stato_candidato sc on (c.id = sc.id_candidato)
          join tipologia_candidato tc on (c.id = tc.id_candidato)
+         left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+         left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          join tipo_candidato ttc on (c.id = ttc.id_candidato)
          join livello_candidato lc on (c.id = lc.id_candidato)
          where if(?1 is not null, c.nome LIKE ?1%, 1=1)
@@ -68,54 +105,19 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
     Long countRicercaByNomeAndCognomeAndEmailAndTipologia_IdAndStato_IdAndTipo_Id
         (String nome, String cognome, String email,Integer idTipologia, Integer idStato, Integer idTipo);
 
-    @Query(value= """
-         SELECT c.*, tc.id_tipologia, sc.id_stato, lc.id_livello, ttc.id_tipo,
-         (ifnull ((select id_fornitore from fornitore_candidato where id_candidato = c.id),null)) id_fornitore,
-         (ifnull ((select id_facolta from facolta_candidato where id_candidato = c.id),null)) id_facolta,
-         (ifnull ((select id_owner from candidato_owner where id_candidato = c.id),null)) id_owner
-         FROM candidato c, stato_candidato sc, tipologia_candidato tc,  tipo_candidato ttc,livello_candidato lc, need_candidato nc
-         where c.id = sc.id_candidato
-         and c.id = tc.id_candidato
-         and c.id = lc.id_candidato
-         and c.id = ttc.id_candidato
-         and c.id = nc.id_candidato
-         and nc.id_need = ?1
-         limit 80
-        """, nativeQuery=true)
-    List<Candidato> findByNeed_Id(Integer idNeed);
-
     List<Candidato> findByEmail(String email);
 
-    List<Candidato> findByNome(String nome);
-
-    List<Candidato> findByCognome(String cognome);
-
-    @Query(value=""" 
-            SELECT count(*)>0
-            FROM fornitore_candidato
-            where id_fornitore = ?1
-        """, nativeQuery=true)
-    Integer findFornitoriAssociati(Integer idFornitore);
-
-    @Query("SELECT coalesce(max(c.id), 0) FROM Candidato c")
-    Long findMaxId();
-
     @Query(value= """
-         SELECT coalesce(max(i.id), 0)
-         FROM intervista i , candidato_intervista ci
-         where i.id = ci.id_intervista
-         and ci.id_candidato = ?1
-        """, nativeQuery=true)
-    Integer findUltimoIdIntervistaCandidato(Integer idCandidato);
-
-    @Query(value= """
-         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
+         fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca
             from candidato c
             left join fornitore_candidato fc on (c.id = fc.id_candidato )
             left join facolta_candidato fac on (c.id = fac.id_candidato )
             left join candidato_owner co on (c.id = co.id_candidato )
             join stato_candidato scc on (c.id = scc.id_candidato)
             join tipologia_candidato tc on (c.id = tc.id_candidato)
+            left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+            left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
             left join tipo_candidato ttc on (c.id = ttc.id_candidato)
             join livello_candidato lc on (c.id = lc.id_candidato)
             where c.id not in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
@@ -130,6 +132,8 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
             left join facolta_candidato fac on (c.id = fac.id_candidato )
             left join candidato_owner co on (c.id = co.id_candidato )
             join stato_candidato scc on (c.id = scc.id_candidato)
+            left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+            left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
             join tipologia_candidato tc on (c.id = tc.id_candidato)
             left join tipo_candidato ttc on (c.id = ttc.id_candidato)
             join livello_candidato lc on (c.id = lc.id_candidato)
@@ -139,12 +143,15 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
     Long countCandidatiNonAssociati(Integer idNeed);
 
     @Query(value= """
-         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
+          fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca
          from candidato c
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
          left join facolta_candidato fac on (c.id = fac.id_candidato )
          left join candidato_owner co on (c.id = co.id_candidato )
          join stato_candidato scc on (c.id = scc.id_candidato)
+         left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+         left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          join tipologia_candidato tc on (c.id = tc.id_candidato)
          left join tipo_candidato ttc on (c.id = ttc.id_candidato)
          join livello_candidato lc on (c.id = lc.id_candidato)
@@ -168,6 +175,8 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          left join facolta_candidato fac on (c.id = fac.id_candidato )
          left join candidato_owner co on (c.id = co.id_candidato )
          join stato_candidato scc on (c.id = scc.id_candidato)
+         left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+         left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          join tipologia_candidato tc on (c.id = tc.id_candidato)
          left join tipo_candidato ttc on (c.id = ttc.id_candidato)
          join livello_candidato lc on (c.id = lc.id_candidato)
@@ -185,11 +194,14 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
                                                  Integer anniMassimi);
 
     @Query(value= """
-         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore, fac.id_facolta, co.id_owner
+         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
+          fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca
          from candidato c
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
          left join facolta_candidato fac on (c.id = fac.id_candidato )
          left join candidato_owner co on (c.id = co.id_candidato )
+         left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+         left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          join stato_candidato scc on (c.id = scc.id_candidato)
          join tipologia_candidato tc on (c.id = tc.id_candidato)
          join tipo_candidato ttc on (c.id = ttc.id_candidato)
@@ -205,6 +217,8 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
          left join facolta_candidato fac on (c.id = fac.id_candidato )
          left join candidato_owner co on (c.id = co.id_candidato )
+         left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
+         left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          join stato_candidato scc on (c.id = scc.id_candidato)
          join tipologia_candidato tc on (c.id = tc.id_candidato)
          join tipo_candidato ttc on (c.id = ttc.id_candidato)

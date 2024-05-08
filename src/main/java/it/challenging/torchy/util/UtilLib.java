@@ -4,10 +4,14 @@
 
 package it.challenging.torchy.util;
 
+import it.challenging.torchy.entity.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UtilLib {
 
@@ -30,13 +34,126 @@ public class UtilLib {
         return false;
     }
 
-    public static String cercaNome(String message, List<String> nomi) {
-        for (String s : nomi) {
+    public static String cercaStringhe(String message, List<String> stringhe) {
+        for (String s : stringhe) {
             if (message.toLowerCase().contains(s.toLowerCase())) {
                 return s;
             }
         }
         return null;
+    }
+
+    public static String cercaSkills(String message, List<Skill> skill) {
+        StringBuilder idSkills = new StringBuilder();
+
+        for (Skill s : skill) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                idSkills.append(s.getId()).append(",");
+            }
+        }
+
+        idSkills = new StringBuilder(idSkills.substring(0, idSkills.length() - 1));
+
+        return (idSkills.isEmpty()) ? null : idSkills.toString();
+    }
+
+    public static String cercaFacolta(String message, List<Facolta> facolta) {
+        StringBuilder facoltaList = new StringBuilder();
+
+        for (Facolta s : facolta) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                facoltaList.append(s.getId()).append(",");
+            }
+        }
+
+        facoltaList = new StringBuilder(facoltaList.substring(0, facoltaList.length() - 1));
+
+        return (facoltaList.isEmpty()) ? null : facoltaList.toString();
+    }
+
+    public static String cercaOwner(String message, List<Owner> owner) {
+        StringBuilder ownerList = new StringBuilder();
+
+        for (Owner s : owner) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                ownerList.append(s.getId()).append(",");
+            }
+        }
+
+        ownerList = new StringBuilder(ownerList.substring(0, ownerList.length() - 1));
+
+        return (ownerList.isEmpty()) ? null : ownerList.toString();
+    }
+
+    public static String cercaLivello(String message, List<LivelloScolastico> livelli) {
+        StringBuilder livelliList = new StringBuilder();
+
+        for (LivelloScolastico s : livelli) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                livelliList.append(s.getId()).append(",");
+            }
+        }
+
+        livelliList = new StringBuilder(livelliList.substring(0, livelliList.length() - 1));
+
+        return (livelliList.isEmpty()) ? null : livelliList.toString();
+    }
+
+    public static String cercaTipoCandidatura(String message, List<TipoCandidatura> candidature) {
+        StringBuilder candidatureList = new StringBuilder();
+
+        for (TipoCandidatura s : candidature) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                candidatureList.append(s.getId()).append(",");
+            }
+        }
+
+        candidatureList = new StringBuilder(candidatureList.substring(0, candidatureList.length() - 1));
+
+        return (candidatureList.isEmpty()) ? null : candidatureList.toString();
+    }
+
+    public static String cercaTipoRicerca(String message, List<TipoRicerca> ricerche) {
+        StringBuilder ricercheList = new StringBuilder();
+
+        for (TipoRicerca s : ricerche) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                ricercheList.append(s.getId()).append(",");
+            }
+        }
+
+        ricercheList = new StringBuilder(ricercheList.substring(0, ricercheList.length() - 1));
+
+        return (ricercheList.isEmpty()) ? null : ricercheList.toString();
+    }
+
+    public static String cercaTipo(String message, List<Tipo> tipi) {
+        StringBuilder tipoList = new StringBuilder();
+
+        for (Tipo s : tipi) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                tipoList.append(s.getId()).append(",");
+            }
+        }
+
+        tipoList = new StringBuilder(tipoList.substring(0, tipoList.length() - 1));
+
+        return (tipoList.isEmpty()) ? null : tipoList.toString();
+    }
+
+
+    public static String cercaJobTitle(String message, List<Tipologia> tipologie) {
+        StringBuilder idTipologie = new StringBuilder();
+
+        for (Tipologia s : tipologie) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                idTipologie.append(s.getId()).append(",");
+            }
+        }
+
+        idTipologie = new StringBuilder(idTipologie.substring(0, idTipologie.length() - 1));
+
+        return (idTipologie.isEmpty()) ? null : idTipologie.toString();
     }
 
     public static void caricaKeyFind(ArrayList<String> findArray) {
@@ -99,6 +216,8 @@ public class UtilLib {
         array.add(Constants.AZIENDE_CODICE_DESTINATARIO);
         array.add(Constants.AZIENDE_POTENZIALITA);
         array.add(Constants.AZIENDE_IDA);
+        array.add(Constants.AZIENDE_SCADE);
+        array.add(Constants.AZIENDE_INTERNET);
     }
 
     public static void caricaAziendeText(ArrayList<String> array) {
@@ -110,37 +229,24 @@ public class UtilLib {
     }
 
     public static void caricaCandidatiQuery(ArrayList<String> array) {
-        array.add(Constants.CANDIDATI_FACOLTA);
-        array.add(Constants.CANDIDATI_CITTA);
-        array.add(Constants.CANDIDATI_OWNER);
-        array.add(Constants.CANDIDATI_STATO);
-        array.add(Constants.CANDIDATI_SKILL);
-        array.add(Constants.CANDIDATI_TIPOLOGIA);
-        array.add(Constants.CANDIDATI_TIPO);
-        array.add(Constants.CANDIDATI_NOME);
-        array.add(Constants.CANDIDATI_HA_STUDIATO);
-        array.add(Constants.CANDIDATI_JOB_TITLE);
-        array.add(Constants.CANDIDATI_CELLULARE);
-        array.add(Constants.CANDIDATI_RATING);
-        array.add(Constants.CANDIDATI_RAL);
-        array.add(Constants.CANDIDATI_PROPRIETARIO);
-        array.add(Constants.CANDIDATI_NATO);
-        array.add(Constants.CANDIDATI_MODALITA);
-        array.add(Constants.CANDIDATI_LIVELLO_SCOLASTICO);
-        array.add(Constants.CANDIDATI_ESPERIENZA);
-        array.add(Constants.CANDIDATI_EMAIL);
-        array.add(Constants.CANDIDATI_DISPONIBILITA);
-        array.add(Constants.CANDIDATI_DATA_ULTIMO_CONTATTO);
-        array.add(Constants.CANDIDATI_DATA_DI_NASCITA);
-        array.add(Constants.CANDIDATI_COGNOME);
-        array.add(Constants.CANDIDATI_ANNI_DI_ESPERIENZA);
-        array.add(Constants.CANDIDATI_CONOSCE);
-        array.add(Constants.CANDIDATI_CHIAMANO);
+        array.add(Constants.CANDIDATI_FACOLTA); array.add(Constants.CANDIDATI_CITTA); array.add(Constants.CANDIDATI_OWNER);
+        array.add(Constants.CANDIDATI_STATO); array.add(Constants.CANDIDATI_SKILL); array.add(Constants.CANDIDATI_TIPOLOGIA);
+        array.add(Constants.CANDIDATI_TIPO); array.add(Constants.CANDIDATI_NOME); array.add(Constants.CANDIDATI_HA_STUDIATO);
+        array.add(Constants.CANDIDATI_JOB_TITLE); array.add(Constants.CANDIDATI_CELLULARE); array.add(Constants.CANDIDATI_RATING);
+        array.add(Constants.CANDIDATI_RAL); array.add(Constants.CANDIDATI_PROPRIETARIO); array.add(Constants.CANDIDATI_NATO);
+        array.add(Constants.CANDIDATI_MODALITA); array.add(Constants.CANDIDATI_LIVELLO_SCOLASTICO); array.add(Constants.CANDIDATI_ESPERIENZA);
+        array.add(Constants.CANDIDATI_EMAIL); array.add(Constants.CANDIDATI_DISPONIBILITA); array.add(Constants.CANDIDATI_DATA_ULTIMO_CONTATTO);
+        array.add(Constants.CANDIDATI_DATA_DI_NASCITA); array.add(Constants.CANDIDATI_COGNOME); array.add(Constants.CANDIDATI_ANNI_DI_ESPERIENZA);
+        array.add(Constants.CANDIDATI_CONOSCE); array.add(Constants.CANDIDATI_CHIAMANO); array.add(Constants.CANDIDATI_VIVE);
+        array.add(Constants.CANDIDATI_ABITA); array.add(Constants.CANDIDATI_TIPO_CANDIDATURA); array.add(Constants.CANDIDATI_TIPO_RICERCA);
+        array.add(Constants.CANDIDATI_TELEFONINO); array.add(Constants.CANDIDATI_TELEFONO); array.add(Constants.CANDIDATI_SKILLATO);
+        array.add(Constants.CANDIDATI_DISPONIBILE);
     }
 
     public static void caricaCandidatiText(ArrayList<String> array) {
         array.add(Constants.CANDIDATI_CANDIDATI);
         array.add(Constants.CANDIDATI_CANDIDATO);
+        array.add(Constants.CANDIDATI_SVILUPPATORI);
     }
 
     public static void caricaKeyPeopleQuery(ArrayList<String> array) {
@@ -188,7 +294,8 @@ public class UtilLib {
         array.add(Constants.NEED_LUOGO);
         array.add(Constants.NEED_LOCALITA);
         array.add(Constants.NEED_CHIAMATO);
-        array.add(Constants.NEED_CANDIDATI);
+        array.add(Constants.NEED_CONTACT);
+        array.add(Constants.NEED_CONTATTO);
         array.add(Constants.NEED_BUSINESS);
         array.add(Constants.NEED_AZIENDA);
         array.add(Constants.NEED_ASSOCIATI);
@@ -240,5 +347,30 @@ public class UtilLib {
 
     public static ArrayList<String> getElementByIndex(LinkedHashMap<ArrayList<String>,ArrayList<String>> map,int index){
         return map.get( (map.keySet().toArray())[ index ] );
+    }
+
+    public static String findIntegers(String stringToSearch) {
+        Pattern integerPattern = Pattern.compile("-?\\d+");
+        Matcher matcher = integerPattern.matcher(stringToSearch);
+
+        List<String> integerList = new ArrayList<>();
+        while (matcher.find()) {
+            integerList.add(matcher.group());
+        }
+
+        return !integerList.isEmpty() ? integerList.get(0) : null;
+    }
+
+    public static String findDoubles(String stringToSearch) {
+        Pattern p = Pattern.compile("(\\d+(?:\\.\\d+))");
+        Matcher m = p.matcher(stringToSearch);
+
+        List<String> doubleList = new ArrayList<>();
+
+        while (m.find()) {
+            doubleList.add(m.group());
+        }
+
+        return !doubleList.isEmpty() ? doubleList.get(0) : null;
     }
 }

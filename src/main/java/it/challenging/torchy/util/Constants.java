@@ -7,8 +7,33 @@ package it.challenging.torchy.util;
 public class Constants {
 
     //DEFAULT
-    public static final String AI_MESSAGE_DEFAULT                = "Non riesco a soddisfare la tua richiesta, prova a riformulare la domanda.";
-    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_NOME = "Non riesco a trovare il nome che stai cercando, prova un nome diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT                            = "Non riesco a soddisfare la tua richiesta, prova a riformulare la domanda.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_NOME             = "Non riesco a trovare il nome che stai cercando, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_COGNOME          = "Non riesco a trovare il cognome che stai cercando, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_ANNI_ESPERIENZA  = "Non riesco a trovare candidati con questi anni di esperienza, provane di diversi o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_CELLULARE        = "Non riesco a trovare candidati con questo cellulare, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_CITTA            = "Non riesco a trovare candidati che vivono in questa città, provane una diversa o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_SKILL            = "Non riesco a trovare candidati con queste skill, provane di diverse o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_FACOLTA          = "Non riesco a trovare candidati cha hanno studiato in questa facoltà, provane una diversa o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_EMAIL            = "Non riesco a trovare candidati con questa email, provane una diversa o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_JOB_TITLE        = "Non riesco a trovare candidati con questo job title, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_DISPONIBILITA    = "Non riesco a trovare candidati con questa disponibilità, prova a cercare per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_OWNER            = "Non riesco a trovare candidati con questo owner, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_LIVELLO          = "Non riesco a trovare candidati con questo livello di studio, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_TIPO_RICERCA     = "Non riesco a trovare candidati con questo tipo di ricerca, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_TIPO_CANDIDATURA = "Non riesco a trovare candidati con questo tipo di candidatura, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_TIPO             = "Non riesco a trovare candidati con questo tipo, provane uno diverso o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_MODALITA         = "Non riesco a trovare candidati con questa modalità, provane una diversa o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_RAL              = "Non riesco a trovare candidati con questa RAL, provane una diversa o cerca per altri parametri.";
+    public static final String AI_MESSAGE_DEFAULT_CANDIDATO_RATING           = "Non riesco a trovare candidati con questo rating, provane uno diverso o cerca per altri parametri.";
+
+
+    //KEY WORD
+    public static final String ALMENO           = "almeno";
+    public static final String PIU              = "più";
+    public static final String MASSIMO          = "massimo";
+    public static final String MENO             = "meno";
+    public static final String PARENTESI_CHIUSA = " )";
 
     //KEY FIND
     public static final String FIND_CERCA     = "cerca";
@@ -61,12 +86,14 @@ public class Constants {
     public static final String AZIENDE_PEC                     = "pec";
     public static final String AZIENDE_CODICE_DESTINATARIO     = "codice destinatario";
     public static final String AZIENDE_SITO                    = "sito";
+    public static final String AZIENDE_INTERNET                = "internet";
     public static final String AZIENDE_TIPOLOGIA               = "tipologia";
     public static final String AZIENDE_STATO                   = "stato";
     public static final String AZIENDE_STATUS                  = "status";
     public static final String AZIENDE_POTENZIALITA            = "potenzialità";
     public static final String AZIENDE_SEMPLICITA              = "semplicità";
     public static final String AZIENDE_IDA                     = "ida";
+    public static final String AZIENDE_SCADE                   = "scade";
     public static final String AZIENDE_SCADENZA_DEL_CONTRATTO  = "scadenza del contratto";
     public static final String AZIENDE_SCADENZA_CONTRATTO      = "scadenza contratto";
     public static final String AZIENDE_SETTORE                 = "settore";
@@ -76,8 +103,9 @@ public class Constants {
     public static final String AZIENDE_PROPRIETARIO            = "proprietario";
 
     //KEY CANDIDATI TEXT
-    public static final String CANDIDATI_CANDIDATI = "candidati";
-    public static final String CANDIDATI_CANDIDATO = "candidato";
+    public static final String CANDIDATI_CANDIDATI    = "candidati";
+    public static final String CANDIDATI_CANDIDATO    = "candidato";
+    public static final String CANDIDATI_SVILUPPATORI = "sviluppatori";
 
     //KEY CANDIDATI QUERY
     public static final String CANDIDATI_NOME                 = "nome";
@@ -85,27 +113,62 @@ public class Constants {
     public static final String CANDIDATI_COGNOME              = "cognome";
     public static final String CANDIDATI_EMAIL                = "email";
     public static final String CANDIDATI_CELLULARE            = "cellulare";
+    public static final String CANDIDATI_TELEFONINO           = "telefonino";
+    public static final String CANDIDATI_TELEFONO             = "telefono";
     public static final String CANDIDATI_CITTA                = "citta";
+    public static final String CANDIDATI_VIVE                 = "vive";
+    public static final String CANDIDATI_ABITA                = "abita";
     public static final String CANDIDATI_DATA_DI_NASCITA      = "data di nascita";
     public static final String CANDIDATI_NATO                 = "nato";
+    public static final String CANDIDATI_ANNI                 = "anni";
     public static final String CANDIDATI_ANNI_DI_ESPERIENZA   = "anni di esperienza";
     public static final String CANDIDATI_ESPERIENZA           = "esperienza";
     public static final String CANDIDATI_MODALITA             = "modalita";
     public static final String CANDIDATI_LIVELLO_SCOLASTICO   = "livello scolastico";
+    public static final String CANDIDATI_TITOLO               = "titolo";
+    public static final String CANDIDATI_TITOLO_DI_STUDIO     = "titolo di studio";
     public static final String CANDIDATI_TIPOLOGIA            = "tipologia";
     public static final String CANDIDATI_JOB_TITLE            = "job title";
     public static final String CANDIDATI_SKILL                = "skill";
+    public static final String CANDIDATI_SKILLATO             = "skillato";
     public static final String CANDIDATI_CONOSCE              = "conosce";
     public static final String CANDIDATI_DISPONIBILITA        = "disponibilità";
+    public static final String CANDIDATI_DISPONIBILE          = "disponibile";
     public static final String CANDIDATI_STATO                = "stato";
     public static final String CANDIDATI_DATA_ULTIMO_CONTATTO = "ultimo contatto";
     public static final String CANDIDATI_RATING               = "rating";
     public static final String CANDIDATI_RAL                  = "ral";
     public static final String CANDIDATI_TIPO                 = "tipo";
+    public static final String CANDIDATI_TIPO_CANDIDATURA     = "tipo candidatura";
+    public static final String CANDIDATI_TIPO_RICERCA         = "tipo ricerca";
     public static final String CANDIDATI_FACOLTA              = "facolta";
     public static final String CANDIDATI_HA_STUDIATO          = "ha studiato";
     public static final String CANDIDATI_OWNER                = "owner";
     public static final String CANDIDATI_PROPRIETARIO         = "proprietario";
+
+    //KEY CANDIDATI WHERE
+    public static final String CANDIDATI_WHERE_NOME           = " and c.nome = ";
+    public static final String CANDIDATI_WHERE_COGNOME        = " and c.cognome = ";
+    public static final String CANDIDATI_WHERE_ESP_MAG        = " and c.anni_esperienza_ruolo >= ";
+    public static final String CANDIDATI_WHERE_ESP_MIN        = " and c.anni_esperienza_ruolo <= ";
+    public static final String CANDIDATI_WHERE_ESP_EQ         = " and c.anni_esperienza_ruolo = ";
+    public static final String CANDIDATI_WHERE_CELLULARE      = " and c.cellulare = ";
+    public static final String CANDIDATI_WHERE_CITTA          = " and c.residenza = ";
+    public static final String CANDIDATI_WHERE_SKILL          = " and sc.id_skill in ( ";
+    public static final String CANDIDATI_WHERE_FACOLTA        = " and fac.id_facolta in ( ";
+    public static final String CANDIDATI_WHERE_EMAIL          = " and c.email = ";
+    public static final String CANDIDATI_WHERE_JOB_TITLE      = " and tc.id_tipologia in ( ";
+    public static final String CANDIDATI_WHERE_DISPONIBILITA  = " and c.disponibilita = ";
+    public static final String CANDIDATI_WHERE_OWNER          = " and co.id_owner in ( ";
+    public static final String CANDIDATI_WHERE_LIVELLI        = " and lc.id_livello in ( ";
+    public static final String CANDIDATI_WHERE_TIPO_RICERCA   = " and trc.id_tipologia in ( ";
+    public static final String CANDIDATI_WHERE_TIPO_CANDI     = " and tcc.id_tipologia in ( ";
+    public static final String CANDIDATI_WHERE_TIPO           = " and ttc.id_tipo in ( ";
+    public static final String CANDIDATI_WHERE_MODALITA       = " and c.modalita = ";
+    public static final String CANDIDATI_WHERE_RAL            = " and c.ral = ";
+    public static final String CANDIDATI_WHERE_RATING_MAG     = " and c.rating >= ";
+    public static final String CANDIDATI_WHERE_RATING_MIN     = " and c.rating <= ";
+    public static final String CANDIDATI_WHERE_RATING_EQ      = " and c.rating = ";
 
     //KEY KEYPEOPLE TEXT
     public static final String KEY_PEOPLE_KEY_PEOPLE = "key people";
@@ -153,12 +216,13 @@ public class Constants {
     public static final String NEED_PROPRIETARIO = "proprietario";
     public static final String NEED_KEY_PEOPLE = "key people";
     public static final String NEED_KEYPEOPLE = "keypeople";
+    public static final String NEED_CONTATTO = "contatto";
+    public static final String NEED_CONTACT = "contact";
     public static final String NEED_TIPO = "tipo";
     public static final String NEED_PRIORITA = "priorita";
     public static final String NEED_WEEK = "week";
     public static final String NEED_SETTIMANA = "settimana";
     public static final String NEED_STATO = "stato";
-    public static final String NEED_CANDIDATI = "candidati";
     public static final String NEED_ASSOCIATI = "associati";
     public static final String NEED_PUBBLICAZIONE = "pubblicazione";
     public static final String NEED_SCREENING = "screening";
