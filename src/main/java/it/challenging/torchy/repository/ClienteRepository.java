@@ -16,6 +16,51 @@ import java.util.List;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
+    @Query(value= " SELECT c.denominazione FROM cliente c ",nativeQuery=true)
+    List<String> findAllDescriptions();
+
+    @Query(value= " SELECT c.sede_operativa FROM cliente c ",nativeQuery=true)
+    List<String> findAllSedeLegali();
+
+    @Query(value= " SELECT c.sede_legale FROM cliente c ",nativeQuery=true)
+    List<String> findAllSedeOperative();
+
+    @Query(value= " SELECT c.cap FROM cliente c ",nativeQuery=true)
+    List<String> findAllCap();
+
+    @Query(value= " SELECT c.indirizzo FROM cliente c ",nativeQuery=true)
+    List<String> findAllAddress();
+
+    @Query(value= " SELECT c.provincia FROM cliente c ",nativeQuery=true)
+    List<String> findAllProvince();
+
+    @Query(value= " SELECT c.provincia FROM cliente c ",nativeQuery=true)
+    List<String> findAllEmail();
+
+    @Query(value= " SELECT c.pec FROM cliente c ",nativeQuery=true)
+    List<String> findAllPec();
+
+    @Query(value= " SELECT c.codice_destinatario FROM cliente c ",nativeQuery=true)
+    List<String> findAllCodiciDestinatario();
+
+    @Query(value= " SELECT c.sito FROM cliente c ",nativeQuery=true)
+    List<String> findAllSites();
+
+    @Query(value= " SELECT c.sito FROM cliente c ",nativeQuery=true)
+    List<String> findAllSettoreMercato();
+
+    @Query(value= " SELECT c.tipologia FROM cliente c ",nativeQuery=true)
+    List<String> findAllTipologie();
+
+    @Query(value= " SELECT c.cf FROM cliente c ",nativeQuery=true)
+    List<String> findAllCF();
+
+    @Query(value= " SELECT c.pi FROM cliente c ",nativeQuery=true)
+    List<String> findAllPI();
+
+    @Query(value= " SELECT c.citta FROM cliente c ",nativeQuery=true)
+    List<String> findAllCities();
+
     Page<Cliente> findAllByOrderByDenominazioneAsc(Pageable p);
     List<Cliente> findAllByOrderByDenominazioneAsc();
 
@@ -55,6 +100,17 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
           order by c.denominazione asc
         """,nativeQuery=true)
     Page<Cliente> ricercaByUsername( String username, Pageable p);
+
+    @Query(value= """
+          SELECT c.*, co.id_owner
+          FROM cliente c
+          join cliente_owner co on c.id = co.id_cliente
+          join owner o on co.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          where 1=1
+          ?1
+        """,nativeQuery=true)
+    List<Cliente> findByWhere(String where);
 
     @Query(value= """
          SELECT c.*, co.id_owner

@@ -6,10 +6,7 @@ package it.challenging.torchy.util;
 
 import it.challenging.torchy.entity.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +34,15 @@ public class UtilLib {
     public static String cercaStringhe(String message, List<String> stringhe) {
         for (String s : stringhe) {
             if (message.toLowerCase().contains(s.toLowerCase())) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public static String cercaStringheLike(String message, List<String> stringhe) {
+        for (String s : stringhe) {
+            if (Arrays.stream(message.split(" ")).anyMatch((p -> like(p,s)))){
                 return s;
             }
         }
@@ -83,6 +89,81 @@ public class UtilLib {
         ownerList = new StringBuilder(ownerList.substring(0, ownerList.length() - 1));
 
         return (ownerList.isEmpty()) ? null : ownerList.toString();
+    }
+
+    public static String cercaTipologieN(String message, List<TipologiaN> tipologie) {
+        StringBuilder tipologieList = new StringBuilder();
+
+        for (TipologiaN s : tipologie) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                tipologieList.append(s.getId()).append(",");
+            }
+        }
+
+        tipologieList = new StringBuilder(tipologieList.substring(0, tipologieList.length() - 1));
+
+        return (tipologieList.isEmpty()) ? null : tipologieList.toString();
+    }
+
+    public static String cercaTipiN(String message, List<Integer> tipi) {
+        StringBuilder tipologieList = new StringBuilder();
+
+        for (Integer s : tipi) {
+            if (message.toLowerCase().contains("cliente")){
+                tipologieList.append("1").append(",");
+            } else  if (message.toLowerCase().contains("consulenza")){
+                tipologieList.append("2").append(",");
+            } else  if (message.toLowerCase().contains("prospect")){
+                tipologieList.append("3").append(",");
+            }
+        }
+
+        tipologieList = new StringBuilder(tipologieList.substring(0, tipologieList.length() - 1));
+
+        return (tipologieList.isEmpty()) ? null : tipologieList.toString();
+    }
+
+    public static String cercaTipologieK(String message) {
+        StringBuilder tipologieList = new StringBuilder();
+        if (message.toLowerCase().contains("keypeople")){
+            tipologieList.append("1").append(",");
+        } else  if (message.toLowerCase().contains("hook")){
+            tipologieList.append("2").append(",");
+        } else  if (message.toLowerCase().contains("link")){
+            tipologieList.append("3").append(",");
+        }
+
+        tipologieList = new StringBuilder(tipologieList.substring(0, tipologieList.length() - 1));
+
+        return (tipologieList.isEmpty()) ? null : tipologieList.toString();
+    }
+
+    public static String cercaTipologieA(String message, List<String> tipologie) {
+        StringBuilder tipologieList = new StringBuilder();
+
+        for (String s : tipologie) {
+            if (message.toLowerCase().contains(s)){
+                tipologieList.append(s).append(",");
+            }
+        }
+
+        tipologieList = new StringBuilder(tipologieList.substring(0, tipologieList.length() - 1));
+
+        return (tipologieList.isEmpty()) ? null : tipologieList.toString();
+    }
+
+    public static String cercaStatoN(String message, List<StatoN> stati) {
+        StringBuilder statiList = new StringBuilder();
+
+        for (StatoN s : stati) {
+            if (message.toLowerCase().contains(s.getDescrizione().toLowerCase())) {
+                statiList.append(s.getId()).append(",");
+            }
+        }
+
+        statiList = new StringBuilder(statiList.substring(0, statiList.length() - 1));
+
+        return (statiList.isEmpty()) ? null : statiList.toString();
     }
 
     public static String cercaLivello(String message, List<LivelloScolastico> livelli) {

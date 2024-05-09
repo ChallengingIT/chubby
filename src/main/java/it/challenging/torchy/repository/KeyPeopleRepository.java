@@ -17,6 +17,12 @@ import java.util.Optional;
 @Repository
 public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
 
+  @Query(value= " SELECT k.nome FROM key_people k ",nativeQuery=true)
+  List<String> findAllNames();
+
+  @Query(value= " SELECT k.email FROM key_people k ",nativeQuery=true)
+  List<String> findAllEmail();
+
   Optional<KeyPeople> findByEmail(String nome);
 
   Page<KeyPeople> findAllByOrderByNomeAsc(Pageable p);
@@ -35,6 +41,19 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
           order by k.nome asc
         """,nativeQuery=true)
   Page<KeyPeople> ricercaByUsername(String username, Pageable p);
+
+  @Query(value= """
+          SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato
+          FROM key_people k
+          left join key_people_owner ko on k.id = ko.id_key_people
+          left join key_people_stato ks on k.id = ks.id_key_people
+          left join key_people_cliente kc on k.id = kc.id_key_people
+          join owner o on ko.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          where 1=1
+          ?1
+        """,nativeQuery=true)
+  List<KeyPeople> findByWhere(String where);
 
   @Query(value= """
        SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato

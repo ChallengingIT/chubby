@@ -34,6 +34,8 @@ public class AIController {
     @Autowired
     private TipologiaRepository tipologiaRepository;
     @Autowired
+    private TipologiaNRepository tipologiaNRepository;
+    @Autowired
     private FacoltaRepository facoltaRepository;
     @Autowired
     private LivelloRepository livelloRepository;
@@ -43,6 +45,16 @@ public class AIController {
     private TipoRicercaRepository tipoRicercaRepository;
     @Autowired
     private TipoRepository tipoRepository;
+    @Autowired
+    private StatoNRepository statoNRepository;
+    @Autowired
+    private NeedRepository needRepository;
+    @Autowired
+    private ClienteRepository aziendeRepository;
+    @Autowired
+    private StatoARepository statoARepository;
+    @Autowired
+    private KeyPeopleRepository keyPeopleRepository;
 
     @GetMapping
     public ResponseEntity<?> findById(
@@ -115,7 +127,7 @@ public class AIController {
                             String nome = UtilLib.cercaStringhe(message, candidatoRepository.findAllNames());
 
                             if (null == nome) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_NOME);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_NOME);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_NOME)
@@ -128,7 +140,7 @@ public class AIController {
                             String cognome = UtilLib.cercaStringhe(message, candidatoRepository.findAllSurnames());
 
                             if (null == cognome) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_COGNOME);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_COGNOME);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_COGNOME)
@@ -155,7 +167,7 @@ public class AIController {
                                         .append(anniEsperienza);
                                 }
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_ANNI_ESPERIENZA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_ANNI_ESPERIENZA);
                             }
 
                             break;
@@ -169,7 +181,7 @@ public class AIController {
                                     .append(Constants.CANDIDATI_WHERE_CELLULARE)
                                     .append(cellulare);
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_CELLULARE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_CELLULARE);
                             }
 
                             break;
@@ -178,7 +190,7 @@ public class AIController {
                             String citta = UtilLib.cercaStringhe(message, candidatoRepository.findAllCity());
 
                             if (null == citta) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_CITTA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_CITTA);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_CITTA)
@@ -191,7 +203,7 @@ public class AIController {
                             String idsSkill = UtilLib.cercaSkills(message, skillRepository.findAll());
 
                             if (null == idsSkill) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_SKILL);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_SKILL);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_SKILL)
@@ -209,7 +221,7 @@ public class AIController {
                                 //return ResponseEntity.ok(candidatoRepository.findByAnni(anni));
                                 return null;
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_CELLULARE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_CELLULARE);
                             }
 
 
@@ -217,7 +229,7 @@ public class AIController {
                             String idFacolta = UtilLib.cercaFacolta(message, facoltaRepository.findAll());
 
                             if (null == idFacolta) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_FACOLTA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_FACOLTA);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_FACOLTA)
@@ -231,7 +243,7 @@ public class AIController {
                             String email = UtilLib.cercaStringhe(message, candidatoRepository.findAllEmail());
 
                             if (null == email) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_EMAIL);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_EMAIL);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_EMAIL)
@@ -244,7 +256,7 @@ public class AIController {
                             String idJobTitle = UtilLib.cercaJobTitle(message, tipologiaRepository.findAll());
 
                             if (null == idJobTitle) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_JOB_TITLE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_JOB_TITLE);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_JOB_TITLE)
@@ -258,7 +270,7 @@ public class AIController {
                             String disponibilita = UtilLib.cercaStringhe(message, candidatoRepository.findAllDisponibilita());
 
                             if (null == disponibilita) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_DISPONIBILITA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_DISPONIBILITA);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_DISPONIBILITA)
@@ -271,7 +283,7 @@ public class AIController {
                             String idOwner = UtilLib.cercaOwner(message, ownerRepository.findAll());
 
                             if (null == idOwner) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_OWNER);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_OWNER);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_OWNER)
@@ -286,7 +298,7 @@ public class AIController {
                             String idLivelli = UtilLib.cercaLivello(message, livelloRepository.findAll());
 
                             if (null == idLivelli) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_LIVELLO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_LIVELLO);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_LIVELLI)
@@ -300,7 +312,7 @@ public class AIController {
                             String idTipoRicerca = UtilLib.cercaTipoRicerca(message, tipoRicercaRepository.findAll());
 
                             if (null == idTipoRicerca) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_TIPO_RICERCA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_TIPO_RICERCA);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_TIPO_RICERCA)
@@ -314,7 +326,7 @@ public class AIController {
                             String idTipoCandidatura = UtilLib.cercaTipoCandidatura(message, tipoCandidaturaRepository.findAll());
 
                             if (null == idTipoCandidatura) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_TIPO_CANDIDATURA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_TIPO_CANDIDATURA);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_TIPO_CANDI)
@@ -328,7 +340,7 @@ public class AIController {
                             String idTipo = UtilLib.cercaTipo(message, tipoRepository.findAll());
 
                             if (null == idTipo) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_TIPO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_TIPO);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_TIPO)
@@ -342,7 +354,7 @@ public class AIController {
                             String modalita = UtilLib.cercaStringhe(message, candidatoRepository.findAllModalita());
 
                             if (null == modalita) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_MODALITA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_MODALITA);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_MODALITA)
@@ -355,7 +367,7 @@ public class AIController {
                             String ral = UtilLib.cercaStringhe(message, candidatoRepository.findAllRal());
 
                             if (null == ral) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_RAL);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_RAL);
                             } else {
                                 where
                                     .append(Constants.CANDIDATI_WHERE_RAL)
@@ -382,7 +394,7 @@ public class AIController {
                                         .append(rating);
                                 }
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_CANDIDATO_RATING);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_CANDIDATO_RATING);
                             }
 
                             break;
@@ -398,7 +410,7 @@ public class AIController {
             return ResponseEntity.ok(candidatoRepository.findByWhere(where.toString()));
 
         }
-        /*else if (need) {
+        else if (need) {
             for (String s : keyNeed) {
                 if (message.toLowerCase().contains(s)) {
 
@@ -408,7 +420,7 @@ public class AIController {
                             String descrizione = UtilLib.cercaStringheLike(message, needRepository.findAllDescriptions());
 
                             if (null == descrizione) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_DESCRIZIONE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_DESCRIZIONE);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_DESCRIZIONE)
@@ -435,7 +447,7 @@ public class AIController {
                                         .append(risorse);
                                 }
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_RISORSE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_RISORSE);
                             }
 
                             break;
@@ -458,16 +470,16 @@ public class AIController {
                                         .append(anniEsperienza);
                                 }
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_ANNI_ESPERIENZA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_ANNI_ESPERIENZA);
                             }
 
                             break;
 
                         case Constants.NEED_LUOGO, Constants.NEED_LOCALITA, Constants.NEED_LOCATION:
-                            String citta = UtilLib.cercaStringhe(message, needRepository.findAllLocation());
+                            String citta = UtilLib.cercaStringhe(message, needRepository.findAllLocations());
 
                             if (null == citta) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_LOCATION);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_LOCATION);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_LOCATION)
@@ -480,7 +492,7 @@ public class AIController {
                             String idsSkill = UtilLib.cercaSkills(message, skillRepository.findAll());
 
                             if (null == idsSkill) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_SKILL);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_SKILL);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_SKILL)
@@ -498,10 +510,10 @@ public class AIController {
                                 //return ResponseEntity.ok(candidatoRepository.findByAnni(anni));
                                 return null;
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_DATA_RICHIESTA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_DATA_RICHIESTA);
                             }
 
-                            break;
+                            //break;
 
                         //TODO
                         case Constants.NEED_WEEK, Constants.NEED_SETTIMANA:
@@ -511,16 +523,16 @@ public class AIController {
                                 //return ResponseEntity.ok(candidatoRepository.findByAnni(anni));
                                 return null;
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_WEEK);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_WEEK);
                             }
 
-                            break;
+                           // break;
 
                         case Constants.NEED_PRIORITA:
                             String priorita = UtilLib.findIntegers(message);
 
                             if (null == priorita) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_PRIORITA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_PRIORITA);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_PRIORITA)
@@ -533,7 +545,7 @@ public class AIController {
                             String pubblicazione = UtilLib.findIntegers(message);
 
                             if (null == pubblicazione) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_PUBBLICAZIONE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_PUBBLICAZIONE);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_PUBBLICAZIONE)
@@ -546,7 +558,7 @@ public class AIController {
                             String screening = UtilLib.findIntegers(message);
 
                             if (null == screening) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_SCREENING);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_SCREENING);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_SCREENING)
@@ -559,7 +571,7 @@ public class AIController {
                             String idOwner = UtilLib.cercaOwner(message, ownerRepository.findAll());
 
                             if (null == idOwner) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_OWNER);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_OWNER);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_OWNER)
@@ -570,10 +582,10 @@ public class AIController {
                             break;
 
                         case Constants.NEED_STATO:
-                            String idStati = UtilLib.cercaStato(message, statoNRepository.findAll());
+                            String idStati = UtilLib.cercaStatoN(message, statoNRepository.findAll());
 
                             if (null == idStati) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_STATO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_STATO);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_STATI)
@@ -587,7 +599,7 @@ public class AIController {
                             String idTipoLogie = UtilLib.cercaTipologieN(message, tipologiaNRepository.findAll());
 
                             if (null == idTipoLogie) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_TIPOLOGIA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_TIPO);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_TIPOLOGIA)
@@ -598,10 +610,11 @@ public class AIController {
                             break;
 
                         case Constants.NEED_TIPO:
+                            //Cliente = 1 Consulenza = 2 Prospect = 3
                             String idTipi = UtilLib.cercaTipiN(message, needRepository.findAllTypes());
 
                             if (null == idTipi) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_NEED_TIPO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_NEED_TIPO);
                             } else {
                                 where
                                     .append(Constants.NEED_WHERE_TIPO)
@@ -633,7 +646,7 @@ public class AIController {
                             String descrizione = UtilLib.cercaStringheLike(message, aziendeRepository.findAllDescriptions());
 
                             if (null == descrizione) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_DESCRIZIONE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_DESCRIZIONE);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_DESCRIZIONE)
@@ -647,7 +660,7 @@ public class AIController {
                             String sedeOperativa = UtilLib.cercaStringheLike(message, aziendeRepository.findAllSedeLegali());
 
                             if (null == sedeOperativa) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_SEDE_OPERATIVA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_SEDE_OPERATIVA);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_SEDE_OPERATIVA)
@@ -662,7 +675,7 @@ public class AIController {
                             String sedeLegale = UtilLib.cercaStringheLike(message, aziendeRepository.findAllSedeOperative());
 
                             if (null == sedeLegale) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_SEDE_LEGALE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_SEDE_LEGALE);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_SEDE_LEGALE)
@@ -676,7 +689,7 @@ public class AIController {
                             String codFiscale = UtilLib.cercaStringhe(message, aziendeRepository.findAllCF());
 
                             if (null == codFiscale) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_CF);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_CF);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_CF)
@@ -690,7 +703,7 @@ public class AIController {
                             String pi = UtilLib.cercaStringhe(message, aziendeRepository.findAllPI());
 
                             if (null == pi) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_PI);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_PI);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_PI)
@@ -703,7 +716,7 @@ public class AIController {
                             String citta = UtilLib.cercaStringhe(message, aziendeRepository.findAllCities());
 
                             if (null == citta) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_CITTA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_CITTA);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_CITTA)
@@ -716,7 +729,7 @@ public class AIController {
                             String cap = UtilLib.cercaStringhe(message, aziendeRepository.findAllCap());
 
                             if (null == cap) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_CAP);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_CAP);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_CAP)
@@ -729,7 +742,7 @@ public class AIController {
                             String indirizzo = UtilLib.cercaStringhe(message, aziendeRepository.findAllAddress());
 
                             if (null == indirizzo) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_INDIRIZZO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_INDIRIZZO);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_INDIRIZZO)
@@ -740,10 +753,11 @@ public class AIController {
 
                         //TODO
                         case Constants.AZIENDE_PROVINCIA:
-                            String province = UtilLib.cercaProvince(message, aziendeRepository.findAllProvince());
+                            String province = null;
+                            //UtilLib.cercaProvince(message, aziendeRepository.findAllProvince());
 
                             if (null == province) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_PROVINCE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_PROVINCE);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_PROVINCE)
@@ -757,7 +771,7 @@ public class AIController {
                             String email = UtilLib.cercaStringhe(message, aziendeRepository.findAllEmail());
 
                             if (null == email) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_EMAIL);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_EMAIL);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_EMAIL)
@@ -770,7 +784,7 @@ public class AIController {
                             String pec = UtilLib.cercaStringhe(message, aziendeRepository.findAllPec());
 
                             if (null == pec) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_PEC);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_PEC);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_PEC)
@@ -783,7 +797,7 @@ public class AIController {
                             String codiceDestinatario = UtilLib.cercaStringhe(message, aziendeRepository.findAllCodiciDestinatario());
 
                             if (null == codiceDestinatario) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_CODICE_DESTINATARIO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_CODICE_DESTINATARIO);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_CODICE_DESTINATARIO)
@@ -800,16 +814,16 @@ public class AIController {
                                 //return ResponseEntity.ok(candidatoRepository.findByAnni(anni));
                                 return null;
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_SCADENZA_CONTRATTO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_SCADENZA_CONTRATTO);
                             }
 
-                            break;
+                            //break;
 
                         case Constants.AZIENDE_SITO, Constants.AZIENDE_INTERNET:
                             String sito = UtilLib.cercaStringhe(message, aziendeRepository.findAllSites());
 
                             if (null == sito) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_SITO);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_SITO);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_SITO)
@@ -822,7 +836,7 @@ public class AIController {
                             String potenzialita = UtilLib.findIntegers(message);
 
                             if (null == potenzialita) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_POTENZIALITA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_POTENZIALITA);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_POTENZIALITA)
@@ -835,7 +849,7 @@ public class AIController {
                             String semplicita = UtilLib.findIntegers(message);
 
                             if (null == semplicita) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_SEMPLICITA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_SEMPLICITA);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_SEMPLICITA)
@@ -848,7 +862,7 @@ public class AIController {
                             String idOwner = UtilLib.cercaOwner(message, ownerRepository.findAll());
 
                             if (null == idOwner) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_OWNER);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_OWNER);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_OWNER)
@@ -859,24 +873,23 @@ public class AIController {
                             break;
 
                         case Constants.AZIENDE_STATO, Constants.AZIENDE_STATUS:
-                            String idStati = UtilLib.cercaStati(message, statoARepository.findAll());
+                            String status = UtilLib.findIntegers(message);
 
-                            if (null == idStati) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_STATO);
+                            if (null == status) {
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_STATO);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_STATI)
-                                    .append(idStati)
-                                    .append(Constants.PARENTESI_CHIUSA);
+                                    .append(status);
                             }
 
                             break;
 
                         case Constants.AZIENDE_TIPOLOGIA:
-                            String idTipoLogie = UtilLib.cercaTipologieA(message, tipologiaARepository.findAll());
+                            String idTipoLogie = UtilLib.cercaTipologieA(message, aziendeRepository.findAllTipologie());
 
                             if (null == idTipoLogie) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_TIPOLOGIA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_TIPOLOGIA);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_TIPOLOGIA)
@@ -890,7 +903,7 @@ public class AIController {
                             String settore = UtilLib.cercaStringhe(message, aziendeRepository.findAllSettoreMercato());
 
                             if (null == settore) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_AZIENDE_SETTORE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_AZIENDE_SETTORE);
                             } else {
                                 where
                                     .append(Constants.AZIENDE_WHERE_SETTORE)
@@ -919,24 +932,24 @@ public class AIController {
                             String nome = UtilLib.cercaStringheLike(message, keyPeopleRepository.findAllNames());
 
                             if (null == nome) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_NOME);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_NOME);
                             } else {
                                 where
-                                        .append(Constants.KEY_PEOPLE_WHERE_NOME)
-                                        .append(nome);
+                                    .append(Constants.KEY_PEOPLE_WHERE_NOME)
+                                    .append(nome);
                             }
 
                             break;
 
                         case Constants.KEY_PEOPLE_EMAIL:
-                            String email = UtilLib.cercaStringhe(message, aziendeRepository.findAllEmail());
+                            String email = UtilLib.cercaStringhe(message, keyPeopleRepository.findAllEmail());
 
                             if (null == email) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_EMAIL);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_EMAIL);
                             } else {
                                 where
-                                        .append(Constants.KEY_PEOPLE_WHERE_EMAIL)
-                                        .append(email);
+                                    .append(Constants.KEY_PEOPLE_WHERE_EMAIL)
+                                    .append(email);
                             }
 
                             break;
@@ -945,26 +958,26 @@ public class AIController {
                             String idOwner = UtilLib.cercaOwner(message, ownerRepository.findAll());
 
                             if (null == idOwner) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_OWNER);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_OWNER);
                             } else {
                                 where
-                                        .append(Constants.KEY_PEOPLE_WHERE_OWNER)
-                                        .append(idOwner)
-                                        .append(Constants.PARENTESI_CHIUSA);
+                                    .append(Constants.KEY_PEOPLE_WHERE_OWNER)
+                                    .append(idOwner)
+                                    .append(Constants.PARENTESI_CHIUSA);
                             }
 
                             break;
 
                         case Constants.KEY_PEOPLE_TIPOLOGIA, Constants.KEY_PEOPLE_TIPO:
-                            String idTipoLogie = UtilLib.cercaTipologiek(message, tipologiakRepository.findAll());
+                            String idTipoLogie = UtilLib.cercaTipologieK(message);
 
                             if (null == idTipoLogie) {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_TIPOLOGIA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_TIPOLOGIA);
                             } else {
                                 where
-                                        .append(Constants.KEY_PEOPLE_WHERE_TIPOLOGIA)
-                                        .append(idTipoLogie)
-                                        .append(Constants.PARENTESI_CHIUSA);
+                                    .append(Constants.KEY_PEOPLE_WHERE_TIPOLOGIA)
+                                    .append(idTipoLogie)
+                                    .append(Constants.PARENTESI_CHIUSA);
                             }
 
                             break;
@@ -977,20 +990,20 @@ public class AIController {
                                 //return ResponseEntity.ok(candidatoRepository.findByAnni(anni));
                                 return null;
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_ULTIMA_ATTIVITA);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_ULTIMA_ATTIVITA);
                             }
 
-                            break;
+                            //break;
 
                         case Constants.KEY_PEOPLE_CELLULARE:
                             String cellulare = UtilLib.findIntegers(message);
 
                             if (null != cellulare) {
                                 where
-                                        .append(Constants.KEY_PEOPLE_WHERE_CELLULARE)
-                                        .append(cellulare);
+                                    .append(Constants.KEY_PEOPLE_WHERE_CELLULARE)
+                                    .append(cellulare);
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_CELLULARE);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_CELLULARE);
                             }
 
                             break;
@@ -1003,10 +1016,10 @@ public class AIController {
                                 //return ResponseEntity.ok(candidatoRepository.findByAnni(anni));
                                 return null;
                             } else {
-                                return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT_KEY_PEOPLE_AZIONI);
+                                return ResponseEntity.ok(Constants.AI_MESSAGE_KEY_PEOPLE_AZIONI);
                             }
 
-                            break;
+                            //break;
 
                     }
                 }
@@ -1016,7 +1029,7 @@ public class AIController {
             }
 
             return ResponseEntity.ok(keyPeopleRepository.findByWhere(where.toString()));
-        }*/
+        }
 
         return ResponseEntity.ok(Constants.AI_MESSAGE_DEFAULT);
     }
