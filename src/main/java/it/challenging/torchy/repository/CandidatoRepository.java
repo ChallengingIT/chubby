@@ -195,13 +195,14 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
 
     @Query(value= """
          select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
-          fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca
+          fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca, ffc.id_file
          from candidato c
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
          left join facolta_candidato fac on (c.id = fac.id_candidato )
          left join candidato_owner co on (c.id = co.id_candidato )
          left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
          left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
+         left join file_candidato ffc on (c.id = ffc.id_candidato )
          join stato_candidato scc on (c.id = scc.id_candidato)
          join tipologia_candidato tc on (c.id = tc.id_candidato)
          left join tipo_candidato ttc on (c.id = ttc.id_candidato)
