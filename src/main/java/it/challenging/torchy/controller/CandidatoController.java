@@ -350,6 +350,15 @@ public class CandidatoController {
 
             }
 
+            List<AssociazioneCandidatoNeed> associazioni = associazioniRepository.findByCandidato_Id(id);
+
+            for (AssociazioneCandidatoNeed associazione : associazioni) {
+                associazioniRepository.deleteById(associazione.getId());
+
+                logger.debug("Eliminata associazione: " + associazione.getId());
+
+            }
+
             candidatoRepository.deleteById(id);
 
             logger.info("Candidato eliminato correttamente");
