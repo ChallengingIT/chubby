@@ -40,6 +40,9 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Byte enabled;
 
+    @Column(nullable = false)
+    private Integer idAzienda;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
         name = "authorities_user",

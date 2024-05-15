@@ -73,7 +73,8 @@ public class AuthController {
         logger.debug("Login effettuato");
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-            userDetails.getUsername(), user.getNome(), user.getCognome(),
+            userDetails.getUsername(), user.getNome(),
+            user.getCognome(), user.getIdAzienda(),
             roles));
         } catch (Exception e) {
             logger.error(e.getMessage());

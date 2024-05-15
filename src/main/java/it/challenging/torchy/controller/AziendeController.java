@@ -49,6 +49,15 @@ public class AziendeController {
         return clienteRepository.findAll();
     }
 
+    @GetMapping("/react/logo")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String getLogo(
+            @RequestParam("idAzienda") Integer idAzienda
+            ) {
+        logger.info("Logo aziende");
+        return clienteRepository.findLogoByIdAzienda(idAzienda);
+    }
+
     @GetMapping("/react/select")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     //@PreAuthorize("hasRole(@roles.ADMIN)")

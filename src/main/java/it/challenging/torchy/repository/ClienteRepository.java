@@ -19,6 +19,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query(value= " SELECT c.denominazione FROM cliente c ",nativeQuery=true)
     List<String> findAllDescriptions();
 
+    @Query(value= " SELECT c.logo FROM cliente c where c.id = ?1",nativeQuery=true)
+    String findLogoByIdAzienda(Integer idAzienda);
+
     @Query(value= " SELECT c.sede_operativa FROM cliente c ",nativeQuery=true)
     List<String> findAllSedeLegali();
 
