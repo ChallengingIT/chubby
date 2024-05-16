@@ -4,6 +4,7 @@ import it.challenging.torchy.entity.Authority;
 import it.challenging.torchy.entity.User;
 import it.challenging.torchy.repository.AuthorityRepository;
 import it.challenging.torchy.repository.UserRepository;
+import it.challenging.torchy.request.ChangePasswordRequest;
 import it.challenging.torchy.request.LoginRequest;
 import it.challenging.torchy.request.SignupRequest;
 import it.challenging.torchy.response.JwtResponse;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -52,30 +54,38 @@ public class AuthController {
 
         logger.info("Login");
 
-        try {Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        logger.debug("Autenticazione passata");
+            logger.debug("Autenticazione passata");
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            User user = userRepository.findByUsername(loginRequest.getUsername()).get();
 
-        logger.debug("Token generato");
+            if (user.getExpirationDate().isBefore(LocalDateTime.now())) {
+                logger.debug("Password scaduta");
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: password expired!"));
+            }
 
-        List<String> roles = new ArrayList<>();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        User user = userRepository.findByUsername(loginRequest.getUsername()).get();
+            logger.debug("Token generato");
 
-        roles.add(authorityRepository.findByUsername(loginRequest.getUsername()).getAuthority());
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        logger.debug("Login effettuato");
+            List<String> roles = new ArrayList<>();
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-            userDetails.getUsername(), user.getNome(),
-            user.getCognome(), user.getIdAzienda(),
-            roles));
+
+            roles.add(authorityRepository.findByUsername(loginRequest.getUsername()).getAuthority());
+
+            logger.debug("Login effettuato");
+
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getUsername(), user.getNome(),
+                user.getCognome(), user.getIdAzienda(),
+                roles));
         } catch (Exception e) {
             logger.error(e.getMessage());
 
@@ -98,8 +108,12 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
             }
 
+            LocalDateTime expirationDate = LocalDateTime.now().plusDays(30);
+
             // Create new user's account
-            User user = new User(signUpRequest.getUsername(), signUpRequest.getNome(), signUpRequest.getCognome(), encoder.encode(signUpRequest.getPassword()), (byte)1);
+            User user = new User(signUpRequest.getUsername(), signUpRequest.getNome(),
+                                signUpRequest.getCognome(), encoder.encode(signUpRequest.getPassword()),
+                                (byte)1, expirationDate);
 
             logger.debug("User generato");
 
@@ -115,6 +129,41 @@ public class AuthController {
 
             logger.debug("Utenza creata");
 
+        } catch(Exception e) {
+            logger.error(e.toString());
+        }
+
+        return ResponseEntity.ok(new MessageResponse("OK"));
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/change/password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changeRequest) {
+
+        logger.info("Cambio Password");
+
+        try {
+
+            if (userRepository.existsByUsername(changeRequest.getUsername())) {
+
+                User user = userRepository.findByUsername(changeRequest.getUsername()).get();
+
+                if (user.getPassword().equals(encoder.encode(changeRequest.getOldPassword()))) {
+
+                    user.setPassword(encoder.encode(changeRequest.getNewPassword()));
+
+                }
+
+                userRepository.save(user);
+
+                logger.debug("Password aggiornata");
+
+            } else {
+
+                logger.debug("Username non presente");
+
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is not present!"));
+            }
         } catch(Exception e) {
             logger.error(e.toString());
         }
