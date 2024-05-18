@@ -6,6 +6,7 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
+import it.challenging.torchy.util.Constants;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -52,6 +53,8 @@ public class CandidatoController {
     private AssociazioniRepository associazioniRepository;
     @Autowired
     private FunzioniAziendaliRepository funzioniAziendaliRepository;
+    @Autowired
+    private HiringRepository    hiringRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CandidatoController.class);
 
@@ -278,6 +281,30 @@ public class CandidatoController {
             }
 
             candidatoRepository.save(candidatoEntity);
+
+            if (null != candidatoEntity.getStato()) {
+                if (null != candidatoEntity.getStato().getDescrizione()) {
+                    if (candidatoEntity.getStato().getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_HEAD_HUNTING) ||
+                            candidatoEntity.getStato().getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_RECRUITING) ||
+                            candidatoEntity.getStato().getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_STAFFING) ||
+                            candidatoEntity.getStato().getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_TEMPORARY)) {
+
+                        Hiring hiring = hiringRepository.findHiringByNuovoStatoCandidato(candidatoEntity.getId(), candidatoEntity.getStato().getId());
+
+                        if (null != hiring) {
+                            SchedaCandidato schedaCandidato = new SchedaCandidato();
+                            schedaCandidato.setIdCandidato(candidatoEntity.getId());
+                            schedaCandidato.setCognomeCandidato(candidatoEntity.getCognome());
+                            schedaCandidato.setNomeCandidato(candidatoEntity.getNome());
+
+                            hiring.getSchedeCandidato().add(schedaCandidato);
+
+                            hiringRepository.save(hiring);
+                        }
+                    }
+                }
+            }
+
             logger.debug("Candidato salvato correttamente");
 
             return ""+candidatoEntity.getId();

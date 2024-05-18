@@ -96,10 +96,13 @@ public class WebSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/auth/delete").authenticated()
                     .requestMatchers("/ai/**").authenticated()
                     .requestMatchers("/associazioni/**").authenticated()
                     .requestMatchers("/azioni/**").authenticated()
                     .requestMatchers("/aziende/**").authenticated()
+                    .requestMatchers("/dashboard/**").authenticated()
+                    .requestMatchers("/hiring/**").authenticated()
                     .requestMatchers("/staffing/**").authenticated()
                     .requestMatchers("/files/**").authenticated()
                     .requestMatchers("/calendar/**").authenticated()

@@ -15,10 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.IntStream;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -39,6 +37,8 @@ public class AziendeController {
     private KeyPeopleRepository         keyPeopleRepository;
     @Autowired
     private AssociazioniRepository      associazioniRepository;
+    @Autowired
+    private HiringRepository            hiringRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AziendeController.class);
 
@@ -440,6 +440,20 @@ public class AziendeController {
 
             clienteRepository.save(clienteEntity);
 
+            if (null != clienteEntity.getTipiServizio()) {
+                for(TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
+                    List<Hiring> hiringList = hiringRepository.findAllByIdClienteAndTipoServizio_Id(clienteEntity.getId(), tipoServizio.getId());
+                    if (null == hiringList || hiringList.isEmpty()) {
+                        Hiring hiring = new Hiring();
+                        hiring.setIdCliente(clienteEntity.getId());
+                        hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
+                        hiring.setTipoServizio(tipoServizio);
+
+                        hiringRepository.save(hiring);
+                    }
+                }
+            }
+
             logger.debug("Azienda salvata correttamente");
 
             return ResponseEntity.ok(clienteEntity.getId()+"");
@@ -552,5 +566,28 @@ public class AziendeController {
 
         cliente.setIda(ida);
 
+        List<TipoServizio> tipiServizio = new ArrayList<>();
+
+        if (null != clienteMap.get("tipiServizio")) {
+            IntStream tipiServizioInt =
+                    Arrays
+                            .stream(
+                                clienteMap.get("tipiServizio")
+                                .split(",")
+                            )
+                            .mapToInt(Integer::parseInt);
+
+            Iterator<Integer> iter = tipiServizioInt.iterator();
+
+            while (iter.hasNext()) {
+                Integer idTipo = iter.next();
+                TipoServizio tipoServizio = new TipoServizio();
+                tipoServizio.setId(idTipo);
+
+                tipiServizio.add(tipoServizio);
+            }
+        }
+
+        cliente.setTipiServizio(tipiServizio);
     }
 }

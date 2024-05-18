@@ -13,6 +13,7 @@ import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -116,6 +117,15 @@ public class Cliente implements Serializable {
 
     @Column(name="logo")
     private String logo;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "tipo_servizio_cliente",
+            joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_tipo_servizio", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<TipoServizio> tipiServizio;
 
     @Override
     public boolean equals(Object o) {

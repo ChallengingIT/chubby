@@ -6,6 +6,18 @@ package it.challenging.torchy.util;
 
 public class Constants {
 
+    public static final String STATO_CANDIDATO_CF_DISPONIBILE     = "CF Disponibile";
+    public static final String STATO_CANDIDATO_CF_INVIATO         = "CF Inviato";
+    public static final String STATO_CANDIDATO_QM_PIANIFICATA     = "QM Pianificata";
+    public static final String STATO_CANDIDATO_QM_FATTA           = "QM Fatta";
+    public static final String STATO_CANDIDATO_FOLLOW_UP_POOL     = "Follow up pool";
+    public static final String STATO_CANDIDATO_FOLLOW_UP_POSITIVO = "Follow up positivo";
+    public static final String STATO_CANDIDATO_STAFFING           = "Staffing";
+    public static final String STATO_CANDIDATO_TEMPORARY          = "Temporary";
+    public static final String STATO_CANDIDATO_RECRUITING         = "Recruiting";
+    public static final String STATO_CANDIDATO_HEAD_HUNTING       = "Head Hunting";
+
+    // ---------------- AI ------------------
     //DEFAULT
     public static final String AI_MESSAGE_DEFAULT                    = "Non riesco a soddisfare la tua richiesta, prova a riformulare la domanda.";
 

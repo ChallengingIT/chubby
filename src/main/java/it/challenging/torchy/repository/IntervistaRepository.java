@@ -24,8 +24,6 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
 
     Page<Intervista> findByCandidato_IdOrderByDataColloquioDesc(Integer idCandidato, Pageable p);
 
-    //List<Intervista> findByCandidato_IdOrderByIdDesc(Integer idCandidato);
-
     @Query(value= """
                 SELECT i.*, ci.id_candidato, io.id_owner, si.id_stato, ti.id_tipologia
                 FROM intervista i, candidato_intervista ci, intervista_owner io, stato_intervista si, tipologia_intervista ti
@@ -40,6 +38,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 order by i.data_colloquio desc
         """, nativeQuery=true)
     Page<Intervista> ricercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(Integer idStato, Integer idOwner, Date dataColloquio, Integer idCandidato, Pageable p);
+
 
     @Query(value= """
                 SELECT count(*)
@@ -57,66 +56,35 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
     Long countRicercaByStato_IdAndOwner_IdAndDataColloquioAndCandidato_Id(Integer idStato, Integer idOwner, Date dataColloquio, Integer idCandidato);
 
 
-    @Query(value= """
-         SELECT i.*, ci.id_candidato, io.id_owner, si.id_stato, ti.id_tipologia
-         FROM intervista i, tipologia_intervista ti, candidato_intervista ci, intervista_owner io, stato_intervista si
-         where i.id = ti.id_intervista
-         and ci.id_intervista = i.id
-         and i.id = io.id_intervista
-         and i.id = si.id_intervista
-         and ora_aggiornamento is not null
-         and i.id in ( select max(id_intervista) from candidato_intervista group by id_candidato )
-         order by ora_aggiornamento limit 6
-        """, nativeQuery=true)
-    List<Intervista> findIntervisteImminenti();
-
-
-    @Query(value= """
-         SELECT i.*, io.id_owner, ci.id_candidato, si.id_stato, ti.id_tipologia
-         FROM intervista_owner io, tipologia_intervista ti, intervista i, candidato_intervista ci, stato_intervista si
-         where io.id_intervista = i.id
-         and i.id = ci.id_intervista
-         and i.id = ti.id_intervista
-         and i.id = si.id_intervista
-         and week(i.data_colloquio) = week(curdate())
-        """, nativeQuery=true)
-    List<Intervista> findIntervisteSettimanaCur();
-
-    @Query(value= """
-         SELECT i.*, io.id_owner, ci.id_candidato, si.id_stato, ti.id_tipologia
-         FROM intervista_owner io, tipologia_intervista ti, intervista i, candidato_intervista ci, stato_intervista si
-         where io.id_intervista = i.id
-         and i.id = ci.id_intervista
-         and i.id = ti.id_intervista
-         and i.id = si.id_intervista
-         and week(i.data_colloquio) = week(DATE_SUB(curdate(), interval 1 week))
-        """, nativeQuery=true)
-    List<Intervista> findIntervisteSettimanaCurMeno();
-
-    @Query(value= """
-         SELECT i.*, io.id_owner, ci.id_candidato, si.id_stato, ti.id_tipologia
-         FROM intervista_owner io, tipologia_intervista ti, intervista i, candidato_intervista ci, stato_intervista si
-         where io.id_intervista = i.id
-         and i.id = ci.id_intervista
-         and i.id = ti.id_intervista
-         and i.id = si.id_intervista
-         and week(i.data_colloquio) = week(DATE_ADD(curdate(), interval 1 week))
-        """, nativeQuery=true)
-    List<Intervista> findIntervisteSettimanaCurPiu();
-
     @Query("SELECT coalesce(max(i.id), 0) FROM Intervista i")
     Integer findMaxId();
 
-
-    @Query(value = """
-        SELECT i.*, ino.id_owner, ci.id_candidato, si.id_stato, ti.id_tipologia
-        FROM intervista_next_owner ino, tipologia_intervista ti, intervista i, candidato_intervista ci, stato_intervista si
-        where ino.id_intervista = i.id
-        and i.id = ci.id_intervista
-        and i.id = ti.id_intervista
-        and i.id = si.id_intervista
-        and ino.id_owner = (select id from owner where SUBSTRING_INDEX(email, '@', 1) = ?1)
-        and ti.id_tipologia not in (5,7)
+    @Query(value= """
+                SELECT i.*, ci.id_candidato, io.id_owner as owner_id, ino.id_owner as nextOwner_id, si.id_stato, ti.id_tipologia
+                FROM intervista i
+                left join candidato_intervista ci on (i.id = ci.id_intervista)
+                left join intervista_owner io on (i.id = io.id_intervista)
+                left join intervista_next_owner ino on (i.id = ino.id_intervista)
+                left join stato_intervista si on (i.id = si.id_intervista)
+                left join tipologia_intervista ti on (i.id = ti.id_intervista)
+                left join owner o on ino.id_owner = o.id
+                left join users u on o.nome = u.nome and o.cognome = u.cognome
+                where u.username = ?1
+                order by i.ora_aggiornamento desc
         """, nativeQuery=true)
-    List<Intervista> findNextUpdateForUser(String username);
+    Page<Intervista> ricercaAttivitaByUsername(String username, Pageable p);
+
+
+    @Query(value= """
+                SELECT i.*, ci.id_candidato, io.id_owner as owner_id, ino.id_owner as nextOwner_id, si.id_stato, ti.id_tipologia
+                FROM intervista i
+                left join candidato_intervista ci on (i.id = ci.id_intervista)
+                left join intervista_owner io on (i.id = io.id_intervista)
+                left join intervista_next_owner ino on (i.id = ino.id_intervista)
+                left join stato_intervista si on (i.id = si.id_intervista)
+                left join tipologia_intervista ti on (i.id = ti.id_intervista)
+                left join owner o on ino.id_owner = o.id
+                order by i.ora_aggiornamento desc
+        """, nativeQuery=true)
+    Page<Intervista> ricercaAttivita(Pageable p);
 }

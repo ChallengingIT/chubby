@@ -57,9 +57,38 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
           join owner o on non.id_owner = o.id
           left join users u on o.nome = u.nome and o.cognome = u.cognome
           where u.username = ?1
-          order by n.progressivo desc
+          order by id = 1 desc, id = 7 desc
         """,nativeQuery=true)
     Page<Need> ricercaByUsername(String username, Pageable p);
+
+    @Query(value= """
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+          FROM need n
+          left join need_cliente nc on n.id = nc.id_need
+          left join need_keypeople nk on n.id = nk.id_need
+          left join tipologia_need tn on n.id = tn.id_need
+          left join need_owner non on n.id = non.id_need
+          left join stato_need sn on n.id = sn.id_need
+          join owner o on non.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          order by id = 1 desc, id = 7 desc
+        """,nativeQuery=true)
+    Page<Need> ricercaOrdinata(Pageable p);
+
+    @Query(value= """
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+          FROM need n
+          left join need_cliente nc on n.id = nc.id_need
+          left join need_keypeople nk on n.id = nk.id_need
+          left join tipologia_need tn on n.id = tn.id_need
+          left join need_owner non on n.id = non.id_need
+          left join stato_need sn on n.id = sn.id_need
+          join owner o on non.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          where u.username = ?1
+          order by id = 1 desc, id = 7 desc
+        """,nativeQuery=true)
+    Page<Need> find(String username, Pageable p);
 
     @Query(value= """
          select progressivo

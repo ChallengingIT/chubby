@@ -170,4 +170,41 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("OK"));
     }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteUser(@Valid @RequestBody LoginRequest changeRequest) {
+
+        logger.info("Eliminazione utente");
+
+        try {
+
+            if (userRepository.existsByUsername(changeRequest.getUsername())) {
+
+                User user = userRepository.findByUsername(changeRequest.getUsername()).get();
+
+                if (user.getPassword().equals(encoder.encode(changeRequest.getPassword()))) {
+
+                    userRepository.delete(user);
+
+                    logger.debug("Utente eliminato");
+
+                } else {
+                    logger.debug("Password non uguale a quella presente");
+
+                    return ResponseEntity.badRequest().body(new MessageResponse("Error: Password incorrect!"));
+                }
+
+            } else {
+
+                logger.debug("Username non presente");
+
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is not present!"));
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+
+        return ResponseEntity.ok(new MessageResponse("OK"));
+    }
 }
