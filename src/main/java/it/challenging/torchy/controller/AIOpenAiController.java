@@ -5,8 +5,10 @@
 package it.challenging.torchy.controller;
 
 import it.challenging.torchy.entity.Candidato;
+import it.challenging.torchy.entity.KeyPeople;
 import it.challenging.torchy.entity.Tipologia;
 import it.challenging.torchy.repository.CandidatoRepository;
+import it.challenging.torchy.repository.KeyPeopleRepository;
 import it.challenging.torchy.repository.TipologiaRepository;
 import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -36,6 +38,8 @@ public class AIOpenAiController {
 
     @Autowired
     private CandidatoRepository candidatoRepository;
+    @Autowired
+    private KeyPeopleRepository keyPeopleRepository;
 
     private final EmbeddingClient embeddingClient;
 
@@ -65,7 +69,13 @@ public class AIOpenAiController {
 
     @GetMapping("/generate")
     public Map generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        return Map.of("generation", chatClient.call(message));
+        List<KeyPeople> keyPeople = keyPeopleRepository.findAll();
+
+        Prompt prompt = new Prompt(new UserMessage(message + "\n" + keyPeople));
+
+        ChatResponse chatResponse = chatClient.call(prompt);
+        return Map.of("response", chatResponse.getResults().get(0).getOutput());
+
     }
 
     @GetMapping("/generate/assistant")
