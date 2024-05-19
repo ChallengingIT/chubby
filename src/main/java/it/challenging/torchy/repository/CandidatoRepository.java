@@ -46,7 +46,6 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
             left join fornitore_candidato fc on (c.id = fc.id_candidato )
             left join facolta_candidato fac on (c.id = fac.id_candidato )
             left join candidato_owner co on (c.id = co.id_candidato )
-            left join candidato_owner co on (c.id = co.id_candidato )
             left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
             left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
             left join skill_candidato sc on (c.id = sc.id_candidato )
