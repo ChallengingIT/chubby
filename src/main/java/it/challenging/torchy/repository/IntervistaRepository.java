@@ -60,7 +60,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
     Integer findMaxId();
 
     @Query(value= """
-                SELECT i.*, ci.id_candidato, io.id_owner as owner_id, ino.id_owner as nextOwner_id, si.id_stato, ti.id_tipologia
+                SELECT i.*, ci.id_candidato, io.id_owner, ino.id_owner as id_next_owner, si.id_stato, ti.id_tipologia
                 FROM intervista i
                 left join candidato_intervista ci on (i.id = ci.id_intervista)
                 left join intervista_owner io on (i.id = io.id_intervista)
@@ -76,7 +76,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
 
 
     @Query(value= """
-                SELECT i.*, ci.id_candidato, io.id_owner as owner_id, ino.id_owner as nextOwner_id, si.id_stato, ti.id_tipologia
+                SELECT i.*, ci.id_candidato, io.id_owner , ino.id_owner as id_next_owner, si.id_stato, ti.id_tipologia
                 FROM intervista i
                 left join candidato_intervista ci on (i.id = ci.id_intervista)
                 left join intervista_owner io on (i.id = io.id_intervista)
