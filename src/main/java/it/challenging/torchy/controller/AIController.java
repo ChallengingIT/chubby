@@ -921,7 +921,7 @@ public class AIController {
                 return ResponseEntity.ok(aziendeRepository.findByWhere(where.toString()));
 
             } else if (keyPeople) {
-                for (String s : keyAziende) {
+                for (String s : keyKeyPeople) {
                     if (message.toLowerCase().contains(s)) {
                         switch (s) {
                             case Constants.KEY_PEOPLE_NOME:
