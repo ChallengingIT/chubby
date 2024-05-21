@@ -46,7 +46,7 @@ public class Hiring implements Serializable {
     @ToString.Exclude
     private TipoServizio tipoServizio;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "schede_candidato_hiring",
             joinColumns = @JoinColumn(name = "id_hiring", referencedColumnName = "id"),
