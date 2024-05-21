@@ -6,7 +6,6 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.entity.Owner;
 import it.challenging.torchy.repository.OwnerRepository;
-import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,7 @@ public class OwnerController {
     @PostMapping("/salva")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
-            @RequestBody Map<String,String> ownerMap,
-            @RequestParam("skill") @Nullable List<Integer> skillList
+            @RequestBody Map<String,String> ownerMap
     ) {
         logger.info("Salva candidato");
 
