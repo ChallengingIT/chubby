@@ -525,31 +525,31 @@ public class NeedController {
 
             if(needMap.get("id") != null) {
                 need = needRepository.findById(Integer.parseInt(needMap.get("id"))).get();
+            } else {
+                String ultimoProgressivo = needRepository.findUltimoProgressivo();
+
+                String anno      = ultimoProgressivo.split("-")[0];
+                String contatore = ultimoProgressivo.split("-")[1];
+
+                OffsetDateTime data = OffsetDateTime.now();
+                String annoCorrente = ""+data.getYear();
+                String finaleAnnoCorrente = annoCorrente.substring(2);
+                if (!anno.equalsIgnoreCase(finaleAnnoCorrente)) {
+                    if (finaleAnnoCorrente.equalsIgnoreCase("99")) {
+                        anno = "00";
+                        contatore = "01";
+                    } else {
+                        anno = String.valueOf(Integer.parseInt(finaleAnnoCorrente) + 1);
+                        contatore = "01";
+                    }
+                } else {
+                    contatore = String.valueOf(Integer.parseInt(contatore) + 1);
+                }
+
+                need.setProgressivo(anno + "-" + contatore);
             }
 
             trasformaMappaInNeed(need, needMap, skill1List);
-
-            String ultimoProgressivo = needRepository.findUltimoProgressivo();
-
-            String anno      = ultimoProgressivo.split("-")[0];
-            String contatore = ultimoProgressivo.split("-")[1];
-
-            OffsetDateTime data = OffsetDateTime.now();
-            String annoCorrente = ""+data.getYear();
-            String finaleAnnoCorrente = annoCorrente.substring(2);
-            if (!anno.equalsIgnoreCase(finaleAnnoCorrente)) {
-                if (finaleAnnoCorrente.equalsIgnoreCase("99")) {
-                    anno = "00";
-                    contatore = "01";
-                } else {
-                    anno = String.valueOf(Integer.parseInt(finaleAnnoCorrente) + 1);
-                    contatore = "01";
-                }
-            } else {
-                contatore = String.valueOf(Integer.parseInt(contatore) + 1);
-            }
-
-            need.setProgressivo(anno + "-" + contatore);
 
             needRepository.save(need);
 
@@ -881,7 +881,7 @@ public class NeedController {
         need.setAnniEsperienza(needMap.get("anniEsperienza") != null ? Double.parseDouble(needMap.get("anniEsperienza")) : null);
         need.setNumeroRisorse(needMap.get("numeroRisorse") != null ? Integer.parseInt(needMap.get("numeroRisorse")) : null);
         need.setNote(needMap.get("note") != null ? needMap.get("note") : null);
-        ;
+
         need.setDescrizione(needMap.get("descrizione") != null ? needMap.get("descrizione") : null);
         need.setLocation(needMap.get("location") != null ? needMap.get("location") : null);
         need.setTipo(needMap.get("tipo") != null ? Integer.parseInt(needMap.get("tipo")) : null);

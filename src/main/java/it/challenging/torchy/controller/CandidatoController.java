@@ -105,6 +105,33 @@ public class CandidatoController {
         }
     }
 
+    @GetMapping("/react/mod/hiring")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public CandidatoGroup getAllModHiring() {
+        try {
+            logger.info("Candidati");
+
+            CandidatoGroup            candidatoGroup      = new CandidatoGroup();
+            List<Candidato>           candidati           = candidatoRepository.findAllByOrderByCognomeAsc();
+            List<CandidatoModificato> candidatiModificati = new ArrayList<>();
+
+            for (Candidato candidato : candidati) {
+                CandidatoModificato candidatoMod = getCandidatoModificatoHiring(candidato);
+
+                candidatiModificati.add(candidatoMod);
+            }
+
+            candidatoGroup.setCandidati(candidatiModificati);
+            candidatoGroup.setRecord(candidatoRepository.count());
+
+            return candidatoGroup;
+        } catch (Exception e) {
+            logger.error(e.toString());
+
+            return null;
+        }
+    }
+
     @GetMapping("/react/mod/ricerca")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public CandidatoGroup getAllModRicerca(
@@ -175,6 +202,17 @@ public class CandidatoController {
 
             candidatoMod.setFile(file);
         }
+        return candidatoMod;
+    }
+
+    private static @NotNull CandidatoModificato getCandidatoModificatoHiring(Candidato candidato) {
+        CandidatoModificato candidatoMod = new CandidatoModificato();
+
+        candidatoMod.setId(candidato.getId());
+        candidatoMod.setCognome(candidato.getCognome());
+        candidatoMod.setNome(candidato.getNome());
+        candidatoMod.setEmail(candidato.getEmail());
+
         return candidatoMod;
     }
 

@@ -223,7 +223,7 @@ public class HiringController {
 
             logger.debug("Scheda candidato salvata correttamente");
 
-            return ResponseEntity.ok(schedaCandidatoEntity.getId()+"");
+            return ResponseEntity.ok("OK");
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());

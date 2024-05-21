@@ -18,6 +18,8 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
 
     Page<Candidato> findAllByOrderByCognomeAsc(Pageable p);
 
+    List<Candidato> findAllByOrderByCognomeAsc();
+
     @Query(value= " SELECT c.nome FROM candidato c ", nativeQuery=true)
     List<String> findAllNames();
 
