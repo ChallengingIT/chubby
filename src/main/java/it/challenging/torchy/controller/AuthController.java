@@ -1,16 +1,21 @@
 package it.challenging.torchy.controller;
 
+import it.challenging.torchy.EmailSenderService;
 import it.challenging.torchy.entity.Authority;
+import it.challenging.torchy.entity.Email;
 import it.challenging.torchy.entity.User;
 import it.challenging.torchy.repository.AuthorityRepository;
 import it.challenging.torchy.repository.UserRepository;
 import it.challenging.torchy.request.ChangePasswordRequest;
 import it.challenging.torchy.request.LoginRequest;
+import it.challenging.torchy.request.LostPasswordRequest;
 import it.challenging.torchy.request.SignupRequest;
 import it.challenging.torchy.response.JwtResponse;
 import it.challenging.torchy.response.MessageResponse;
 import it.challenging.torchy.security.jwt.JwtUtils;
 import it.challenging.torchy.security.services.UserDetailsImpl;
+import it.challenging.torchy.util.Constants;
+import it.challenging.torchy.util.UtilLib;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +47,9 @@ public class AuthController {
 
     @Autowired
     BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private EmailSenderService serviceEmail;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -150,6 +158,9 @@ public class AuthController {
 
                 if (user.getPassword().equals(encoder.encode(changeRequest.getOldPassword()))) {
 
+                    LocalDateTime expirationDate = LocalDateTime.now().plusDays(30);
+
+                    user.setExpirationDate(expirationDate);
                     user.setPassword(encoder.encode(changeRequest.getNewPassword()));
 
                 }
@@ -163,6 +174,46 @@ public class AuthController {
                 logger.debug("Username non presente");
 
                 return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is not present!"));
+            }
+        } catch(Exception e) {
+            logger.error(e.toString());
+        }
+
+        return ResponseEntity.ok(new MessageResponse("OK"));
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/lost/password")
+    public ResponseEntity<?> lostPassword(@Valid @RequestBody LostPasswordRequest lostRequest) {
+
+        logger.info("Dimenticato la Password");
+
+        try {
+
+            if (userRepository.existsByEmail(lostRequest.getEmail())) {
+
+                User user = userRepository.findByEmail(lostRequest.getEmail()).get();
+
+                LocalDateTime expirationDate = LocalDateTime.now().plusDays(1);
+
+                String newPassword = UtilLib.generatePassayPassword();
+
+                user.setExpirationDate(expirationDate);
+                user.setPassword(encoder.encode(newPassword));
+
+                Email email = UtilLib.getEmail(lostRequest.getEmail(), Constants.NOTE_LOST_PASSWORD + newPassword, Constants.OGGETTO_LOST_PASSWORD);
+
+                serviceEmail.sendHtmlMessage(email);
+
+                userRepository.save(user);
+
+                logger.debug("Password aggiornata");
+
+            } else {
+
+                logger.debug("Email non presente");
+
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is not present!"));
             }
         } catch(Exception e) {
             logger.error(e.toString());

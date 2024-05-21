@@ -37,6 +37,9 @@ public class User implements Serializable {
     @Column(length = 50)
     private String cognome;
 
+    @Column(length = 50)
+    private String email;
+
     @Column(nullable = false, length = 120)
     private String password;
 

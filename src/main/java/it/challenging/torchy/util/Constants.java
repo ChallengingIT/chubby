@@ -6,6 +6,9 @@ package it.challenging.torchy.util;
 
 public class Constants {
 
+    public static final String NOTE_LOST_PASSWORD                 = "Salve, la nuova password da cambiare entro 24h è la seguente \n ";
+    public static final String OGGETTO_LOST_PASSWORD              = "Nuovo accesso a Torchy ";
+
     public static final String STATO_CANDIDATO_CF_DISPONIBILE     = "CF Disponibile";
     public static final String STATO_CANDIDATO_CF_INVIATO         = "CF Inviato";
     public static final String STATO_CANDIDATO_QM_PIANIFICATA     = "QM Pianificata";
