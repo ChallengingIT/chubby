@@ -40,7 +40,7 @@ public interface HiringRepository extends JpaRepository<Hiring, Integer> {
            select distinct h.*, th.id_tipo_servizio, sh.id_scheda_candidato
            from hiring h
            left join tipo_servizio_hiring th on th.id_hiring = h.id
-           left join scheda_candidato_hiring sh on h.id = sh.id_hiring
+           left join schede_candidato_hiring sh on h.id = sh.id_hiring
            where if(?1 is not null, h.id_cliente = ?1, 1=1)
            and if(?2 is not null, th.id_tipo_servizio = ?2, 1=1)
            order by h.id_cliente desc
