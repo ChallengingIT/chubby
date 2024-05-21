@@ -104,6 +104,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/dashboard/**").authenticated()
                     .requestMatchers("/hiring/**").authenticated()
                     .requestMatchers("/staffing/**").authenticated()
+                    .requestMatchers("/owner/**").authenticated()
                     .requestMatchers("/files/**").authenticated()
                     .requestMatchers("/calendar/**").authenticated()
                     .requestMatchers("/email/**").authenticated()
