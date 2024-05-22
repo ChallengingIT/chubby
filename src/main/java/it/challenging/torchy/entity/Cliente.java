@@ -118,7 +118,7 @@ public class Cliente implements Serializable {
     @Column(name="logo")
     private String logo;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tipo_servizio_cliente",
             joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id"),
