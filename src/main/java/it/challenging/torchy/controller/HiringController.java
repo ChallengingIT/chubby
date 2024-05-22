@@ -103,7 +103,7 @@ public class HiringController {
 
     //ricerca per idCliente e tipoServizio
     @GetMapping("/ricerca")
-    public List<Hiring> findAllByIdCliente(
+    public List<Hiring> findAllByIdClienteTipoServizio(
             @RequestParam("idCliente")  @Nullable Integer idCliente,
             @RequestParam("idTipoServizio")  @Nullable Integer idTipoServizio,
             @RequestParam("pagina") Integer pagina,
