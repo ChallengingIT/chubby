@@ -114,7 +114,15 @@ public class HiringController {
         try  {
             Pageable p = PageRequest.of(pagina, quantita);
 
-            return hiringRepository.ricercaByIdClienteAndIdTipoServizio(idCliente, idTipoServizio, p).getContent();
+            if(null != idCliente && null != idTipoServizio) {
+                return hiringRepository.findAllByIdClienteAndTipoServizio_Id(idCliente, idTipoServizio, p).getContent();
+            } else if (null == idCliente && null != idTipoServizio) {
+                return hiringRepository.findAllByTipoServizio_Id(idTipoServizio, p).getContent();
+            } else if (null != idCliente){
+                return hiringRepository.findAllByIdCliente(idCliente, p).getContent();
+            } else {
+                return hiringRepository.findAll();
+            }
 
         } catch (Exception e) {
             logger.error(e.getMessage());
