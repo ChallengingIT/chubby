@@ -376,6 +376,14 @@ public class AziendeController {
         return tipologiaRepository.findByFunzione_IdOrderByDescrizioneAsc(idFunzione);
     }
 
+    @GetMapping("/react/owner")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Owner> getAllOwner() {
+        logger.info("Owner");
+
+        return ownerRepository.findAll();
+    }
+
     @GetMapping("/react/keypeople/{id}")
     ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<KeyPeople> getAllKeyPeopleByIdCLiente(
