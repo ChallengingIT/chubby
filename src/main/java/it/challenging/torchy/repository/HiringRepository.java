@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public interface HiringRepository extends JpaRepository<Hiring, Integer> {
     Page<Hiring> findAllByIdCliente(Integer idCliente, Pageable p);
     Page<Hiring> findAllByTipoServizio_Id(Integer idTipoServizio, Pageable p);
 
+    @Transactional
     void deleteAllByIdClienteAndTipoServizio_Id(Integer idCliente, Integer idTipoServizio);
+    @Transactional
     void deleteAllByIdCliente(Integer idCliente);
 }
