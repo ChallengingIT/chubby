@@ -40,5 +40,7 @@ public interface HiringRepository extends JpaRepository<Hiring, Integer> {
     Page<Hiring> findAllByIdClienteAndTipoServizio_Id(Integer idCliente, Integer idTipoServizio, Pageable p);
     Page<Hiring> findAllByIdCliente(Integer idCliente, Pageable p);
     Page<Hiring> findAllByTipoServizio_Id(Integer idTipoServizio, Pageable p);
+
     void deleteAllByIdClienteAndTipoServizio_Id(Integer idCliente, Integer idTipoServizio);
+    void deleteAllByIdCliente(Integer idCliente);
 }

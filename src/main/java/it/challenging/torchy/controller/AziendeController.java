@@ -348,6 +348,8 @@ public class AziendeController {
                 logger.debug("KeyPeople " + key.getId() + " eliminato");
             }
 
+            hiringRepository.deleteAllByIdCliente(id);
+
             clienteRepository.deleteById(id);
 
             logger.debug("Azienda " + id + " eliminata");
