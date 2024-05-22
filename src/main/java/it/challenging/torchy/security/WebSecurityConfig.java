@@ -97,6 +97,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/auth/delete").authenticated()
+                    .requestMatchers("/api/auth/change/password").authenticated()
                     .requestMatchers("/ai/**").authenticated()
                     .requestMatchers("/associazioni/**").authenticated()
                     .requestMatchers("/azioni/**").authenticated()
