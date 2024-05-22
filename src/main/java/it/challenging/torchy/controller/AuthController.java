@@ -123,6 +123,8 @@ public class AuthController {
                                 signUpRequest.getCognome(), encoder.encode(signUpRequest.getPassword()),
                                 (byte)1, expirationDate);
 
+            user.setEmail(signUpRequest.getEmail());
+
             logger.debug("User generato");
 
             String strRole = signUpRequest.getRole();
