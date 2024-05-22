@@ -144,8 +144,8 @@ public class DashboardController {
                 attivita.setIdOwner(owner.getId());
                 attivita.setSiglaOwner(owner.getDescrizione());
                 attivita.setIdIntervista(intervista.getId());
-                attivita.setAzione(intervista.getTipo().getDescrizione());
-                attivita.setIdAzione(intervista.getTipo().getId());
+                attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
+                attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
                 attivita.setData(intervista.getDataAggiornamento());
 
                 attivitaRecruiting.add(attivita);
@@ -184,8 +184,8 @@ public class DashboardController {
                 attivita.setIdOwner(owner.getId());
                 attivita.setSiglaOwner(owner.getDescrizione());
                 attivita.setIdIntervista(intervista.getId());
-                attivita.setAzione(intervista.getTipo().getDescrizione());
-                attivita.setIdAzione(intervista.getTipo().getId());
+                attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
+                attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
                 attivita.setData(intervista.getDataAggiornamento());
 
                 attivitaRecruiting.add(attivita);
