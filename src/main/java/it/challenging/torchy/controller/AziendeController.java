@@ -422,9 +422,13 @@ public class AziendeController {
 
         try {
             Cliente clienteEntity = new Cliente();
+            List<TipoServizio> tipiServiziOld = new ArrayList<>();
+            boolean modifica = false;
 
             if(clienteMap.get("id") != null) {
-                clienteEntity = clienteRepository.findById(Integer.parseInt(clienteMap.get("id"))).get();
+                clienteEntity  = clienteRepository.findById(Integer.parseInt(clienteMap.get("id"))).get();
+                modifica       = true;
+                tipiServiziOld = clienteEntity.getTipiServizio();
 
                 logger.debug("Azienda trovata si procede in modifica");
 
@@ -451,6 +455,12 @@ public class AziendeController {
 
                         hiringRepository.save(hiring);
                     }
+                }
+            }
+
+            for(TipoServizio tipoServizioOld : tipiServiziOld) {
+                if (clienteEntity.getTipiServizio().stream().noneMatch(t -> t.getId().equals(tipoServizioOld.getId()))) {
+                    hiringRepository.deleteAllByIdClienteAndTipoServizio_Id(clienteEntity.getId(), tipoServizioOld.getId());
                 }
             }
 
