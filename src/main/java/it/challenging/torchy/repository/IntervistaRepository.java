@@ -70,6 +70,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 left join owner o on ino.id_owner = o.id
                 left join users u on o.nome = u.nome and o.cognome = u.cognome
                 where u.username = ?1
+                and DATE(i.ora_aggiornamento) = DATE(now())
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivitaByUsername(String username, Pageable p);
@@ -84,6 +85,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 left join stato_intervista si on (i.id = si.id_intervista)
                 left join tipologia_intervista ti on (i.id = ti.id_intervista)
                 left join owner o on ino.id_owner = o.id
+                where DATE(i.ora_aggiornamento) = DATE(now())
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivita(Pageable p);
