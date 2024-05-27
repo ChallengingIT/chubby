@@ -7,9 +7,6 @@ WORKDIR /app
 # Copy the backend code into the container
 COPY target/*.jar app.jar
 
-# Install any Python dependencies listed in 'requirements.txt'
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Expose the port the app runs on
 EXPOSE 8443
 
