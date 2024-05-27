@@ -1,10 +1,11 @@
-# Select a base image that includes Python
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk-focal
 
-# Copy the backend code into the container
-COPY target/*.jar torchy-be.jar
+WORKDIR /app
 
-# Expose the port the app runs on
-EXPOSE 8443
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
 
-ENTRYPOINT ["java","-jar","/torchy-be.jar"]
+COPY src ./src
+
+CMD ["./mvnw", "spring-boot:run"]
