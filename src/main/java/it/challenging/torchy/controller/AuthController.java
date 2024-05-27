@@ -158,7 +158,7 @@ public class AuthController {
 
                 User user = userRepository.findByUsername(changeRequest.getUsername()).get();
 
-                if (encoder.matches(user.getPassword(), encoder.encode(changeRequest.getOldPassword()))) {
+                if (encoder.matches(changeRequest.getOldPassword(), user.getPassword())) {
 
                     LocalDateTime expirationDate = LocalDateTime.now().plusDays(30);
 
@@ -236,7 +236,7 @@ public class AuthController {
 
                 User user = userRepository.findByUsername(changeRequest.getUsername()).get();
 
-                if (encoder.matches(user.getPassword(), encoder.encode(changeRequest.getPassword()))) {
+                if (encoder.matches(changeRequest.getPassword(), user.getPassword())) {
 
                     userRepository.delete(user);
 
