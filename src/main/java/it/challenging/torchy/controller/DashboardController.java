@@ -218,21 +218,23 @@ public class DashboardController {
                 for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
                     AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    Owner   owner   = keyPeople.getOwner();
-                    Cliente cliente = keyPeople.getCliente();
+                    if (DateUtils.isToday(azione.getDataModifica())) {
+                        Owner owner = keyPeople.getOwner();
+                        Cliente cliente = keyPeople.getCliente();
 
-                    attivita.setIdContatto(keyPeople.getId());
-                    attivita.setNomeContatto(keyPeople.getNome());
-                    attivita.setIdCliente(cliente.getId());
-                    attivita.setDescrizioneCliente(cliente.getDenominazione());
-                    attivita.setIdOwner(owner.getId());
-                    attivita.setSiglaOwner(owner.getDescrizione());
-                    attivita.setIdAzioneKeyPeople(azione.getId());
-                    attivita.setAzione(azione.getTipologia().getDescrizione());
-                    attivita.setIdAzione(azione.getTipologia().getId());
-                    attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setIdContatto(keyPeople.getId());
+                        attivita.setNomeContatto(keyPeople.getNome());
+                        attivita.setIdCliente(cliente.getId());
+                        attivita.setDescrizioneCliente(cliente.getDenominazione());
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
+                        attivita.setIdAzioneKeyPeople(azione.getId());
+                        attivita.setAzione(azione.getTipologia().getDescrizione());
+                        attivita.setIdAzione(azione.getTipologia().getId());
+                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
 
-                    attivitaBusiness.add(attivita);
+                        attivitaBusiness.add(attivita);
+                    }
                 }
             }
             return attivitaBusiness;
