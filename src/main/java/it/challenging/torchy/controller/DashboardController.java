@@ -3,6 +3,7 @@ package it.challenging.torchy.controller;
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
 import it.challenging.torchy.util.Constants;
+import it.challenging.torchy.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,21 +259,23 @@ public class DashboardController {
                 for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
                     AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    Owner   owner   = keyPeople.getOwner();
-                    Cliente cliente = keyPeople.getCliente();
+                    if (DateUtils.isToday(azione.getDataModifica())) {
+                        Owner owner = keyPeople.getOwner();
+                        Cliente cliente = keyPeople.getCliente();
 
-                    attivita.setIdContatto(keyPeople.getId());
-                    attivita.setNomeContatto(keyPeople.getNome());
-                    attivita.setIdCliente(cliente.getId());
-                    attivita.setDescrizioneCliente(cliente.getDenominazione());
-                    attivita.setIdOwner(owner.getId());
-                    attivita.setSiglaOwner(owner.getDescrizione());
-                    attivita.setIdAzioneKeyPeople(azione.getId());
-                    attivita.setAzione(azione.getTipologia().getDescrizione());
-                    attivita.setIdAzione(azione.getTipologia().getId());
-                    attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setIdContatto(keyPeople.getId());
+                        attivita.setNomeContatto(keyPeople.getNome());
+                        attivita.setIdCliente(cliente.getId());
+                        attivita.setDescrizioneCliente(cliente.getDenominazione());
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
+                        attivita.setIdAzioneKeyPeople(azione.getId());
+                        attivita.setAzione(azione.getTipologia().getDescrizione());
+                        attivita.setIdAzione(azione.getTipologia().getId());
+                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
 
-                    attivitaBusiness.add(attivita);
+                        attivitaBusiness.add(attivita);
+                    }
                 }
             }
             return attivitaBusiness;
