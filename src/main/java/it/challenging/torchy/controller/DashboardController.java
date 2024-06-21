@@ -12,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -201,6 +203,89 @@ public class DashboardController {
         }
     }
 
+    @GetMapping("/attivita/recruting/personal/interval")
+    public List<AttivitaRecruiting> getAttivitaRecruitingPersonal(
+            @RequestParam("username") String username,
+            @RequestParam("interval") Integer interval,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista attivita recruiting personal");
+        try  {
+            Pageable                 p                  = PageRequest.of(pagina, quantita);
+            Page<Intervista>         pageableIntervista = intervistaRepository.ricercaAttivitaByUsernameInterval(username, interval, p);
+            List<Intervista>         interviste         = pageableIntervista.getContent();
+            List<AttivitaRecruiting> attivitaRecruiting = new ArrayList<>();
+
+            for (Intervista intervista : interviste) {
+                AttivitaRecruiting attivita = new AttivitaRecruiting();
+
+                Candidato candidato = intervista.getCandidato();
+                Owner     owner     = intervista.getNextOwner();
+
+                attivita.setIdCandidato(candidato.getId());
+                attivita.setNomeCandidato(candidato.getNome());
+                attivita.setCognomeCandidato(candidato.getCognome());
+                attivita.setIdOwner(owner.getId());
+                attivita.setSiglaOwner(owner.getDescrizione());
+                attivita.setIdIntervista(intervista.getId());
+                attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
+                attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
+                attivita.setData(intervista.getDataAggiornamento());
+
+                attivitaRecruiting.add(attivita);
+
+            }
+
+            return attivitaRecruiting;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @GetMapping("/attivita/recruting/interval")
+    public List<AttivitaRecruiting> getAttivitaRecruitingInterval(
+            @RequestParam("interval") Integer interval,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista attivita recruiting");
+        try  {
+            Pageable                 p                  = PageRequest.of(pagina, quantita);
+            Page<Intervista>         pageableIntervista = intervistaRepository.ricercaAttivitaInterval(interval, p);
+            List<Intervista>         interviste         = pageableIntervista.getContent();
+            List<AttivitaRecruiting> attivitaRecruiting = new ArrayList<>();
+
+            for (Intervista intervista : interviste) {
+                AttivitaRecruiting attivita = new AttivitaRecruiting();
+
+                Candidato candidato = intervista.getCandidato();
+                Owner     owner     = intervista.getNextOwner();
+
+                attivita.setIdCandidato(candidato.getId());
+                attivita.setNomeCandidato(candidato.getNome());
+                attivita.setCognomeCandidato(candidato.getCognome());
+                attivita.setIdOwner(owner.getId());
+                attivita.setSiglaOwner(owner.getDescrizione());
+                attivita.setIdIntervista(intervista.getId());
+                attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
+                attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
+                attivita.setData(intervista.getDataAggiornamento());
+
+                attivitaRecruiting.add(attivita);
+
+            }
+
+            return attivitaRecruiting;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
     @GetMapping("/attivita/business/personal")
     public List<AttivitaBusiness> getAttivitaBusinessPersonal(
             @RequestParam("username") String username,
@@ -218,7 +303,52 @@ public class DashboardController {
                 for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
                     AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    if (DateUtils.isToday(azione.getDataModifica())) {
+                    if (DateUtils.isToday(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()))) {
+                        Owner owner = keyPeople.getOwner();
+                        Cliente cliente = keyPeople.getCliente();
+
+                        attivita.setIdContatto(keyPeople.getId());
+                        attivita.setNomeContatto(keyPeople.getNome());
+                        attivita.setIdCliente(cliente.getId());
+                        attivita.setDescrizioneCliente(cliente.getDenominazione());
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
+                        attivita.setIdAzioneKeyPeople(azione.getId());
+                        attivita.setAzione(azione.getTipologia().getDescrizione());
+                        attivita.setIdAzione(azione.getTipologia().getId());
+                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+
+                        attivitaBusiness.add(attivita);
+                    }
+                }
+            }
+            return attivitaBusiness;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @GetMapping("/attivita/business/personal/interval")
+    public List<AttivitaBusiness> getAttivitaBusinessPersonalInterval(
+            @RequestParam("username") String username,
+            @RequestParam("interval") Integer interval,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista attivita business personal interval");
+        try  {
+            Pageable               p                 = PageRequest.of(pagina, quantita);
+            Page<KeyPeople>        pageableKeyPeople = keyPeopleRepository.ricercaAzioniByUsernameInterval(username, interval, p);
+            List<KeyPeople>        keyPeoples        = pageableKeyPeople.getContent();
+            List<AttivitaBusiness> attivitaBusiness  = new ArrayList<>();
+
+            for (KeyPeople keyPeople : keyPeoples) {
+                for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
+                    AttivitaBusiness attivita = new AttivitaBusiness();
+
+                    if (DateUtils.isToday(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()))) {
                         Owner owner = keyPeople.getOwner();
                         Cliente cliente = keyPeople.getCliente();
 
@@ -261,7 +391,51 @@ public class DashboardController {
                 for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
                     AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    if (DateUtils.isToday(azione.getDataModifica())) {
+                    if (DateUtils.isToday(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()))) {
+                        Owner owner = keyPeople.getOwner();
+                        Cliente cliente = keyPeople.getCliente();
+
+                        attivita.setIdContatto(keyPeople.getId());
+                        attivita.setNomeContatto(keyPeople.getNome());
+                        attivita.setIdCliente(cliente.getId());
+                        attivita.setDescrizioneCliente(cliente.getDenominazione());
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
+                        attivita.setIdAzioneKeyPeople(azione.getId());
+                        attivita.setAzione(azione.getTipologia().getDescrizione());
+                        attivita.setIdAzione(azione.getTipologia().getId());
+                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+
+                        attivitaBusiness.add(attivita);
+                    }
+                }
+            }
+            return attivitaBusiness;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @GetMapping("/attivita/business/interval")
+    public List<AttivitaBusiness> getAttivitaBusinessPersonalInterval(
+            @RequestParam("interval") Integer interval,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("quantita") Integer quantita
+    ) {
+        logger.info("Lista attivita business");
+        try  {
+            Pageable               p                 = PageRequest.of(pagina, quantita);
+            Page<KeyPeople>        pageableKeyPeople = keyPeopleRepository.ricercaAzioniInterval(interval, p);
+            List<KeyPeople>        keyPeoples        = pageableKeyPeople.getContent();
+            List<AttivitaBusiness> attivitaBusiness  = new ArrayList<>();
+
+            for (KeyPeople keyPeople : keyPeoples) {
+                for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
+                    AttivitaBusiness attivita = new AttivitaBusiness();
+
+                    if (DateUtils.isToday(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()))) {
                         Owner owner = keyPeople.getOwner();
                         Cliente cliente = keyPeople.getCliente();
 

@@ -75,6 +75,22 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivitaByUsername(String username, Pageable p);
 
+    @Query(value= """
+                SELECT i.*, ci.id_candidato, io.id_owner, ino.id_owner as id_next_owner, si.id_stato, ti.id_tipologia
+                FROM intervista i
+                left join candidato_intervista ci on (i.id = ci.id_intervista)
+                left join intervista_owner io on (i.id = io.id_intervista)
+                left join intervista_next_owner ino on (i.id = ino.id_intervista)
+                left join stato_intervista si on (i.id = si.id_intervista)
+                left join tipologia_intervista ti on (i.id = ti.id_intervista)
+                left join owner o on ino.id_owner = o.id
+                left join users u on o.nome = u.nome and o.cognome = u.cognome
+                where u.username = ?1
+                and DATE(i.ora_aggiornamento) = DATE(now() + INTERVAL ?2 DAY )
+                order by i.ora_aggiornamento desc
+        """, nativeQuery=true)
+    Page<Intervista> ricercaAttivitaByUsernameInterval(String username, Integer interval,  Pageable p);
+
 
     @Query(value= """
                 SELECT i.*, ci.id_candidato, io.id_owner , ino.id_owner as id_next_owner, si.id_stato, ti.id_tipologia
@@ -89,4 +105,18 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivita(Pageable p);
+
+    @Query(value= """
+                SELECT i.*, ci.id_candidato, io.id_owner , ino.id_owner as id_next_owner, si.id_stato, ti.id_tipologia
+                FROM intervista i
+                left join candidato_intervista ci on (i.id = ci.id_intervista)
+                left join intervista_owner io on (i.id = io.id_intervista)
+                left join intervista_next_owner ino on (i.id = ino.id_intervista)
+                left join stato_intervista si on (i.id = si.id_intervista)
+                left join tipologia_intervista ti on (i.id = ti.id_intervista)
+                left join owner o on ino.id_owner = o.id
+                where DATE(i.ora_aggiornamento) = DATE(now() + INTERVAL ?1 DAY)
+                order by i.ora_aggiornamento desc
+        """, nativeQuery=true)
+    Page<Intervista> ricercaAttivitaInterval(Integer interval, Pageable p);
 }

@@ -5,7 +5,9 @@
 
 package it.challenging.torchy.controller;
 
-import it.challenging.torchy.entity.*;
+import it.challenging.torchy.entity.AzioneKeyPeople;
+import it.challenging.torchy.entity.KeyPeople;
+import it.challenging.torchy.entity.TipologiaAz;
 import it.challenging.torchy.repository.AzioneRepository;
 import it.challenging.torchy.repository.KeyPeopleRepository;
 import it.challenging.torchy.repository.TipologiaAzRepository;
@@ -15,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +89,9 @@ public class AzioneController {
 
         logger.debug("Trasforma mappa in azione");
 
-        azione.setDataModifica(azioneMap.get("data") != null ? Date.valueOf(azioneMap.get("data")) : null);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        azione.setDataModifica(azioneMap.get("data") != null ? LocalDateTime.parse(azioneMap.get("data"),formatter) : null);
 
         if (azioneMap.get("idTipologia") != null) {
             TipologiaAz tipologia = new TipologiaAz();

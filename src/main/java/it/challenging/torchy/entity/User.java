@@ -71,6 +71,16 @@ public class User implements Serializable {
         this.expirationDate = expirationDate;
     }
 
+    public User(String username, String nome, String cognome, String password, Byte enabled, String email) {
+
+        this.username = username;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.password = password;
+        this.enabled  = enabled;
+        this.email  = email;
+    }
+
     @Override
     public boolean equals(Object o) {
 
