@@ -10,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -32,7 +33,8 @@ public class AzioneKeyPeople implements Serializable {
     private Integer id;
 
     @Column(nullable = false, name = "data_modifica")
-    private Date dataModifica;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime dataModifica;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(

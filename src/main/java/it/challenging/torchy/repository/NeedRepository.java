@@ -57,7 +57,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
           join owner o on non.id_owner = o.id
           left join users u on o.nome = u.nome and o.cognome = u.cognome
           where u.username = ?1
-          order by sn.id_stato = 1 desc, sn.id_stato = 7 desc
+          order by sn.id_stato = 1 desc, sn.id_stato = 7 desc, n.priorita desc
           """,nativeQuery=true)
     Page<Need> ricercaByUsername(String username, Pageable p);
 
@@ -71,7 +71,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
           left join stato_need sn on n.id = sn.id_need
           join owner o on non.id_owner = o.id
           left join users u on o.nome = u.nome and o.cognome = u.cognome
-          order by sn.id_stato = 1 desc, sn.id_stato = 7 desc
+          order by sn.id_stato = 1 desc, sn.id_stato = 7 desc, n.priorita desc
           """,nativeQuery=true)
     Page<Need> ricercaOrdinata(Pageable p);
 
