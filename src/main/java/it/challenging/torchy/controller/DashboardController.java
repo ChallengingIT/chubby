@@ -44,8 +44,8 @@ public class DashboardController {
         logger.info("Lista pipeline need");
         try  {
             Pageable             p               = PageRequest.of(pagina, quantita);
-            Page<Need>           pageableNeed    = needRepository.ricercaByUsername(username);
-            List<Need>           needs           = pageableNeed.getContent();
+            List<Need>           needs    = needRepository.ricercaByUsername(username);
+            //List<Need>           needs           = pageableNeed.getContent();
             List<NeedPipeline>   needsModificati = new ArrayList<>();
 
             for (Need need : needs) {
@@ -87,8 +87,8 @@ public class DashboardController {
         logger.info("Lista pipeline need");
         try  {
             Pageable             p               = PageRequest.of(pagina, quantita);
-            Page<Need>           pageableNeed    = needRepository.ricercaOrdinata();
-            List<Need>           needs           = pageableNeed.getContent();
+            List<Need>           needs    = needRepository.ricercaOrdinata();
+            //List<Need>           needs           = pageableNeed.getContent();
             List<NeedPipeline>   needsModificati = new ArrayList<>();
 
             for (Need need : needs) {

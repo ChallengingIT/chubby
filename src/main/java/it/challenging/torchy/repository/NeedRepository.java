@@ -60,7 +60,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
           and sn.id_stato in (1,6,7)
           order by sn.id_stato = 1 desc, sn.id_stato = 7 desc, n.priorita asc
           """,nativeQuery=true)
-    Page<Need> ricercaByUsername(String username);
+    List<Need> ricercaByUsername(String username);
 
     @Query(value= """
           SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
@@ -75,7 +75,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
           where sn.id_stato in (1,6,7)
           order by sn.id_stato = 1 desc, sn.id_stato = 7 desc, n.priorita asc
           """,nativeQuery=true)
-    Page<Need> ricercaOrdinata();
+    List<Need> ricercaOrdinata();
 
     @Query(value= """
           SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
