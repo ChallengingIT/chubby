@@ -112,7 +112,7 @@ public class Candidato implements Serializable {
     @ToString.Exclude
     private Set<Skill> skills = new HashSet<>();
 
-    @Column(length = 4000, name = "note")
+    @Column(length = 8000, name = "note")
     private String note;
 
     @Column(length = 45)
