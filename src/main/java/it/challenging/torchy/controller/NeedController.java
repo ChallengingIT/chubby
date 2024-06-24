@@ -132,7 +132,7 @@ public class NeedController {
 
         try {
             Pageable             p               = PageRequest.of(pagina, quantita);
-            Page<Need>           pageableNeed    = needRepository.ricercaByUsername(username, p);
+            Page<Need>           pageableNeed    = needRepository.ricercaByUsername(username);
             List<Need>           needs           = pageableNeed.getContent();
             List<NeedModificato> needsModificati = new ArrayList<>();
 
