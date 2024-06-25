@@ -73,7 +73,7 @@ public class WebSecurityConfig {
         http.cors(cors -> {
             CorsConfigurationSource cs = resources -> {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                corsConfiguration.setAllowedOrigins(List.of("http://localhost:80","http://torchy.it"));
                 corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
                 corsConfiguration.setAllowedHeaders(List.of("Authorization",
                     "Content-Type",
