@@ -70,7 +70,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 left join owner o on ino.id_owner = o.id
                 left join users u on o.nome = u.nome and o.cognome = u.cognome
                 where u.username = ?1
-                and DATE(i.ora_aggiornamento) = DATE(now())
+                and WEEK(DATE(i.ora_aggiornamento)) = WEEK(DATE(now()))
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivitaByUsername(String username, Pageable p);
@@ -86,7 +86,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 left join owner o on ino.id_owner = o.id
                 left join users u on o.nome = u.nome and o.cognome = u.cognome
                 where u.username = ?1
-                and DATE(i.ora_aggiornamento) = DATE(now() + INTERVAL ?2 DAY )
+                and WEEK(DATE(i.ora_aggiornamento)) = WEEK(DATE(now() + INTERVAL ?2 WEEK ))
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivitaByUsernameInterval(String username, Integer interval,  Pageable p);
@@ -101,7 +101,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 left join stato_intervista si on (i.id = si.id_intervista)
                 left join tipologia_intervista ti on (i.id = ti.id_intervista)
                 left join owner o on ino.id_owner = o.id
-                where DATE(i.ora_aggiornamento) = DATE(now())
+                where WEEK(DATE(i.ora_aggiornamento)) = WEEK(DATE(now()))
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivita(Pageable p);
@@ -115,7 +115,7 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
                 left join stato_intervista si on (i.id = si.id_intervista)
                 left join tipologia_intervista ti on (i.id = ti.id_intervista)
                 left join owner o on ino.id_owner = o.id
-                where DATE(i.ora_aggiornamento) = DATE(now() + INTERVAL ?1 DAY)
+                where WEEK(DATE(i.ora_aggiornamento)) = WEEK(DATE(now() + INTERVAL ?1 WEEK))
                 order by i.ora_aggiornamento desc
         """, nativeQuery=true)
     Page<Intervista> ricercaAttivitaInterval(Integer interval, Pageable p);
