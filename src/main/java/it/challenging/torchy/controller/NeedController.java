@@ -356,7 +356,7 @@ public class NeedController {
 
     @GetMapping("/react/ricerca/modificato")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<NeedModificato> getModRicerca(
+    public NeedGroup getModRicerca(
         @RequestParam("azienda") @Nullable Integer azienda,
         @RequestParam("stato") @Nullable Integer stato,
         @RequestParam("keypeople") @Nullable Integer idKeyPeople,
@@ -372,7 +372,7 @@ public class NeedController {
 
         try {
             Pageable p = PageRequest.of(pagina, quantita);
-
+            NeedGroup needGroup = new NeedGroup();
             Page<Need> pageableNeeds = needRepository.ricerca(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, p);
             List<Need> needs = pageableNeeds.getContent();
 
@@ -416,7 +416,10 @@ public class NeedController {
                 needsModificati.add(needSolo);
             }
 
-            return needsModificati;
+            needGroup.setNeeds(needsModificati);
+            needGroup.setRecord(needRepository.countRicerca(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione));
+
+            return needGroup;
         } catch (Exception e) {
             logger.error(e.getMessage());
 
@@ -426,7 +429,7 @@ public class NeedController {
 
     @GetMapping("/react/ricerca/modificato/personal")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<NeedModificato> getModRicercaPersonal(
+    public NeedGroup getModRicercaPersonal(
             @RequestParam("username") @Nullable String username,
             @RequestParam("azienda") @Nullable Integer azienda,
             @RequestParam("stato") @Nullable Integer stato,
@@ -443,7 +446,7 @@ public class NeedController {
 
         try {
             Pageable p = PageRequest.of(pagina, quantita);
-
+            NeedGroup needGroup = new NeedGroup();
             Page<Need> pageableNeeds = needRepository.ricercaUsername(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, username, p);
             List<Need> needs = pageableNeeds.getContent();
 
@@ -487,7 +490,10 @@ public class NeedController {
                 needsModificati.add(needSolo);
             }
 
-            return needsModificati;
+            needGroup.setNeeds(needsModificati);
+            needGroup.setRecord(needRepository.countRicercaUsername(azienda, stato, idKeyPeople, priorita, tipologia, week, owner, descrizione, username));
+
+            return needGroup;
         } catch (Exception e) {
             logger.error(e.getMessage());
 

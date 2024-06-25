@@ -129,6 +129,20 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
   Page<KeyPeople> ricercaByIdStatoAndIdOwnerAndIdAzienda(Integer status, Integer azienda, Integer owner, String nome, Pageable p);
 
   @Query(value= """
+       SELECT count(*)
+       FROM key_people k
+        left join key_people_owner ko on k.id = ko.id_key_people
+        left join key_people_stato ks on k.id = ks.id_key_people
+        left join key_people_cliente kc on k.id = kc.id_key_people
+       where  if(?1 is not null, ks.id_stato = ?1, 1=1)
+       and if(?2 is not null, kc.id_cliente = ?2, 1=1)
+       and if(?3 is not null, ko.id_owner = ?3, 1=1)
+       and if(?4 is not null, k.nome like %?4%, 1=1)
+      """,nativeQuery=true)
+  Long countRicercaByIdStatoAndIdOwnerAndIdAzienda(Integer status, Integer azienda, Integer owner, String nome);
+
+
+  @Query(value= """
        SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato
        FROM key_people k
         left join key_people_owner ko on k.id = ko.id_key_people
@@ -144,5 +158,21 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
        order by k.nome asc
       """,nativeQuery=true)
   Page<KeyPeople> ricercaByIdStatoAndIdOwnerAndIdAziendaAndUsername(Integer status, Integer azienda, Integer owner, String nome, String username, Pageable p);
+
+  @Query(value= """
+       SELECT count(*)
+       FROM key_people k
+        left join key_people_owner ko on k.id = ko.id_key_people
+        left join key_people_stato ks on k.id = ks.id_key_people
+        left join key_people_cliente kc on k.id = kc.id_key_people
+        join owner o on ko.id_owner = o.id
+        left join users u on o.nome = u.nome and o.cognome = u.cognome
+       where  if(?1 is not null, ks.id_stato = ?1, 1=1)
+       and if(?2 is not null, kc.id_cliente = ?2, 1=1)
+       and if(?3 is not null, ko.id_owner = ?3, 1=1)
+       and if(?4 is not null, k.nome like %?4%, 1=1)
+       and u.username = ?5
+      """,nativeQuery=true)
+  Long countRicercaByIdStatoAndIdOwnerAndIdAziendaAndUsername(Integer status, Integer azienda, Integer owner, String nome, String username);
 
 }

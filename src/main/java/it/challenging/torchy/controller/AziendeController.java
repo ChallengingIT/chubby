@@ -180,7 +180,7 @@ public class AziendeController {
     @GetMapping("/react/ricerca/mod/personal")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     //@PreAuthorize("hasRole(@roles.ADMIN)")
-    public List<ClienteModificato> getAllModPersonalRicerca(
+    public ClienteGroup getAllModPersonalRicerca(
             @RequestParam("username") String username,
             @RequestParam("ida") @Nullable String ida,
             @RequestParam("denominazione") @Nullable String ragSociale,
@@ -192,6 +192,7 @@ public class AziendeController {
 
         try {
             Pageable p            = PageRequest.of(pagina, quantita);
+            ClienteGroup clienteGroup = new ClienteGroup();
             Double   valoreIdaMin = null;
             Double   valoreIdaMax = null;
 
@@ -235,7 +236,10 @@ public class AziendeController {
                 aziendeModificate.add(aziendaModificata);
             }
 
-            return aziendeModificate;
+            clienteGroup.setClienti(aziendeModificate);
+            clienteGroup.setRecord(clienteRepository.countRicercaByUsernameAndIdaAndTipologiaAndDenominazione(username, valoreIdaMin, valoreIdaMax, tipologia, ragSociale));
+
+            return clienteGroup;
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -245,7 +249,7 @@ public class AziendeController {
     }
 
     @GetMapping("/react/ricerca/mod")
-    public List<ClienteModificato> getAllModSearch(
+    public ClienteGroup getAllModSearch(
         @RequestParam("ida") @Nullable String ida,
         @RequestParam("denominazione") @Nullable String ragSociale,
         @RequestParam("owner") @Nullable Integer owner,
@@ -256,7 +260,8 @@ public class AziendeController {
         logger.info("Lista aziende");
 
         try {
-            Pageable p            = PageRequest.of(pagina, quantita);
+            Pageable p                = PageRequest.of(pagina, quantita);
+            ClienteGroup clienteGroup = new ClienteGroup();
             Double   valoreIdaMin = null;
             Double   valoreIdaMax = null;
 
@@ -299,7 +304,10 @@ public class AziendeController {
                 aziendeModificate.add(aziendaModificata);
             }
 
-            return aziendeModificate;
+            clienteGroup.setClienti(aziendeModificate);
+            clienteGroup.setRecord(clienteRepository.countRicercaByIdaAndOwner_IdAndTipologiaAndDenominazione(valoreIdaMin, valoreIdaMax, owner, tipologia, ragSociale));
+
+            return clienteGroup;
         } catch (Exception e) {
             logger.error(e.getMessage());
 

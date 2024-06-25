@@ -164,7 +164,7 @@ public class KeyPeopleController {
 
     @GetMapping("/react/ricerca/mod")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<KeyPeopleModificato> getAllModRicerca(
+    public KeyPeopleGroup getAllModRicerca(
         @RequestParam("azienda") @Nullable Integer azienda,
         @RequestParam("stato") @Nullable Integer stato,
         @RequestParam("owner") @Nullable Integer owner,
@@ -176,7 +176,7 @@ public class KeyPeopleController {
 
         try {
             Pageable p = PageRequest.of(pagina, quantita);
-
+            KeyPeopleGroup keyPeopleGroup = new KeyPeopleGroup();
             List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAzienda(stato, azienda, owner, nome, p).getContent();
             List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
 
@@ -207,7 +207,10 @@ public class KeyPeopleController {
                 keyPeoplesMod.add(keyPeopleMod);
             }
 
-            return keyPeoplesMod;
+            keyPeopleGroup.setKeyPeoples(keyPeoplesMod);
+            keyPeopleGroup.setRecord(keyPeopleRepository.countRicercaByIdStatoAndIdOwnerAndIdAzienda(stato, azienda, owner, nome));
+
+            return keyPeopleGroup;
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -216,9 +219,9 @@ public class KeyPeopleController {
         }
     }
 
-    @GetMapping("/react/ricerca/modpersonal")
+    @GetMapping("/react/ricerca/mod/personal")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public List<KeyPeopleModificato> getAllModRicercaPersonal(
+    public KeyPeopleGroup getAllModRicercaPersonal(
             @RequestParam("username") String username,
             @RequestParam("azienda") @Nullable Integer azienda,
             @RequestParam("stato") @Nullable Integer stato,
@@ -231,6 +234,7 @@ public class KeyPeopleController {
 
         try {
             Pageable p = PageRequest.of(pagina, quantita);
+            KeyPeopleGroup keyPeopleGroup = new KeyPeopleGroup();
 
             List<KeyPeople> keyPeoples = keyPeopleRepository.ricercaByIdStatoAndIdOwnerAndIdAziendaAndUsername(stato, azienda, owner, nome, username, p).getContent();
             List<KeyPeopleModificato> keyPeoplesMod = new ArrayList<>();
@@ -262,7 +266,10 @@ public class KeyPeopleController {
                 keyPeoplesMod.add(keyPeopleMod);
             }
 
-            return keyPeoplesMod;
+            keyPeopleGroup.setKeyPeoples(keyPeoplesMod);
+            keyPeopleGroup.setRecord(keyPeopleRepository.countRicercaByIdStatoAndIdOwnerAndIdAziendaAndUsername(stato, azienda, owner, nome, username));
+
+            return keyPeopleGroup;
 
         } catch (Exception e) {
             logger.error(e.getMessage());
