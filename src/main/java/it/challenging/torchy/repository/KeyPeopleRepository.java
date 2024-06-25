@@ -53,7 +53,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
           left join owner o on ko.id_owner = o.id
           left join users u on o.nome = u.nome and o.cognome = u.cognome
           where u.username = ?1
-          and DATE(a.data_modifica) = DATE(now())
+          and WEEK(DATE(a.data_modifica)) = WEEK(DATE(now()))
           order by k.nome asc
         """,nativeQuery=true)
   Page<KeyPeople> ricercaAzioniByUsername(String username, Pageable p);
@@ -69,7 +69,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
           left join owner o on ko.id_owner = o.id
           left join users u on o.nome = u.nome and o.cognome = u.cognome
           where u.username = ?1
-          and DATE(a.data_modifica) = DATE(now() + INTERVAL ?1 DAY)
+          and WEEK(DATE(a.data_modifica)) = WEEK(DATE(now() + INTERVAL ?1 WEEK))
           order by k.nome asc
         """,nativeQuery=true)
   Page<KeyPeople> ricercaAzioniByUsernameInterval(String username, Integer interval, Pageable p);
@@ -82,7 +82,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
           left join key_people_cliente kc on k.id = kc.id_key_people
           join key_people_azioni ka on  k.id = ka.id_key_people
           join azioni a on ka.id_azione = a.id
-          where DATE(a.data_modifica) = DATE(now())
+          where WEEK(DATE(a.data_modifica)) = WEEK(DATE(now()))
           order by k.nome asc
         """,nativeQuery=true)
   Page<KeyPeople> ricercaAzioni(Pageable p);
@@ -95,7 +95,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
           left join key_people_cliente kc on k.id = kc.id_key_people
           join key_people_azioni ka on  k.id = ka.id_key_people
           join azioni a on ka.id_azione = a.id
-          where DATE(a.data_modifica) = DATE(now() + INTERVAL ?1 DAY)
+          where WEEK(DATE(a.data_modifica)) = WEEK(DATE(now() + INTERVAL ?1 WEEK))
           order by k.nome asc
         """,nativeQuery=true)
   Page<KeyPeople> ricercaAzioniInterval(Integer interval, Pageable p);
