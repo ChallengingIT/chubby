@@ -122,7 +122,7 @@ public class DashboardController {
         }
     }
 
-    @GetMapping("/attivita/recruting/personal")
+    @GetMapping("/attivita/recruiting/personal")
     public List<AttivitaRecruiting> getAttivitaRecruitingPersonal(
             @RequestParam("username") String username,
             @RequestParam("pagina") Integer pagina,
@@ -163,7 +163,7 @@ public class DashboardController {
         }
     }
 
-    @GetMapping("/attivita/recruting")
+    @GetMapping("/attivita/recruiting")
     public List<AttivitaRecruiting> getAttivitaRecruiting(
             @RequestParam("pagina") Integer pagina,
             @RequestParam("quantita") Integer quantita
@@ -203,7 +203,7 @@ public class DashboardController {
         }
     }
 
-    @GetMapping("/attivita/recruting/personal/interval")
+    @GetMapping("/attivita/recruiting/personal/interval")
     public List<AttivitaRecruiting> getAttivitaRecruitingPersonal(
             @RequestParam("username") String username,
             @RequestParam("interval") Integer interval,
@@ -245,7 +245,7 @@ public class DashboardController {
         }
     }
 
-    @GetMapping("/attivita/recruting/interval")
+    @GetMapping("/attivita/recruiting/interval")
     public List<AttivitaRecruiting> getAttivitaRecruitingInterval(
             @RequestParam("interval") Integer interval,
             @RequestParam("pagina") Integer pagina,
