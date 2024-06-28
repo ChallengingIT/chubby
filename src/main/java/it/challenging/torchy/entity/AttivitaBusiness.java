@@ -63,6 +63,9 @@ public class AttivitaBusiness implements Serializable {
     @Column(name="id_azione_key_people")
     private Integer idAzioneKeyPeople;
 
+    @Column(length = 4000, name = "note")
+    private String note;
+
     @Override
     public boolean equals(Object o) {
 

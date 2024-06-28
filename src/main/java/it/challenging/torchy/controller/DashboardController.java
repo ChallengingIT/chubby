@@ -317,6 +317,7 @@ public class DashboardController {
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
                         attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setNote(azione.getNote());
 
                         attivitaBusiness.add(attivita);
                     }
@@ -362,6 +363,7 @@ public class DashboardController {
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
                         attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setNote(azione.getNote());
 
                         attivitaBusiness.add(attivita);
                     }
@@ -449,6 +451,7 @@ public class DashboardController {
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
                         attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setNote(azione.getNote());
 
                         attivitaBusiness.add(attivita);
                     }
