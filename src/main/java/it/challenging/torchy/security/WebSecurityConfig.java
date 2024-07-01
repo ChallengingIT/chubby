@@ -106,6 +106,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/associazioni/**").authenticated()
                     .requestMatchers("/azioni/**").authenticated()
                     .requestMatchers("/aziende/**").authenticated()
+                    .requestMatchers("/job/description/**").authenticated()
                     .requestMatchers("/dashboard/**").authenticated()
                     .requestMatchers("/hiring/**").authenticated()
                     .requestMatchers("/staffing/**").authenticated()

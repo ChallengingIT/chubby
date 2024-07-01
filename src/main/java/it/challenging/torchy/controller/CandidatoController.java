@@ -280,6 +280,32 @@ public class CandidatoController {
         return livelloRepository.findAll();
     }
 
+    @PostMapping("/salva/rating")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveRatingCandidato(
+            @RequestParam("id") Integer id,
+            @RequestParam("rating") Double rating
+    ) {
+        logger.info("Salva candidato");
+
+        try {
+            Candidato candidatoEntity = candidatoRepository.findById(id).get();
+
+            candidatoEntity.setRating(rating);
+
+            candidatoRepository.save(candidatoEntity);
+
+            logger.debug("Candidato salvato correttamente");
+
+            return ""+candidatoEntity.getId();
+
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
     @PostMapping("/salva")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveCandidato(
