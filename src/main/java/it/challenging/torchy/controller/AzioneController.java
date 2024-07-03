@@ -89,7 +89,7 @@ public class AzioneController {
 
         logger.debug("Trasforma mappa in azione");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
         azione.setDataModifica(azioneMap.get("data") != null ? LocalDateTime.parse(azioneMap.get("data"),formatter) : null);
 

@@ -204,11 +204,13 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
          left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
          left join file_candidato ffc on (c.id = ffc.id_candidato )
+         left join tipologia_file tfc on (tfc.id_file = ffc.id_file )
          join stato_candidato scc on (c.id = scc.id_candidato)
          join tipologia_candidato tc on (c.id = tc.id_candidato)
          left join tipo_candidato ttc on (c.id = ttc.id_candidato)
          join livello_candidato lc on (c.id = lc.id_candidato)
          where c.id  in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
+         and tfc.id_tipologia = 1
          order by c.cognome asc
         """, nativeQuery=true)
     Page<Candidato> findCandidatiAssociati(Integer idNeed, Pageable p);
