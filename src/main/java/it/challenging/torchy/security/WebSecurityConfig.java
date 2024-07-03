@@ -104,6 +104,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/auth/change/password").authenticated()
                     .requestMatchers("/ai/**").authenticated()
                     .requestMatchers("/associazioni/**").authenticated()
+                    .requestMatchers("/qr/**").authenticated()
                     .requestMatchers("/azioni/**").authenticated()
                     .requestMatchers("/aziende/**").authenticated()
                     .requestMatchers("/job/description/**").authenticated()

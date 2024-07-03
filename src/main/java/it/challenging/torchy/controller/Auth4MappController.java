@@ -5,12 +5,10 @@
 package it.challenging.torchy.controller;
 
 import it.challenging.torchy.EmailSenderService;
-import it.challenging.torchy.entity.Authority;
-import it.challenging.torchy.entity.Chiesa;
-import it.challenging.torchy.entity.Email;
-import it.challenging.torchy.entity.User;
+import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.AuthorityRepository;
 import it.challenging.torchy.repository.ChurchRepository;
+import it.challenging.torchy.repository.PassRepository;
 import it.challenging.torchy.repository.UserRepository;
 import it.challenging.torchy.request.*;
 import it.challenging.torchy.response.JwtResponse;
@@ -51,6 +49,9 @@ public class Auth4MappController {
     UserRepository userRepository;
 
     @Autowired
+    private PassRepository passRepository;
+
+    @Autowired
     BCryptPasswordEncoder encoder;
 
     @Autowired
@@ -88,6 +89,30 @@ public class Auth4MappController {
         return ResponseEntity.ok(new JwtResponse(jwt,
             userDetails.getUsername(),
             roles));
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/code/verify/{username}")
+    public ResponseEntity<?> consumeQRCodeImage(
+            @PathVariable("username") String username
+    ) throws Exception {
+
+        Pass pass = passRepository.findByUsername(username) != null ?
+                passRepository.findByUsername(username) : null;
+
+        if (null != pass) {
+            if (pass.getConsumed().equals((byte)1)) {
+                return ResponseEntity.badRequest().body(new MessageResponse("QrCode gia' utilizzato"));
+            } else {
+                pass.setConsumed((byte) 1);
+
+                passRepository.save(pass);
+            }
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse("QrCode non abilitato"));
+        }
+
+        return ResponseEntity.ok(new MessageResponse("OK"));
     }
 
     @CrossOrigin(origins = "*")
