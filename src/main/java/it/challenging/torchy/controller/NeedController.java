@@ -14,8 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.threeten.extra.YearWeek;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -28,6 +30,8 @@ public class NeedController {
     private CandidatoRepository    candidatoRepository;
     @Autowired
     private ClienteRepository      clienteRepository;
+    @Autowired
+    private KeyPeopleRepository    keyPeopleRepository;
     @Autowired
     private TipologiaNRepository   tipologiaNRepository;
     @Autowired
@@ -48,8 +52,28 @@ public class NeedController {
     private TipoRepository         tipoRepository;
     @Autowired
     private AssociazioniRepository associazioniRepository;
+    @Autowired
+    private ModalitaImpiegoRepository modalitaImpiegoRepository;
+    @Autowired
+    private ModalitaLavoroRepository modalitaLavoroRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(NeedController.class);
+
+    @GetMapping("/impiego")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<ModalitaImpiego> getModalitaImpiego() {
+        logger.info("JobDescription id cliente");
+
+        return modalitaImpiegoRepository.findAll();
+    }
+
+    @GetMapping("/lavoro")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<ModalitaLavoro> getModalitaLavoro() {
+        logger.info("JobDescription id cliente");
+
+        return modalitaLavoroRepository.findAll();
+    }
 
     @GetMapping("/react")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
@@ -427,6 +451,33 @@ public class NeedController {
         }
     }
 
+    @PostMapping("/add/shortlist")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String addShortlist(
+            @RequestParam("id") Integer id,
+            @RequestParam("idCandidato") Integer idCandidato
+    ) {
+        logger.info("Salva need");
+
+        try {
+
+            Need need = needRepository.findById(id).get();
+            Candidato candidato = candidatoRepository.findById(idCandidato).get();
+
+            need.getCandidati().add(candidato);
+
+            needRepository.save(need);
+
+            logger.info("Candidato inserito correttamente");
+
+            return "OK";
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
+    }
+
     @GetMapping("/react/ricerca/modificato/personal")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public NeedGroup getModRicercaPersonal(
@@ -515,6 +566,80 @@ public class NeedController {
         logger.info("Tipologie need");
 
         return tipologiaNRepository.findAll();
+    }
+
+    @PostMapping("/react/cliente/salva")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String saveJobTitle(
+            @RequestBody Map<String,String> needMap,
+            @RequestParam("username") String username,
+            @RequestParam("idCliente") Integer idCliente,
+            @RequestParam("skill") List<Integer> skillList
+    ) {
+        logger.info("Salva need");
+
+        try {
+
+            Need need = new Need();
+
+            if(needMap.get("id") != null) {
+                need = needRepository.findById(Integer.parseInt(needMap.get("id"))).get();
+
+            } else {
+                trasformaMappaInNeed(need, needMap, skillList);
+
+                String ultimoProgressivo = needRepository.findUltimoProgressivo();
+
+                String anno      = ultimoProgressivo.split("-")[0];
+                String contatore = ultimoProgressivo.split("-")[1];
+
+                OffsetDateTime data = OffsetDateTime.now();
+                String annoCorrente = ""+data.getYear();
+                String finaleAnnoCorrente = annoCorrente.substring(2);
+                if (!anno.equalsIgnoreCase(finaleAnnoCorrente)) {
+                    if (finaleAnnoCorrente.equalsIgnoreCase("99")) {
+                        anno = "00";
+                        contatore = "01";
+                    } else {
+                        anno = String.valueOf(Integer.parseInt(finaleAnnoCorrente) + 1);
+                        contatore = "01";
+                    }
+                } else {
+                    contatore = String.valueOf(Integer.parseInt(contatore) + 1);
+                }
+
+                need.setProgressivo(anno + "-" + contatore);
+                need.setDataRichiesta(new Date(System.currentTimeMillis()));
+                need.setCliente(clienteRepository.findById(idCliente).get());
+                need.setKeyPeople(keyPeopleRepository.findByCliente_Id(idCliente).get(0));
+                need.setOwner(ownerRepository.findByUsername(username).isPresent() ? ownerRepository.findByUsername(username).get() : null);
+                need.setNumeroRisorse(1);
+                need.setPriorita(1);
+                need.setScreening(1);
+                need.setPubblicazione(1);
+                need.setNumeroRisorse(1);
+                need.setWeek(YearWeek.from(LocalDate.now()).toString());
+
+                TipologiaN tipologia = new TipologiaN();
+                StatoN stato = new StatoN();
+                stato.setId(1);  //Attivo
+                tipologia.setId(2); //Head Hunting
+
+                need.setStato(stato);
+                need.setTipologia(tipologia);
+
+            }
+
+            needRepository.save(need);
+
+            logger.info("Job Description salvata correttamente");
+
+            return need.getId().toString();
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return "ERRORE";
+        }
     }
 
     @PostMapping("/react/salva")
@@ -931,6 +1056,27 @@ public class NeedController {
             tipologia.setId(Integer.parseInt(needMap.get("tipologia")));
 
             need.setTipologia(tipologia);
+        }
+
+        if (needMap.get("jobTitle") != null) {
+            Tipologia tipologia = new Tipologia();
+            tipologia.setId(Integer.parseInt(needMap.get("tipologia")));
+
+            need.setJobTitle(tipologia);
+        }
+
+        if (needMap.get("modalitaImpiego") != null) {
+            ModalitaImpiego modalitaImpiego = new ModalitaImpiego();
+            modalitaImpiego.setId(Integer.parseInt(needMap.get("modalitaImpiego")));
+
+            need.setModalitaImpiego(modalitaImpiego);
+        }
+
+        if (needMap.get("modalitaLavoro") != null) {
+            ModalitaLavoro modalitaLavoro = new ModalitaLavoro();
+            modalitaLavoro.setId(Integer.parseInt(needMap.get("modalitaLavoro")));
+
+            need.setModalitaLavoro(modalitaLavoro);
         }
 
         Set<Skill> skill1ListNew = new HashSet<>();

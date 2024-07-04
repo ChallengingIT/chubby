@@ -130,6 +130,33 @@ public class Need implements Serializable {
     @Column(length = 1, name="screening")
     private Integer screening;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "need_job_title",
+            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_job_title", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Tipologia jobTitle;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "modalita_lavoro_need",
+            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_modalita_lavoro", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private ModalitaLavoro modalitaLavoro;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "modalita_impiego_need",
+            joinColumns = @JoinColumn(name = "id_need", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_modalita_impiego", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private ModalitaImpiego modalitaImpiego;
+
     @Override
     public boolean equals(Object o) {
 
