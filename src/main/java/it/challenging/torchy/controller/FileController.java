@@ -32,7 +32,7 @@ public class FileController {
     @GetMapping("/react/download/file/{id}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public void downloadFile(
-        @PathVariable Integer id,
+        @PathVariable("id") Integer id,
         HttpServletResponse resp
     ) {
         logger.info("Download file");
