@@ -455,18 +455,34 @@ public class NeedController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String addShortlist(
             @RequestParam("id") Integer id,
-            @RequestParam("idCandidato") Integer idCandidato
+            @RequestParam("idCandidato") Integer idCandidato,
+            @RequestParam("username") String username
     ) {
         logger.info("Salva need");
+        StatoA                    statoa       = new StatoA();
+        AssociazioneCandidatoNeed associazione = new AssociazioneCandidatoNeed();
+        long                      millis       = System.currentTimeMillis();
 
         try {
+
+            statoa.setId(1);
+            statoa.setDescrizione("Pool");
+            associazione.setStato(statoa);
+            associazione.setDataModifica(new Date(millis));
 
             Need need = needRepository.findById(id).get();
             Candidato candidato = candidatoRepository.findById(idCandidato).get();
 
             need.getCandidati().add(candidato);
 
-            needRepository.save(need);
+            associazione.setNeed(need);
+            associazione.setCandidato(candidato);
+
+            Owner owner = ownerRepository.findByUsername(username).isPresent() ? ownerRepository.findByUsername(username).get() : null;
+
+            associazione.setOwner(owner);
+
+            associazioniRepository.save(associazione);
 
             logger.info("Candidato inserito correttamente");
 
