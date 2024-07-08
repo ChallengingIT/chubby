@@ -475,6 +475,8 @@ public class NeedController {
 
             need.getCandidati().add(candidato);
 
+            needRepository.save(need);
+
             associazione.setNeed(need);
             associazione.setCandidato(candidato);
 
