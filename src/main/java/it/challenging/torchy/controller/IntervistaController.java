@@ -339,7 +339,7 @@ public class IntervistaController {
         staff.setComunicazione(staffMap.get("comunicazione") != null ? Integer.parseInt(staffMap.get("comunicazione")) : null);
         staff.setDataNascita(staffMap.get("dataNascita") != null ? Date.valueOf(staffMap.get("dataNascita")) : null);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
         staff.setDataAggiornamento(staffMap.get("dataAggiornamento") != null ? LocalDateTime.parse(staffMap.get("dataAggiornamento"), formatter) : null);
         staff.setDataAVideo(staffMap.get("dataAVideo") != null ? staffMap.get("dataAVideo") : null);
