@@ -144,8 +144,10 @@ public class DashboardController {
                 attivita.setIdCandidato(candidato.getId());
                 attivita.setNomeCandidato(candidato.getNome());
                 attivita.setCognomeCandidato(candidato.getCognome());
-                attivita.setIdOwner(owner.getId());
-                attivita.setSiglaOwner(owner.getDescrizione());
+                if (null != owner) {
+                    attivita.setIdOwner(owner.getId());
+                    attivita.setSiglaOwner(owner.getDescrizione());
+                }
                 attivita.setIdIntervista(intervista.getId());
                 attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
                 attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
@@ -184,8 +186,11 @@ public class DashboardController {
                 attivita.setIdCandidato(candidato.getId());
                 attivita.setNomeCandidato(candidato.getNome());
                 attivita.setCognomeCandidato(candidato.getCognome());
-                attivita.setIdOwner(owner.getId());
-                attivita.setSiglaOwner(owner.getDescrizione());
+
+                if (null != owner) {
+                    attivita.setIdOwner(owner.getId());
+                    attivita.setSiglaOwner(owner.getDescrizione());
+                }
                 attivita.setIdIntervista(intervista.getId());
                 attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
                 attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
@@ -226,8 +231,10 @@ public class DashboardController {
                 attivita.setIdCandidato(candidato.getId());
                 attivita.setNomeCandidato(candidato.getNome());
                 attivita.setCognomeCandidato(candidato.getCognome());
-                attivita.setIdOwner(owner.getId());
-                attivita.setSiglaOwner(owner.getDescrizione());
+                if (null != owner) {
+                    attivita.setIdOwner(owner.getId());
+                    attivita.setSiglaOwner(owner.getDescrizione());
+                }
                 attivita.setIdIntervista(intervista.getId());
                 attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
                 attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
@@ -267,8 +274,10 @@ public class DashboardController {
                 attivita.setIdCandidato(candidato.getId());
                 attivita.setNomeCandidato(candidato.getNome());
                 attivita.setCognomeCandidato(candidato.getCognome());
-                attivita.setIdOwner(owner.getId());
-                attivita.setSiglaOwner(owner.getDescrizione());
+                if (null != owner) {
+                    attivita.setIdOwner(owner.getId());
+                    attivita.setSiglaOwner(owner.getDescrizione());
+                }
                 attivita.setIdIntervista(intervista.getId());
                 attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
                 attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
@@ -311,8 +320,10 @@ public class DashboardController {
                         attivita.setNomeContatto(keyPeople.getNome());
                         attivita.setIdCliente(cliente.getId());
                         attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        attivita.setIdOwner(owner.getId());
-                        attivita.setSiglaOwner(owner.getDescrizione());
+                        if (null != owner) {
+                            attivita.setIdOwner(owner.getId());
+                            attivita.setSiglaOwner(owner.getDescrizione());
+                        }
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
@@ -357,8 +368,10 @@ public class DashboardController {
                         attivita.setNomeContatto(keyPeople.getNome());
                         attivita.setIdCliente(cliente.getId());
                         attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        attivita.setIdOwner(owner.getId());
-                        attivita.setSiglaOwner(owner.getDescrizione());
+                        if (null != owner) {
+                            attivita.setIdOwner(owner.getId());
+                            attivita.setSiglaOwner(owner.getDescrizione());
+                        }
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
@@ -401,8 +414,10 @@ public class DashboardController {
                         attivita.setNomeContatto(keyPeople.getNome());
                         attivita.setIdCliente(cliente.getId());
                         attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        attivita.setIdOwner(owner.getId());
-                        attivita.setSiglaOwner(owner.getDescrizione());
+                        if (null != owner) {
+                            attivita.setIdOwner(owner.getId());
+                            attivita.setSiglaOwner(owner.getDescrizione());
+                        }
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
@@ -445,8 +460,10 @@ public class DashboardController {
                         attivita.setNomeContatto(keyPeople.getNome());
                         attivita.setIdCliente(cliente.getId());
                         attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        attivita.setIdOwner(owner.getId());
-                        attivita.setSiglaOwner(owner.getDescrizione());
+                        if (null != owner) {
+                            attivita.setIdOwner(owner.getId());
+                            attivita.setSiglaOwner(owner.getDescrizione());
+                        }
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
