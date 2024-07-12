@@ -380,6 +380,14 @@ public class KeyPeopleController {
         }
     }
 
+    @GetMapping("/{email}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public String emailDuplicata(@PathVariable("email") String email) {
+        logger.info("Key people tramite email");
+
+        return keyPeopleRepository.findByEmail(email).isPresent() ? "KO" : "OK";
+    }
+
     public boolean controllaEmailDuplicata(String email){
         logger.debug("Controlla email duplicata");
 

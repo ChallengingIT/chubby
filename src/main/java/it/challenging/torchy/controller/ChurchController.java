@@ -19,9 +19,9 @@ public class ChurchController {
 
     private static final Logger logger = LoggerFactory.getLogger(ChurchController.class);
 
-    @GetMapping
+    @GetMapping("/{username}")
     public List<Chiesa> getAllByUserId(
-        @RequestParam("username") String username
+        @PathVariable("username") String username
     ) {
         logger.info("Lista chiese tramite utenza");
         return churchRepository.findByUsername(username);
