@@ -31,10 +31,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     Page<Need> findByKeyPeople_IdOrderByProgressivoDesc(Integer idKeyPeople, Pageable p);
 
     @Query(value= """
-          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, ssn.id_skill
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, ssn.id_skill, nj.id_job_title
           FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join skill_need ssn on n.id = ssn.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
@@ -47,10 +48,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     List<Need> findByWhere(String where);
 
     @Query(value= """
-          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title
           FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -63,10 +65,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     List<Need> ricercaByUsername(String username);
 
     @Query(value= """
-          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title
           FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -78,10 +81,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     List<Need> ricercaOrdinata();
 
     @Query(value= """
-          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title
           FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -103,28 +107,16 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
     @Query(value=" SELECT count(distinct id_need) FROM wehub.need_associazione ", nativeQuery=true)
     Integer findNeedAssociati();
 
-    @Query(value= """
-         select n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato
-         from need n, need_cliente nc, tipologia_need tn, need_owner non, stato_need sn
-         where n.id = sn.id_need
-         and n.id = nc.id_need
-         and n.id = tn.id_need
-         and n.id = non.id_need
-         and sn.id_stato not in (2,3,4,5)
-         order by priorita,data_richiesta desc
-         limit 6
-        """, nativeQuery=true)
-    List<Need> findNeedOrdinati();
-
     List<Need> findByCliente_Id(@Param("idCliente") Integer idCliente);
 
     Page<Need> findByCliente_IdOrderByProgressivoDesc(Integer idCliente, Pageable p);
 
     @Query(value= """
-         SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+         SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title
          FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -145,6 +137,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -162,10 +155,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
 
 
     @Query(value= """
-         SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+         SELECT n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title
          FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -189,6 +183,7 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
          FROM need n
           left join need_cliente nc on n.id = nc.id_need
           left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
           left join tipologia_need tn on n.id = tn.id_need
           left join need_owner non on n.id = non.id_need
           left join stato_need sn on n.id = sn.id_need
@@ -209,10 +204,11 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
 
 
     @Query(value= """
-           select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople
+           select distinct n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title
            from need n
               left join need_cliente nc on n.id = nc.id_need
               left join need_keypeople nk on n.id = nk.id_need
+              left join need_job_title nj on n.id = nj.id_need
               left join tipologia_need tn on n.id = tn.id_need
               left join need_owner non on n.id = non.id_need
               left join stato_need sn on n.id = sn.id_need
