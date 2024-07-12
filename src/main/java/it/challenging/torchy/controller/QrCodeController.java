@@ -42,7 +42,7 @@ public class QrCodeController {
 
             QRCodeWriter barcodeWriter = new QRCodeWriter();
 
-            String url = "http://localhost:8080/api/auth/code/verify/" + username;
+            String url = "http://89.46.196.60:8443/api/auth/mapp/code/verify/" + username;
 
             BitMatrix bitMatrix = barcodeWriter.encode(url, BarcodeFormat.QR_CODE, 200, 200);
 
