@@ -195,7 +195,7 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
                                                  Integer anniMassimi);
 
     @Query(value= """
-         select c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
+         select distinct c.*, tc.id_tipologia, scc.id_stato, lc.id_livello, ttc.id_tipo, fc.id_fornitore,
           fac.id_facolta, co.id_owner, tcc.id_tipo_candidatura, trc.id_tipo_ricerca, ffc.id_file
          from candidato c
          left join fornitore_candidato fc on (c.id = fc.id_candidato )
@@ -210,7 +210,7 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
          left join tipo_candidato ttc on (c.id = ttc.id_candidato)
          join livello_candidato lc on (c.id = lc.id_candidato)
          where c.id  in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-         and tfc.id_tipologia = 1
+         and if ( tfc.id_tipologia = 1, tfc.id_tipologia = 1 , tfc.id_tipologia = 2)
          order by c.cognome asc
         """, nativeQuery=true)
     Page<Candidato> findCandidatiAssociati(Integer idNeed, Pageable p);
