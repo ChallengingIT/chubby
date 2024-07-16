@@ -360,26 +360,24 @@ public class DashboardController {
                 for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
                     AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    if (DateUtils.isToday(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()))) {
-                        Owner owner = keyPeople.getOwner();
-                        Cliente cliente = keyPeople.getCliente();
+                    Owner owner = keyPeople.getOwner();
+                    Cliente cliente = keyPeople.getCliente();
 
-                        attivita.setIdContatto(keyPeople.getId());
-                        attivita.setNomeContatto(keyPeople.getNome());
-                        attivita.setIdCliente(cliente.getId());
-                        attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        if (null != owner) {
-                            attivita.setIdOwner(owner.getId());
-                            attivita.setSiglaOwner(owner.getDescrizione());
-                        }
-                        attivita.setIdAzioneKeyPeople(azione.getId());
-                        attivita.setAzione(azione.getTipologia().getDescrizione());
-                        attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
-                        attivita.setNote(azione.getNote());
-
-                        attivitaBusiness.add(attivita);
+                    attivita.setIdContatto(keyPeople.getId());
+                    attivita.setNomeContatto(keyPeople.getNome());
+                    attivita.setIdCliente(cliente.getId());
+                    attivita.setDescrizioneCliente(cliente.getDenominazione());
+                    if (null != owner) {
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
                     }
+                    attivita.setIdAzioneKeyPeople(azione.getId());
+                    attivita.setAzione(azione.getTipologia().getDescrizione());
+                    attivita.setIdAzione(azione.getTipologia().getId());
+                    attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                    attivita.setNote(azione.getNote());
+
+                    attivitaBusiness.add(attivita);
                 }
             }
             return attivitaBusiness;
@@ -452,26 +450,24 @@ public class DashboardController {
                 for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
                     AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    if (DateUtils.isToday(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()))) {
-                        Owner owner = keyPeople.getOwner();
-                        Cliente cliente = keyPeople.getCliente();
+                    Owner owner = keyPeople.getOwner();
+                    Cliente cliente = keyPeople.getCliente();
 
-                        attivita.setIdContatto(keyPeople.getId());
-                        attivita.setNomeContatto(keyPeople.getNome());
-                        attivita.setIdCliente(cliente.getId());
-                        attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        if (null != owner) {
-                            attivita.setIdOwner(owner.getId());
-                            attivita.setSiglaOwner(owner.getDescrizione());
-                        }
-                        attivita.setIdAzioneKeyPeople(azione.getId());
-                        attivita.setAzione(azione.getTipologia().getDescrizione());
-                        attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
-                        attivita.setNote(azione.getNote());
-
-                        attivitaBusiness.add(attivita);
+                    attivita.setIdContatto(keyPeople.getId());
+                    attivita.setNomeContatto(keyPeople.getNome());
+                    attivita.setIdCliente(cliente.getId());
+                    attivita.setDescrizioneCliente(cliente.getDenominazione());
+                    if (null != owner) {
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
                     }
+                    attivita.setIdAzioneKeyPeople(azione.getId());
+                    attivita.setAzione(azione.getTipologia().getDescrizione());
+                    attivita.setIdAzione(azione.getTipologia().getId());
+                    attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                    attivita.setNote(azione.getNote());
+
+                    attivitaBusiness.add(attivita);
                 }
             }
             return attivitaBusiness;
