@@ -328,7 +328,7 @@ public class DashboardController {
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setData(azione.getDataModifica());
                         attivita.setNote(azione.getNote());
 
                         attivitaBusiness.add(attivita);
@@ -386,7 +386,7 @@ public class DashboardController {
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setData(azione.getDataModifica());
                         attivita.setNote(azione.getNote());
 
                         attivitaBusiness.add(attivita);
@@ -432,7 +432,7 @@ public class DashboardController {
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setData(azione.getDataModifica());
 
                         attivitaBusiness.add(attivita);
                     }
@@ -488,7 +488,7 @@ public class DashboardController {
                         attivita.setIdAzioneKeyPeople(azione.getId());
                         attivita.setAzione(azione.getTipologia().getDescrizione());
                         attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica().toLocalDate().atStartOfDay());
+                        attivita.setData(azione.getDataModifica());
                         attivita.setNote(azione.getNote());
 
                         attivitaBusiness.add(attivita);
