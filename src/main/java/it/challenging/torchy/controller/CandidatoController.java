@@ -6,7 +6,6 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.entity.*;
 import it.challenging.torchy.repository.*;
-import it.challenging.torchy.util.Constants;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -346,7 +345,7 @@ public class CandidatoController {
 
             candidatoRepository.save(candidatoEntity);
 
-            if (null != candidatoEntity.getStato()) {
+            /*if (null != candidatoEntity.getStato()) {
                 if (null != candidatoEntity.getStato().getDescrizione()) {
                     if (candidatoEntity.getStato().getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_HEAD_HUNTING) ||
                             candidatoEntity.getStato().getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_RECRUITING) ||
@@ -367,7 +366,7 @@ public class CandidatoController {
                         }
                     }
                 }
-            }
+            }*/
 
             logger.debug("Candidato salvato correttamente");
 
@@ -509,6 +508,10 @@ public class CandidatoController {
         if (candidatoMap.get("stato") != null) {
             StatoC stato = new StatoC();
             stato.setId(Integer.parseInt(candidatoMap.get("stato")));
+            candidato.setStato(stato);
+        } else  {
+            StatoC stato = new StatoC();
+            stato.setId(13);
             candidato.setStato(stato);
         }
         candidato.setAnniEsperienza(candidatoMap.get("anniEsperienza") != null ? Double.parseDouble(candidatoMap.get("anniEsperienza")) : null);

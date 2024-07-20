@@ -117,8 +117,8 @@ public class Intervista implements Serializable {
     @Column(length = 2, name="valutazione_competenze")
     private Integer valutazione;
 
-    @Column(length = 45, name="team_si_no")
-    private String teamSiNo;
+    @Column(length = 2, name="team_si_no")
+    private Integer teamSiNo;
 
     @Column(length = 45)
     private String preavviso;

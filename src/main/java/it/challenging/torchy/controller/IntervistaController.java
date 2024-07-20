@@ -272,7 +272,14 @@ public class IntervistaController {
             interviste.add(intervista);
 
             candidato.setRating(ricalcoloRating(interviste));
-            //candidato.setStato(intervista.getStato());
+
+            if (intervista.getTeamSiNo() == 3) {
+                StatoC stato = new StatoC();
+                stato.setId(22);
+                candidato.setStato(stato);
+            } else {
+                candidato.setStato(calcolaStato(candidato.getRating()));
+            }
 
             intervista.setCandidato(candidato);
 
@@ -327,6 +334,18 @@ public class IntervistaController {
         return rating/interviste.size();
     }
 
+    public StatoC calcolaStato(Double rating) {
+        StatoC stato = new StatoC();
+        if(rating > 0 && rating <= 1.9) {
+            stato.setId(21);
+        } else if (rating >= 2.0 && rating <= 2.9) {
+            stato.setId(20);
+        } else if (rating >= 3.0) {
+            stato.setId(19);
+        }
+        return stato;
+    }
+
     public void trasformaMappaInIntervista(Intervista staff, Map<String,String> staffMap) {
         logger.debug("Trasforma mappa in intervista");
 
@@ -373,7 +392,7 @@ public class IntervistaController {
         staff.setProposta(staffMap.get("proposta") != null ? staffMap.get("proposta") : null);
         staff.setRecapiti(staffMap.get("recapiti") != null ? staffMap.get("recapiti") : null);;
         staff.setStanding(staffMap.get("standing") != null ? Integer.parseInt(staffMap.get("standing")) : null);
-        staff.setTeamSiNo(staffMap.get("teamSiNo") != null ? staffMap.get("teamSiNo") : null);
+        staff.setTeamSiNo(staffMap.get("teamSiNo") != null ? Integer.parseInt(staffMap.get("teamSiNo")) : null);
         staff.setTipologia(staffMap.get("tipologia") != null ? staffMap.get("tipologia") : null);
         staff.setValutazione(staffMap.get("valutazione") != null ? Integer.parseInt(staffMap.get("valutazione")) : null);
 

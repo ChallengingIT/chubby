@@ -67,7 +67,7 @@ public class IntervistaModificato implements Serializable {
 
     private Integer valutazione;
 
-    private String teamSiNo;
+    private Integer teamSiNo;
 
     private String preavviso;
 
