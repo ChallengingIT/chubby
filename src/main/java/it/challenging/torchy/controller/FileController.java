@@ -64,12 +64,12 @@ public class FileController {
             Sei un recruiter che deve condividere le informazioni di un tuo candidato ad un'azienda per proporre un colloquio conoscitivo.
             Per costruire queste informazioni hai bisogno di estrarre le esperienze che ti manderò a seguire in questa modalità: Inizio e fine Attività,
             Job title posizione svolta senza esporre il nome dell'azienda, settore azienda, attività svolta durante l'esperienza lavorativa suddivisa in tre massimo
-            cinque punti con numero massimo di 80 caratteri, stack tecnologico utilizzato. Potresti estrarre queste informazioni da questo testo?
+            cinque punti con numero massimo di 80 caratteri, stack tecnologico utilizzato. Potresti estrarre queste informazioni da questo testo senza mettermi stringhe introduttive?
             """;
     private static final String SYSTEM_MESSAGE_LINGUE = """
             Sei un recruiter che deve condividere le informazioni di un tuo candidato ad un'azienda per proporre un colloquio conoscitivo.
             Per costruire queste informazioni hai bisogno di estrarre le lingue conosciute dal candidato che ti manderò a seguire in questa modalità: Lingue conosciute in un elenco
-            puntato con numero massimo di 80 caratteri. Potresti estrarre queste informazioni da questo testo?
+            puntato con numero massimo di 80 caratteri. Potresti estrarre queste informazioni da questo testo senza mettermi stringhe introduttive?
             """;
     public FileController(OpenAiChatClient chatClient) {
         this.chatClient = chatClient;
@@ -146,7 +146,6 @@ public class FileController {
         cal.setTime(candidato.getDataNascita());
 
         Integer annoNascita     = cal.get(Calendar.YEAR);
-        var systemMessage       = new SystemMessage(SYSTEM_MESSAGE);
         var systemMessageLingue = new SystemMessage(SYSTEM_MESSAGE_LINGUE);
 
 
@@ -432,7 +431,7 @@ public class FileController {
 
         contentStreamPage3.beginText();
         contentStreamPage3.setFont(font, fontSize);
-        contentStreamPage3.newLineAtOffset(centroX-40, 620);
+        contentStreamPage3.newLineAtOffset(centroX-60, 620);
         contentStreamPage3.showText("Professional Experiences");
         contentStreamPage3.endText();
 
@@ -456,6 +455,7 @@ public class FileController {
             row = row
                     .replace("*", "")
                     .replace("\r", "")
+                    .replace("\t", "    ")
                     .replaceAll("[0-9]\\.","•");
 
             contentStreamPage3.showText(row);
