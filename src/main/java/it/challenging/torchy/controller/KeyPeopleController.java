@@ -284,7 +284,7 @@ public class KeyPeopleController {
             @PathVariable("id") Integer id,
             @RequestParam ("stato") Integer idStato
     ) {
-        logger.info("Salva cambio stato need");
+        logger.info("Salva cambio stato keypeople");
 
         try {
 
@@ -345,6 +345,11 @@ public class KeyPeopleController {
                 logger.debug("Key people duplicato");
 
                 return "DUPLICATO";
+            }
+
+            if (null != keyPeopleEntity.getCliente()) {
+                Cliente cliente = clienteRepository.findById(keyPeopleEntity.getCliente().getId()).get();
+                keyPeopleEntity.setOwner(cliente.getOwner());
             }
 
             keyPeopleRepository.save(keyPeopleEntity);
