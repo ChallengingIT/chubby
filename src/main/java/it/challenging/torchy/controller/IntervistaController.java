@@ -274,7 +274,9 @@ public class IntervistaController {
             candidato.setRating(ricalcoloRating(interviste));
 
             if (intervista.getTeamSiNo() == 3) {
-                candidato.getStato().setId(22);
+                StatoC stato = new StatoC();
+                stato.setId(22);
+                candidato.setStato(stato);
             } else {
                 candidato.setStato(calcolaStato(candidato.getRating()));
             }
@@ -340,8 +342,6 @@ public class IntervistaController {
             stato.setId(20);
         } else if (rating >= 3.0) {
             stato.setId(19);
-        } else {
-            stato.setId(13);
         }
         return stato;
     }
