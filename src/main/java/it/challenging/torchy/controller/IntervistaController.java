@@ -346,68 +346,68 @@ public class IntervistaController {
         return stato;
     }
 
-    public void trasformaMappaInIntervista(Intervista staff, Map<String,String> staffMap) {
+    public void trasformaMappaInIntervista(Intervista intervista, Map<String,String> staffMap) {
         logger.debug("Trasforma mappa in intervista");
 
-        staff.setAnniEsperienza(staffMap.get("anniEsperienza") != null ? Double.parseDouble(staffMap.get("anniEsperienza")) : null);
-        staff.setAderenza(staffMap.get("aderenza") != null ? Integer.parseInt(staffMap.get("aderenza")) : null);
-        staff.setAttuale(staffMap.get("attuale") != null ? staffMap.get("attuale") : null);
-        staff.setCoerenza(staffMap.get("coerenza") != null ? Integer.parseInt(staffMap.get("coerenza")) : null);
-        staff.setCognome(staffMap.get("cognome") != null ? staffMap.get("cognome") : null);
-        staff.setCompetenze(staffMap.get("competenze") != null ? staffMap.get("competenze") : null);;
-        staff.setComunicazione(staffMap.get("comunicazione") != null ? Integer.parseInt(staffMap.get("comunicazione")) : null);
-        staff.setDataNascita(staffMap.get("dataNascita") != null ? Date.valueOf(staffMap.get("dataNascita")) : null);
+        intervista.setAnniEsperienza(staffMap.get("anniEsperienza") != null ? Double.parseDouble(staffMap.get("anniEsperienza")) : null);
+        intervista.setAderenza(staffMap.get("aderenza") != null ? Integer.parseInt(staffMap.get("aderenza")) : null);
+        intervista.setAttuale(staffMap.get("attuale") != null ? staffMap.get("attuale") : null);
+        intervista.setCoerenza(staffMap.get("coerenza") != null ? Integer.parseInt(staffMap.get("coerenza")) : null);
+        intervista.setCognome(staffMap.get("cognome") != null ? staffMap.get("cognome") : null);
+        intervista.setCompetenze(staffMap.get("competenze") != null ? staffMap.get("competenze") : null);;
+        intervista.setComunicazione(staffMap.get("comunicazione") != null ? Integer.parseInt(staffMap.get("comunicazione")) : null);
+        intervista.setDataNascita(staffMap.get("dataNascita") != null ? Date.valueOf(staffMap.get("dataNascita")) : null);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-        staff.setDataAggiornamento(staffMap.get("dataAggiornamento") != null ? LocalDateTime.parse(staffMap.get("dataAggiornamento"), formatter) : null);
-        staff.setDataAVideo(staffMap.get("dataAVideo") != null ? staffMap.get("dataAVideo") : null);
-        staff.setDataColloquio(staffMap.get("dataColloquio") != null ? Date.valueOf(staffMap.get("dataColloquio")) : null);
-        staff.setDescrizioneCandidato(staffMap.get("descrizioneCandidato") != null ? staffMap.get("descrizioneCandidato") : null);
-        staff.setNome(staffMap.get("nome") != null ? staffMap.get("nome") : null);
-        staff.setDescrizioneCandidatoUna(staffMap.get("descrizioneCandidatoUna") != null ? staffMap.get("descrizioneCandidatoUna") : null);
-        staff.setDesiderata(staffMap.get("desiderata") != null ? staffMap.get("desiderata") : null);
-        staff.setDisponibilita(staffMap.get("disponibilita") != null ? staffMap.get("disponibilita") : null);
-        staff.setEnergia(staffMap.get("energia") != null ? Integer.parseInt(staffMap.get("energia")) : null);
+        intervista.setDataAggiornamento(staffMap.get("dataAggiornamento") != null ? LocalDateTime.parse(staffMap.get("dataAggiornamento"), formatter) : null);
+        intervista.setDataAVideo(staffMap.get("dataAVideo") != null ? staffMap.get("dataAVideo") : null);
+        intervista.setDataColloquio(staffMap.get("dataColloquio") != null ? Date.valueOf(staffMap.get("dataColloquio")) : null);
+        intervista.setDescrizioneCandidato(staffMap.get("descrizioneCandidato") != null ? staffMap.get("descrizioneCandidato") : null);
+        intervista.setNome(staffMap.get("nome") != null ? staffMap.get("nome") : null);
+        intervista.setDescrizioneCandidatoUna(staffMap.get("descrizioneCandidatoUna") != null ? staffMap.get("descrizioneCandidatoUna") : null);
+        intervista.setDesiderata(staffMap.get("desiderata") != null ? staffMap.get("desiderata") : null);
+        intervista.setDisponibilita(staffMap.get("disponibilita") != null ? staffMap.get("disponibilita") : null);
+        intervista.setEnergia(staffMap.get("energia") != null ? Integer.parseInt(staffMap.get("energia")) : null);
 
         if (staffMap.get("idNextOwner") != null) {
             Owner owner = new Owner();
             owner.setId(Integer.parseInt(staffMap.get("idNextOwner")));
 
-            staff.setNextOwner(owner);
+            intervista.setNextOwner(owner);
         }
 
         if (staffMap.get("idOwner") != null) {
             Owner owner = new Owner();
             owner.setId(Integer.parseInt(staffMap.get("idOwner")));
 
-            staff.setOwner(owner);
+            intervista.setOwner(owner);
         }
 
-        staff.setInglese(staffMap.get("inglese") != null ? Integer.parseInt(staffMap.get("inglese")) : null);
-        staff.setMobilita(staffMap.get("mobilita") != null ? staffMap.get("mobilita") : null);
-        staff.setMotivazione(staffMap.get("motivazione") != null ? Integer.parseInt(staffMap.get("motivazione")) : null);
-        staff.setOraAVideo(staffMap.get("oraAVideo") != null ? staffMap.get("oraAVideo") : null);
-        staff.setPreavviso(staffMap.get("preavviso") != null ? staffMap.get("preavviso") : null);
-        staff.setProposta(staffMap.get("proposta") != null ? staffMap.get("proposta") : null);
-        staff.setRecapiti(staffMap.get("recapiti") != null ? staffMap.get("recapiti") : null);;
-        staff.setStanding(staffMap.get("standing") != null ? Integer.parseInt(staffMap.get("standing")) : null);
-        staff.setTeamSiNo(staffMap.get("teamSiNo") != null ? Integer.parseInt(staffMap.get("teamSiNo")) : null);
-        staff.setTipologia(staffMap.get("tipologia") != null ? staffMap.get("tipologia") : null);
-        staff.setValutazione(staffMap.get("valutazione") != null ? Integer.parseInt(staffMap.get("valutazione")) : null);
+        intervista.setInglese(staffMap.get("inglese") != null ? Integer.parseInt(staffMap.get("inglese")) : null);
+        intervista.setMobilita(staffMap.get("mobilita") != null ? staffMap.get("mobilita") : null);
+        intervista.setMotivazione(staffMap.get("motivazione") != null ? Integer.parseInt(staffMap.get("motivazione")) : null);
+        intervista.setOraAVideo(staffMap.get("oraAVideo") != null ? staffMap.get("oraAVideo") : null);
+        intervista.setPreavviso(staffMap.get("preavviso") != null ? staffMap.get("preavviso") : null);
+        intervista.setProposta(staffMap.get("proposta") != null ? staffMap.get("proposta") : null);
+        intervista.setRecapiti(staffMap.get("recapiti") != null ? staffMap.get("recapiti") : null);;
+        intervista.setStanding(staffMap.get("standing") != null ? Integer.parseInt(staffMap.get("standing")) : null);
+        intervista.setTeamSiNo(staffMap.get("teamSiNo") != null ? Integer.parseInt(staffMap.get("teamSiNo")) : null);
+        intervista.setTipologia(staffMap.get("tipologia") != null ? staffMap.get("tipologia") : null);
+        intervista.setValutazione(staffMap.get("valutazione") != null ? Integer.parseInt(staffMap.get("valutazione")) : null);
 
         if (staffMap.get("stato") != null) {
             StatoC stato = new StatoC();
             stato.setId(Integer.parseInt(staffMap.get("stato")));
 
-            staff.setStato(stato);
+            intervista.setStato(stato);
         }
 
         if (staffMap.get("tipo") != null) {
             TipologiaI tipo = new TipologiaI();
             tipo.setId(Integer.parseInt(staffMap.get("tipo")));
 
-            staff.setTipo(tipo);
+            intervista.setTipo(tipo);
         }
     }
 }
