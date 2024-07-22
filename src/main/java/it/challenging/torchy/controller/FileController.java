@@ -196,7 +196,7 @@ public class FileController {
                     byte[] pdf = candidato.getFiles().get(0).getData();
 
                     InputStream is = new ByteArrayInputStream(pdf);
-                    java.io.File f = new java.io.File("");
+                    java.io.File f = new java.io.File(Objects.requireNonNull(FileController.class.getResource("/static/files/pdf.pdf")).getPath());
                     FileUtils.copyInputStreamToFile(is, f);
                     var userMessage = getUserMessage(f);
 
