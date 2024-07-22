@@ -514,45 +514,37 @@ public class DashboardController {
         cfDisponibili = candidatoRepository
                 .countCandidatiAssociatiByStato(
                         idNeed,
-                        stati
-                            .stream()
+                        stati.stream()
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_DISPONIBILE)) ? stati.stream()
                             .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_DISPONIBILE))
-                            .findFirst()
-                            .get()
-                            .getId()
+                            .findFirst().get().getId() : null
                 );
 
         cfInviati = candidatoRepository
                 .countCandidatiAssociatiByStato(
                         idNeed,
-                        stati
-                                .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_INVIATO))
-                                .findFirst()
-                                .get()
-                                .getId()
+                        stati.stream()
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_INVIATO)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_INVIATO))
+                            .findFirst().get().getId() : null
                 );
 
         qmPianificate = candidatoRepository
                 .countCandidatiAssociatiByStato(
                         idNeed,
-                        stati
-                                .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_PIANIFICATA))
-                                .findFirst()
-                                .get()
-                                .getId()
+                        stati.stream()
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_PIANIFICATA)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_PIANIFICATA))
+                            .findFirst().get().getId() : null
                 );
 
         qmFatte = candidatoRepository
                 .countCandidatiAssociatiByStato(
                         idNeed,
-                        stati
-                                .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_FATTA))
-                                .findFirst()
-                                .get()
-                                .getId()
+                        stati.stream()
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_FATTA)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_FATTA))
+                            .findFirst().get().getId() : null
                 );
 
         /*itwPianificate = candidatoRepository
@@ -580,23 +572,19 @@ public class DashboardController {
         followUpPool = candidatoRepository
                 .countCandidatiAssociatiByStato(
                         idNeed,
-                        stati
-                                .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POOL))
-                                .findFirst()
-                                .get()
-                                .getId()
+                        stati.stream()
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POOL)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POOL))
+                            .findFirst().get().getId() : null
                 );
 
         followUpPositivi = candidatoRepository
                 .countCandidatiAssociatiByStato(
                         idNeed,
-                        stati
-                                .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POSITIVO))
-                                .findFirst()
-                                .get()
-                                .getId()
+                        stati.stream()
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POSITIVO)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POSITIVO))
+                            .findFirst().get().getId() : null
                 );
 
         pipeline.setCfDisponibili(cfDisponibili);
