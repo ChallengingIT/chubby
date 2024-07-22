@@ -367,9 +367,11 @@ public class FileController {
                 skillString += skill.getDescrizione() + " / ";
             }
         }
-
-        contentStreamPage2.showText(skillString.substring(0, skillString.length()-2));
+        if (!skillString.isEmpty()) {
+            contentStreamPage2.showText(skillString.substring(0, skillString.length() - 2));
+        }
         contentStreamPage2.endText();
+
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, 14);
