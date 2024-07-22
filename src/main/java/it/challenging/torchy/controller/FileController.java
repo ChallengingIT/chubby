@@ -192,7 +192,7 @@ public class FileController {
 
         if (null != candidato.getFiles() && !candidato.getFiles().isEmpty()) {
             if(null != candidato.getFiles().get(0)) {
-                if(candidato.getFiles().get(0).getTipologia().getId() == 0) {
+                if(candidato.getFiles().get(0).getTipologia().getId() == 1) {
                     byte[] pdf = candidato.getFiles().get(0).getData();
 
                     InputStream is = new ByteArrayInputStream(pdf);
