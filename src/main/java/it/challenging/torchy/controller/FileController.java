@@ -186,9 +186,10 @@ public class FileController {
             @PathVariable("id") Integer id
     ) throws IOException {
 
-        Candidato        candidato     = candidatoRepository.findById(id).get();
-        var              systemMessage = new SystemMessage(SYSTEM_MESSAGE);
-        AssistantMessage risposta      = null;
+        Candidato        candidato          = candidatoRepository.findById(id).get();
+        var              systemMessage      = new SystemMessage(SYSTEM_MESSAGE);
+        AssistantMessage risposta           = null;
+        String           rispostaModificata = null;
 
         if (null != candidato.getFiles() && !candidato.getFiles().isEmpty()) {
             if(null != candidato.getFiles().get(0)) {
@@ -202,14 +203,23 @@ public class FileController {
 
                     ChatResponse chatResponse = chatClient.call(new Prompt(List.of(systemMessage, userMessage)));
 
-                    risposta = chatResponse.getResults().get(0).getOutput();
+                    risposta = chatResponse.getResults().getFirst().getOutput();
+
+                    if (null != risposta) {
+
+                        rispostaModificata = risposta.getContent()
+                            .replace("Inizio Esperienze Lavorative","")
+                            .replace("Fine Esperienze Lavorative", "")
+                            .replace("*", "")
+                            .replace("\r", "")
+                            .replace("\t", "    ")
+                            .replaceAll("[0-9]\\.","•");
+                    }
                 }
             }
         }
 
-
-        return risposta != null ? risposta.getContent() : null;
-
+        return rispostaModificata;
     }
 
     private static @NotNull UserMessage getUserMessage(java.io.File f) throws IOException {
@@ -445,19 +455,9 @@ public class FileController {
         contentStreamPage3.newLineAtOffset(offsetX, 595);
         contentStreamPage3.setLeading(18.5f);
 
-        rispostaOpenAI = rispostaOpenAI
-                .replace("Inizio Esperienze Lavorative","")
-                .replace("Fine Esperienze Lavorative", "");
         String[] rows = rispostaOpenAI.split("\n");
 
         for(String row : rows) {
-
-            row = row
-                    .replace("*", "")
-                    .replace("\r", "")
-                    .replace("\t", "    ")
-                    .replaceAll("[0-9]\\.","•");
-
             contentStreamPage3.showText(row);
             contentStreamPage3.newLine();
         }
