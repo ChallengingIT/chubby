@@ -148,13 +148,18 @@ public class FileController {
         Integer annoNascita     = cal.get(Calendar.YEAR);
         var systemMessageLingue = new SystemMessage(SYSTEM_MESSAGE_LINGUE);
 
+        byte[] pdf = candidato.getFiles().get(0).getData();
+
+        InputStream is = new ByteArrayInputStream(pdf);
+        java.io.File f = new java.io.File(Objects.requireNonNull(FileController.class.getResource("/static/files/pdf.pdf")).getPath());
+        FileUtils.copyInputStreamToFile(is, f);
+        var userMessage = getUserMessage(f);
 
         if (null != descrizione) {
-            ChatResponse chatResponseLingue = chatClient.call(new Prompt(List.of(systemMessageLingue, new UserMessage(descrizione))));
+            ChatResponse chatResponseLingue = chatClient.call(new Prompt(List.of(systemMessageLingue, userMessage)));
 
             rispostaLingua = chatResponseLingue.getResults().get(0).getOutput();
         }
-
 
         ByteArrayOutputStream byteArrayOutputStream =
                 createPDF(
