@@ -148,14 +148,14 @@ public class FileController {
         Integer annoNascita     = cal.get(Calendar.YEAR);
         var systemMessageLingue = new SystemMessage(SYSTEM_MESSAGE_LINGUE);
 
-        byte[] pdf = candidato.getFiles().get(0).getData();
+        if (null != candidato.getFiles() && !candidato.getFiles().isEmpty()) {
+            byte[] pdf = candidato.getFiles().get(0).getData();
 
-        InputStream is = new ByteArrayInputStream(pdf);
-        java.io.File f = new java.io.File(Objects.requireNonNull(FileController.class.getResource("/static/files/pdf.pdf")).getPath());
-        FileUtils.copyInputStreamToFile(is, f);
-        var userMessage = getUserMessage(f);
+            InputStream is = new ByteArrayInputStream(pdf);
+            java.io.File f = new java.io.File(Objects.requireNonNull(FileController.class.getResource("/static/files/pdf.pdf")).getPath());
+            FileUtils.copyInputStreamToFile(is, f);
+            var userMessage = getUserMessage(f);
 
-        if (null != descrizione) {
             ChatResponse chatResponseLingue = chatClient.call(new Prompt(List.of(systemMessageLingue, userMessage)));
 
             rispostaLingua = chatResponseLingue.getResults().get(0).getOutput();
@@ -246,12 +246,14 @@ public class FileController {
         PDPageContentStream contentStream;
         PDPageContentStream contentStreamPage2;
         PDPageContentStream contentStreamPage3;
+        PDPageContentStream contentStreamPage4;
         ByteArrayOutputStream output =new ByteArrayOutputStream();
         PDDocument document =new PDDocument();
         PDFont font = PDType0Font.load(document, new java.io.File(Objects.requireNonNull(FileController.class.getResource("/static/fonts/Roboto-Regular.ttf")).getPath()));
         PDPage page = new PDPage();
         PDPage page2 = new PDPage();
         PDPage page3 = new PDPage();
+        PDPage page4 = new PDPage();
 
         int marginTop = 330; // Or whatever margin you want.
 
@@ -464,12 +466,30 @@ public class FileController {
         contentStreamPage3.newLineAtOffset(offsetX, 595);
         contentStreamPage3.setLeading(18.5f);
 
+        contentStreamPage4 = new PDPageContentStream(document, page4);
+        contentStreamPage4.drawImage(pdImage, 110, 675);
+
+        int countRows = 0;
+        boolean quartaPagina = false;
         if (null != rispostaOpenAI) {
             String[] rows = rispostaOpenAI.split("\n");
 
             for (String row : rows) {
-                contentStreamPage3.showText(row);
-                contentStreamPage3.newLine();
+                countRows++;
+                if(countRows > 26 && !quartaPagina) {
+                    quartaPagina = true;
+
+                    document.addPage(page4);
+
+                    contentStreamPage4.showText(row);
+                    contentStreamPage4.newLine();
+                } else if (countRows > 26){
+                    contentStreamPage4.showText(row);
+                    contentStreamPage4.newLine();
+                } else {
+                    contentStreamPage3.showText(row);
+                    contentStreamPage3.newLine();
+                }
             }
         }
         contentStreamPage3.endText();
@@ -499,6 +519,34 @@ public class FileController {
         contentStreamPage3.endText();
 
         contentStreamPage3.close();
+
+        if(quartaPagina){
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroAziendaX, 39);
+            contentStreamPage4.showText(NOME_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroLuogoX, 27);
+            contentStreamPage4.showText(LUOGO_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroPIX, 15);
+            contentStreamPage4.showText(PI_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroREAX, 3 );
+            contentStreamPage4.showText(REA_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.close();
+        }
 
         document.save(output);
         document.close();
