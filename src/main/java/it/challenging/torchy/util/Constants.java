@@ -9,16 +9,16 @@ public class Constants {
     public static final String NOTE_LOST_PASSWORD                 = "Salve, la nuova password da cambiare entro 24h è la seguente \n ";
     public static final String OGGETTO_LOST_PASSWORD              = "Nuovo accesso a Torchy ";
 
-    public static final String STATO_CANDIDATO_CF_DISPONIBILE     = "CF Disponibile";
-    public static final String STATO_CANDIDATO_CF_INVIATO         = "CF Inviato";
-    public static final String STATO_CANDIDATO_QM_PIANIFICATA     = "QM Pianificata";
-    public static final String STATO_CANDIDATO_QM_FATTA           = "QM Fatta";
-    public static final String STATO_CANDIDATO_FOLLOW_UP_POOL     = "Follow up pool";
-    public static final String STATO_CANDIDATO_FOLLOW_UP_POSITIVO = "Follow up positivo";
-    public static final String STATO_CANDIDATO_STAFFING           = "Staffing";
-    public static final String STATO_CANDIDATO_TEMPORARY          = "Temporary";
-    public static final String STATO_CANDIDATO_RECRUITING         = "Recruiting";
-    public static final String STATO_CANDIDATO_HEAD_HUNTING       = "Head Hunting";
+    public static final String STATO_CF_DISPONIBILE     = "CF Disponibile";
+    public static final String STATO_CF_INVIATO         = "CF Inviato";
+    public static final String STATO_QM_OK              = "Qualification Meeting  OK";
+    public static final String STATO_QM_KO              = "Qualification Meeting  KO";
+    public static final String STATO_FOLLOW_UP_POOL     = "Follow up Pool";
+    public static final String STATO_FOLLOW_UP_POSITIVO = "Follow up Positivo";
+    public static final String STATO_STAFFING           = "Staffing";
+    public static final String STATO_TEMPORARY          = "Temporary";
+    public static final String STATO_RECRUITING         = "Recruiting";
+    public static final String STATO_HEAD_HUNTING       = "Head Hunting";
 
     // ---------------- AI ------------------
     //DEFAULT

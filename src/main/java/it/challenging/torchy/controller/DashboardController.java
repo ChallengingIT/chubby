@@ -28,7 +28,9 @@ public class DashboardController {
     @Autowired
     private CandidatoRepository  candidatoRepository;
     @Autowired
-    private StatoCRepository     statoCRepository;
+    private AssociazioniRepository  associazioniRepository;
+    @Autowired
+    private StatoARepository     statoARepository;
     @Autowired
     private IntervistaRepository intervistaRepository;
     @Autowired
@@ -509,81 +511,81 @@ public class DashboardController {
 
         Pipeline pipeline = new Pipeline();
 
-        List<StatoC> stati = statoCRepository.findAll();
+        List<StatoA> stati = statoARepository.findAll();
 
-        cfDisponibili = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        cfDisponibili = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati.stream()
-                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_DISPONIBILE)) ? stati.stream()
-                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_DISPONIBILE))
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CF_DISPONIBILE)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CF_DISPONIBILE))
                             .findFirst().get().getId() : null
                 );
 
-        cfInviati = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        cfInviati = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati.stream()
-                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_INVIATO)) ? stati.stream()
-                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_CF_INVIATO))
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CF_INVIATO)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CF_INVIATO))
                             .findFirst().get().getId() : null
                 );
 
-        qmPianificate = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        qmPianificate = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati.stream()
-                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_PIANIFICATA)) ? stati.stream()
-                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_PIANIFICATA))
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_QM_OK)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_QM_OK))
                             .findFirst().get().getId() : null
                 );
 
-        qmFatte = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        qmFatte = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati.stream()
-                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_FATTA)) ? stati.stream()
-                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_QM_FATTA))
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_QM_KO)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_QM_KO))
                             .findFirst().get().getId() : null
                 );
 
-        /*itwPianificate = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        /*itwPianificate = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati
                                 .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_ITW_PIANIFICATA))
+                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_ITW_PIANIFICATA))
                                 .findFirst()
                                 .get()
                                 .getId()
                 );
 
-        itwFatte = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        itwFatte = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati
                                 .stream()
-                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_ITW_FATTA))
+                                .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_ITW_FATTA))
                                 .findFirst()
                                 .get()
                                 .getId()
                 );*/
 
-        followUpPool = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        followUpPool = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati.stream()
-                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POOL)) ? stati.stream()
-                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POOL))
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_FOLLOW_UP_POOL)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_FOLLOW_UP_POOL))
                             .findFirst().get().getId() : null
                 );
 
-        followUpPositivi = candidatoRepository
-                .countCandidatiAssociatiByStato(
+        followUpPositivi = associazioniRepository
+                .countAssociazioniByStato(
                         idNeed,
                         stati.stream()
-                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POSITIVO)) ? stati.stream()
-                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_CANDIDATO_FOLLOW_UP_POSITIVO))
+                            .anyMatch(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_FOLLOW_UP_POSITIVO)) ? stati.stream()
+                            .filter(s -> s.getDescrizione().equalsIgnoreCase(Constants.STATO_FOLLOW_UP_POSITIVO))
                             .findFirst().get().getId() : null
                 );
 

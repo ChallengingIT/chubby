@@ -232,21 +232,4 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
         """, nativeQuery=true)
     Long countCandidatiAssociati(Integer idNeed);
 
-    @Query(value= """
-         select count(*)
-            from candidato c
-            left join fornitore_candidato fc on (c.id = fc.id_candidato )
-            left join facolta_candidato fac on (c.id = fac.id_candidato )
-            left join candidato_owner co on (c.id = co.id_candidato )
-            left join stato_candidato scc on (c.id = scc.id_candidato)
-            left join tipo_candidatura_candidato tcc on (c.id = tcc.id_candidato )
-            left join tipo_ricerca_candidato trc on (c.id = trc.id_candidato )
-            join tipologia_candidato tc on (c.id = tc.id_candidato)
-            left join tipo_candidato ttc on (c.id = ttc.id_candidato)
-            join livello_candidato lc on (c.id = lc.id_candidato)
-            where c.id in (select id_candidato from need_candidato where id_candidato = c.id and id_need = ?1)
-            and scc.id_stato = ?2
-            order by c.cognome asc
-        """, nativeQuery=true)
-    Integer countCandidatiAssociatiByStato(Integer idNeed, Integer stato);
 }

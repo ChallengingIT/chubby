@@ -45,4 +45,15 @@ public interface AssociazioniRepository extends JpaRepository<AssociazioneCandid
               order by acn.data_modifica
         """, nativeQuery=true)
     List<AssociazioneCandidatoNeed> ricercaByCandidato_IdAndCliente_IdAndStato_IdAndDataModifica(Integer idCandidato, Integer idCliente, Integer idStato, Date dataModifica);
+
+    @Query(value= """
+         select count(*)
+           from associazione_candidato_need acn
+           join need_associazione na on (acn.id = na.id_associazione)
+           join need n on (n.id = na.id_need)
+           join stato_associazione sa on (sa.id_associazione = acn.id)
+           where id_need = ?1
+           and sa.id_stato = ?2
+        """, nativeQuery=true)
+    Integer countAssociazioniByStato(Integer idNeed, Integer stato);
 }
