@@ -468,6 +468,10 @@ public class FileController {
 
         contentStreamPage4 = new PDPageContentStream(document, page4);
         contentStreamPage4.drawImage(pdImage, 110, 675);
+        contentStreamPage4.beginText();
+        contentStreamPage4.setFont(font, 14);
+        contentStreamPage4.newLineAtOffset(offsetX, 620);
+        contentStreamPage4.setLeading(18.5f);
 
         int countRows = 0;
         boolean quartaPagina = false;
@@ -521,6 +525,8 @@ public class FileController {
         contentStreamPage3.close();
 
         if(quartaPagina){
+            contentStreamPage4.endText();
+
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroAziendaX, 39);
