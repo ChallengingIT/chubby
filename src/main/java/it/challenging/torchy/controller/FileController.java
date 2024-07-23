@@ -403,15 +403,17 @@ public class FileController {
         contentStreamPage2.showText("- Lingue: ");
         contentStreamPage2.setLeading(18.5f);
 
-        String[] rowsLingue = rispostaLinguaOpenAI.split("\n");
-        contentStreamPage2.newLine();
-
-        for(String row : rowsLingue) {
-
-            row = row.replace("\r", "");
-
-            contentStreamPage2.showText("   " + row);
+        if (null != rispostaLinguaOpenAI) {
+            String[] rowsLingue = rispostaLinguaOpenAI.split("\n");
             contentStreamPage2.newLine();
+
+            for (String row : rowsLingue) {
+
+                row = row.replace("\r", "");
+
+                contentStreamPage2.showText("   " + row);
+                contentStreamPage2.newLine();
+            }
         }
 
         contentStreamPage2.endText();
@@ -462,13 +464,14 @@ public class FileController {
         contentStreamPage3.newLineAtOffset(offsetX, 595);
         contentStreamPage3.setLeading(18.5f);
 
-        String[] rows = rispostaOpenAI.split("\n");
+        if (null != rispostaOpenAI) {
+            String[] rows = rispostaOpenAI.split("\n");
 
-        for(String row : rows) {
-            contentStreamPage3.showText(row);
-            contentStreamPage3.newLine();
+            for (String row : rows) {
+                contentStreamPage3.showText(row);
+                contentStreamPage3.newLine();
+            }
         }
-
         contentStreamPage3.endText();
 
         contentStreamPage3.beginText();

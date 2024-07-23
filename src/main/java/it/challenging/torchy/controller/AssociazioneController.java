@@ -77,7 +77,7 @@ public class AssociazioneController {
     public List<StatoA> findStati(){
         logger.info("Stati associazione");
 
-        return statoARepository.findAll();
+        return statoARepository.findAllOrdered();
     }
 
     @PostMapping("/salva")
