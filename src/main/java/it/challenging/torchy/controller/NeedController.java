@@ -1009,7 +1009,9 @@ public class NeedController {
                 candidatoMod.setRal(candidato.getRal());
                 candidatoMod.setRating(candidato.getRating());
 
-                candidatiModificati.add(candidatoMod);
+                if (!isPresent(candidatiModificati,candidatoMod)) {
+                    candidatiModificati.add(candidatoMod);
+                }
             }
 
             candidatoGroup.setCandidati(candidatiModificati);
@@ -1109,6 +1111,10 @@ public class NeedController {
             need.setSkills(skill1ListNew);
         }
 
+    }
+
+    public boolean isPresent(List<CandidatoModificato> candidati, CandidatoModificato candidato) {
+        return candidati.contains(candidato);
     }
 
 }

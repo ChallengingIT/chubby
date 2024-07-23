@@ -43,7 +43,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
   Page<KeyPeople> ricercaByUsername(String username, Pageable p);
 
   @Query(value= """
-          SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato, ka.id_azione
+          SELECT distinct k.*, ko.id_owner, kc.id_cliente, ks.id_stato
           FROM key_people k
           left join key_people_owner ko on k.id = ko.id_key_people
           left join key_people_stato ks on k.id = ks.id_key_people
@@ -59,7 +59,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
   Page<KeyPeople> ricercaAzioniByUsername(String username, Pageable p);
 
   @Query(value= """
-          SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato, ka.id_azione
+          SELECT distinct k.*, ko.id_owner, kc.id_cliente, ks.id_stato
           FROM key_people k
           left join key_people_owner ko on k.id = ko.id_key_people
           left join key_people_stato ks on k.id = ks.id_key_people
@@ -75,7 +75,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
   Page<KeyPeople> ricercaAzioniByUsernameInterval(String username, Integer interval, Pageable p);
 
   @Query(value= """
-          SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato, ka.id_azione
+          SELECT distinct k.*, ko.id_owner, kc.id_cliente, ks.id_stato
           FROM key_people k
           left join key_people_owner ko on k.id = ko.id_key_people
           left join key_people_stato ks on k.id = ks.id_key_people
@@ -88,7 +88,7 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
   Page<KeyPeople> ricercaAzioni(Pageable p);
 
   @Query(value= """
-          SELECT k.*, ko.id_owner, kc.id_cliente, ks.id_stato, ka.id_azione
+          SELECT distinct k.*, ko.id_owner, kc.id_cliente, ks.id_stato
           FROM key_people k
           left join key_people_owner ko on k.id = ko.id_key_people
           left join key_people_stato ks on k.id = ks.id_key_people
