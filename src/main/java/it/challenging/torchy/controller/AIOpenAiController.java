@@ -4,15 +4,11 @@
 
 package it.challenging.torchy.controller;
 
-import it.challenging.torchy.entity.Candidato;
-import it.challenging.torchy.entity.KeyPeople;
-import it.challenging.torchy.entity.Tipologia;
-import it.challenging.torchy.repository.CandidatoRepository;
-import it.challenging.torchy.repository.KeyPeopleRepository;
-import it.challenging.torchy.repository.TipologiaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.ChatResponse;
-import org.springframework.ai.chat.messages.Media;
+import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.embedding.EmbeddingClient;
@@ -22,8 +18,7 @@ import org.springframework.ai.image.ImageResponse;
 import org.springframework.ai.openai.OpenAiChatClient;
 import org.springframework.ai.openai.OpenAiImageClient;
 import org.springframework.ai.openai.OpenAiImageOptions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.MimeTypeUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -36,25 +31,70 @@ import java.util.Map;
 @RequestMapping("/ai/open")
 public class AIOpenAiController {
 
-    @Autowired
-    private TipologiaRepository tipologiaRepository;
-
-    @Autowired
-    private CandidatoRepository candidatoRepository;
-    @Autowired
-    private KeyPeopleRepository keyPeopleRepository;
-
     private final EmbeddingClient embeddingClient;
 
     private final OpenAiChatClient chatClient;
 
     private final OpenAiImageClient openaiImageClient;
 
+    @PersistenceContext
+    private EntityManager em;
+
     private static final String SYSTEM_MESSAGE = """
-            Sei un recruiter che deve condividere il cv schermato di un tuo candidato ad un'azienda per proporre un colloquio conoscitivo.
-            Per costruire un cv schermato hai bisogno di estrarre le esperienze dal cv normale in questa modalità: Inizio e fine Attività,
-            Job title posizione svolta, settore azienda (no nome), attività svolta durante l'esperienza lavorativa suddivisa in tre massimo
-            cinque punti sintetici, stack tecnologico utilizzato. Potresti estrarre queste informazioni dal cv in allegato?
+            Sei un gestionale che deve gestire tutti i dati interni della nostra organizzazione. Il sistema si basa su mysql.
+            Sapendo che la tabella delle associazioni è associazione_candidato_need con colonne id e data_modifica ,
+            la tabella delle attività è attivita, la tabella di congiunzione tra attivita e cliente è attivita_cliente con colonne id_attivita e id_cliente,
+            la tabella di congiunzione tra attivita e contatto o key people è attivita_key_people con colonne id_attivita e id_candidato,
+            la tabella delle azioni è azioni, la tabella dei candidati è candidato,
+            la tabella di congiunzione tra candidato e associazione è candidato_associazione con colonne id_associazione e id_candidato,
+            la tabella di congiunzione tra candidato e intervista è candidato_intervista con colonne id_intervista e id_candidato,
+            la tabella di congiunzione tra candidato e owner è candidato_owner con colonne id_owner e id_candidato,
+            la tabella dei clienti o dei business o delle aziende è cliente,
+            la tabella di congiunzione tra cliente/business/azienda e owner è cliente_owner,
+            la tabella delle facoltà è facolta, la tabella di congiunzione tra facolta e candidato è facolta_candidato,
+            la tabella dei file è file, la tabella di congiunzione tra file e candidato è file_candidato,
+            la tabella delle funzioni aziendali è funzioni_aziendali,
+            la tabella di congiunzione tra funzioni aziendali e tipologie delle funzioni aziendali è funzioni_tipologie,
+            la tabella degli hiring è hiring, la tabella delle interviste è intervista,
+            la tabella di congiunzione tra interviste e owner per i futuri follow up è intervista_next_owner,
+            la tabella di congiunzione tra interviste e owner è intervista_owner,
+            la tabella dei contatti o key people è key_people,
+            la tabella di congiunzione tra contatto o key people e azioni è key_people_azioni,
+            la tabella di congiunzione tra contatto o key people e cliente/business/azienda è key_people_cliente,
+            la tabella di congiunzione tra contatto o key people e owner è key_people_owner,
+            la tabella di congiunzione tra contatto o key people e stato è key_people_stato,
+            la tabella dei livelli di studio è livelli_scolastici,
+            la tabella di congiunzione tra livelli di studio e candidati è livello_candidato,
+            la tabella delle modalità di lavoro è modalita_lavoro,
+            la tabella di congiunzione tra modalità di lavoro e need è modalita_lavoro_need,
+            la tabella dei need è need, la tabella di congiunzione tra need e associazione è need_associazione con colonne id_need e id_associazione,
+            la tabella di congiunzione tra need e candidato è need_candidato,
+            la tabella di congiunzione tra need e cliente/business/azienda è need_cliente,
+            la tabella di congiunzione tra need e job title è need_job_title,
+            la tabella di congiunzione tra need e contact/key people è need_keypeople,
+            la tabella di congiunzione tra need e owner è need_owner,
+            la tabella degli owner è owner, la tabella di congiunzione tra owner e associazione è owner_associazione,
+            la tabella di congiunzione tra owner e attività è owner_attivita,
+            la tabella delle skill è skill, la tabella di congiunzione tra skill e candidato è skill_candidato,
+            la tabella di congiunzione tra skill e need è skill_need,
+            la tabella di congiunzione tra stato dell'associazione e l'associazione stessa è stato_associazione,
+            la tabella di congiunzione tra stato del candidato e il candidato stesso è stato_candidato,
+            la tabella di congiunzione tra stato dell'intervista e l'intervista stessa è stato_intervista,
+            la tabella di congiunzione tra stato del need e il need stesso è stato_need,
+            la tabella degli stati dell'associazione è statoa, la tabella degli stati del candidato è statoc,
+            la tabella degli stati del contact/key people è statok, la tabella degli stati del need è staton,
+            la tabelle dei tipi o tipologie del candidato è tipo,
+            la tabelle di congiunzione tra i tipi o tipologie del candidato ed il candidato stesso è tipo_candidato,
+            la tabella delle tipologie delle attività è tipologia_attivita,
+            la tabella di congiunzione tra tipologie delle attività ed attività è tipologia_attivita_attivita,
+            la tabella di congiunzione tra tipologie delle azioni ed azioni è tipologia_azione,
+            la tabella di congiunzione tra job title e candidati è tipologia_candidato,
+            la tabella di congiunzione tra tipologie dei file e file è tipologia_file,
+            la tabella di congiunzione tra tipologie delle interviste ed interviste è tipologia_intervista,
+            la tabella di congiunzione tra tipologie dei need e need è tipologia_need,
+            la tabella dei job title è tipologie, la tabella delle tipologie delle azioni è tipologieaz,
+            la tabella delle tipologie dei file è tipologief, la tabella delle tipologie delle interviste è tipologiei,
+            la tabella delle tipologie dei need è tipologien. Potresti estrarre le informazioni richieste dal prossimo messaggio?
             """;
 
     @GetMapping("/embedding")
@@ -64,30 +104,25 @@ public class AIOpenAiController {
     }
 
     @GetMapping("/generate")
-    public Map generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) throws IOException {
-        List<KeyPeople> keyPeople = keyPeopleRepository.findAll();
+    public ResponseEntity generate(@RequestParam(value = "message", defaultValue = "Raccontami una barzelletta") String message) throws IOException {
 
-        Candidato candidato = new Candidato();
+        var          systemMessage = new SystemMessage(SYSTEM_MESSAGE);
+        ChatResponse chatResponse  = chatClient.call(new Prompt(List.of(systemMessage, new UserMessage(message))));
+        String query = null;
+        String response = chatResponse.getResults().get(0).getOutput().getContent();
+        if( response.contains("sql\n") ) {
+            query = response.split("sql\n")[1].split(";")[0];
 
-        byte[] pdf = candidato.getFiles().get(0).getData();
+            List lista = em.createQuery(query).getResultList();
 
-        var userMessage = new UserMessage(SYSTEM_MESSAGE,
-                List.of(new Media(MimeTypeUtils.APPLICATION_OCTET_STREAM, pdf)));
-
-        ChatResponse chatResponse = chatClient.call(new Prompt(List.of(userMessage)));
-
-        return Map.of("response", chatResponse.getResults().get(0).getOutput());
-
-    }
-
-    @GetMapping("/try")
-    public Map generateStreamWithDB(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        List<Tipologia> tipologieJson = tipologiaRepository.findAll();
-        List<Candidato> candidatoList = candidatoRepository.findAll();
-
-        message = message + " cerca il messaggio precedente in questa lista " + candidatoList;
-
-        return Map.of("generation", chatClient.call(message));
+            if (null != lista) {
+                return ResponseEntity.badRequest().body("KO");
+            } else {
+                return ResponseEntity.ok(response);
+            }
+        } else  {
+            return ResponseEntity.ok(response);
+        }
     }
 
     @GetMapping("/image")
