@@ -322,9 +322,9 @@ public class IntervistaController {
         double rating = 0.0;
 
         for (Intervista intervista : interviste) {
-            rating += (((intervista.getAderenza()      != null ? intervista.getAderenza()      : 0) +
+            rating += (((intervista.getCompetenze()      != null ? intervista.getCompetenze()      : 0) +
                 (intervista.getCoerenza()      != null ? intervista.getCoerenza()      : 0) +
-                (intervista.getMotivazione()   != null ? intervista.getMotivazione()   : 0) +
+                (intervista.getValutazione()   != null ? intervista.getValutazione()   : 0) +
                 (intervista.getStanding()      != null ? intervista.getStanding()      : 0) +
                 (intervista.getEnergia()       != null ? intervista.getEnergia()       : 0) +
                 (intervista.getComunicazione() != null ? intervista.getComunicazione() : 0) +
@@ -354,7 +354,7 @@ public class IntervistaController {
         intervista.setAttuale(staffMap.get("attuale") != null ? staffMap.get("attuale") : null);
         intervista.setCoerenza(staffMap.get("coerenza") != null ? Integer.parseInt(staffMap.get("coerenza")) : null);
         intervista.setCognome(staffMap.get("cognome") != null ? staffMap.get("cognome") : null);
-        intervista.setCompetenze(staffMap.get("competenze") != null ? staffMap.get("competenze") : null);;
+        intervista.setCompetenze(staffMap.get("competenze") != null ? Integer.parseInt(staffMap.get("competenze")) : null);;
         intervista.setComunicazione(staffMap.get("comunicazione") != null ? Integer.parseInt(staffMap.get("comunicazione")) : null);
         intervista.setDataNascita(staffMap.get("dataNascita") != null ? Date.valueOf(staffMap.get("dataNascita")) : null);
 

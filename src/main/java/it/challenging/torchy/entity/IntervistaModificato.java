@@ -63,7 +63,7 @@ public class IntervistaModificato implements Serializable {
 
     private String descrizioneCandidatoUna;
 
-    private String competenze;
+    private Integer competenze;
 
     private Integer valutazione;
 

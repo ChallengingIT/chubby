@@ -111,8 +111,8 @@ public class Intervista implements Serializable {
     @Column(length = 45, name="descrizione_candidato_una")
     private String descrizioneCandidatoUna;
 
-    @Column(length = 90)
-    private String competenze;
+    @Column(length = 2, name = "competenze")
+    private Integer competenze;
 
     @Column(length = 2, name="valutazione_competenze")
     private Integer valutazione;
