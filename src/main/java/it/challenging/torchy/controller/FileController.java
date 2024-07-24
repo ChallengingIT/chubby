@@ -324,13 +324,13 @@ public class FileController {
         contentStream.beginText();
         contentStream.setFont(font, fontSize);
         contentStream.newLineAtOffset(centroX, centroY+10);
-        contentStream.showText(nomeCompleto);
+        contentStream.showText(nomeCompleto != null ? nomeCompleto : "");
         contentStream.endText();
 
         contentStream.beginText();
         contentStream.setFont(font, fontSize);
         contentStream.newLineAtOffset(centroTipologiaX, centroY-25);
-        contentStream.showText(tipologia);
+        contentStream.showText(tipologia != null ? tipologia : "");
         contentStream.endText();
 
         contentStream.beginText();
@@ -379,17 +379,15 @@ public class FileController {
         contentStreamPage2.showText("Skills");
         contentStreamPage2.endText();
 
-        //contentStreamPage2.drawLine(20,610,page.getMediaBox().getWidth()-90,609);
-        //contentStreamPage2.drawLine(20,440,page.getMediaBox().getWidth()-90,439);
         contentStreamPage2.moveTo(30, 610);
         contentStreamPage2.lineTo(page.getMediaBox().getWidth()-30, 609);
         contentStreamPage2.stroke();
-        contentStreamPage2.moveTo(30, 440);
-        contentStreamPage2.lineTo(page.getMediaBox().getWidth()-30, 439);
+        contentStreamPage2.moveTo(30, 390);
+        contentStreamPage2.lineTo(page.getMediaBox().getWidth()-30, 389);
         contentStreamPage2.stroke();
 
         Integer offsetX = 20;
-        Integer offsetY = 420;
+        Integer offsetY = 380;
 
         String skillString = "";
         contentStreamPage2.beginText();
@@ -420,25 +418,25 @@ public class FileController {
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, 14);
         contentStreamPage2.newLineAtOffset(20, 590);
-        contentStreamPage2.showText("- Anno di nascita: "+annoNascita);
+        contentStreamPage2.showText("- Anno di nascita: " + (annoNascita != null ? annoNascita : ""));
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, 14);
         contentStreamPage2.newLineAtOffset(20, 570);
-        contentStreamPage2.showText("- Domicilio attuale: "+domicilio);
+        contentStreamPage2.showText("- Domicilio attuale: " + (domicilio != null ? domicilio : ""));
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, 14);
         contentStreamPage2.newLineAtOffset(20, 550);
-        contentStreamPage2.showText("- Anni di esperienza nel ruolo: "+anniEsperienza);
+        contentStreamPage2.showText("- Anni di esperienza nel ruolo: " + (anniEsperienza != null ? anniEsperienza : ""));
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, 14);
         contentStreamPage2.newLineAtOffset(20, 530);
-        contentStreamPage2.showText("- Background accademico: "+livello);
+        contentStreamPage2.showText("- Background accademico: " + (livello != null ? livello : ""));
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
@@ -499,8 +497,8 @@ public class FileController {
         contentStreamPage3.endText();
 
         //contentStreamPage3.drawLine(20,610,page.getMediaBox().getWidth()-90,609);
-        contentStreamPage3.moveTo(30, 610);
-        contentStreamPage3.lineTo(page.getMediaBox().getWidth()-30, 609);
+        contentStreamPage3.moveTo(30, 640);
+        contentStreamPage3.lineTo(page.getMediaBox().getWidth()-30, 639);
         contentStreamPage3.stroke();
 
         contentStreamPage3.beginText();
@@ -605,12 +603,20 @@ public class FileController {
             contentStreamPage5 = new PDPageContentStream(document, page5);
             contentStreamPage5.drawImage(pdImage, 110, 675);
             contentStreamPage5.beginText();
-            contentStreamPage5.setFont(font, 14);
+            contentStreamPage5.setFont(font, fontSize);
             contentStreamPage5.newLineAtOffset(offsetX, 620);
             contentStreamPage5.setLeading(18.5f);
+            contentStreamPage5.showText("Education and Training");
+            contentStreamPage5.endText();
 
             document.addPage(page5);
-            contentStreamPage5.showText("Education and Training");
+
+            contentStreamPage5.beginText();
+
+            contentStreamPage5.moveTo(30, 610);
+            contentStreamPage5.lineTo(page.getMediaBox().getWidth()-30, 609);
+            contentStreamPage5.stroke();
+
 
             contentStreamPage6 = new PDPageContentStream(document, page6);
             contentStreamPage6.drawImage(pdImage, 110, 675);
@@ -706,12 +712,18 @@ public class FileController {
             contentStreamPage4 = new PDPageContentStream(document, page5);
             contentStreamPage4.drawImage(pdImage, 110, 675);
             contentStreamPage4.beginText();
-            contentStreamPage4.setFont(font, 14);
+            contentStreamPage4.setFont(font, fontSize);
             contentStreamPage4.newLineAtOffset(offsetX, 620);
             contentStreamPage4.setLeading(18.5f);
+            contentStreamPage4.showText("Education and Training");
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
 
             document.addPage(page4);
-            contentStreamPage4.showText("Education and Training");
+            contentStreamPage4.moveTo(30, 610);
+            contentStreamPage4.lineTo(page.getMediaBox().getWidth()-30, 609);
+            contentStreamPage4.stroke();
 
             contentStreamPage5 = new PDPageContentStream(document, page6);
             contentStreamPage5.drawImage(pdImage, 110, 675);
