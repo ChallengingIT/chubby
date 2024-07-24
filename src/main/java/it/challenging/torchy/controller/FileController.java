@@ -285,6 +285,7 @@ public class FileController {
         PDPageContentStream contentStreamPage2;
         PDPageContentStream contentStreamPage3;
         PDPageContentStream contentStreamPage4;
+        PDPageContentStream contentStreamPage5;
         ByteArrayOutputStream output =new ByteArrayOutputStream();
         PDDocument document =new PDDocument();
         PDFont font = PDType0Font.load(document, new java.io.File(Objects.requireNonNull(FileController.class.getResource("/static/fonts/Roboto-Regular.ttf")).getPath()));
@@ -292,6 +293,7 @@ public class FileController {
         PDPage page2 = new PDPage();
         PDPage page3 = new PDPage();
         PDPage page4 = new PDPage();
+        PDPage page5 = new PDPage();
 
         int marginTop = 330; // Or whatever margin you want.
 
@@ -562,7 +564,7 @@ public class FileController {
 
         contentStreamPage3.close();
 
-        if(quartaPagina){
+        if (quartaPagina) {
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
@@ -590,6 +592,110 @@ public class FileController {
             contentStreamPage4.endText();
 
             contentStreamPage4.close();
+
+            contentStreamPage5 = new PDPageContentStream(document, page5);
+            contentStreamPage5.drawImage(pdImage, 110, 675);
+            contentStreamPage5.beginText();
+            contentStreamPage5.setFont(font, 14);
+            contentStreamPage5.newLineAtOffset(offsetX, 620);
+            contentStreamPage5.setLeading(18.5f);
+
+            document.addPage(page5);
+            contentStreamPage5.showText("Education and Training");
+            contentStreamPage5.endText();
+
+            if (null != rispostaBackgroundOpenAI) {
+                String[] rowsBackground = rispostaBackgroundOpenAI.split("\n");
+                contentStreamPage5.newLine();
+
+                for (String row : rowsBackground) {
+
+                    row = row.replace("\r", "");
+
+                    contentStreamPage5.showText(row);
+                    contentStreamPage5.newLine();
+                }
+            }
+
+            contentStreamPage5.endText();
+
+            contentStreamPage5.beginText();
+            contentStreamPage5.setFont(font, fontSizeFooter);
+            contentStreamPage5.newLineAtOffset(centroAziendaX, 39);
+            contentStreamPage5.showText(NOME_AZIENDA);
+            contentStreamPage5.endText();
+
+            contentStreamPage5.beginText();
+            contentStreamPage5.setFont(font, fontSizeFooter);
+            contentStreamPage5.newLineAtOffset(centroLuogoX, 27);
+            contentStreamPage5.showText(LUOGO_AZIENDA);
+            contentStreamPage5.endText();
+
+            contentStreamPage5.beginText();
+            contentStreamPage5.setFont(font, fontSizeFooter);
+            contentStreamPage5.newLineAtOffset(centroPIX, 15);
+            contentStreamPage5.showText(PI_AZIENDA);
+            contentStreamPage5.endText();
+
+            contentStreamPage5.beginText();
+            contentStreamPage5.setFont(font, fontSizeFooter);
+            contentStreamPage5.newLineAtOffset(centroREAX, 3 );
+            contentStreamPage5.showText(REA_AZIENDA);
+            contentStreamPage5.endText();
+
+            contentStreamPage5.close();
+
+            //TODO in caso di righe superiore a 26 andare a pagina 6
+        } else {
+            quartaPagina = true;
+
+            document.addPage(page4);
+            contentStreamPage4.showText("Education and Training");
+            contentStreamPage4.endText();
+
+            if (null != rispostaBackgroundOpenAI) {
+                String[] rowsBackground = rispostaBackgroundOpenAI.split("\n");
+                contentStreamPage4.newLine();
+
+                for (String row : rowsBackground) {
+
+                    row = row.replace("\r", "");
+
+                    contentStreamPage4.showText(row);
+                    contentStreamPage4.newLine();
+                }
+            }
+
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroAziendaX, 39);
+            contentStreamPage4.showText(NOME_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroLuogoX, 27);
+            contentStreamPage4.showText(LUOGO_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroPIX, 15);
+            contentStreamPage4.showText(PI_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, fontSizeFooter);
+            contentStreamPage4.newLineAtOffset(centroREAX, 3 );
+            contentStreamPage4.showText(REA_AZIENDA);
+            contentStreamPage4.endText();
+
+            contentStreamPage4.close();
+
+            //TODO scrivere in pagina 5 in caso di righe superiore a 26
+
         }
 
         document.save(output);
