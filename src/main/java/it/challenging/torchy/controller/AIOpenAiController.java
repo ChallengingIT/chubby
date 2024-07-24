@@ -123,7 +123,7 @@ public class AIOpenAiController {
 
         var          systemMessage = new SystemMessage(SYSTEM_MESSAGE);
         ChatResponse chatResponse  = chatClient.call(new Prompt(List.of(systemMessage, new UserMessage(message))));
-        String       query         = null;
+        String       query;
         String       response      = chatResponse.getResults().get(0).getOutput().getContent();
 
         if (response.contains("sql\n")) {
