@@ -602,7 +602,6 @@ public class FileController {
 
             document.addPage(page5);
             contentStreamPage5.showText("Education and Training");
-            contentStreamPage5.endText();
 
             if (null != rispostaBackgroundOpenAI) {
                 String[] rowsBackground = rispostaBackgroundOpenAI.split("\n");
