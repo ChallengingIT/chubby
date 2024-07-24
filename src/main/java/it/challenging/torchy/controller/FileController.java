@@ -695,20 +695,25 @@ public class FileController {
 
                 contentStreamPage6.beginText();
                 contentStreamPage6.setFont(font, fontSizeFooter);
-                contentStreamPage6.newLineAtOffset(centroREAX, 3 );
+                contentStreamPage6.newLineAtOffset(centroREAX, 3);
                 contentStreamPage6.showText(REA_AZIENDA);
                 contentStreamPage6.endText();
 
                 contentStreamPage6.close();
-
+            }
         } else {
 
-            }
+            contentStreamPage4 = new PDPageContentStream(document, page5);
+            contentStreamPage4.drawImage(pdImage, 110, 675);
+            contentStreamPage4.beginText();
+            contentStreamPage4.setFont(font, 14);
+            contentStreamPage4.newLineAtOffset(offsetX, 620);
+            contentStreamPage4.setLeading(18.5f);
+
             document.addPage(page4);
             contentStreamPage4.showText("Education and Training");
-            contentStreamPage4.endText();
 
-            contentStreamPage5 = new PDPageContentStream(document, page4);
+            contentStreamPage5 = new PDPageContentStream(document, page6);
             contentStreamPage5.drawImage(pdImage, 110, 675);
             contentStreamPage5.beginText();
             contentStreamPage5.setFont(font, 14);
@@ -723,8 +728,8 @@ public class FileController {
                     countRowsPage4++;
                     row = row.replace("\r", "");
 
-                    if(countRowsPage4 > 26 && !quintaPagina) {
-                        quintaPagina = true;
+                    if(countRowsPage4 > 26 && !sestaPagina) {
+                        sestaPagina = true;
 
                         document.addPage(page5);
 
@@ -768,7 +773,7 @@ public class FileController {
 
             contentStreamPage4.close();
 
-            if (quintaPagina) {
+            if (sestaPagina) {
                 contentStreamPage5.endText();
 
                 contentStreamPage5.beginText();
@@ -791,7 +796,7 @@ public class FileController {
 
                 contentStreamPage5.beginText();
                 contentStreamPage5.setFont(font, fontSizeFooter);
-                contentStreamPage5.newLineAtOffset(centroREAX, 3 );
+                contentStreamPage5.newLineAtOffset(centroREAX, 3);
                 contentStreamPage5.showText(REA_AZIENDA);
                 contentStreamPage5.endText();
 
