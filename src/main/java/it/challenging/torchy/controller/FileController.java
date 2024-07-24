@@ -71,6 +71,14 @@ public class FileController {
             Per costruire queste informazioni hai bisogno di estrarre le lingue conosciute dal candidato che ti manderò a seguire in questa modalità: Lingue conosciute in un elenco
             puntato con numero massimo di 80 caratteri. Potresti estrarre queste informazioni da questo testo senza mettermi stringhe introduttive?
             """;
+
+    private static final String SYSTEM_MESSAGE_BACKGROUND = """
+            Sei un recruiter che deve condividere le informazioni di un tuo candidato ad un'azienda per proporre un colloquio conoscitivo.
+            Per costruire queste informazioni hai bisogno di estrarre l'istruzione, la formazione e i corsi effettuati: Prima eventuali studi accademici in ordine decrescente
+            con titolo, data, corsi rilevanti e voto finale, poi i vari corsi effettuati con titolo ed un piccolo riassunto. Il tutto con numero massimo di 80 caratteri
+            per riga. Potresti estrarre queste informazioni da questo testo senza mettermi stringhe introduttive?
+            """;
+
     public FileController(OpenAiChatClient chatClient) {
         this.chatClient = chatClient;
     }
@@ -132,7 +140,6 @@ public class FileController {
     @GetMapping("/download/cf/{id}")
     public void downloadCF(
             @PathVariable("id") Integer id,
-            @RequestParam("descrizione") String descrizione,
             HttpServletResponse resp
     ) throws IOException {
 
@@ -141,12 +148,17 @@ public class FileController {
         String siglaCognome       = candidato.getCognome().substring(0,1);
         String nomeCompleto       = nome+" "+siglaCognome+".";
         Calendar cal              = Calendar.getInstance();
+        AssistantMessage risposta = null;
         AssistantMessage rispostaLingua = null;
+        AssistantMessage rispostaBackground = null;
+        String           rispostaModificata = null;
 
         cal.setTime(candidato.getDataNascita());
 
         Integer annoNascita     = cal.get(Calendar.YEAR);
+        var systemMessage = new SystemMessage(SYSTEM_MESSAGE);
         var systemMessageLingue = new SystemMessage(SYSTEM_MESSAGE_LINGUE);
+        var systemMessageBackground = new SystemMessage(SYSTEM_MESSAGE_BACKGROUND);
 
         if (null != candidato.getFiles() && !candidato.getFiles().isEmpty()) {
             byte[] pdf = candidato.getFiles().get(0).getData();
@@ -157,8 +169,23 @@ public class FileController {
             var userMessage = getUserMessage(f);
 
             ChatResponse chatResponseLingue = chatClient.call(new Prompt(List.of(systemMessageLingue, userMessage)));
+            ChatResponse chatResponseBackground = chatClient.call(new Prompt(List.of(systemMessageBackground, userMessage)));
+            ChatResponse chatResponse = chatClient.call(new Prompt(List.of(systemMessage, userMessage)));
 
             rispostaLingua = chatResponseLingue.getResults().get(0).getOutput();
+            rispostaBackground = chatResponseBackground.getResults().get(0).getOutput();
+            risposta = chatResponse.getResults().getFirst().getOutput();
+
+            if (null != risposta) {
+
+                rispostaModificata = risposta.getContent()
+                        .replace("Inizio Esperienze Lavorative","")
+                        .replace("Fine Esperienze Lavorative", "")
+                        .replace("*", "")
+                        .replace("\r", "")
+                        .replace("\t", "    ")
+                        .replaceAll("[0-9]\\.","•");
+            }
         }
 
         ByteArrayOutputStream byteArrayOutputStream =
@@ -170,8 +197,9 @@ public class FileController {
                         candidato.getCitta(),
                         candidato.getAnniEsperienza(),
                         candidato.getSkills(),
-                        descrizione,
-                        rispostaLingua != null ? rispostaLingua.getContent() : null);
+                        rispostaModificata,
+                        rispostaLingua != null ? rispostaLingua.getContent() : null,
+                        rispostaBackground != null ? rispostaBackground.getContent() : null);
 
         resp.setContentType(MimeTypeUtils.APPLICATION_OCTET_STREAM.getType());
         resp.setHeader("Content-Disposition", "attachment; filename=CF-" + siglaCognome + "." + nome + ".pdf" );
@@ -213,12 +241,12 @@ public class FileController {
                     if (null != risposta) {
 
                         rispostaModificata = risposta.getContent()
-                            .replace("Inizio Esperienze Lavorative","")
-                            .replace("Fine Esperienze Lavorative", "")
-                            .replace("*", "")
-                            .replace("\r", "")
-                            .replace("\t", "    ")
-                            .replaceAll("[0-9]\\.","•");
+                                .replace("Inizio Esperienze Lavorative","")
+                                .replace("Fine Esperienze Lavorative", "")
+                                .replace("*", "")
+                                .replace("\r", "")
+                                .replace("\t", "    ")
+                                .replaceAll("[0-9]\\.","•");
                     }
                 }
             }
@@ -240,7 +268,17 @@ public class FileController {
         return userMessage;
     }
 
-    public static ByteArrayOutputStream createPDF(String nomeCompleto, String tipologia, Integer annoNascita, String livello, String domicilio, Double anniEsperienza, Set<Skill> skills, String rispostaOpenAI, String rispostaLinguaOpenAI) throws IOException {
+    public static ByteArrayOutputStream createPDF(
+            String nomeCompleto,
+            String tipologia,
+            Integer annoNascita,
+            String livello,
+            String domicilio,
+            Double anniEsperienza,
+            Set<Skill> skills,
+            String rispostaOpenAI,
+            String rispostaLinguaOpenAI,
+            String rispostaBackgroundOpenAI) throws IOException {
         //PDFont font = new PDType0Font(Standard14Fonts.FontName.RHELVETICA);
 
         PDPageContentStream contentStream;
