@@ -123,19 +123,20 @@ public class AIOpenAiController {
 
         var          systemMessage = new SystemMessage(SYSTEM_MESSAGE);
         ChatResponse chatResponse  = chatClient.call(new Prompt(List.of(systemMessage, new UserMessage(message))));
-        String query = null;
-        String response = chatResponse.getResults().get(0).getOutput().getContent();
-        if( response.contains("sql\n") ) {
+        String       query         = null;
+        String       response      = chatResponse.getResults().get(0).getOutput().getContent();
+
+        if (response.contains("sql\n")) {
             query = response.split("sql\n")[1].split(";")[0];
 
-            List lista = em.createQuery(query).getResultList();
+            List lista = em.createNativeQuery(query).getResultList();
 
-            if (null != lista) {
+            if (null == lista) {
                 return ResponseEntity.badRequest().body("KO");
             } else {
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(lista);
             }
-        } else  {
+        } else {
             return ResponseEntity.ok(response);
         }
     }
