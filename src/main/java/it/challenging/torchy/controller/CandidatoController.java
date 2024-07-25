@@ -179,6 +179,7 @@ public class CandidatoController {
         candidatoMod.setNote(candidato.getNote());
         candidatoMod.setOwner(candidato.getOwner());
         candidatoMod.setStato(candidato.getStato());
+        candidatoMod.setDataNascita(candidato.getDataNascita());
         candidatoMod.setTipologia(candidato.getTipologia());
         candidatoMod.setCognome(candidato.getCognome());
         candidatoMod.setNome(candidato.getNome());

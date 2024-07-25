@@ -34,6 +34,8 @@ public class CandidatoModificato implements Serializable {
 
     private StatoC stato;
 
+    private Date dataNascita;
+
     private Date dataUltimoContatto;
 
     private Double rating;
