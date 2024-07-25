@@ -509,7 +509,7 @@ public class FileController {
         contentStreamPage4 = new PDPageContentStream(document, page4);
         contentStreamPage4.drawImage(pdImage, 110, 675);
         contentStreamPage4.beginText();
-        contentStreamPage4.setFont(font, 14);
+        contentStreamPage4.setFont(font, fontSize);
         contentStreamPage4.newLineAtOffset(offsetX, 620);
         contentStreamPage4.setLeading(18.5f);
 
@@ -602,21 +602,21 @@ public class FileController {
 
             contentStreamPage5 = new PDPageContentStream(document, page5);
             contentStreamPage5.drawImage(pdImage, 110, 675);
+
             contentStreamPage5.beginText();
             contentStreamPage5.setFont(font, fontSize);
-            contentStreamPage5.newLineAtOffset(offsetX, 620);
+            contentStreamPage5.newLineAtOffset(centroX-60, 650);
             contentStreamPage5.setLeading(18.5f);
             contentStreamPage5.showText("Education and Training");
             contentStreamPage5.endText();
 
             document.addPage(page5);
 
-            contentStreamPage5.beginText();
-
             contentStreamPage5.moveTo(30, 610);
             contentStreamPage5.lineTo(page.getMediaBox().getWidth()-30, 609);
             contentStreamPage5.stroke();
 
+            contentStreamPage5.beginText();
 
             contentStreamPage6 = new PDPageContentStream(document, page6);
             contentStreamPage6.drawImage(pdImage, 110, 675);
@@ -708,22 +708,17 @@ public class FileController {
                 contentStreamPage6.close();
             }
         } else {
+            document.addPage(page4);
 
-            contentStreamPage4 = new PDPageContentStream(document, page5);
-            contentStreamPage4.drawImage(pdImage, 110, 675);
-            contentStreamPage4.beginText();
-            contentStreamPage4.setFont(font, fontSize);
-            contentStreamPage4.newLineAtOffset(offsetX, 620);
-            contentStreamPage4.setLeading(18.5f);
             contentStreamPage4.showText("Education and Training");
             contentStreamPage4.endText();
 
-            contentStreamPage4.beginText();
 
-            document.addPage(page4);
             contentStreamPage4.moveTo(30, 610);
             contentStreamPage4.lineTo(page.getMediaBox().getWidth()-30, 609);
             contentStreamPage4.stroke();
+
+            contentStreamPage4.beginText();
 
             contentStreamPage5 = new PDPageContentStream(document, page6);
             contentStreamPage5.drawImage(pdImage, 110, 675);
@@ -740,8 +735,8 @@ public class FileController {
                     countRowsPage4++;
                     row = row.replace("\r", "");
 
-                    if(countRowsPage4 > 26 && !sestaPagina) {
-                        sestaPagina = true;
+                    if(countRowsPage4 > 26 && !quintaPagina) {
+                        quintaPagina = true;
 
                         document.addPage(page5);
 
@@ -785,7 +780,7 @@ public class FileController {
 
             contentStreamPage4.close();
 
-            if (sestaPagina) {
+            if (quintaPagina) {
                 contentStreamPage5.endText();
 
                 contentStreamPage5.beginText();
