@@ -476,7 +476,14 @@ public class AziendeController {
             Hiring hiring = new Hiring();
             hiring.setIdCliente(clienteEntity.getId());
             hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
-            hiring.setTipiServizio(clienteEntity.getTipiServizio());
+            List<TipoServizio> tipiServizio = null;
+
+            for (TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
+                tipiServizio = new ArrayList<>();
+                tipiServizio.add(tipoServizio);
+            }
+
+            hiring.setTipiServizio(tipiServizio);
 
             hiringRepository.save(hiring);
 
