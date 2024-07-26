@@ -17,8 +17,6 @@ public class CandidatoSignupRequest {
     @NotBlank
     private String cognome;
 
-    private String role;
-
     @NotBlank
     private String email;
 

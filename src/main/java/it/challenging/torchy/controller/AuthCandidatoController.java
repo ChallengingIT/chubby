@@ -127,11 +127,9 @@ public class AuthCandidatoController {
 
             logger.debug("User generato");
 
-            String strRole = signUpRequest.getRole();
-
             Authority authority = new Authority();
 
-            authority.setAuthority(Objects.requireNonNullElse(strRole, "ROLE_CANDIDATO"));
+            authority.setAuthority("ROLE_CANDIDATO");
             authority.setUsername(user.getUsername());
 
             user.setAuthority(authority);
