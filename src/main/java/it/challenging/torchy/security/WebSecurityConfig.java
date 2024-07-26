@@ -111,7 +111,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/azioni/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/aziende/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/job/description/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
-                    .requestMatchers("/dashboard/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
+                    .requestMatchers("/dashboard/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/hiring/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/staffing/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/owner/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
