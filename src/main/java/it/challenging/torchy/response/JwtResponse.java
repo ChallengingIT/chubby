@@ -25,6 +25,14 @@ public class JwtResponse {
         this.roles = roles;
     }
 
+    public JwtResponse(String accessToken, String username, String nome, String cognome, List<String> roles) {
+        this.token = accessToken;
+        this.username = username;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.roles = roles;
+    }
+
     public JwtResponse(String accessToken, String username, List<String> roles) {
         this.token = accessToken;
         this.username = username;
