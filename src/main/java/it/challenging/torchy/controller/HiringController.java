@@ -119,7 +119,7 @@ public class HiringController {
             } else if (null == idCliente && null != idTipoServizio) {
                 return hiringRepository.findAllByTipoServizio_Id(idTipoServizio, p).getContent();
             } else if (null != idCliente){
-                return hiringRepository.findAllByIdCliente(idCliente, p).getContent();
+                return hiringRepository.findByIdCliente(idCliente, p).getContent();
             } else {
                 return hiringRepository.findAll();
             }
