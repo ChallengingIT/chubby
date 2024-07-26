@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/associazioni/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/qr/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/azioni/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
-                    .requestMatchers("/aziende/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
+                    .requestMatchers("/aziende/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/job/description/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/dashboard/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/hiring/**").hasAnyRole("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
