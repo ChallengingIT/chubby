@@ -432,10 +432,10 @@ public class AziendeController {
 
         try {
             Cliente clienteEntity = new Cliente();
-
+            boolean modifica = false;
             if(clienteMap.get("id") != null) {
                 clienteEntity  = clienteRepository.findById(Integer.parseInt(clienteMap.get("id"))).get();
-
+                modifica = true;
                 logger.debug("Azienda trovata si procede in modifica");
             }
 
@@ -449,21 +449,37 @@ public class AziendeController {
 
             clienteRepository.save(clienteEntity);
 
-            Hiring hiring = new Hiring();
-            hiring.setIdCliente(clienteEntity.getId());
-            hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
-            List<TipoServizio> tipiServizio = new ArrayList<>();
+            if (!modifica) {
 
-            for (TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
-                TipoServizio tipoNuovo = tipoServizio;
+                Hiring hiring = new Hiring();
+                hiring.setIdCliente(clienteEntity.getId());
+                hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
+                List<TipoServizio> tipiServizio = new ArrayList<>();
 
-                tipiServizio.add(tipoNuovo);
+                for (TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
+                    TipoServizio tipoNuovo = tipoServizio;
+
+                    tipiServizio.add(tipoNuovo);
+                }
+
+                hiring.setTipiServizio(tipiServizio);
+
+                hiringRepository.save(hiring);
+            } else {
+                Hiring hiring = hiringRepository.findByIdCliente(clienteEntity.getId());
+
+                List<TipoServizio> tipiServizio = new ArrayList<>();
+
+                for (TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
+                    TipoServizio tipoNuovo = tipoServizio;
+
+                    tipiServizio.add(tipoNuovo);
+                }
+
+                hiring.setTipiServizio(tipiServizio);
+
+                hiringRepository.save(hiring);
             }
-
-            hiring.setTipiServizio(tipiServizio);
-
-            hiringRepository.save(hiring);
-
             logger.debug("Azienda salvata correttamente");
 
             return ResponseEntity.ok(clienteEntity.getId()+"");

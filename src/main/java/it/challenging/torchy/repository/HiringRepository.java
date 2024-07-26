@@ -45,7 +45,7 @@ public interface HiringRepository extends JpaRepository<Hiring, Integer> {
           """, nativeQuery=true)
     Page<Hiring> findAllByIdClienteAndTipoServizio_Id(Integer idCliente, Integer idTipoServizio, Pageable p);
     
-    Page<Hiring> findAllByIdCliente(Integer idCliente, Pageable p);
+    Hiring findByIdCliente(Integer idCliente);
 
     @Query(value= """
            select distinct h.*, th.id_tipo_servizio, sh.id_scheda_candidato
