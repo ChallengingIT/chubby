@@ -432,16 +432,11 @@ public class AziendeController {
 
         try {
             Cliente clienteEntity = new Cliente();
-            List<TipoServizio> tipiServiziOld = new ArrayList<>();
-            boolean modifica = false;
 
             if(clienteMap.get("id") != null) {
                 clienteEntity  = clienteRepository.findById(Integer.parseInt(clienteMap.get("id"))).get();
-                modifica       = true;
-                tipiServiziOld = clienteEntity.getTipiServizio();
 
                 logger.debug("Azienda trovata si procede in modifica");
-
             }
 
             trasformaMappaInCLiente(clienteEntity, clienteMap);
@@ -454,25 +449,6 @@ public class AziendeController {
 
             clienteRepository.save(clienteEntity);
 
-            /*if (null != clienteEntity.getTipiServizio()) {
-                for(TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
-                    List<Hiring> hiringList = hiringRepository.findAllByIdClienteAndTipoServizio_Id(clienteEntity.getId(), tipoServizio.getId());
-                    if (null == hiringList || hiringList.isEmpty()) {
-                        Hiring hiring = new Hiring();
-                        hiring.setIdCliente(clienteEntity.getId());
-                        hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
-                        hiring.setTipoServizio(tipoServizio);
-
-                        hiringRepository.save(hiring);
-                    }
-                }
-            }
-
-            for(TipoServizio tipoServizioOld : tipiServiziOld) {
-                if (clienteEntity.getTipiServizio().stream().noneMatch(t -> t.getId().equals(tipoServizioOld.getId()))) {
-                    hiringRepository.deleteAllByIdClienteAndTipoServizio_Id(clienteEntity.getId(), tipoServizioOld.getId());
-                }
-            }*/
             Hiring hiring = new Hiring();
             hiring.setIdCliente(clienteEntity.getId());
             hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
