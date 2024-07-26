@@ -37,7 +37,7 @@ public class Hiring implements Serializable {
     @Column(length = 90, name = "denominazione_cliente")
     private String denominazioneCliente;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tipo_servizio_hiring",
             joinColumns = @JoinColumn(name = "id_hiring", referencedColumnName = "id"),

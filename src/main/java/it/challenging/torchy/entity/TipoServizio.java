@@ -34,15 +34,6 @@ public class TipoServizio implements Serializable {
     @Column(nullable = false, unique = true, length = 45)
     private String descrizione;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "schede_candidato_tipo_servizio",
-            joinColumns = @JoinColumn(name = "id_tipo_servizio", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_scheda_candidato", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private List<SchedaCandidato> schedeCandidato;
-
     @Override
     public boolean equals(Object o) {
 
