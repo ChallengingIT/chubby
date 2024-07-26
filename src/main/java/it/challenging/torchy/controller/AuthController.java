@@ -1,10 +1,9 @@
 package it.challenging.torchy.controller;
 
 import it.challenging.torchy.EmailSenderService;
-import it.challenging.torchy.entity.Authority;
 import it.challenging.torchy.entity.Email;
+import it.challenging.torchy.entity.Role;
 import it.challenging.torchy.entity.User;
-import it.challenging.torchy.repository.AuthorityRepository;
 import it.challenging.torchy.repository.UserRepository;
 import it.challenging.torchy.request.ChangePasswordRequest;
 import it.challenging.torchy.request.LoginRequest;
@@ -12,8 +11,7 @@ import it.challenging.torchy.request.LostPasswordRequest;
 import it.challenging.torchy.request.SignupRequest;
 import it.challenging.torchy.response.JwtResponse;
 import it.challenging.torchy.response.MessageResponse;
-import it.challenging.torchy.security.jwt.JwtUtils;
-import it.challenging.torchy.security.services.UserDetailsImpl;
+import it.challenging.torchy.security.services.JwtService;
 import it.challenging.torchy.util.Constants;
 import it.challenging.torchy.util.UtilLib;
 import jakarta.validation.Valid;
@@ -23,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,9 +36,6 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    AuthorityRepository authorityRepository;
-
-    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -52,7 +45,7 @@ public class AuthController {
     private EmailSenderService serviceEmail;
 
     @Autowired
-    JwtUtils jwtUtils;
+    JwtService jwtUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -63,35 +56,28 @@ public class AuthController {
         logger.info("Login");
 
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+            );
 
             logger.debug("Autenticazione passata");
 
             User user = userRepository.findByUsername(loginRequest.getUsername()).get();
 
-            if (user.getExpirationDate().isBefore(LocalDateTime.now())) {
-                logger.debug("Password scaduta");
-
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: password expired!"));
-            }
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
+            String jwt = jwtUtils.generateJwtToken(user);
 
             logger.debug("Token generato");
 
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
             List<String> roles = new ArrayList<>();
-
-
-            roles.add(authorityRepository.findByUsername(loginRequest.getUsername()).getAuthority());
+            roles.add(user.getRole().name());
 
             logger.debug("Login effettuato");
 
             return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getUsername(), user.getNome(),
+                user.getUsername(), user.getNome(),
                 user.getCognome(), user.getIdAzienda(),
                 roles));
         } catch (Exception e) {
@@ -127,14 +113,7 @@ public class AuthController {
 
             logger.debug("User generato");
 
-            String strRole = signUpRequest.getRole();
-
-            Authority authority = new Authority();
-
-            authority.setAuthority(Objects.requireNonNullElse(strRole, "ROLE_USER"));
-            authority.setUsername(user.getUsername());
-
-            user.setAuthority(authority);
+            user.setRole(Objects.requireNonNullElse(Role.valueOf(signUpRequest.getRole()), Role.USER));
             userRepository.save(user);
 
             logger.debug("Utenza creata");

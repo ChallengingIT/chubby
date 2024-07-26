@@ -6,15 +6,13 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.EmailSenderService;
 import it.challenging.torchy.entity.*;
-import it.challenging.torchy.repository.AuthorityRepository;
 import it.challenging.torchy.repository.ChurchRepository;
 import it.challenging.torchy.repository.PassRepository;
 import it.challenging.torchy.repository.UserRepository;
 import it.challenging.torchy.request.*;
 import it.challenging.torchy.response.JwtResponse;
 import it.challenging.torchy.response.MessageResponse;
-import it.challenging.torchy.security.jwt.JwtUtils;
-import it.challenging.torchy.security.services.UserDetailsImpl;
+import it.challenging.torchy.security.services.JwtService;
 import it.challenging.torchy.util.Constants;
 import it.challenging.torchy.util.UtilLib;
 import jakarta.validation.Valid;
@@ -24,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +34,6 @@ import java.util.Objects;
 public class Auth4MappController {
     @Autowired
     AuthenticationManager authenticationManager;
-
-    @Autowired
-    AuthorityRepository authorityRepository;
 
     @Autowired
     ChurchRepository churchRepository;
@@ -58,7 +51,7 @@ public class Auth4MappController {
     EmailSenderService emailSenderService;
 
     @Autowired
-    JwtUtils jwtUtils;
+    JwtService jwtUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -68,26 +61,28 @@ public class Auth4MappController {
 
         logger.info("Login");
 
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
 
         logger.debug("Autenticazione passata");
+        User user = userRepository.findByUsername(loginRequest.getUsername()).get();
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String jwt = jwtUtils.generateJwtToken(user);
 
         logger.debug("Token generato");
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
         List<String> roles = new ArrayList<>();
 
-        roles.add(authorityRepository.findByUsername(loginRequest.getUsername()).getAuthority());
+        roles.add(user.getRole().name());
 
         logger.debug("Login effettuato");
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-            userDetails.getUsername(),
+            user.getUsername(),
             roles));
     }
 
@@ -130,20 +125,12 @@ public class Auth4MappController {
                 .body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        // Create new user's account
         User user = new User(signUpRequest.getUsername(), signUpRequest.getNome(), signUpRequest.getCognome(),
             encoder.encode(signUpRequest.getPassword()), (byte)1, signUpRequest.getEmail());
 
         logger.debug("User generato");
 
-        String strRole = signUpRequest.getRole();
-
-        Authority authority = new Authority();
-
-        authority.setAuthority(Objects.requireNonNullElse(strRole, "ROLE_USER"));
-        authority.setUsername(user.getUsername());
-
-        user.setAuthority(authority);
+        user.setRole(Objects.requireNonNullElse(Role.valueOf(signUpRequest.getRole()), Role.USER));
         userRepository.save(user);
 
         for (int i = 1; i <= 7; i++) {
@@ -249,7 +236,7 @@ public class Auth4MappController {
                 authority.setAuthority(changeRequest.getRole());
                 authority.setUsername(user.getUsername());
 
-                user.setAuthority(authority);
+                user.setRole(Role.valueOf(changeRequest.getRole()));
 
                 userRepository.save(user);
 
