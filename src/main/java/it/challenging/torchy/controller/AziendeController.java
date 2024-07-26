@@ -454,7 +454,7 @@ public class AziendeController {
 
             clienteRepository.save(clienteEntity);
 
-            if (null != clienteEntity.getTipiServizio()) {
+            /*if (null != clienteEntity.getTipiServizio()) {
                 for(TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
                     List<Hiring> hiringList = hiringRepository.findAllByIdClienteAndTipoServizio_Id(clienteEntity.getId(), tipoServizio.getId());
                     if (null == hiringList || hiringList.isEmpty()) {
@@ -472,7 +472,13 @@ public class AziendeController {
                 if (clienteEntity.getTipiServizio().stream().noneMatch(t -> t.getId().equals(tipoServizioOld.getId()))) {
                     hiringRepository.deleteAllByIdClienteAndTipoServizio_Id(clienteEntity.getId(), tipoServizioOld.getId());
                 }
-            }
+            }*/
+            Hiring hiring = new Hiring();
+            hiring.setIdCliente(clienteEntity.getId());
+            hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
+            hiring.setTipiServizio(clienteEntity.getTipiServizio());
+
+            hiringRepository.save(hiring);
 
             logger.debug("Azienda salvata correttamente");
 

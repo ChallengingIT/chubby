@@ -37,14 +37,14 @@ public class Hiring implements Serializable {
     @Column(length = 90, name = "denominazione_cliente")
     private String denominazioneCliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tipo_servizio_hiring",
             joinColumns = @JoinColumn(name = "id_hiring", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "id_tipo_servizio", referencedColumnName = "id")
     )
     @ToString.Exclude
-    private TipoServizio tipoServizio;
+    private List<TipoServizio> tipiServizio;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(

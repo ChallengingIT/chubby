@@ -16,6 +16,8 @@ import java.util.List;
 @Repository
 public interface CandidatoRepository extends JpaRepository<Candidato, Integer> {
 
+    Page<Candidato> findAllByOrderByDataUltimoContattoDesc(Pageable p);
+
     Page<Candidato> findAllByOrderByCognomeAsc(Pageable p);
 
     List<Candidato> findAllByOrderByCognomeAsc();

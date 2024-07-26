@@ -131,37 +131,6 @@ public class HiringController {
         }
     }
 
-    @PostMapping("/salva")
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
-    public ResponseEntity<String> saveHiring(
-            @RequestBody Map<String, String> hiringMap
-    ){
-        logger.info("Salva hiring");
-
-        try {
-            Hiring hiringEntity = new Hiring();
-
-            if(hiringMap.get("id") != null) {
-                hiringEntity = hiringRepository.findById(Integer.parseInt(hiringMap.get("id"))).get();
-
-                logger.debug("Hiring trovato si procede in modifica");
-            }
-
-            trasformaMappaInHiring(hiringEntity, hiringMap);
-
-            hiringRepository.save(hiringEntity);
-
-            logger.debug("Hiring salvato correttamente");
-
-            return ResponseEntity.ok(hiringEntity.getId()+"");
-
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
-
-            return ResponseEntity.ok("ERRORE");
-        }
-    }
-
     //get scheda candidato by idCandidato
     @GetMapping("/scheda/candidato")
     public List<SchedaCandidato> findSchedaByIdCandidato(
@@ -199,10 +168,12 @@ public class HiringController {
             return null;
         }
     }
+
     @PostMapping("/salva/scheda")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> saveScheda(
             @RequestParam("idHiring") Integer idHiring,
+            @RequestParam("idTipoServizio") Integer idTipoServizio,
             @RequestBody Map<String, String> schedaMap
     ){
         logger.info("Salva scheda candidato");
@@ -218,7 +189,7 @@ public class HiringController {
                 logger.debug("Scheda candidato trovata si procede in modifica");
             }
 
-            trasformaMappaInSchedaCandidato(schedaCandidatoEntity, schedaMap);
+            trasformaMappaInSchedaCandidato(schedaCandidatoEntity, schedaMap, idTipoServizio);
 
             if (!modifica) {
                 Hiring hiring = hiringRepository.findById(idHiring).get();
@@ -240,24 +211,29 @@ public class HiringController {
         }
     }
 
+    @PostMapping("/elimina/scheda")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public ResponseEntity<String> eliminaScheda(
+            @RequestParam("idScheda") Integer idScheda
+    ){
+        logger.info("Elimina scheda candidato");
 
-    public void trasformaMappaInHiring(Hiring hiring, Map<String,String> hiringMap) {
+        try {
 
-        logger.info("Trasforma mappa in hiring");
+            schedaCandidatoRepository.deleteById(idScheda);
 
-        hiring.setIdCliente(hiringMap.get("idCliente") != null ? Integer.parseInt(hiringMap.get("idCliente")) : null);
-        hiring.setDenominazioneCliente(hiringMap.get("denominazione") != null ? hiringMap.get("denominazione") : null);
+            logger.debug("Scheda candidato eliminata correttamente");
 
-        if (hiringMap.get("idTipoServizio") != null) {
-            TipoServizio tipoServizio = new TipoServizio();
-            tipoServizio.setId(Integer.parseInt(hiringMap.get("idTipoServizio")));
+            return ResponseEntity.ok("OK");
 
-            hiring.setTipoServizio(tipoServizio);
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+
+            return ResponseEntity.ok("ERRORE");
         }
-
     }
 
-    public void trasformaMappaInSchedaCandidato(SchedaCandidato schedaCandidato, Map<String,String> schedaMap) {
+    public void trasformaMappaInSchedaCandidato(SchedaCandidato schedaCandidato, Map<String,String> schedaMap, Integer idTipoServizio) {
 
         logger.info("Trasforma mappa in scheda candidato");
 
@@ -288,6 +264,12 @@ public class HiringController {
             schedaCandidato.setCanoneMensile(canoneMensile);
         }
 
+        if (idTipoServizio != null) {
+            TipoServizio tipoServizio = new TipoServizio();
+            tipoServizio.setId(idTipoServizio);
+
+            schedaCandidato.setTipoServizio(tipoServizio);
+        }
 
         if (schedaMap.get("rate") != null) {
             Double rate           = Double.parseDouble(schedaMap.get("rate"));

@@ -84,7 +84,7 @@ public class CandidatoController {
 
             CandidatoGroup            candidatoGroup      = new CandidatoGroup();
             Pageable                  p                   = PageRequest.of(pagina, quantita);
-            List<Candidato>           candidati           = candidatoRepository.findAllByOrderByCognomeAsc(p).getContent();
+            List<Candidato>           candidati           = candidatoRepository.findAllByOrderByDataUltimoContattoDesc(p).getContent();
             List<CandidatoModificato> candidatiModificati = new ArrayList<>();
 
             for (Candidato candidato : candidati) {
@@ -172,7 +172,7 @@ public class CandidatoController {
         }
     }
 
-    private static @NotNull CandidatoModificato getCandidatoModificato(Candidato candidato) {
+    private @NotNull CandidatoModificato getCandidatoModificato(Candidato candidato) {
         CandidatoModificato candidatoMod = new CandidatoModificato();
 
         candidatoMod.setId(candidato.getId());
@@ -185,7 +185,7 @@ public class CandidatoController {
         candidatoMod.setNome(candidato.getNome());
         candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
         candidatoMod.setEmail(candidato.getEmail());
-
+        candidatoMod.setHasInterviste(!intervistaRepository.findByCandidato_Id(candidato.getId()).isEmpty());
         candidatoMod.setRal(candidato.getRal());
         candidatoMod.setRating(candidato.getRating());
 

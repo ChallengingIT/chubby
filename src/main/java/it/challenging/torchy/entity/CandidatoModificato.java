@@ -46,6 +46,8 @@ public class CandidatoModificato implements Serializable {
 
     private Owner owner;
 
+    private boolean hasInterviste;
+
     @Override
     public boolean equals(Object o) {
 

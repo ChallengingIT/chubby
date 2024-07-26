@@ -82,6 +82,15 @@ public class SchedaCandidato implements Serializable {
     @Column(name = "importo_fatturato")
     private Double fatturato;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tipo_servizio_scheda_candidato",
+            joinColumns = @JoinColumn(name = "id_scheda_candidato", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_tipo_servizio", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private TipoServizio tipoServizio;
+
     @Override
     public boolean equals(Object o) {
 

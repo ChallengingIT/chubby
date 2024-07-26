@@ -128,9 +128,12 @@ public class AIOpenAiController {
 
         if (response.contains("sql\n")) {
             query = response.split("sql\n")[1].split(";")[0];
-
-            List lista = em.createNativeQuery(query).getResultList();
-
+            List lista = null;
+            try {
+                lista = em.createNativeQuery(query).getResultList();
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("KO");
+            }
             if (null == lista) {
                 return ResponseEntity.badRequest().body("KO");
             } else {
