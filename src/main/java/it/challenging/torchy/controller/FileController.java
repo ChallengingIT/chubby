@@ -56,10 +56,17 @@ public class FileController {
     private final OpenAiChatClient  chatClient;
 
     private static final Logger logger        = LoggerFactory.getLogger(FileController.class);
-    private static final String NOME_AZIENDA  = "Innotek Srl";
+    private static final String NOME_AZIENDA_INNOTEK  = "Innotek Srl";
+    private static final String LUOGO_AZIENDA_INNOTEK = "Piazza San Bernando, 106 – 00185 ROMA (RM)";
+    private static final String PI_AZIENDA_INNOTEK   = "C.F. e P.I.: 15726311002";
+    private static final String REA_AZIENDA_INNOTEK   = "REA: VV – 1609855";
+
+    private static final String NOME_AZIENDA  = "Challenging Srl";
     private static final String LUOGO_AZIENDA = "Piazza San Bernando, 106 – 00185 ROMA (RM)";
-    private static final String PI_AZIENDA    = "C.F. e P.I.: 15726311002";
-    private static final String REA_AZIENDA   = "REA: VV – 1609855";
+    private static final String PI_AZIENDA    = "C.F. e P.I.: 15938691001";
+    private static final String REA_AZIENDA   = "PEC: challenging@legalmail.it";
+
+
     private static final String SYSTEM_MESSAGE = """
             Sei un recruiter che deve condividere le informazioni di un tuo candidato ad un'azienda per proporre un colloquio conoscitivo.
             Per costruire queste informazioni hai bisogno di estrarre le esperienze che ti manderò a seguire in questa modalità: Inizio e fine Attività,
@@ -140,6 +147,7 @@ public class FileController {
     @GetMapping("/download/cf/{id}")
     public void downloadCF(
             @PathVariable("id") Integer id,
+            @RequestParam("tipo") Integer tipo,
             HttpServletResponse resp
     ) throws IOException {
 
@@ -190,6 +198,7 @@ public class FileController {
 
         ByteArrayOutputStream byteArrayOutputStream =
                 createPDF(
+                        tipo,
                         nomeCompleto.toUpperCase(),
                         candidato.getTipologia().getDescrizione().toUpperCase(),
                         annoNascita,
@@ -269,6 +278,7 @@ public class FileController {
     }
 
     public static ByteArrayOutputStream createPDF(
+            Integer tipo,
             String nomeCompleto,
             String tipologia,
             Integer annoNascita,
@@ -280,6 +290,11 @@ public class FileController {
             String rispostaLinguaOpenAI,
             String rispostaBackgroundOpenAI) throws IOException {
         //PDFont font = new PDType0Font(Standard14Fonts.FontName.RHELVETICA);
+
+        String nomeAzienda = tipo == 1 ? NOME_AZIENDA_INNOTEK : NOME_AZIENDA;
+        String luogoAzienda = tipo == 1 ? LUOGO_AZIENDA_INNOTEK : LUOGO_AZIENDA;
+        String piAzienda = tipo == 1 ? PI_AZIENDA_INNOTEK : PI_AZIENDA;
+        String reaAzienda = tipo == 1 ? REA_AZIENDA_INNOTEK : REA_AZIENDA;
 
         PDPageContentStream contentStream;
         PDPageContentStream contentStreamPage2;
@@ -306,10 +321,10 @@ public class FileController {
 
         float centroX = centraScritta(page,font, fontSize, nomeCompleto);
         float centroTipologiaX = centraScritta(page,font, fontSize, tipologia);
-        float centroAziendaX = centraScritta(page,font, fontSizeFooter, NOME_AZIENDA);
-        float centroLuogoX = centraScritta(page,font, fontSizeFooter, LUOGO_AZIENDA);
-        float centroPIX = centraScritta(page,font, fontSizeFooter, PI_AZIENDA);
-        float centroREAX = centraScritta(page,font, fontSizeFooter, REA_AZIENDA);
+        float centroAziendaX = centraScritta(page,font, fontSizeFooter, nomeAzienda);
+        float centroLuogoX = centraScritta(page,font, fontSizeFooter, luogoAzienda);
+        float centroPIX = centraScritta(page,font, fontSizeFooter, piAzienda);
+        float centroREAX = centraScritta(page,font, fontSizeFooter, reaAzienda);
         float centroY = (page.getMediaBox().getHeight()/2) - titleHeight;
 
         document.addPage(page);
@@ -317,7 +332,11 @@ public class FileController {
         document.addPage(page3);
 
         PDImageXObject pdImage = PDImageXObject.createFromFile(
-                Objects.requireNonNull(FileController.class.getResource("/static/images/innotekCF.jpg")).getPath(),
+                Objects.requireNonNull(
+                        FileController
+                                .class
+                                .getResource(tipo == 1 ? "/static/images/innotekCF.jpg" : "/static/images/challenging.png")
+                ).getPath(),
                 document);
         contentStream = new PDPageContentStream(document, page);
         contentStream.drawImage(pdImage, 110, 675);
@@ -336,25 +355,25 @@ public class FileController {
         contentStream.beginText();
         contentStream.setFont(font, fontSizeFooter);
         contentStream.newLineAtOffset(centroAziendaX, 39);
-        contentStream.showText(NOME_AZIENDA);
+        contentStream.showText(nomeAzienda);
         contentStream.endText();
 
         contentStream.beginText();
         contentStream.setFont(font, fontSizeFooter);
         contentStream.newLineAtOffset(centroLuogoX, 27);
-        contentStream.showText(LUOGO_AZIENDA);
+        contentStream.showText(luogoAzienda);
         contentStream.endText();
 
         contentStream.beginText();
         contentStream.setFont(font, fontSizeFooter);
         contentStream.newLineAtOffset(centroPIX, 15);
-        contentStream.showText(PI_AZIENDA);
+        contentStream.showText(piAzienda);
         contentStream.endText();
 
         contentStream.beginText();
         contentStream.setFont(font, fontSizeFooter);
         contentStream.newLineAtOffset(centroREAX, 3 );
-        contentStream.showText(REA_AZIENDA);
+        contentStream.showText(reaAzienda);
         contentStream.endText();
 
         //contentStream.drawLine(30,centroY,page.getMediaBox().getWidth()-30,centroY+1);
@@ -463,25 +482,25 @@ public class FileController {
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, fontSizeFooter);
         contentStreamPage2.newLineAtOffset(centroAziendaX, 39);
-        contentStreamPage2.showText(NOME_AZIENDA);
+        contentStreamPage2.showText(nomeAzienda);
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, fontSizeFooter);
         contentStreamPage2.newLineAtOffset(centroLuogoX, 27);
-        contentStreamPage2.showText(LUOGO_AZIENDA);
+        contentStreamPage2.showText(luogoAzienda);
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, fontSizeFooter);
         contentStreamPage2.newLineAtOffset(centroPIX, 15);
-        contentStreamPage2.showText(PI_AZIENDA);
+        contentStreamPage2.showText(piAzienda);
         contentStreamPage2.endText();
 
         contentStreamPage2.beginText();
         contentStreamPage2.setFont(font, fontSizeFooter);
         contentStreamPage2.newLineAtOffset(centroREAX, 3 );
-        contentStreamPage2.showText(REA_AZIENDA);
+        contentStreamPage2.showText(reaAzienda);
         contentStreamPage2.endText();
 
         contentStreamPage2.close();
@@ -548,25 +567,25 @@ public class FileController {
         contentStreamPage3.beginText();
         contentStreamPage3.setFont(font, fontSizeFooter);
         contentStreamPage3.newLineAtOffset(centroAziendaX, 39);
-        contentStreamPage3.showText(NOME_AZIENDA);
+        contentStreamPage3.showText(nomeAzienda);
         contentStreamPage3.endText();
 
         contentStreamPage3.beginText();
         contentStreamPage3.setFont(font, fontSizeFooter);
         contentStreamPage3.newLineAtOffset(centroLuogoX, 27);
-        contentStreamPage3.showText(LUOGO_AZIENDA);
+        contentStreamPage3.showText(luogoAzienda);
         contentStreamPage3.endText();
 
         contentStreamPage3.beginText();
         contentStreamPage3.setFont(font, fontSizeFooter);
         contentStreamPage3.newLineAtOffset(centroPIX, 15);
-        contentStreamPage3.showText(PI_AZIENDA);
+        contentStreamPage3.showText(piAzienda);
         contentStreamPage3.endText();
 
         contentStreamPage3.beginText();
         contentStreamPage3.setFont(font, fontSizeFooter);
         contentStreamPage3.newLineAtOffset(centroREAX, 3 );
-        contentStreamPage3.showText(REA_AZIENDA);
+        contentStreamPage3.showText(reaAzienda);
         contentStreamPage3.endText();
 
         contentStreamPage3.close();
@@ -577,25 +596,25 @@ public class FileController {
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroAziendaX, 39);
-            contentStreamPage4.showText(NOME_AZIENDA);
+            contentStreamPage4.showText(nomeAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroLuogoX, 27);
-            contentStreamPage4.showText(LUOGO_AZIENDA);
+            contentStreamPage4.showText(luogoAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroPIX, 15);
-            contentStreamPage4.showText(PI_AZIENDA);
+            contentStreamPage4.showText(piAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroREAX, 3 );
-            contentStreamPage4.showText(REA_AZIENDA);
+            contentStreamPage4.showText(reaAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.close();
@@ -655,25 +674,25 @@ public class FileController {
             contentStreamPage5.beginText();
             contentStreamPage5.setFont(font, fontSizeFooter);
             contentStreamPage5.newLineAtOffset(centroAziendaX, 39);
-            contentStreamPage5.showText(NOME_AZIENDA);
+            contentStreamPage5.showText(nomeAzienda);
             contentStreamPage5.endText();
 
             contentStreamPage5.beginText();
             contentStreamPage5.setFont(font, fontSizeFooter);
             contentStreamPage5.newLineAtOffset(centroLuogoX, 27);
-            contentStreamPage5.showText(LUOGO_AZIENDA);
+            contentStreamPage5.showText(luogoAzienda);
             contentStreamPage5.endText();
 
             contentStreamPage5.beginText();
             contentStreamPage5.setFont(font, fontSizeFooter);
             contentStreamPage5.newLineAtOffset(centroPIX, 15);
-            contentStreamPage5.showText(PI_AZIENDA);
+            contentStreamPage5.showText(piAzienda);
             contentStreamPage5.endText();
 
             contentStreamPage5.beginText();
             contentStreamPage5.setFont(font, fontSizeFooter);
             contentStreamPage5.newLineAtOffset(centroREAX, 3 );
-            contentStreamPage5.showText(REA_AZIENDA);
+            contentStreamPage5.showText(reaAzienda);
             contentStreamPage5.endText();
 
             contentStreamPage5.close();
@@ -684,25 +703,25 @@ public class FileController {
                 contentStreamPage6.beginText();
                 contentStreamPage6.setFont(font, fontSizeFooter);
                 contentStreamPage6.newLineAtOffset(centroAziendaX, 39);
-                contentStreamPage6.showText(NOME_AZIENDA);
+                contentStreamPage6.showText(nomeAzienda);
                 contentStreamPage6.endText();
 
                 contentStreamPage6.beginText();
                 contentStreamPage6.setFont(font, fontSizeFooter);
                 contentStreamPage6.newLineAtOffset(centroLuogoX, 27);
-                contentStreamPage6.showText(LUOGO_AZIENDA);
+                contentStreamPage6.showText(luogoAzienda);
                 contentStreamPage6.endText();
 
                 contentStreamPage6.beginText();
                 contentStreamPage6.setFont(font, fontSizeFooter);
                 contentStreamPage6.newLineAtOffset(centroPIX, 15);
-                contentStreamPage6.showText(PI_AZIENDA);
+                contentStreamPage6.showText(piAzienda);
                 contentStreamPage6.endText();
 
                 contentStreamPage6.beginText();
                 contentStreamPage6.setFont(font, fontSizeFooter);
                 contentStreamPage6.newLineAtOffset(centroREAX, 3);
-                contentStreamPage6.showText(REA_AZIENDA);
+                contentStreamPage6.showText(reaAzienda);
                 contentStreamPage6.endText();
 
                 contentStreamPage6.close();
@@ -757,25 +776,25 @@ public class FileController {
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroAziendaX, 39);
-            contentStreamPage4.showText(NOME_AZIENDA);
+            contentStreamPage4.showText(nomeAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroLuogoX, 27);
-            contentStreamPage4.showText(LUOGO_AZIENDA);
+            contentStreamPage4.showText(luogoAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroPIX, 15);
-            contentStreamPage4.showText(PI_AZIENDA);
+            contentStreamPage4.showText(piAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.beginText();
             contentStreamPage4.setFont(font, fontSizeFooter);
             contentStreamPage4.newLineAtOffset(centroREAX, 3 );
-            contentStreamPage4.showText(REA_AZIENDA);
+            contentStreamPage4.showText(reaAzienda);
             contentStreamPage4.endText();
 
             contentStreamPage4.close();
@@ -786,25 +805,25 @@ public class FileController {
                 contentStreamPage5.beginText();
                 contentStreamPage5.setFont(font, fontSizeFooter);
                 contentStreamPage5.newLineAtOffset(centroAziendaX, 39);
-                contentStreamPage5.showText(NOME_AZIENDA);
+                contentStreamPage5.showText(nomeAzienda);
                 contentStreamPage5.endText();
 
                 contentStreamPage5.beginText();
                 contentStreamPage5.setFont(font, fontSizeFooter);
                 contentStreamPage5.newLineAtOffset(centroLuogoX, 27);
-                contentStreamPage5.showText(LUOGO_AZIENDA);
+                contentStreamPage5.showText(luogoAzienda);
                 contentStreamPage5.endText();
 
                 contentStreamPage5.beginText();
                 contentStreamPage5.setFont(font, fontSizeFooter);
                 contentStreamPage5.newLineAtOffset(centroPIX, 15);
-                contentStreamPage5.showText(PI_AZIENDA);
+                contentStreamPage5.showText(piAzienda);
                 contentStreamPage5.endText();
 
                 contentStreamPage5.beginText();
                 contentStreamPage5.setFont(font, fontSizeFooter);
                 contentStreamPage5.newLineAtOffset(centroREAX, 3);
-                contentStreamPage5.showText(REA_AZIENDA);
+                contentStreamPage5.showText(reaAzienda);
                 contentStreamPage5.endText();
 
                 contentStreamPage5.close();
