@@ -93,8 +93,7 @@ public class AuthCandidatoController {
     @CrossOrigin(origins = "*")
     @PostMapping("/signup")
     public ResponseEntity<?> registerCandidato(
-            @Valid @RequestBody CandidatoSignupRequest signUpRequest,
-            @RequestParam("cv") MultipartFile cv
+            @Valid @RequestBody CandidatoSignupRequest signUpRequest
     ) {
 
         logger.info("Registrazione");
@@ -115,16 +114,45 @@ public class AuthCandidatoController {
                     signUpRequest.getCognome(), signUpRequest.getEmail(), signUpRequest.getCellulare(),signUpRequest.getResidenza(),
                     encoder.encode(signUpRequest.getPassword()), (byte)1, expirationDate);
 
-            if (( null != cv.getOriginalFilename() ) && !cv.getOriginalFilename().isEmpty()) {
-                user.setFile(fileVoid(cv));
-            }
-
             logger.debug("User generato");
 
             user.setRole(Role.CANDIDATO);
             userCandidatoRepository.save(user);
 
             logger.debug("Utenza creata");
+
+            return ResponseEntity.ok(new MessageResponse(user.getUsername()));
+
+        } catch(Exception e) {
+            logger.error(e.toString());
+        }
+
+        return ResponseEntity.ok(new MessageResponse("OK"));
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/signup/cv")
+    public ResponseEntity<?> registerFileCandidato(
+            @RequestParam("username") String username,
+            @RequestParam("cv") MultipartFile cv
+    ) {
+
+        logger.info("Registrazione CV");
+
+        try {
+
+            if (userCandidatoRepository.existsByUsername(username)) {
+
+                UserCandidato user = userCandidatoRepository.findByUsername(username).get();
+
+                if (( null != cv.getOriginalFilename() ) && !cv.getOriginalFilename().isEmpty()) {
+                    user.setFile(fileVoid(cv));
+                }
+
+                userCandidatoRepository.save(user);
+            }
+
+            logger.debug("Utenza aggiornata");
 
         } catch(Exception e) {
             logger.error(e.toString());
