@@ -335,7 +335,7 @@ public class FileController {
                 Objects.requireNonNull(
                         FileController
                                 .class
-                                .getResource(tipo == 1 ? "/static/images/innotekCF.jpg" : "/static/images/challenging.png")
+                                .getResource(tipo == 1 ? "/static/images/innotekCF.jpg" : "/static/images/challenging.jpg")
                 ).getPath(),
                 document);
         contentStream = new PDPageContentStream(document, page);
