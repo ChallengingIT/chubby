@@ -121,7 +121,7 @@ public class AuthCandidatoController {
 
             logger.debug("Utenza creata");
 
-            return ResponseEntity.ok(new MessageResponse(user.getUsername()));
+            return ResponseEntity.ok(user.getUsername());
 
         } catch(Exception e) {
             logger.error(e.toString());
