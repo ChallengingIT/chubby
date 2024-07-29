@@ -212,15 +212,29 @@ public class HiringController {
     }
 
     @PostMapping("/elimina/scheda")
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public ResponseEntity<String> eliminaScheda(
-            @RequestParam("idScheda") Integer idScheda
+            @RequestParam("idScheda") Integer idScheda,
+            @RequestParam("idHiring") Integer idHiring
     ){
         logger.info("Elimina scheda candidato");
 
         try {
 
-            schedaCandidatoRepository.deleteById(idScheda);
+            if (hiringRepository.findById(idHiring).isPresent()) {
+                Hiring hiring = hiringRepository.findById(idHiring).get();
+
+                SchedaCandidato scheda = schedaCandidatoRepository.findById(idScheda).get();
+
+                hiring.setSchedeCandidato(
+                    hiring.getSchedeCandidato()
+                        .stream()
+                        .dropWhile(s -> s.equals(scheda))
+                        .toList()
+                );
+
+                hiringRepository.save(hiring);
+
+            }
 
             logger.debug("Scheda candidato eliminata correttamente");
 
