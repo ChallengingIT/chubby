@@ -2,7 +2,7 @@ package it.challenging.torchy.controller;
 
 import it.challenging.torchy.EmailSenderService;
 import it.challenging.torchy.entity.*;
-import it.challenging.torchy.repository.UserCandidatoRepository;
+import it.challenging.torchy.repository.UserRepository;
 import it.challenging.torchy.request.*;
 import it.challenging.torchy.response.JwtResponse;
 import it.challenging.torchy.response.MessageResponse;
@@ -33,7 +33,7 @@ public class AuthCandidatoController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserCandidatoRepository userCandidatoRepository;
+    UserRepository userRepository;
 
     @Autowired
     BCryptPasswordEncoder encoder;
@@ -62,7 +62,7 @@ public class AuthCandidatoController {
 
             logger.debug("Autenticazione passata");
 
-            UserCandidato user = userCandidatoRepository.findByUsername(loginRequest.getUsername()).get();
+            User user = userRepository.findByUsername(loginRequest.getUsername()).get();
 
             if (user.getExpirationDate().isBefore(LocalDateTime.now())) {
                 logger.debug("Password scaduta");
@@ -82,7 +82,7 @@ public class AuthCandidatoController {
 
             return ResponseEntity.ok(new JwtResponse(jwt,
                     user.getUsername(), user.getNome(),
-                    user.getCognome(),roles));
+                    user.getCognome(), roles));
         } catch (Exception e) {
             logger.error(e.getMessage());
 
@@ -100,7 +100,7 @@ public class AuthCandidatoController {
 
         try {
 
-            if (userCandidatoRepository.existsByUsername(signUpRequest.getUsername())) {
+            if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 
                 logger.debug("Username selezionato già presente");
 
@@ -110,14 +110,14 @@ public class AuthCandidatoController {
             LocalDateTime expirationDate = LocalDateTime.now().plusDays(365);
 
             // Create new user's account
-            UserCandidato user = new UserCandidato(signUpRequest.getUsername(), signUpRequest.getNome(),
+            User user = new User(signUpRequest.getUsername(), signUpRequest.getNome(),
                     signUpRequest.getCognome(), signUpRequest.getEmail(), signUpRequest.getCellulare(),signUpRequest.getResidenza(),
                     encoder.encode(signUpRequest.getPassword()), (byte)1, expirationDate);
 
             logger.debug("User generato");
 
             user.setRole(Role.CANDIDATO);
-            userCandidatoRepository.save(user);
+            userRepository.save(user);
 
             logger.debug("Utenza creata");
 
@@ -141,15 +141,15 @@ public class AuthCandidatoController {
 
         try {
 
-            if (userCandidatoRepository.existsByUsername(username)) {
+            if (userRepository.existsByUsername(username)) {
 
-                UserCandidato user = userCandidatoRepository.findByUsername(username).get();
+                User user = userRepository.findByUsername(username).get();
 
                 if (( null != cv.getOriginalFilename() ) && !cv.getOriginalFilename().isEmpty()) {
                     user.setFile(fileVoid(cv));
                 }
 
-                userCandidatoRepository.save(user);
+                userRepository.save(user);
             }
 
             logger.debug("Utenza aggiornata");
@@ -158,7 +158,7 @@ public class AuthCandidatoController {
             logger.error(e.toString());
         }
 
-        return ResponseEntity.ok(new MessageResponse("OK"));
+        return ResponseEntity.ok("OK");
     }
 
     @CrossOrigin(origins = "*")
@@ -169,9 +169,9 @@ public class AuthCandidatoController {
 
         try {
 
-            if (userCandidatoRepository.existsByUsername(changeRequest.getUsername())) {
+            if (userRepository.existsByUsername(changeRequest.getUsername())) {
 
-                UserCandidato user = userCandidatoRepository.findByUsername(changeRequest.getUsername()).get();
+                User user = userRepository.findByUsername(changeRequest.getUsername()).get();
 
                 if (encoder.matches(changeRequest.getOldPassword(), user.getPassword())) {
 
@@ -182,7 +182,7 @@ public class AuthCandidatoController {
 
                 }
 
-                userCandidatoRepository.save(user);
+                userRepository.save(user);
 
                 logger.debug("Password aggiornata");
 
@@ -207,9 +207,9 @@ public class AuthCandidatoController {
 
         try {
 
-            if (userCandidatoRepository.existsByEmail(lostRequest.getEmail())) {
+            if (userRepository.existsByEmail(lostRequest.getEmail())) {
 
-                UserCandidato user = userCandidatoRepository.findByEmail(lostRequest.getEmail()).get();
+                User user = userRepository.findByEmail(lostRequest.getEmail()).get();
 
                 LocalDateTime expirationDate = LocalDateTime.now().plusDays(1);
 
@@ -222,7 +222,7 @@ public class AuthCandidatoController {
 
                 serviceEmail.sendHtmlMessage(email);
 
-                userCandidatoRepository.save(user);
+                userRepository.save(user);
 
                 logger.debug("Password aggiornata");
 
@@ -247,13 +247,13 @@ public class AuthCandidatoController {
 
         try {
 
-            if (userCandidatoRepository.existsByUsername(changeRequest.getUsername())) {
+            if (userRepository.existsByUsername(changeRequest.getUsername())) {
 
-                UserCandidato user = userCandidatoRepository.findByUsername(changeRequest.getUsername()).get();
+                User user = userRepository.findByUsername(changeRequest.getUsername()).get();
 
                 if (encoder.matches(changeRequest.getPassword(), user.getPassword())) {
 
-                    userCandidatoRepository.delete(user);
+                    userRepository.delete(user);
 
                     logger.debug("Utente eliminato");
 

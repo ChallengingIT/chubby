@@ -53,8 +53,23 @@ public class User implements UserDetails {
     @Column(nullable = false, name="id_azienda")
     private Integer idAzienda;
 
+    @Column(length = 15)
+    private String cellulare;
+
+    @Column(length = 50)
+    private String residenza;
+
     @Column(nullable = false, name="expiration_date")
     private LocalDateTime expirationDate;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "file_user",
+            joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"),
+            inverseJoinColumns = @JoinColumn(name = "id_file", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private File file = new File();
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -78,6 +93,18 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled  = enabled;
         this.email  = email;
+    }
+
+    public User(String username, String nome, String cognome, String email, String cellulare, String residenza, String password, Byte enabled, LocalDateTime expirationDate) {
+        this.username = username;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.expirationDate = expirationDate;
+        this.enabled  = enabled;
+        this.email  = email;
+        this.cellulare = cellulare;
+        this.residenza = residenza;
+        this.password = password;
     }
 
     @Override
