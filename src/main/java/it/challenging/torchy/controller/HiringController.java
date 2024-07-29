@@ -4,10 +4,7 @@ import it.challenging.torchy.entity.Hiring;
 import it.challenging.torchy.entity.SchedaCandidato;
 import it.challenging.torchy.entity.TerminePagamento;
 import it.challenging.torchy.entity.TipoServizio;
-import it.challenging.torchy.repository.HiringRepository;
-import it.challenging.torchy.repository.SchedaCandidatoRepository;
-import it.challenging.torchy.repository.TerminePagamentoRepository;
-import it.challenging.torchy.repository.TipoServizioRepository;
+import it.challenging.torchy.repository.*;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +27,8 @@ public class HiringController {
     private HiringRepository           hiringRepository;
     @Autowired
     private SchedaCandidatoRepository  schedaCandidatoRepository;
+    @Autowired
+    private SchedaCandidatoHiringRepository schedaCandidatoHiringRepository;
     @Autowired
     private TipoServizioRepository     tipoServizioRepository;
     @Autowired
@@ -219,7 +218,7 @@ public class HiringController {
 
         try {
 
-            schedaCandidatoRepository.deleteFromSchedaCandidatoHiring(idScheda);
+            schedaCandidatoHiringRepository.deleteByIdSchedaCandidato(idScheda);
 
             schedaCandidatoRepository.deleteById(idScheda);
 
