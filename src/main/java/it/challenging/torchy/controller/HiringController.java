@@ -211,30 +211,17 @@ public class HiringController {
         }
     }
 
-    @PostMapping("/elimina/scheda")
+    @PostMapping("/elimina/scheda/{id}")
     public ResponseEntity<String> eliminaScheda(
-            @RequestParam("idScheda") Integer idScheda,
-            @RequestParam("idHiring") Integer idHiring
+            @PathVariable("id") Integer idScheda
     ){
         logger.info("Elimina scheda candidato");
 
         try {
 
-            if (hiringRepository.findById(idHiring).isPresent()) {
-                Hiring hiring = hiringRepository.findById(idHiring).get();
+            schedaCandidatoRepository.deleteFromSchedaCandidatoHiring(idScheda);
 
-                SchedaCandidato scheda = schedaCandidatoRepository.findById(idScheda).get();
-
-                hiring.setSchedeCandidato(
-                    hiring.getSchedeCandidato()
-                        .stream()
-                        .dropWhile(s -> s.equals(scheda))
-                        .toList()
-                );
-
-                hiringRepository.save(hiring);
-
-            }
+            schedaCandidatoRepository.deleteById(idScheda);
 
             logger.debug("Scheda candidato eliminata correttamente");
 
