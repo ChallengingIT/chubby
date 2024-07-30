@@ -716,7 +716,9 @@ public class NeedController {
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public String saveNeedStato(
         @PathVariable("id") Integer id,
-        @RequestParam ("stato") Integer idStato
+        @RequestParam ("stato") Integer idStato,
+        @RequestParam ("priorita") Integer priorita
+
     ) {
         logger.info("Salva cambio stato need");
 
@@ -728,6 +730,7 @@ public class NeedController {
             stato.setId(idStato);
 
             need.setStato(stato);
+            need.setPriorita(priorita);
 
             needRepository.save(need);
 
