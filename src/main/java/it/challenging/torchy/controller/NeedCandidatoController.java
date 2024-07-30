@@ -232,6 +232,14 @@ public class NeedCandidatoController {
         }
     }
 
+    @GetMapping("/owner")
+    ////@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public List<Owner> getAllOwner() {
+        logger.info("Lista owner");
+
+        return ownerRepository.findAll();
+    }
+
     @GetMapping("/react/stato")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<StatoN> getAllStato() {
