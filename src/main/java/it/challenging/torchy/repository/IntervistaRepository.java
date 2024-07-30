@@ -24,6 +24,8 @@ public interface IntervistaRepository extends JpaRepository<Intervista, Integer>
 
     Page<Intervista> findByCandidato_IdOrderByDataColloquioDesc(Integer idCandidato, Pageable p);
 
+    List<Intervista> findByCandidato_IdOrderByDataColloquioDesc(Integer idCandidato);
+
     @Query(value= """
                 SELECT i.*, ci.id_candidato, io.id_owner, si.id_stato, ti.id_tipologia
                 FROM intervista i, candidato_intervista ci, intervista_owner io, stato_intervista si, tipologia_intervista ti

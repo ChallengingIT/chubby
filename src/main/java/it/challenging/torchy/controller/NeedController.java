@@ -29,6 +29,8 @@ public class NeedController {
     @Autowired
     private CandidatoRepository    candidatoRepository;
     @Autowired
+    private IntervistaRepository    intervistaRepository;
+    @Autowired
     private ClienteRepository      clienteRepository;
     @Autowired
     private KeyPeopleRepository    keyPeopleRepository;
@@ -876,11 +878,28 @@ public class NeedController {
                 candidatoMod.setStato(candidato.getStato());
                 candidatoMod.setTipologia(candidato.getTipologia());
                 candidatoMod.setCognome(candidato.getCognome());
+
+                if (null != candidato.getFiles()) {
+                    File file = null;
+
+                    for (File fileC : candidato.getFiles()) {
+                        if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
+                            file = new File();
+                            file.setId(fileC.getId());
+                            file.setDescrizione(fileC.getDescrizione());
+                        }
+                    }
+
+                    candidatoMod.setFile(file);
+                }
+
+
                 candidatoMod.setNome(candidato.getNome());
                 candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-                candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setCitta(candidato.getCitta());
                 candidatoMod.setRal(candidato.getRal());
                 candidatoMod.setRating(candidato.getRating());
+                candidatoMod.setHasInterviste(!intervistaRepository.findByCandidato_Id(candidato.getId()).isEmpty());
 
                 candidatiModificati.add(candidatoMod);
             }
@@ -924,11 +943,27 @@ public class NeedController {
                 candidatoMod.setStato(candidato.getStato());
                 candidatoMod.setTipologia(candidato.getTipologia());
                 candidatoMod.setCognome(candidato.getCognome());
+
+                if (null != candidato.getFiles()) {
+                    File file = null;
+
+                    for (File fileC : candidato.getFiles()) {
+                        if (fileC.getTipologia() != null && fileC.getTipologia().getId() == 1) {
+                            file = new File();
+                            file.setId(fileC.getId());
+                            file.setDescrizione(fileC.getDescrizione());
+                        }
+                    }
+
+                    candidatoMod.setFile(file);
+                }
+
                 candidatoMod.setNome(candidato.getNome());
                 candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-                candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setCitta(candidato.getCitta());
                 candidatoMod.setRal(candidato.getRal());
                 candidatoMod.setRating(candidato.getRating());
+                candidatoMod.setHasInterviste(!intervistaRepository.findByCandidato_Id(candidato.getId()).isEmpty());
 
                 candidatiModificati.add(candidatoMod);
             }
@@ -1008,7 +1043,7 @@ public class NeedController {
 
                 candidatoMod.setNome(candidato.getNome());
                 candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
-                candidatoMod.setEmail(candidato.getEmail());
+                candidatoMod.setCitta(candidato.getCitta());
                 candidatoMod.setRal(candidato.getRal());
                 candidatoMod.setRating(candidato.getRating());
 

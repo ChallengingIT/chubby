@@ -42,6 +42,8 @@ public class CandidatoModificato implements Serializable {
 
     private String ral;
 
+    private String citta;
+
     private String note;
 
     private Owner owner;

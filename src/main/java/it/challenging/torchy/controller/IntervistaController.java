@@ -151,6 +151,75 @@ public class IntervistaController {
         }
     }
 
+    @GetMapping("/ultima/{idCandidato}")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
+    public IntervistaModificato showIntervistaModIdList(
+            @PathVariable("idCandidato") Integer idCandidato
+    ) {
+        logger.info("Interviste candidato tramite id mod");
+
+        try {
+            List<Intervista>     interviste    = intervistaRepository.findByCandidato_IdOrderByDataColloquioDesc(idCandidato);
+            IntervistaModificato intervistaMod = new IntervistaModificato();
+
+            if (null != interviste && !interviste.isEmpty()){
+
+                Intervista intervista = interviste.getFirst();
+
+                intervistaMod.setAderenza(intervista.getAderenza());
+                intervistaMod.setAnniEsperienza(intervista.getAnniEsperienza());
+                intervistaMod.setAttuale(intervista.getAttuale());
+
+                if (null != intervista.getCandidato()) {
+                    Candidato candidato = new Candidato();
+
+                    candidato.setId(intervista.getCandidato().getId());
+                    candidato.setCognome(intervista.getCandidato().getCognome());
+                    candidato.setNome(intervista.getCandidato().getNome());
+
+                    intervistaMod.setCandidato(candidato);
+                }
+
+                intervistaMod.setCoerenza(intervista.getCoerenza());
+                intervistaMod.setCognome(intervista.getCognome());
+                intervistaMod.setCompetenze(intervista.getCompetenze());
+                intervistaMod.setComunicazione(intervista.getComunicazione());
+                intervistaMod.setDataAggiornamento(intervista.getDataAggiornamento());
+                intervistaMod.setDataAVideo(intervista.getDataAVideo());
+                intervistaMod.setDataColloquio(intervista.getDataColloquio());
+                intervistaMod.setDataNascita(intervista.getDataNascita());
+                intervistaMod.setDescrizioneCandidato(intervista.getDescrizioneCandidato());
+                intervistaMod.setDescrizioneCandidatoUna(intervista.getDescrizioneCandidatoUna());
+                intervistaMod.setDesiderata(intervista.getDesiderata());
+                intervistaMod.setDisponibilita(intervista.getDisponibilita());
+                intervistaMod.setEnergia(intervista.getEnergia());
+                intervistaMod.setId(intervista.getId());
+                intervistaMod.setInglese(intervista.getInglese());
+                intervistaMod.setMobilita(intervista.getMobilita());
+                intervistaMod.setMotivazione(intervista.getMotivazione());
+                intervistaMod.setNextOwner(intervista.getNextOwner());
+                intervistaMod.setNome(intervista.getNome());
+                intervistaMod.setOraAVideo(intervista.getOraAVideo());
+                intervistaMod.setOwner(intervista.getOwner());
+                intervistaMod.setPreavviso(intervista.getPreavviso());
+                intervistaMod.setProposta(intervista.getProposta());
+                intervistaMod.setRecapiti(intervista.getRecapiti());
+                intervistaMod.setStanding(intervista.getStanding());
+                intervistaMod.setStato(intervista.getStato());
+                intervistaMod.setTeamSiNo(intervista.getTeamSiNo());
+                intervistaMod.setTipo(intervista.getTipo());
+                intervistaMod.setTipologia(intervista.getTipologia());
+                intervistaMod.setValutazione(intervista.getValutazione());
+            }
+
+            return intervistaMod;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
     @GetMapping("/react/mod/ricerca/{idCandidato}")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public IntervistaGroup showIntervistaModIdListRicerca(
