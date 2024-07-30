@@ -56,6 +56,31 @@ public class NeedCandidatoController {
 
     private static final Logger logger = LoggerFactory.getLogger(NeedCandidatoController.class);
 
+    @GetMapping("/aziende")
+    public List<ClienteSelect> getAllSelect() {
+        logger.info("Lista aziende select");
+
+        try {
+            List<Cliente> aziende = clienteRepository.findAllByOrderByDenominazioneAsc();
+            List<ClienteSelect> aziendeModificate = new ArrayList<>();
+
+            for (Cliente azienda : aziende) {
+                ClienteSelect aziendaModificata = new ClienteSelect();
+
+                aziendaModificata.setDenominazione(azienda.getDenominazione());
+                aziendaModificata.setId(azienda.getId());
+
+                aziendeModificate.add(aziendaModificata);
+            }
+
+            return aziendeModificate;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
     @GetMapping("/impiego")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('RECRUITER') or hasRole('BM')")
     public List<ModalitaImpiego> getModalitaImpiego() {
