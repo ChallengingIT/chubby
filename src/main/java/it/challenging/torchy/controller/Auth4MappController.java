@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/auth/mapp")
@@ -130,7 +129,7 @@ public class Auth4MappController {
 
         logger.debug("User generato");
 
-        user.setRole(Objects.requireNonNullElse(Role.valueOf(signUpRequest.getRole()), Role.USER));
+        user.setRole(Role.USER);
         userRepository.save(user);
 
         for (int i = 1; i <= 7; i++) {
