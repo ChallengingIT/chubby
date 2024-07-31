@@ -65,10 +65,29 @@ public interface NeedRepository extends JpaRepository<Need, Integer> {
           join owner o on non.id_owner = o.id
           left join users u on o.nome = u.nome and o.cognome = u.cognome
           where u.username = ?1
-          and sn.id_stato in (1,6,7)
           order by sn.id_stato = 1 desc, sn.id_stato = 7 desc, n.priorita asc
           """,nativeQuery=true)
     List<Need> ricercaByUsername(String username);
+
+    @Query(value= """
+          SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title,
+           mi.id_modalita_impiego, ml.id_modalita_lavoro
+          FROM need n
+          left join need_cliente nc on n.id = nc.id_need
+          left join need_keypeople nk on n.id = nk.id_need
+          left join need_job_title nj on n.id = nj.id_need
+          left join modalita_impiego_need mi on n.id = mi.id_need
+          left join modalita_lavoro_need ml on n.id = ml.id_need
+          left join tipologia_need tn on n.id = tn.id_need
+          left join need_owner non on n.id = non.id_need
+          left join stato_need sn on n.id = sn.id_need
+          join owner o on non.id_owner = o.id
+          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          where u.username = ?1
+          and sn.id_stato in (1,6,7)
+          order by sn.id_stato = 1 desc, sn.id_stato = 7 desc, n.priorita asc
+          """,nativeQuery=true)
+    List<Need> ricercaByUsernameFiltered(String username);
 
     @Query(value= """
           SELECT  n.*, nc.id_cliente, tn.id_tipologia, non.id_owner, sn.id_stato, nk.id_keypeople, nj.id_job_title,

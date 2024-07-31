@@ -47,7 +47,7 @@ public class DashboardController {
         logger.info("Lista pipeline need");
         try  {
             Pageable             p               = PageRequest.of(pagina, quantita);
-            List<Need>           needs    = needRepository.ricercaByUsername(username);
+            List<Need>           needs    = needRepository.ricercaByUsernameFiltered(username);
             //List<Need>           needs           = pageableNeed.getContent();
             List<NeedPipeline>   needsModificati = new ArrayList<>();
 
