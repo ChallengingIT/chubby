@@ -69,7 +69,7 @@ public class FileController {
 
     private static final String SYSTEM_MESSAGE = """
             Sei un recruiter che deve condividere le informazioni di un tuo candidato ad un'azienda per proporre un colloquio conoscitivo.
-            Per costruire queste informazioni hai bisogno di estrarre le esperienze che ti manderò a seguire in questa modalità: Inizio e fine Attività,
+            Per costruire queste informazioni hai bisogno di estrarre le esperienze che ti manderò a seguire in questa modalità in ordine decrescente: Inizio e fine Attività,
             Job title posizione svolta senza esporre il nome dell'azienda, settore azienda, attività svolta durante l'esperienza lavorativa suddivisa in tre massimo
             cinque punti con numero massimo di 80 caratteri, stack tecnologico utilizzato. Potresti estrarre queste informazioni da questo testo senza mettermi stringhe introduttive?
             """;
@@ -406,7 +406,7 @@ public class FileController {
         contentStreamPage2.stroke();
 
         Integer offsetX = 20;
-        Integer offsetY = 380;
+        Integer offsetY = 370;
 
         String skillString = "";
         contentStreamPage2.beginText();
@@ -528,7 +528,7 @@ public class FileController {
         contentStreamPage4 = new PDPageContentStream(document, page4);
         contentStreamPage4.drawImage(pdImage, 110, 675);
         contentStreamPage4.beginText();
-        contentStreamPage4.setFont(font, fontSize);
+        contentStreamPage4.setFont(font, 14);
         contentStreamPage4.newLineAtOffset(offsetX, 620);
         contentStreamPage4.setLeading(18.5f);
 
