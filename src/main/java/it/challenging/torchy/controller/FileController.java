@@ -529,7 +529,7 @@ public class FileController {
         contentStreamPage4.drawImage(pdImage, 110, 675);
         contentStreamPage4.beginText();
         contentStreamPage4.setFont(font, 14);
-        contentStreamPage4.newLineAtOffset(offsetX, 620);
+        contentStreamPage4.newLineAtOffset(offsetX, 650);
         contentStreamPage4.setLeading(18.5f);
 
         int countRows      = 0;
@@ -631,8 +631,8 @@ public class FileController {
 
             document.addPage(page5);
 
-            contentStreamPage5.moveTo(30, 610);
-            contentStreamPage5.lineTo(page.getMediaBox().getWidth()-30, 609);
+            contentStreamPage5.moveTo(30, 640);
+            contentStreamPage5.lineTo(page.getMediaBox().getWidth()-30, 639);
             contentStreamPage5.stroke();
 
             contentStreamPage5.beginText();
@@ -733,8 +733,8 @@ public class FileController {
             contentStreamPage4.endText();
 
 
-            contentStreamPage4.moveTo(30, 610);
-            contentStreamPage4.lineTo(page.getMediaBox().getWidth()-30, 609);
+            contentStreamPage4.moveTo(30, 640);
+            contentStreamPage4.lineTo(page.getMediaBox().getWidth()-30, 639);
             contentStreamPage4.stroke();
 
             contentStreamPage4.beginText();
