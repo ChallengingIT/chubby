@@ -860,7 +860,7 @@ public class FileController {
 
     public static float centraScritta(PDPage page,PDFont font, int fontSize, String stringa) throws IOException {
 
-        float width = (float) stringa.length() / 1000 * fontSize;
+        float width = font.getStringWidth(stringa) / 1000 * fontSize;
 
         return (page.getMediaBox().getWidth() - width) / 2;
     }
