@@ -23,6 +23,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.xmlbeans.XmlException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -335,7 +336,7 @@ public class FileController {
                 Objects.requireNonNull(
                         FileController
                                 .class
-                                .getResource(tipo == 1 ? "/static/images/innotekCF.jpg" : "/static/images/challenging.jpg")
+                                .getResource(tipo == 1 ? "/static/images/innotekCF.jpg" : "/static/images/challenging.png")
                 ).getPath(),
                 document);
         contentStream = new PDPageContentStream(document, page);
@@ -835,9 +836,31 @@ public class FileController {
         return output;
     }
 
+    public static ByteArrayOutputStream createWord(
+            Integer tipo,
+            String nomeCompleto,
+            String tipologia,
+            Integer annoNascita,
+            String livello,
+            String domicilio,
+            Double anniEsperienza,
+            Set<Skill> skills,
+            String rispostaOpenAI,
+            String rispostaLinguaOpenAI,
+            String rispostaBackgroundOpenAI) throws IOException, XmlException {
+        //PDFont font = new PDType0Font(Standard14Fonts.FontName.RHELVETICA);
+
+        String nomeAzienda = tipo == 1 ? NOME_AZIENDA_INNOTEK : NOME_AZIENDA;
+        String luogoAzienda = tipo == 1 ? LUOGO_AZIENDA_INNOTEK : LUOGO_AZIENDA;
+        String piAzienda = tipo == 1 ? PI_AZIENDA_INNOTEK : PI_AZIENDA;
+        String reaAzienda = tipo == 1 ? REA_AZIENDA_INNOTEK : REA_AZIENDA;
+
+       return null;
+    }
+
     public static float centraScritta(PDPage page,PDFont font, int fontSize, String stringa) throws IOException {
 
-        float width = font.getStringWidth(stringa) / 1000 * fontSize;
+        float width = (float) stringa.length() / 1000 * fontSize;
 
         return (page.getMediaBox().getWidth() - width) / 2;
     }
