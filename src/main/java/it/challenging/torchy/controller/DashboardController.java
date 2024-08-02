@@ -355,8 +355,7 @@ public class DashboardController {
         logger.info("Lista attivita business personal interval");
         try  {
             Pageable               p                 = PageRequest.of(pagina, quantita);
-            Page<KeyPeople>        pageableKeyPeople = keyPeopleRepository.ricercaAzioniByUsernameInterval(username, interval, p);
-            List<KeyPeople>        keyPeoples        = pageableKeyPeople.getContent();
+            List<KeyPeople>        keyPeoples = keyPeopleRepository.ricercaAzioniByUsernameInterval(username, interval);
             List<AttivitaBusiness> attivitaBusiness  = new ArrayList<>();
 
             Calendar currentCalendar = Calendar.getInstance();
