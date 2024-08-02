@@ -66,8 +66,8 @@ public interface KeyPeopleRepository extends JpaRepository<KeyPeople,Integer> {
           left join key_people_cliente kc on k.id = kc.id_key_people
           join key_people_azioni ka on  k.id = ka.id_key_people
           join azioni a on ka.id_azione = a.id
-          left join owner o on ko.id_owner = o.id
-          left join users u on o.nome = u.nome and o.cognome = u.cognome
+          join owner o on ko.id_owner = o.id
+          join users u on o.nome = u.nome and o.cognome = u.cognome
           where u.username = ?1
           and WEEK(DATE(a.data_modifica)) = WEEK(DATE(now() + INTERVAL ?1 WEEK))
           order by k.nome asc

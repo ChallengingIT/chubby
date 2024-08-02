@@ -13,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -35,7 +32,8 @@ public class DashboardController {
     private IntervistaRepository intervistaRepository;
     @Autowired
     private KeyPeopleRepository  keyPeopleRepository;
-
+    @Autowired
+    private OwnerRepository  ownerRepository;
     private static final Logger logger = LoggerFactory.getLogger(DashboardController.class);
 
     @GetMapping("/pipeline")
@@ -355,7 +353,9 @@ public class DashboardController {
         logger.info("Lista attivita business personal interval");
         try  {
             Pageable               p                 = PageRequest.of(pagina, quantita);
-            List<KeyPeople>        keyPeoples = keyPeopleRepository.ricercaAzioniByUsernameInterval(username, interval);
+            Page<KeyPeople>        keyPeoplesPaged = keyPeopleRepository.ricercaAzioniInterval(interval, p);
+            List<KeyPeople>        keyPeoples = keyPeoplesPaged.getContent();
+            Owner owner = ownerRepository.findByUsername(username).get();
             List<AttivitaBusiness> attivitaBusiness  = new ArrayList<>();
 
             Calendar currentCalendar = Calendar.getInstance();
@@ -365,32 +365,34 @@ public class DashboardController {
             Calendar targetCalendar = Calendar.getInstance();
 
             for (KeyPeople keyPeople : keyPeoples) {
-                for(AzioneKeyPeople azione : keyPeople.getAzioni()) {
-                    AttivitaBusiness attivita = new AttivitaBusiness();
+                if (Objects.equals(keyPeople.getOwner().getId(), owner.getId())) {
+                    for (AzioneKeyPeople azione : keyPeople.getAzioni()) {
+                        AttivitaBusiness attivita = new AttivitaBusiness();
 
-                    targetCalendar.setTime(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()));
-                    int targetWeek = targetCalendar.get(Calendar.WEEK_OF_YEAR);
-                    int targetYear = targetCalendar.get(Calendar.YEAR);
+                        targetCalendar.setTime(Date.from(azione.getDataModifica().atZone(ZoneId.systemDefault()).toInstant()));
+                        int targetWeek = targetCalendar.get(Calendar.WEEK_OF_YEAR);
+                        int targetYear = targetCalendar.get(Calendar.YEAR);
 
-                    if (week == targetWeek && year == targetYear) {
-                        Owner owner = keyPeople.getOwner();
-                        Cliente cliente = keyPeople.getCliente();
+                        if (week == targetWeek && year == targetYear) {
+                            Owner ownerK = keyPeople.getOwner();
+                            Cliente cliente = keyPeople.getCliente();
 
-                        attivita.setIdContatto(keyPeople.getId());
-                        attivita.setNomeContatto(keyPeople.getNome());
-                        attivita.setIdCliente(cliente.getId());
-                        attivita.setDescrizioneCliente(cliente.getDenominazione());
-                        if (null != owner) {
-                            attivita.setIdOwner(owner.getId());
-                            attivita.setSiglaOwner(owner.getDescrizione());
+                            attivita.setIdContatto(keyPeople.getId());
+                            attivita.setNomeContatto(keyPeople.getNome());
+                            attivita.setIdCliente(cliente.getId());
+                            attivita.setDescrizioneCliente(cliente.getDenominazione());
+                            if (null != ownerK) {
+                                attivita.setIdOwner(ownerK.getId());
+                                attivita.setSiglaOwner(ownerK.getDescrizione());
+                            }
+                            attivita.setIdAzioneKeyPeople(azione.getId());
+                            attivita.setAzione(azione.getTipologia().getDescrizione());
+                            attivita.setIdAzione(azione.getTipologia().getId());
+                            attivita.setData(azione.getDataModifica());
+                            attivita.setNote(azione.getNote());
+
+                            attivitaBusiness.add(attivita);
                         }
-                        attivita.setIdAzioneKeyPeople(azione.getId());
-                        attivita.setAzione(azione.getTipologia().getDescrizione());
-                        attivita.setIdAzione(azione.getTipologia().getId());
-                        attivita.setData(azione.getDataModifica());
-                        attivita.setNote(azione.getNote());
-
-                        attivitaBusiness.add(attivita);
                     }
                 }
             }

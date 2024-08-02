@@ -22,7 +22,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table( name = "attivita_recruiting")
+@Table( name = "attivita_business")
 public class AttivitaBusiness implements Serializable {
 
     @Serial
