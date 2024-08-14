@@ -60,7 +60,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/auth/change/password").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/ai/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/associazioni/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
-                    .requestMatchers("/qr/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
+                    .requestMatchers("/qr/**").hasAnyAuthority("USER")
                     .requestMatchers("/azioni/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/aziende/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
                     .requestMatchers("/job/description/**").hasAnyAuthority("ADMIN","BM", "BUSINESS", "RECRUITER", "RIBA")
