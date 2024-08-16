@@ -199,6 +199,10 @@ public class Auth4MappController {
 
                     user.setPassword(encoder.encode(changeRequest.getNewPassword()));
 
+                } else {
+                    logger.debug("Old Password non corrispondente all'attuale");
+
+                    return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong old password!"));
                 }
 
                 userRepository.save(user);
