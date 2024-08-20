@@ -13,7 +13,6 @@ import org.hibernate.Hibernate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -30,7 +29,7 @@ public class Chiesa implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(nullable = false)
-    private BigDecimal id;
+    private Long id;
 
     @Column(nullable = false, name = "id_chiesa")
     private Integer idChiesa;

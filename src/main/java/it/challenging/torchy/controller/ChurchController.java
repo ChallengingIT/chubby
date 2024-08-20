@@ -27,6 +27,15 @@ public class ChurchController {
         return churchRepository.findByUsername(username);
     }
 
+    @GetMapping("/last/{username}")
+    public long getLastByUserId(
+            @PathVariable("username") String username
+    ) {
+        logger.info("Lista chiese tramite utenza");
+        return churchRepository.findLastByUsername(username);
+    }
+
+
     @PostMapping("/save")
     public String save(
         @RequestParam("username") String username,

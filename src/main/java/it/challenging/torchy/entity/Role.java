@@ -11,5 +11,6 @@ public enum Role{
     CANDIDATO,
     RECRUITER,
     BUSINESS,
+    PREMIUM,
     ADMIN;
 }

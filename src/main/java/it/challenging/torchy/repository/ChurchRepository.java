@@ -24,4 +24,7 @@ public interface ChurchRepository extends JpaRepository<Chiesa, BigDecimal> {
 
     List<Chiesa> findByUsername(String username);
 
+    @Query(value= " select min(id) from chiese where ottenuta = 0 and username = ?1", nativeQuery=true)
+    long findLastByUsername(String username);
+
 }
