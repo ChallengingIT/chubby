@@ -5,6 +5,7 @@
 package it.challenging.torchy.security.services;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -47,8 +48,14 @@ public class JwtService {
     }
 
     public boolean isJwtTokenValid(String jwtToken, UserDetails userDetails) {
-        final String username = extractUsername(jwtToken);
-        return (username.equals(userDetails.getUsername())) && !isJwtTokenExpired(jwtToken);
+        try {
+            final String username = extractUsername(jwtToken);
+            return (username.equals(userDetails.getUsername())) && !isJwtTokenExpired(jwtToken);
+        } catch (ExpiredJwtException e) {
+            String newJwtToken =  generateJwtToken(new HashMap<>(), userDetails);
+            final String username = extractUsername(newJwtToken);
+            return (username.equals(userDetails.getUsername())) && !isJwtTokenExpired(newJwtToken);
+        }
     }
 
     private boolean isJwtTokenExpired(String jwtToken) {
