@@ -454,13 +454,8 @@ public class AziendeController {
                 Hiring hiring = new Hiring();
                 hiring.setIdCliente(clienteEntity.getId());
                 hiring.setDenominazioneCliente(clienteEntity.getDenominazione());
-                List<TipoServizio> tipiServizio = new ArrayList<>();
 
-                for (TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
-                    TipoServizio tipoNuovo = tipoServizio;
-
-                    tipiServizio.add(tipoNuovo);
-                }
+                List<TipoServizio> tipiServizio = new ArrayList<>(clienteEntity.getTipiServizio());
 
                 hiring.setTipiServizio(tipiServizio);
 
@@ -468,17 +463,26 @@ public class AziendeController {
             } else {
                 Hiring hiring = hiringRepository.findByIdCliente(clienteEntity.getId());
 
-                List<TipoServizio> tipiServizio = new ArrayList<>();
+                if(null != hiring) {
 
-                for (TipoServizio tipoServizio : clienteEntity.getTipiServizio()) {
-                    TipoServizio tipoNuovo = tipoServizio;
+                    List<TipoServizio> tipiServizio = new ArrayList<>(clienteEntity.getTipiServizio());
 
-                    tipiServizio.add(tipoNuovo);
+                    hiring.setTipiServizio(tipiServizio);
+
+                    hiringRepository.save(hiring);
+                } else {
+
+                    Hiring nuovoHiring = new Hiring();
+                    nuovoHiring.setIdCliente(clienteEntity.getId());
+                    nuovoHiring.setDenominazioneCliente(clienteEntity.getDenominazione());
+
+                    List<TipoServizio> tipiServizio = new ArrayList<>(clienteEntity.getTipiServizio());
+
+                    nuovoHiring.setTipiServizio(tipiServizio);
+
+                    hiringRepository.save(nuovoHiring);
                 }
 
-                hiring.setTipiServizio(tipiServizio);
-
-                hiringRepository.save(hiring);
             }
             logger.debug("Azienda salvata correttamente");
 
