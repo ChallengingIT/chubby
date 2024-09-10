@@ -37,6 +37,9 @@ public class Chiesa implements Serializable {
     @Column(nullable = false, name = "username", length = 50)
     private String username;
 
+    @Column(nullable = false, name = "denominazione", length = 50)
+    private String denominazione;
+
     @Column(nullable = false)
     private Byte ottenuta;
 

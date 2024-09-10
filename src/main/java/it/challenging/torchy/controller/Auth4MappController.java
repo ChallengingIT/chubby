@@ -16,6 +16,7 @@ import it.challenging.torchy.security.services.JwtService;
 import it.challenging.torchy.util.Constants;
 import it.challenging.torchy.util.UtilLib;
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,10 +134,7 @@ public class Auth4MappController {
         userRepository.save(user);
 
         for (int i = 1; i <= 7; i++) {
-            Chiesa chiesa = new Chiesa();
-            chiesa.setIdChiesa(i);
-            chiesa.setUsername(user.getUsername());
-            chiesa.setOttenuta((byte)0);
+            Chiesa chiesa = getChiesa(i, user);
 
             churchRepository.save(chiesa);
         }
@@ -144,6 +142,30 @@ public class Auth4MappController {
         logger.debug("Utenza creata");
 
         return ResponseEntity.ok(new MessageResponse("OK"));
+    }
+
+    private static @NotNull Chiesa getChiesa(int i, User user) {
+        Chiesa chiesa = new Chiesa();
+        chiesa.setIdChiesa(i);
+        chiesa.setUsername(user.getUsername());
+        switch (i){
+            case 1:
+                chiesa.setDenominazione("Basilica di San Pietro");
+            case 2:
+                chiesa.setDenominazione("Basilica San Paolo fuori le Mura");
+            case 3:
+                chiesa.setDenominazione("Basilica San Sebastiano fuori le Mura");
+            case 4:
+                chiesa.setDenominazione("Basilica di San Giovanni in Laterano");
+            case 5:
+                chiesa.setDenominazione("Basilica di Santa Croce in Gerusalemme");
+            case 6:
+                chiesa.setDenominazione("Basilica di San Lorenzo fuori le Mura");
+            case 7:
+                chiesa.setDenominazione("Basilica di Santa Maria Maggiore");
+        }
+        chiesa.setOttenuta((byte)0);
+        return chiesa;
     }
 
     @CrossOrigin(origins = "*")
