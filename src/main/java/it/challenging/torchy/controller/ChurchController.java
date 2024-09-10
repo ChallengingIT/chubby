@@ -23,7 +23,7 @@ public class ChurchController {
     public List<Chiesa> getAllByUserId(
         @PathVariable("username") String username
     ) {
-        logger.info("Lista chiese tramite utenza");
+        logger.info("Lista chiese tramite utenza privata");
         return churchRepository.findByUsername(username);
     }
 
