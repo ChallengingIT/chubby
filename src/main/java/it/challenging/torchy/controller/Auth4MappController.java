@@ -148,21 +148,28 @@ public class Auth4MappController {
         Chiesa chiesa = new Chiesa();
         chiesa.setIdChiesa(i);
         chiesa.setUsername(user.getUsername());
-        switch (i){
+        switch (i) {
             case 1:
                 chiesa.setDenominazione("Basilica di San Pietro");
+                break;
             case 2:
                 chiesa.setDenominazione("Basilica San Paolo fuori le Mura");
+                break;
             case 3:
                 chiesa.setDenominazione("Basilica San Sebastiano fuori le Mura");
+                break;
             case 4:
                 chiesa.setDenominazione("Basilica di San Giovanni in Laterano");
+                break;
             case 5:
                 chiesa.setDenominazione("Basilica di Santa Croce in Gerusalemme");
+                break;
             case 6:
                 chiesa.setDenominazione("Basilica di San Lorenzo fuori le Mura");
+                break;
             case 7:
                 chiesa.setDenominazione("Basilica di Santa Maria Maggiore");
+                break;
         }
         chiesa.setOttenuta((byte)0);
         return chiesa;
