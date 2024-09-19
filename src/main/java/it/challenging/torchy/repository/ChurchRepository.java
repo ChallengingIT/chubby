@@ -11,11 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface ChurchRepository extends JpaRepository<Chiesa, BigDecimal> {
+public interface ChurchRepository extends JpaRepository<Chiesa, Long> {
 
     @Transactional
     @Modifying

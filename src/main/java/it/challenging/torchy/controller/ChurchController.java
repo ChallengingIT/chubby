@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -28,13 +29,22 @@ public class ChurchController {
     }
 
     @GetMapping("/last/{username}")
-    public long getLastByUserId(
+    public String getLastByUserId(
             @PathVariable("username") String username
     ) {
-        logger.info("Lista chiese tramite utenza");
-        return churchRepository.findLastByUsername(username);
-    }
+        logger.info("Ultima chiesa non visitata");
+        String descrizione = null;
 
+        Long id = churchRepository.findLastByUsername(username);
+
+        Optional<Chiesa> chiesa = churchRepository.findById(id);
+
+        if (chiesa.isPresent()) {
+            descrizione = chiesa.get().getDenominazione();
+        }
+
+        return descrizione;
+    }
 
     @PostMapping("/save")
     public String save(
