@@ -29,21 +29,28 @@ public class ChurchController {
     }
 
     @GetMapping("/last/{username}")
-    public String getLastByUserId(
+    public long getLastByUserId(
+            @PathVariable("username") String username
+    ) {
+        logger.info("Lista chiese tramite utenza");
+        return churchRepository.findLastByUsername(username);
+    }
+
+    @GetMapping("/last/church/{username}")
+    public Chiesa getLastChurchByUserId(
             @PathVariable("username") String username
     ) {
         logger.info("Ultima chiesa non visitata");
-        String descrizione = null;
-
+        Chiesa chiesa = null;
         Long id = churchRepository.findLastByUsername(username);
 
-        Optional<Chiesa> chiesa = churchRepository.findById(id);
+        Optional<Chiesa> chiesaOptional = churchRepository.findById(id);
 
-        if (chiesa.isPresent()) {
-            descrizione = chiesa.get().getDenominazione();
+        if (chiesaOptional.isPresent()) {
+            chiesa = chiesaOptional.get();
         }
 
-        return descrizione;
+        return chiesa;
     }
 
     @PostMapping("/save")
