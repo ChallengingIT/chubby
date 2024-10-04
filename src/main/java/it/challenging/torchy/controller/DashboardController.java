@@ -223,26 +223,37 @@ public class DashboardController {
             List<Intervista>         interviste         = pageableIntervista.getContent();
             List<AttivitaRecruiting> attivitaRecruiting = new ArrayList<>();
 
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.add(Calendar.WEEK_OF_YEAR, interval);
+            int week = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+            int year = currentCalendar.get(Calendar.YEAR);
+            Calendar targetCalendar = Calendar.getInstance();
+
             for (Intervista intervista : interviste) {
                 AttivitaRecruiting attivita = new AttivitaRecruiting();
 
-                Candidato candidato = intervista.getCandidato();
-                Owner     owner     = intervista.getNextOwner();
+                targetCalendar.setTime(Date.from(intervista.getDataAggiornamento().atZone(ZoneId.systemDefault()).toInstant()));
+                int targetWeek = targetCalendar.get(Calendar.WEEK_OF_YEAR);
+                int targetYear = targetCalendar.get(Calendar.YEAR);
 
-                attivita.setIdCandidato(candidato.getId());
-                attivita.setNomeCandidato(candidato.getNome());
-                attivita.setCognomeCandidato(candidato.getCognome());
-                if (null != owner) {
-                    attivita.setIdOwner(owner.getId());
-                    attivita.setSiglaOwner(owner.getDescrizione());
+                if (week == targetWeek && year == targetYear) {
+                    Candidato candidato = intervista.getCandidato();
+                    Owner owner = intervista.getNextOwner();
+
+                    attivita.setIdCandidato(candidato.getId());
+                    attivita.setNomeCandidato(candidato.getNome());
+                    attivita.setCognomeCandidato(candidato.getCognome());
+                    if (null != owner) {
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
+                    }
+                    attivita.setIdIntervista(intervista.getId());
+                    attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
+                    attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
+                    attivita.setData(intervista.getDataAggiornamento());
+
+                    attivitaRecruiting.add(attivita);
                 }
-                attivita.setIdIntervista(intervista.getId());
-                attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
-                attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
-                attivita.setData(intervista.getDataAggiornamento());
-
-                attivitaRecruiting.add(attivita);
-
             }
 
             return attivitaRecruiting;
@@ -266,26 +277,37 @@ public class DashboardController {
             List<Intervista>         interviste         = pageableIntervista.getContent();
             List<AttivitaRecruiting> attivitaRecruiting = new ArrayList<>();
 
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.add(Calendar.WEEK_OF_YEAR, interval);
+            int week = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+            int year = currentCalendar.get(Calendar.YEAR);
+            Calendar targetCalendar = Calendar.getInstance();
+
             for (Intervista intervista : interviste) {
                 AttivitaRecruiting attivita = new AttivitaRecruiting();
 
-                Candidato candidato = intervista.getCandidato();
-                Owner     owner     = intervista.getNextOwner();
+                targetCalendar.setTime(Date.from(intervista.getDataAggiornamento().atZone(ZoneId.systemDefault()).toInstant()));
+                int targetWeek = targetCalendar.get(Calendar.WEEK_OF_YEAR);
+                int targetYear = targetCalendar.get(Calendar.YEAR);
 
-                attivita.setIdCandidato(candidato.getId());
-                attivita.setNomeCandidato(candidato.getNome());
-                attivita.setCognomeCandidato(candidato.getCognome());
-                if (null != owner) {
-                    attivita.setIdOwner(owner.getId());
-                    attivita.setSiglaOwner(owner.getDescrizione());
+                if (week == targetWeek && year == targetYear) {
+                    Candidato candidato = intervista.getCandidato();
+                    Owner owner = intervista.getNextOwner();
+
+                    attivita.setIdCandidato(candidato.getId());
+                    attivita.setNomeCandidato(candidato.getNome());
+                    attivita.setCognomeCandidato(candidato.getCognome());
+                    if (null != owner) {
+                        attivita.setIdOwner(owner.getId());
+                        attivita.setSiglaOwner(owner.getDescrizione());
+                    }
+                    attivita.setIdIntervista(intervista.getId());
+                    attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
+                    attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
+                    attivita.setData(intervista.getDataAggiornamento());
+
+                    attivitaRecruiting.add(attivita);
                 }
-                attivita.setIdIntervista(intervista.getId());
-                attivita.setAzione(intervista.getTipo() != null ? intervista.getTipo().getDescrizione() : null);
-                attivita.setIdAzione(intervista.getTipo() != null ? intervista.getTipo().getId() : null);
-                attivita.setData(intervista.getDataAggiornamento());
-
-                attivitaRecruiting.add(attivita);
-
             }
 
             return attivitaRecruiting;
