@@ -8,10 +8,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="torchy" />
+        <module name="wehub" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="wehub" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
