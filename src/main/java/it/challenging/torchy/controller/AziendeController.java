@@ -461,6 +461,17 @@ public class AziendeController {
 
                 hiringRepository.save(hiring);
             } else {
+
+                List<KeyPeople> keyPeopleCliente = keyPeopleRepository.findByCliente_Id(clienteEntity.getId());
+
+                for (KeyPeople keyPeople : keyPeopleCliente) {
+                    Owner owner = clienteEntity.getOwner();
+
+                    keyPeople.setOwner(owner);
+                    keyPeopleRepository.save(keyPeople);
+                }
+
+
                 Hiring hiring = hiringRepository.findByIdCliente(clienteEntity.getId());
 
                 if(null != hiring) {
