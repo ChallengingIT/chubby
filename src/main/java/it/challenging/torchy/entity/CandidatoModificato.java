@@ -30,6 +30,8 @@ public class CandidatoModificato implements Serializable {
 
     private Tipologia tipologia;
 
+    private Tipo tipo;
+
     private File file;
 
     private StatoC stato;

@@ -181,6 +181,7 @@ public class CandidatoController {
         candidatoMod.setStato(candidato.getStato());
         candidatoMod.setDataNascita(candidato.getDataNascita());
         candidatoMod.setTipologia(candidato.getTipologia());
+        candidatoMod.setTipo(candidato.getTipo());
         candidatoMod.setCognome(candidato.getCognome());
         candidatoMod.setNome(candidato.getNome());
         candidatoMod.setDataUltimoContatto(candidato.getDataUltimoContatto());
