@@ -254,7 +254,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.mypackage.MyClass</mainClass>
+							<mainClass>it.challenging.torchy.TorchyApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
