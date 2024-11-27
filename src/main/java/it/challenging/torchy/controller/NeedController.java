@@ -14,10 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import org.threeten.extra.YearWeek;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -638,7 +636,11 @@ public class NeedController {
                 need.setScreening(1);
                 need.setPubblicazione(1);
                 need.setNumeroRisorse(1);
-                need.setWeek(YearWeek.from(LocalDate.now()).toString());
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new java.util.Date());
+
+                need.setWeek(String.valueOf(calendar.getWeekYear()));
 
                 TipologiaN tipologia = new TipologiaN();
                 StatoN stato = new StatoN();
